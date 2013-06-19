@@ -9,19 +9,20 @@ public class TestReception {
 	@Test
 	public void testCreate() {
 		Date date = new Date();
-		Reception reception = new Reception(5, 23, "Adam Smith", date, 15);
+		Service service = new Service("Service 1");
+		Applicator applicator = new Applicator("Вовка");
+		Operator operator = new Operator(23, "Adam Smith", "A.Smith", true, "multipass", false, false);
+		Reception reception = new Reception(5, service, applicator, operator, date);
 		long resultLong = reception.getId();
 		assertEquals("Wrong Id", 5, resultLong);
-		resultLong = reception.getServiceId();
-		assertEquals("Wrong ServiceId", 23, resultLong);
-		String resultString = reception.getApplicatorFIO();
-		assertEquals("Wrong applicatorFIO", "Adam Smith", resultString);
+		Service resultService = reception.getService();
+		assertEquals("Wrong Service", service, resultService);
+		Applicator resultApplicator = reception.getApplicator();
+		assertEquals("Wrong applicator", applicator, resultApplicator);
+		Operator resultOperator = reception.getOperator();
+		assertEquals("Wrong operator", operator, resultOperator);
 		Date resultDate = reception.getOpenDate();
 		assertEquals("Wrong openDate", date, resultDate);
-		resultLong = reception.getOperatorId();
-		assertEquals("Wrong operatorId", 15, resultLong);
-
-
-	}
-
+	}	
+	
 } 
