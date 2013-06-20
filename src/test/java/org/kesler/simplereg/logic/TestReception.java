@@ -1,4 +1,4 @@
-package org.kesler;
+package org.kesler.simplereg.logic;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -11,7 +11,7 @@ public class TestReception {
 		Date date = new Date();
 		Service service = new Service("Service 1");
 		Applicator applicator = new Applicator("Вовка");
-		Operator operator = new Operator(23, "Adam Smith", "A.Smith", true, "multipass", false, false);
+		Operator operator = new Operator(23, "Adam Smith", "A.Smith", "multipass", false, false, true);
 		Reception reception = new Reception(5, service, applicator, operator, date);
 		long resultLong = reception.getId();
 		assertEquals("Wrong Id", 5, resultLong);

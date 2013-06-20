@@ -1,4 +1,4 @@
-package org.kesler;
+package org.kesler.simplereg.logic;
 
 import java.util.Date;
 import javax.persistence.Entity;

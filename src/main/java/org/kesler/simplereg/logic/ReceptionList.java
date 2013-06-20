@@ -1,4 +1,4 @@
-package org.kesler;
+package org.kesler.simplereg.logic;
 
 import java.util.List;
 import java.util.ArrayList;
