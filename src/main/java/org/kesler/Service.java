@@ -5,6 +5,8 @@ import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -12,10 +14,20 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="Servies")
 public class Service {
+
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy="increment")
 	private long id;
-	private long parentId;
+
+	@ManyToOne
+	@JoinColumn(name="parentID")
 	private Service parentService;
+
+	@Column(name="Name", length=255)
 	private String name;
+
+	@Column(name="Enabled")
 	private boolean enabled;
 
 	public Service() {} // for Hibernate
@@ -32,9 +44,6 @@ public class Service {
 		this.enabled = true;
 	}
 
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy="increment")
 	public long getId() {
 		return id;
 	}
@@ -43,7 +52,6 @@ public class Service {
 		this.id = id;
 	}
 
-	//@?
 	public Service getParentService() {
 		return parentService;
 	}
@@ -52,7 +60,6 @@ public class Service {
 		this.parentService = parentService;
 	}
 
-	@Column(name="Name")
 	public String getName() {
 		return name;
 	}
@@ -61,7 +68,6 @@ public class Service {
 		this.name = name;
 	}
 
-	//@?
 	public boolean getEnabled() {
 		return enabled;
 	}

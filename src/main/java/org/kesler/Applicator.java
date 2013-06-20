@@ -11,7 +11,13 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(name="Applicators")
 public class Applicator {
+
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy="increment")
 	private long id;
+
+	@Column(name="FIO", length=255)
 	private String fio;
 
 	public Applicator() {
@@ -27,9 +33,6 @@ public class Applicator {
 		this.fio = fio;
 	}
 
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy="increment")
 	public long getId() {
 		return id;
 	}
@@ -38,7 +41,6 @@ public class Applicator {
 		this.id = id;
 	}
 
-	@Column(name="FIO")
 	public String getFIO() {
 		return fio;
 	}

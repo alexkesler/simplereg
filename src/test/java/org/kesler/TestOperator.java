@@ -7,7 +7,7 @@ public class TestOperator {
 
 	@Test
 	public void testCreate() {
-		Operator operator = new Operator(1,"Adam Smith", "A.Smith", true, "multipass", false, false);
+		Operator operator = new Operator(1,"Adam Smith", "A.Smith", "multipass", false, false, true);
 		long resultLong = operator.getId();
 		assertEquals("Wrong ID", 1, resultLong);
 		String resultString = operator.getFIO();
@@ -18,8 +18,8 @@ public class TestOperator {
 		assertTrue("Wrong enabled",resultBoolean);
 		resultString = operator.getPassword();
 		assertEquals("Wrong password", "multipass", resultString);
-		resultBoolean = operator.getIsKontroler();
-		assertFalse("Wrong IsKontroler", resultBoolean);
+		resultBoolean = operator.getIsControler();
+		assertFalse("Wrong IsControler", resultBoolean);
 		resultBoolean = operator.getIsAdmin();
 		assertFalse("Wrong IsAdmin", resultBoolean);		
 	}

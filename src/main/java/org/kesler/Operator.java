@@ -1,59 +1,118 @@
 package org.kesler;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Column;
+
+import org.hibernate.annotations.GenericGenerator;
+
+@Entity
+@Table(name="Operators")
 public class Operator {
+
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy="increment")
 	private long id;
+
+	@Column(name="FIO", length=255)
 	private String fio;
+
+	@Column(name="FIOShort", length=255)
 	private String fioShort;
-	private boolean enabled;
+
+	@Column(name="Password", length=50)
 	private String password;
-	private boolean isKontroler;
+
+	@Column(name="IsContoler")
+	private boolean isControler;
+
+	@Column(name="IsAdmin")
 	private boolean isAdmin;
+
+	@Column(name="Enabled")
+	private boolean enabled;
+
+	public Operator() {
+		// for Hibernate
+	}
 
 	public Operator(long id, 
 					String fio, 
 					String fioShort, 
-					boolean enabled, 
 					String password,
-					boolean isKontroler,
-					boolean isAdmin) {
+					boolean isControler,
+					boolean isAdmin,
+					boolean enabled) { 
 		this.id = id;
 		this.fio = fio;
 		this.fioShort = fioShort;
-		this.enabled = enabled;
 		this.password = password;
-		this.isKontroler = isKontroler;
+		this.isControler = isControler;
 		this.isAdmin = isAdmin;
+		this.enabled = enabled;
 	}
 
 	public Operator(String fio) {
-		this(0,fio,fio,true,"",false,false);
+		this(0,fio,fio,"",false,false,true);
 	}
 
 	public long getId() {
 		return id;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getFIO() {
 		return fio;
+	}
+
+	public void setFIO(String fio) {
+		this.fio = fio;
 	}
 
 	public String getFIOShort() {
 		return fioShort;
 	}
 
-	public boolean getEnabled() {
-		return enabled;
+	public void setFIOShort(String fioShort) {
+		this.fioShort = fioShort;
 	}
+
 
 	public String getPassword() {
 		return password;
 	}
 
-	public boolean getIsKontroler() {
-		return isKontroler;
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public boolean getIsControler() {
+		return isControler;
+	}
+
+	public void setIsControler(boolean isControler) {
+		this.isControler = isControler;
 	}
 
 	public boolean getIsAdmin() {
 		return isAdmin;
+	}
+
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	public boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 }

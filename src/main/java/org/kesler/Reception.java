@@ -8,16 +8,34 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="Receptions")
 public class Reception {
+	
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy="increment")
 	private long id;
+
+	@ManyToOne
+	@JoinColumn(name="ServiceID")
 	private Service service;
+
+	@ManyToOne
+	@JoinColumn(name="ApplicatorID")
 	private Applicator applicator;
+	
+	@ManyToOne
+	@JoinColumn(name="OperatorID")
 	private Operator operator;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="OpenDate")
 	private Date openDate;
 
 	public Reception() {
@@ -32,9 +50,6 @@ public class Reception {
 		this.openDate = openDate;
 	}
 
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy="increment")
 	public long getId() {
 		return id;
 	}
@@ -43,7 +58,6 @@ public class Reception {
 		this.id = id;
 	}
 
-	//@?
 	public Service getService() {
 		return service;
 	}
@@ -52,7 +66,6 @@ public class Reception {
 		this.service = service;
 	}
 
-	//@?
 	public Applicator getApplicator() {
 		return applicator;
 	}
@@ -61,7 +74,6 @@ public class Reception {
 		this.applicator = applicator;
 	}
 
-	//@?
 	public Operator getOperator() {
 		return operator;
 	}
@@ -70,8 +82,6 @@ public class Reception {
 		this.operator = operator;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="OpenDate")
 	public Date getOpenDate() {
 		return openDate;
 	}
