@@ -19,7 +19,7 @@ public class SimpleReg {
 		s21.setName("Service # 21");
 		s21.setParentService(s2);
 
-		List<Service> services;
+		List<Service> services = null;
 		try {
 			DAOFactory.getInstance().getServiceDAO().addService(s1);
 			DAOFactory.getInstance().getServiceDAO().addService(s2);
@@ -32,8 +32,12 @@ public class SimpleReg {
 
 		System.out.println("================Все услуги================");
 
-		for (Service s: services) {
-		 	System.out.println("ID: "+ s.getId() + " услуга: "+ s.getName());
+		if (services != null) {
+			for (Service s: services) {
+			 	System.out.println("ID: "+ s.getId() + " услуга: "+ s.getName());
+			}		
+		} else {
+			System.out.println("Error retriving data...");
 		}
 
 	}
