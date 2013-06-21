@@ -2,7 +2,6 @@ package org.kesler.simplereg;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Iterator;
 
 import org.kesler.simplereg.logic.Service;
 
@@ -15,7 +14,6 @@ public class SimpleReg {
 		Service s2 = new Service();
 		Service s21 = new Service();
 
-
 		s1.setName("Service # 1");
 		s2.setName("Service # 2");
 		s21.setName("Service # 21");
@@ -26,7 +24,6 @@ public class SimpleReg {
 			DAOFactory.getInstance().getServiceDAO().addService(s1);
 			DAOFactory.getInstance().getServiceDAO().addService(s2);
 			DAOFactory.getInstance().getServiceDAO().addService(s21);
-
 
 			services = DAOFactory.getInstance().getServiceDAO().getAllServices();			
 		} catch (SQLException e) {
