@@ -10,11 +10,11 @@ public class TestService {
 		Service service = new Service("Test");
 		String resultString = service.getName();
 		assertEquals("Wrong name", "Test", resultString);
-		long resultLong = service.getId();
-		assertEquals("default ID not 0",0,resultLong);
+		Long resultLong = service.getId();
+		assertNull("default id not Null", resultLong);
 		Service resultService = service.getParentService();
 		assertNull("default parentService must be Null", resultService);
-		boolean resultBoolean = service.getEnabled();
+		Boolean resultBoolean = service.getEnabled();
 		assertTrue("default enabled not true",resultBoolean);
 	}
 

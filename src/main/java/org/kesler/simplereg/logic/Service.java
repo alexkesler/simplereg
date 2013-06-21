@@ -18,7 +18,7 @@ public class Service {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
-	private long id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name="parentID")
@@ -28,11 +28,11 @@ public class Service {
 	private String name;
 
 	@Column(name="Enabled")
-	private boolean enabled;
+	private Boolean enabled;
 
 	public Service() {} // for Hibernate
 
-	public Service (long id, Service parentService, String name, boolean enabled) {
+	public Service (Long id, Service parentService, String name, Boolean enabled) {
 		this.id = id;
 		this.parentService = parentService;
 		this.name = name;
@@ -44,11 +44,11 @@ public class Service {
 		this.enabled = true;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -68,11 +68,11 @@ public class Service {
 		this.name = name;
 	}
 
-	public boolean getEnabled() {
+	public Boolean getEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
 
