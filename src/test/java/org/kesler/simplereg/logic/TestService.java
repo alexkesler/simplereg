@@ -18,4 +18,13 @@ public class TestService {
 		assertTrue("default enabled not true",resultBoolean);
 	}
 
+	@Test
+	public void testParentService() {
+		Service s1 = new Service("Service #1");
+		Service s11 = new Service("Service #11");
+		s11.setParentService(s1);
+		String resultString = s11.getParentName();
+		assertEquals("Parent Service not set", "Service #1", resultString);
+	}
+
 }

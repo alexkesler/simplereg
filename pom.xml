@@ -16,20 +16,45 @@
 
   <build>
    <plugins>
-     <plugin>
-      <!-- Build an executable JAR -->
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <configuration>
-        <archive>
-          <manifest>
-            <addClasspath>true</addClasspath>
-            <classpathPrefix>lib/</classpathPrefix>
-            <mainClass>org.kesler.simplereg.SimpleReg</mainClass>
-          </manifest>
-        </archive>
-      </configuration>
-     </plugin>
+
+    <plugin> 
+        <groupId>org.apache.maven.plugins</groupId> 
+        <artifactId>maven-dependency-plugin</artifactId> 
+        <configuration> 
+            <outputDirectory>${project.build.directory}/lib/</outputDirectory> 
+            <overWriteReleases>false</overWriteReleases> 
+            <overWriteSnapshots>false</overWriteSnapshots> 
+            <overWriteIfNewer>true</overWriteIfNewer>
+        </configuration> 
+        <executions> 
+            <execution> 
+                <id>copy-dependencies</id> 
+                <phase>package</phase> 
+                <goals> 
+                    <goal>copy-dependencies</goal> 
+                </goals> 
+            </execution> 
+        </executions> 
+    </plugin>
+
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+            <archive>
+                <manifest>
+                    <addClasspath>true</addClasspath>
+                    <classpathPrefix>lib/</classpathPrefix>
+                    <classpathLayoutType>simple</classpathLayoutType>
+                    <mainClass>org.kesler.simplereg.SimpleReg</mainClass>
+                </manifest>
+                <manifestEntries>
+                    <Version>${buildNumber}</Version>
+                </manifestEntries>
+            </archive>
+        </configuration>
+    </plugin>
+ 
    </plugins>
   </build>
 
@@ -59,13 +84,6 @@
       <artifactId>hibernate-core</artifactId>
       <version>4.2.2.Final</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>4.2.2.Final</version>
-    </dependency>
-
             
   </dependencies>
 </project>

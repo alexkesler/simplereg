@@ -1,3 +1,6 @@
+<!DOCTYPE hibernate-configuration PUBLIC 
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
 		<property name="connection.url">jdbc:mysql://10.10.0.170:3306/simplereg</property>
@@ -9,7 +12,7 @@
 		<property name="show_sql">true</property> 
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
-		<mapping class="org.kesler.simplereg.logic.Service"
+		<mapping class="org.kesler.simplereg.logic.Service" />
 
 	</session-factory>
 </hibernate-configuration>		
