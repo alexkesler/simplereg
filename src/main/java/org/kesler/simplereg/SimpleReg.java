@@ -34,7 +34,7 @@ public class SimpleReg {
 
 		if (services != null) {
 			for (Service s: services) {
-			 	System.out.println("ID: "+ s.getId() + " услуга: "+ s.getName());
+			 	System.out.println("ID: "+ s.getId() + " услуга: "+ s.getName()+ " родительская: " + s.getParentName());
 			}		
 		} else {
 			System.out.println("Error retriving data...");

@@ -12,7 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 
 @Entity
-@Table(name="Servies")
+@Table(name="Services")
 public class Service {
 
 	@Id
@@ -58,6 +58,14 @@ public class Service {
 
 	public void setParentService(Service parentService) {
 		this.parentService = parentService;
+	}
+
+	public String getParentName() {
+		String name = "";
+		if (parentService != null) {
+			name = parentService.getName();
+		}
+		return name;
 	}
 
 	public String getName() {
