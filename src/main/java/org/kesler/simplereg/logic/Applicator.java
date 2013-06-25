@@ -15,7 +15,7 @@ public class Applicator {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
-	private long id;
+	private Long id;
 
 	@Column(name="FIO", length=255)
 	private String fio;
@@ -24,7 +24,7 @@ public class Applicator {
 		// for Hibernate
 	}
 
-	public Applicator(long id, String fio) {
+	public Applicator(Long id, String fio) {
 		this.id = id;
 		this.fio = fio;
 	}
@@ -33,11 +33,11 @@ public class Applicator {
 		this.fio = fio;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

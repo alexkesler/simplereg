@@ -1,9 +1,11 @@
 package org.kesler.simplereg.dao;
 
 import org.kesler.simplereg.dao.impl.ServiceDAOImpl;
+import org.kesler.simplereg.dao.impl.ApplicatorDAOImpl;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
+	private static ApplicatorDAO applicatorDAO = null;
 	private static DAOFactory instance = null;
 
 	public static synchronized DAOFactory getInstance() {
@@ -18,6 +20,13 @@ public class DAOFactory {
 			serviceDAO = new ServiceDAOImpl();
 		}
 		return serviceDAO;
+	}
+
+	public ApplicatorDAO getApplicatorDAO() {
+		if (applicatorDAO == null) {
+			applicatorDAO = new ApplicatorDAOImpl();
+		}
+		return applicatorDAO;
 	}
 
 }
