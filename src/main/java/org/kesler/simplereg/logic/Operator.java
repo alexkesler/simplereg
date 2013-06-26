@@ -15,7 +15,7 @@ public class Operator {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
-	private long id;
+	private Long id;
 
 	@Column(name="FIO", length=255)
 	private String fio;
@@ -26,7 +26,7 @@ public class Operator {
 	@Column(name="Password", length=50)
 	private String password;
 
-	@Column(name="IsContoler")
+	@Column(name="IsControler")
 	private boolean isControler;
 
 	@Column(name="IsAdmin")
@@ -39,7 +39,7 @@ public class Operator {
 		// for Hibernate
 	}
 
-	public Operator(long id, 
+	public Operator(Long id, 
 					String fio, 
 					String fioShort, 
 					String password,
@@ -56,14 +56,14 @@ public class Operator {
 	}
 
 	public Operator(String fio) {
-		this(0,fio,fio,"",false,false,true);
+		this(0L,fio,fio,"",false,false,true);
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

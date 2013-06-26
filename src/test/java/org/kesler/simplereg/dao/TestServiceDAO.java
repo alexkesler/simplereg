@@ -2,6 +2,8 @@ package org.kesler.simplereg.dao;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.Ignore;
+import org.junit.Before;
 
 import java.sql.SQLException;
 
@@ -12,6 +14,12 @@ public class TestServiceDAO {
 
 	private ServiceDAO serviceDAO = new ServiceDAOImpl();
 
+	@Before
+	public void prepareTable() {
+
+	}
+
+	@Ignore
 	@Test
 	public void testWriteRead() {
 		Service service = new Service("Test service");

@@ -1,25 +1,25 @@
 package org.kesler.simplereg.dao.impl;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import org.hibernate.Session;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
-import org.kesler.simplereg.dao.ServiceDAO;
-import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.dao.OperatorDAO;
+import org.kesler.simplereg.logic.Operator;
 
-public class ServiceDAOImpl implements ServiceDAO {
+public class OperatorDAOImpl implements OperatorDAO {
 
-	public void addService(Service service) throws SQLException {
+	public void addOperator(Operator operator) throws SQLException {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.save(service);
+			session.save(operator);
 			session.getTransaction().commit();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
@@ -30,12 +30,12 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	} 
 
-	public void updateService(Service service) throws SQLException {
+	public void updateOperator(Operator operator) throws SQLException {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.update(service);
+			session.update(operator);
 			session.getTransaction().commit();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
@@ -46,12 +46,12 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	}
 
-	public Service getServiceById(Long id) throws SQLException {
+	public Operator getOperatorById(Long id) throws SQLException {
 		Session session = null;
-		Service service = null;
+		Operator operator = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
-			service = (Service) session.load(Service.class, id);
+			operator = (Operator) session.load(Operator.class, id);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
 		} finally {
@@ -59,15 +59,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 				session.close();
 			}				
 		}
-		return service;
+		return operator;
 	}
 
-	public List<Service> getAllServices() throws SQLException {
+	public List<Operator> getAllOperators() throws SQLException {
 		Session session = null;
-		List<Service> services = new ArrayList<Service>();
+		List<Operator> operators = new ArrayList<Operator>();
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
-			services = session.createCriteria(Service.class).list();
+			operators = session.createCriteria(Operator.class).list();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
 		} finally {
@@ -75,15 +75,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 				session.close();
 			}				
 		}
-		return  services;
+		return  operators;
 	}
 
-	public void deleteService(Service service) throws SQLException {
+	public void deleteOperator(Operator operator) throws SQLException {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.delete(service);
+			session.delete(operator);
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);

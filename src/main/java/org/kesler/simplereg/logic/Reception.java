@@ -20,7 +20,7 @@ public class Reception {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
-	private long id;
+	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name="ServiceID")
@@ -42,7 +42,7 @@ public class Reception {
 		// for Hibernate
 	}
 
-	public Reception(long id, Service service, Applicator applicator, Operator operator, Date openDate) {
+	public Reception(Long id, Service service, Applicator applicator, Operator operator, Date openDate) {
 		this.id = id;
 		this.service = service;
 		this.applicator = applicator;
@@ -50,11 +50,19 @@ public class Reception {
 		this.openDate = openDate;
 	}
 
-	public long getId() {
+	public Reception(Service service, Applicator applicator, Operator operator, Date openDate) {
+		this.service = service;
+		this.applicator = applicator;
+		this.operator = operator;
+		this.openDate = openDate;
+	}
+
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
