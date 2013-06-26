@@ -11,10 +11,10 @@ public class TestReception {
 		Date date = new Date();
 		Service service = new Service("Service 1");
 		Applicator applicator = new Applicator("Вовка");
-		Operator operator = new Operator(23, "Adam Smith", "A.Smith", "multipass", false, false, true);
-		Reception reception = new Reception(5, service, applicator, operator, date);
-		long resultLong = reception.getId();
-		assertEquals("Wrong Id", 5, resultLong);
+		Operator operator = new Operator(23L, "Adam Smith", "A.Smith", "multipass", false, false, true);
+		Reception reception = new Reception(5L, service, applicator, operator, date);
+		Long resultLong = reception.getId();
+		assertTrue("Wrong Id", 5L==resultLong);
 		Service resultService = reception.getService();
 		assertEquals("Wrong Service", service, resultService);
 		Applicator resultApplicator = reception.getApplicator();

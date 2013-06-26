@@ -9,17 +9,17 @@ import org.hibernate.Session;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
-import org.kesler.simplereg.dao.ServiceDAO;
-import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.dao.ReceptionDAO;
+import org.kesler.simplereg.logic.Reception;
 
-public class ServiceDAOImpl implements ServiceDAO {
+public class ReceptionDAOImpl implements ReceptionDAO {
 
-	public void addService(Service service) throws SQLException {
+	public void addReception(Reception reception) throws SQLException {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.save(service);
+			session.save(reception);
 			session.getTransaction().commit();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
@@ -30,12 +30,12 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	} 
 
-	public void updateService(Service service) throws SQLException {
+	public void updateReception(Reception reception) throws SQLException {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.update(service);
+			session.update(reception);
 			session.getTransaction().commit();			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
@@ -46,12 +46,12 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	}
 
-	public Service getServiceById(Long id) throws SQLException {
+	public Reception getReceptionById(Long id) throws SQLException {
 		Session session = null;
-		Service service = null;
+		Reception reception = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
-			service = (Service) session.load(Service.class, id);
+			reception = (Reception) session.load(Reception.class, id);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
 		} finally {
@@ -59,15 +59,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 				session.close();
 			}				
 		}
-		return service;
+		return reception;
 	}
 
-	public List<Service> getAllServices() throws SQLException {
+	public List<Reception> getAllReceptions() throws SQLException {
 		Session session = null;
-		List<Service> services = new ArrayList<Service>();
+		List<Reception> receptions = new ArrayList<Reception>();
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
-			services = session.createCriteria(Service.class).list();
+			receptions = session.createCriteria(Reception.class).list();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
 		} finally {
@@ -75,15 +75,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 				session.close();
 			}				
 		}
-		return  services;
+		return  receptions;
 	}
 
-	public void deleteService(Service service) throws SQLException {
+	public void deleteReception(Reception reception) throws SQLException {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
-			session.delete(service);
+			session.delete(reception);
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
