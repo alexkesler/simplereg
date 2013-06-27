@@ -11,9 +11,11 @@ import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
+@Proxy(lazy=false)
 @Table(name="Receptions")
 public class Reception {
 	
