@@ -1,16 +1,14 @@
 package org.kesler.simplereg.logic;
 
 import java.util.List;
-import javax.swing.table.AbstractTableModel;
 
 import org.kesler.simplereg.dao.ReceptionDAO;
 import org.kesler.simplereg.dao.DAOFactory;
 
 
-public ReceptionsModel extends AbstractTableModel {
+public ReceptionsModel {
 	private List<Reception> receptions = null;
 	private static receptionsModel = null;
-	private 
 
 	private ReceptionsModel(List<Reception> receptions) {
 		this.receptions = receptions;
