@@ -2,8 +2,6 @@ package org.kesler.simplereg.dao;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.junit.Ignore;
-import org.junit.Before;
 
 import java.sql.SQLException;
 
@@ -14,12 +12,7 @@ public class TestServiceDAO {
 
 	private ServiceDAO serviceDAO = new ServiceDAOImpl();
 
-	@Before
-	public void prepareTable() {
 
-	}
-
-	@Ignore
 	@Test
 	public void testWriteRead() {
 		Service service = new Service("Test service");
@@ -36,8 +29,11 @@ public class TestServiceDAO {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
-		assertEquals("Don't equals", service, resultService);
+		assertNotNull("Result service is null", resultService);
+		if (resultService!=null) {
+			String serviceName = resultService.getName();
+			assertEquals("Writed and readed service don't equals", "Test service", serviceName);
+		}
 	}
 
 }

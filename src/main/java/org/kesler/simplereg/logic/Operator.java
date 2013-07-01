@@ -6,9 +6,11 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 
+import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
+@Proxy(lazy=false)
 @Table(name="Operators")
 public class Operator {
 
