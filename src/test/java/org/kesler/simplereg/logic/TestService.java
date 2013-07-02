@@ -23,8 +23,15 @@ public class TestService {
 		Service s1 = new Service("Service #1");
 		Service s11 = new Service("Service #11");
 		s11.setParentService(s1);
-		String resultString = s11.getParentName();
+		String resultString = s11.getParentServiceName();
 		assertEquals("Parent Service not set", "Service #1", resultString);
 	}
 
+	@Test
+	public void testGetParentNameWithNoParentService() {
+		Service s1 = new Service("Service # 1");
+		String mustBeString = "Родительская услуга не определена";
+		String resultString = s1.getParentServiceName();
+		assertEquals("No ParentService String not set properly", mustBeString, resultString);
+	}
 }

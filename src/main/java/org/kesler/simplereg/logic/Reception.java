@@ -76,8 +76,25 @@ public class Reception {
 		this.service = service;
 	}
 
+	public String getServiceName() {
+		String serviceName = "Услуга не определена";
+		if (service!=null) {
+			serviceName = service.getName();
+		}
+		return serviceName;
+
+	}
+
 	public Applicator getApplicator() {
 		return applicator;
+	}
+
+	public String getApplicatorFIO() {
+		String applicatorFIO = "Заявитель не определен";
+		if (applicator!=null) {
+			applicatorFIO = applicator.getFIO();
+		}
+		return applicatorFIO;
 	}
 
 	public void setApplicator(Applicator applicator) {
@@ -86,6 +103,14 @@ public class Reception {
 
 	public Operator getOperator() {
 		return operator;
+	}
+
+	public String getOperatorFIO() {
+		String operatorFIO = "Оператор не определен";
+		if (operator!=null) {
+			operatorFIO = operator.getFIO();
+		}
+		return operatorFIO;
 	}
 
 	public void setOperator(Operator operator) {
