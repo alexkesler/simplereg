@@ -21,19 +21,12 @@ public class TestReceptionDAO {
 	@Test
 	public void testAddRead() {
 		Service s1 = new Service();
-		Service s2 = new Service();
-		Service s21 = new Service();
 
 		s1.setName("Service # 1");
-		s2.setName("Service # 2");
-		s21.setName("Service # 21");
-		s21.setParentService(s2);
 
 		System.out.println("Writing Services....");
 		try {
 			DAOFactory.getInstance().getServiceDAO().addService(s1);
-			DAOFactory.getInstance().getServiceDAO().addService(s2);
-			DAOFactory.getInstance().getServiceDAO().addService(s21);
 
 		} catch (SQLException e) {
 			System.out.println("DB Error: " + e.getMessage());
@@ -62,7 +55,7 @@ public class TestReceptionDAO {
 		}
 
 
-		Reception r1 = new Reception(s21,a1,o1,new Date());
+		Reception r1 = new Reception(s1,a1,o1,new Date());
 
 		Reception resultReception = null;
 
@@ -83,11 +76,13 @@ public class TestReceptionDAO {
 			System.out.println("DB Error: " + e.getMessage());
 		}
 
-
-		System.out.println("================Результат================");
+		assertNotNull("Readed Reception is null", resultReception);
+		if (resultReception == null) {
+			return ; // если тест провален - выходим
+		}
 
 		String serviceName = resultReception.getServiceName();
-		assertEquals("ServiceName not same", "Service # 21",serviceName);
+		assertEquals("ServiceName not same", "Service # 1",serviceName);
 
 		String applicatorFIO = resultReception.getApplicatorFIO();
 		assertEquals("ApplicatorFIO not same", "Вова Иванов", applicatorFIO);
@@ -95,16 +90,7 @@ public class TestReceptionDAO {
 		String operatorFIO = resultReception.getOperatorFIO();
 		assertEquals("OperatorFIO not same", "Операторов Оператор", operatorFIO);
 
-		if (resultReception != null) {
-			System.out.println("Прием № "+ resultReception.getId()); 
-			System.out.println("Услуга: " + resultReception.getServiceName()); 
-			System.out.println("Заявитель: " + resultReception.getApplicatorFIO() +
-								"\nОператор: " + resultReception.getOperatorFIO() +
-								"\nДата: " + resultReception.getOpenDate());												
-			} else {
-			System.out.println("Error retriving data...");
-		}
-
 	}
+
 
 }

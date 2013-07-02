@@ -62,8 +62,8 @@ public class Service {
 		this.parentService = parentService;
 	}
 
-	public String getParentName() {
-		String name = "";
+	public String getParentServiceName() {
+		String name = "Родительская услуга не определена";
 		if (parentService != null) {
 			name = parentService.getName();
 		}
