@@ -25,9 +25,6 @@ public class TestApplicatorDAO {
 		// проверяем получение id при сохранении 
 		Long id = a.getId();
 		assertNotNull("Writen Applicator dont get id", id);
-		if (id == null) {
-			return ; // Дальше бессмысленно - выходим
-		}
 
 		// проверяем чтение 
 		Applicator resultApplicator = null;
@@ -39,15 +36,10 @@ public class TestApplicatorDAO {
 
 		assertNotNull("Readed Applicator is null", resultApplicator);
 
-		if (resultApplicator == null) {
-			return ; // Дальше бессмысленно - выходим
-		}
-
 		// проверяем соответствие полей сохраненного и прочитанного объектов
 		String resultApplicatorFIO = "";
 		resultApplicatorFIO = resultApplicator.getFIO();
 		assertEquals("Applicator fio not the same", initFIO, resultApplicatorFIO);
-
 	}
 
 }

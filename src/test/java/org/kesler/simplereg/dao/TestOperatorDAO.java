@@ -26,9 +26,6 @@ public class TestOperatorDAO {
 		// Проверяем получение id при сохранении
 		Long id = o.getId();
 		assertNotNull("Writen Operator dont get id", id);
-		if (id == null) {
-			return ; // далее бессмысленно		
-		}	
 
 		// проверяем чтение 
 		Operator resultOperator = null;
@@ -39,9 +36,6 @@ public class TestOperatorDAO {
 		}
 		
 		assertNotNull("Readed operator is null", resultOperator);
-		if (resultOperator == null) {
-			return ; // далее бессмысленно
-		}
 
 		// проверяем соответствие одного из полей
 
