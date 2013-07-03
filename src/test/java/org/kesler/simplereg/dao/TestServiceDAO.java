@@ -27,8 +27,8 @@ public class TestServiceDAO {
 		Service resultService = null;
 		try {
 			resultService = DAOFactory.getInstance().getServiceDAO().getServiceById(id);
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+		} catch (SQLException sqle) {
+			System.out.println(sqle.getMessage());
 		}
 		assertNotNull("Result service is null", resultService);
 
