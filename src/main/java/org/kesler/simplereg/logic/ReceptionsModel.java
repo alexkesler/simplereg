@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-public class ReceptionList {
+public class ReceptionsModel {
 	private List<Reception> receptions;
 
-	public ReceptionList() {
+	public ReceptionsModel() {
 		receptions = new ArrayList<Reception>();
 	}
 
-	public ReceptionList(List<Reception> receptions) {
+	public ReceptionsModel(List<Reception> receptions) {
 		this.receptions = receptions;
 	}
 
