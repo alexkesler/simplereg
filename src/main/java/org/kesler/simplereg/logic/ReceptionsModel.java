@@ -18,4 +18,8 @@ public class ReceptionsModel {
 	public List<Reception> getReceptions() {
 		return receptions;
 	}
+
+	public void addReception(Reception reception) {
+		receptions.add(reception);
+	}
 }
