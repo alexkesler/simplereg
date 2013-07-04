@@ -59,10 +59,6 @@ public class TestServiceDAO {
 		Long id = s21.getId();
 		assertNotNull("Writed service dont get id", id);
 		
-		if (id == null) {
-			return; //если предыдущий тест провален - выходим
-		}
-
 		Service resultService = null;
 		try {
 			resultService = DAOFactory.getInstance().getServiceDAO().getServiceById(id);
