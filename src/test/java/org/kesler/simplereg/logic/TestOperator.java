@@ -7,9 +7,7 @@ public class TestOperator {
 
 	@Test
 	public void testCreate() {
-		Operator operator = new Operator(1L,"Adam Smith", "A.Smith", "multipass", false, false, true);
-		Long resultLong = operator.getId();
-		assertTrue("Wrong ID", 1L==resultLong);
+		Operator operator = new Operator("Adam Smith", "A.Smith", "multipass", false, false, true);
 		String resultString = operator.getFIO();
 		assertEquals("Wronf FIO", "Adam Smith", resultString);
 		resultString = operator.getFIOShort();

@@ -2,20 +2,16 @@ package org.kesler.simplereg.logic;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Proxy;
+
+import org.kesler.simplereg.dao.AbstractEntity;
 
 @Entity
+@Proxy(lazy=false)
 @Table(name="Operators")
-public class Operator {
-
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy="increment")
-	private Long id;
+public class Operator extends AbstractEntity{
 
 	@Column(name="FIO", length=255)
 	private String fio;
@@ -39,14 +35,12 @@ public class Operator {
 		// for Hibernate
 	}
 
-	public Operator(Long id, 
-					String fio, 
+	public Operator(String fio, 
 					String fioShort, 
 					String password,
 					boolean isControler,
 					boolean isAdmin,
 					boolean enabled) { 
-		this.id = id;
 		this.fio = fio;
 		this.fioShort = fioShort;
 		this.password = password;
@@ -56,15 +50,7 @@ public class Operator {
 	}
 
 	public Operator(String fio) {
-		this(0L,fio,fio,"",false,false,true);
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+		this(fio,fio,"",false,false,true);
 	}
 
 	public String getFIO() {

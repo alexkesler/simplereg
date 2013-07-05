@@ -2,23 +2,19 @@ package org.kesler.simplereg.logic;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Proxy;
+
+import org.kesler.simplereg.dao.AbstractEntity;
 
 
 @Entity
+@Proxy(lazy=false)
 @Table(name="Services")
-public class Service {
-
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy="increment")
-	private Long id;
+public class Service extends AbstractEntity {
 
 	@ManyToOne
 	@JoinColumn(name="parentID")
@@ -32,8 +28,7 @@ public class Service {
 
 	public Service() {} // for Hibernate
 
-	public Service (Long id, Service parentService, String name, Boolean enabled) {
-		this.id = id;
+	public Service (Service parentService, String name, Boolean enabled) {
 		this.parentService = parentService;
 		this.name = name;
 		this.enabled = enabled;
@@ -44,14 +39,6 @@ public class Service {
 		this.enabled = true;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Service getParentService() {
 		return parentService;
 	}
@@ -60,8 +47,8 @@ public class Service {
 		this.parentService = parentService;
 	}
 
-	public String getParentName() {
-		String name = "";
+	public String getParentServiceName() {
+		String name = "Родительская услуга не определена";
 		if (parentService != null) {
 			name = parentService.getName();
 		}
