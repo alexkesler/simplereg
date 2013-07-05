@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui;
 
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
 import org.kesler.simplereg.logic.Reception;
@@ -9,8 +10,8 @@ import org.kesler.simplereg.logic.Reception;
 class MainViewReceptionsTableModel extends AbstractTableModel {
 	private List<Reception> receptions;
 
-	public MainViewReceptionsTableModel(List<Reception> receptions) {
-		this.receptions = receptions;
+	public MainViewReceptionsTableModel() {
+		this.receptions = new ArrayList<Reception>();
 	}
 
 	public void setReceptions(List<Reception> receptions) {
@@ -18,7 +19,7 @@ class MainViewReceptionsTableModel extends AbstractTableModel {
 	}
 
 	public int getRowCount() {
-		receptions.size();
+		return receptions.size();
 	}
 
 	public int getColumnCount() {
@@ -30,7 +31,7 @@ class MainViewReceptionsTableModel extends AbstractTableModel {
 		Reception reception = receptions.get(row);
 		if (reception != null) {
 			switch (column) {
-				case 0: value = reception.getID();
+				case 0: value = reception.getId();
 				break;
 				case 1: value = reception.getOpenDate();
 				break;

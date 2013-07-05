@@ -1,20 +1,20 @@
 package org.kesler.simplereg.gui;
 
-import javax.swing.JFrame;
-import javax.swing.JTable;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
-import org.kesler.simplereg.logic.
+
+//import org.kesler.simplereg.logic.
 
 public class MainView extends JFrame {
 	private MainViewReceptionsTableModel tableModel = null;
 
-	public MainViev(MainViewReceptionsTableModel tableModel) {
+	public MainView() {
 		super("Регистрация заявителей в Росреестре");
 		this.setSize(500,300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		this.tableModel = tableModel;
+		this.tableModel = new MainViewReceptionsTableModel();
 
 		createGUI();
 
@@ -38,8 +38,8 @@ public class MainView extends JFrame {
 		this.pack();	
 	}
 
-	public void setTableModel (MainViewReceptionsTableModel tableModel) {
-		this.tableModel = tableModel;
+	public MainViewReceptionsTableModel getTableModel () {
+		return tableModel;
 	}
 
 }
