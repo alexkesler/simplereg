@@ -40,7 +40,6 @@ public class TestApplicatorDAO {
 		String resultApplicatorFIO = "";
 		resultApplicatorFIO = resultApplicator.getFIO();
 		assertEquals("Applicator fio not the same", initFIO, resultApplicatorFIO);
-
 	}
 
 }

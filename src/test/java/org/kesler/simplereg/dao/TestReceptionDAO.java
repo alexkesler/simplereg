@@ -80,9 +80,6 @@ public class TestReceptionDAO {
 		}
 
 		assertNotNull("Readed Reception is null", resultReception);
-		if (resultReception == null) {
-			return ; // если тест провален - выходим
-		}
 
 		// проверяем соответствие полей в членах объекта
 		String serviceName = resultReception.getServiceName();
