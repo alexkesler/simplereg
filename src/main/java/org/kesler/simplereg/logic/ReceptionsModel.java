@@ -2,6 +2,9 @@ package org.kesler.simplereg.logic;
 
 import java.util.List;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
+import org.kesler.simplereg.dao.DAOFactory;
 
 
 public class ReceptionsModel {
@@ -21,5 +24,11 @@ public class ReceptionsModel {
 
 	public void addReception(Reception reception) {
 		receptions.add(reception);
+		try {
+			DAOFactory.getInstance().getReseptionDAO().addReception(reception);
+		} catch (SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle.getMesage(),"Ошибка записи в базу данных", JOptionPane.OK_OPTION);
+		}
 	}
+
 }
