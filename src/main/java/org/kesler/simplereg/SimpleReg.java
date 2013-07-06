@@ -7,7 +7,6 @@ public class SimpleReg {
 
 	public static void main(String[] args) {
 		ReceptionsModel receptionsModel = new ReceptionsModel();
-		receptionsModel.readReceptionsFromDB();
 		MainViewController mainViewController = new MainViewController(receptionsModel);
 
 	}

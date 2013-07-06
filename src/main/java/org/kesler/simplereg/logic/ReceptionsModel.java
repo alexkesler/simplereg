@@ -16,17 +16,19 @@ public class ReceptionsModel {
 		receptions = new ArrayList<Reception>();
 	}
 
+
+	public List<Reception> getReceptions() {
+		
+		return receptions;
+	}
+
+	// читаем данные из БД
 	public void readReceptionsFromDB() {
 		try {
 			receptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
 		} catch (SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения из базы данных", JOptionPane.OK_OPTION);
 		}		
-	}
-
-	public List<Reception> getReceptions() {
-		
-		return receptions;
 	}
 
 	public void addReception(Reception reception) {

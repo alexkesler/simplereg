@@ -16,6 +16,7 @@ class MainViewReceptionsTableModel extends AbstractTableModel {
 
 	public void setReceptions(List<Reception> receptions) {
 		this.receptions = receptions;
+		fireTableDataChanged();
 	}
 
 	public int getRowCount() {
@@ -35,9 +36,9 @@ class MainViewReceptionsTableModel extends AbstractTableModel {
 				break;
 				case 1: value = reception.getOpenDate();
 				break;
-				case 3: value = reception.getApplicatorFIO();
+				case 2: value = reception.getApplicatorFIO();
 				break;
-				case 4: value = reception.getServiceName();
+				case 3: value = reception.getServiceName();
 				break;
 			}
 

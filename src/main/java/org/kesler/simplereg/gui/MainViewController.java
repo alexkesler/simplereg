@@ -19,7 +19,7 @@ public class MainViewController {
 	}
 
 	private void openMainView() {
-		receptionsModel.readReceptionsFromDB();
+//		receptionsModel.readReceptionsFromDB();
 		List<Reception> receptions = receptionsModel.getReceptions();
 
 		
