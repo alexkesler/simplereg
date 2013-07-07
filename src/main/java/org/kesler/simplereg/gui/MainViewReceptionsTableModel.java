@@ -27,6 +27,22 @@ class MainViewReceptionsTableModel extends AbstractTableModel {
 		return 4;
 	}
 
+	public String getColumnName(int column) {
+		String columnName = "Не опр";
+		switch (column) {
+				case 0: columnName = "№";
+				break;
+				case 1: columnName = "Создано";
+				break;
+				case 2: columnName = "ФИО заявителя";
+				break;
+				case 3: columnName = "Услуга";
+				break;
+			}
+			return columnName;
+
+	}
+
 	public Object getValueAt(int row, int column) {
 		Object value = null;
 		Reception reception = receptions.get(row);

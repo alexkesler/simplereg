@@ -19,14 +19,29 @@ public class MainViewController {
 	}
 
 	private void openMainView() {
-//		receptionsModel.readReceptionsFromDB();
 		List<Reception> receptions = receptionsModel.getReceptions();
 
 		
-		mainView = new MainView();
+		mainView = new MainView(this);
 		mainView.getTableModel().setReceptions(receptions);
 
 		mainView.setVisible(true);
+
+	}
+
+	public void openReceptionView() {
+		ReceptionView receptionView = new ReceptionView(this);
+		receptionView.setVisible(true);
+	}
+
+	public void addReception(Reception reception) {
+		receptionsModel.addReception(reception);
+	}
+
+	public void readReceptions() {
+		receptionsModel.readReceptionsFromDB();
+		List<Reception> receptions = receptionsModel.getReceptions();
+		mainView.getTableModel().setReceptions(receptions);
 
 	}
 

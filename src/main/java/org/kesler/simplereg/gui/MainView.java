@@ -6,10 +6,13 @@ import java.awt.event.*;
 
 
 public class MainView extends JFrame {
+	private MainViewController controller = null;
 	private MainViewReceptionsTableModel tableModel = null;
 
-	public MainView() {
+	public MainView(MainViewController controller) {
 		super("Регистрация заявителей в Росреестре");
+
+		this.controller = controller;
 		this.setSize(500,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -61,6 +64,25 @@ public class MainView extends JFrame {
 
 		this.setJMenuBar(menuBar);
 
+		JPanel buttonPanel = new JPanel();
+		JButton newReceptionButton = new JButton("Новый заявитель");
+		newReceptionButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.openReceptionView();
+			}		
+		});
+
+		JButton updateButton = new JButton("Обновить");
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.readReceptions();
+			}
+		});
+
+		buttonPanel.add(newReceptionButton);
+		buttonPanel.add(updateButton);
+
+
 		JTable receptionTable = new JTable(tableModel);
 		JScrollPane receptionTableScrollPane = new JScrollPane(receptionTable);
 		JPanel tablePanel = new JPanel(new GridLayout(1,0));
@@ -68,6 +90,7 @@ public class MainView extends JFrame {
 		tablePanel.add(receptionTableScrollPane);
 
 		mainPanel.add(BorderLayout.CENTER,tablePanel);
+		mainPanel.add(BorderLayout.NORTH,buttonPanel);
 
 		this.add(mainPanel, BorderLayout.CENTER);	
 
