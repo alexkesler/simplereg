@@ -40,7 +40,7 @@ public class MainView extends JFrame {
 		JMenuItem exitMenuItem = new JMenuItem("Выход");
 		exitMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				System.exit(0);
 			}
 		});
 		// Формируем основное меню

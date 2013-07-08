@@ -29,7 +29,9 @@ public class ReceptionView extends JFrame {
 		this.setSize(300,300);
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
+		JPanel dataPanel = new JPanel();
 		
+		//JTree serviceTree = new JTree();
 
 		JPanel buttonPanel = new JPanel();
 		JButton saveButton = new JButton("Сохранить");
@@ -39,6 +41,7 @@ public class ReceptionView extends JFrame {
 		buttonPanel.add(saveButton);
 		buttonPanel.add(cancelButton);
 
+		mainPanel.add(BorderLayout.CENTER, dataPanel);
 		mainPanel.add(BorderLayout.SOUTH, buttonPanel);
 
 		this.add(mainPanel, BorderLayout.CENTER);
