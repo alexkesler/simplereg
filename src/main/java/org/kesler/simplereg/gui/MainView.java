@@ -13,7 +13,7 @@ public class MainView extends JFrame {
 		super("Регистрация заявителей в Росреестре");
 
 		this.controller = controller;
-		this.setSize(500,400);
+		this.setSize(800,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.tableModel = new MainViewReceptionsTableModel();
@@ -50,8 +50,34 @@ public class MainView extends JFrame {
 		// Меню статистики
 		JMenu statisticMenu = new JMenu("Статистика");
 
+		JMenuItem statisticMenuItem = new JMenuItem("Статистика приемов");
+		statisticMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+
+			}
+		});
+
+		statisticMenu.add(statisticMenuItem);
+
 		// Меню настроек
 		JMenu optionsMenu = new JMenu("Настройки");
+
+		JMenuItem servicesMenuItem = new JMenuItem("Услуги");
+		servicesMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+//				controller.openServicesView();
+			}
+		});
+
+		JMenuItem operatorsMenuItem = new JMenuItem("Операторы");
+		operatorsMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+
+			}
+		});
+
+		optionsMenu.add(servicesMenuItem);
+		optionsMenu.add(operatorsMenuItem);
 
 		// Меню О программе
 		JMenu aboutMenu = new JMenu("О программе");
@@ -95,6 +121,8 @@ public class MainView extends JFrame {
 		this.add(mainPanel, BorderLayout.CENTER);	
 
 		this.pack();	
+
+		this.setLocationRelativeTo(null);
 	}
 
 	public MainViewReceptionsTableModel getTableModel () {

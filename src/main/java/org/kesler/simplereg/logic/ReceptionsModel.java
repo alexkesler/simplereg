@@ -18,7 +18,6 @@ public class ReceptionsModel {
 
 
 	public List<Reception> getReceptions() {
-		
 		return receptions;
 	}
 

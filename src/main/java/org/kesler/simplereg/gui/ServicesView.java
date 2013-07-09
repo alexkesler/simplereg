@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ServicesView extends JFrame{
+	private ServicesViewController controller;
 
 	public ServicesView() {
 		super("Услуги");
@@ -28,7 +29,7 @@ public class ServicesView extends JFrame{
 		JButton saveButton = new JButton("Сохранить");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				
 			}
 		});
 
