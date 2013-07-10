@@ -114,9 +114,6 @@ public class ReceptionView extends JFrame {
 		// c.ipady = 10;
 		dataPanel.add(applicatorFIOText, c);
 
-
-		
-
 		Box buttonBox = new Box(BoxLayout.X_AXIS);
 		JButton saveButton = new JButton("Сохранить");
 

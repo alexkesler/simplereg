@@ -65,7 +65,7 @@ public class MainView extends JFrame {
 		JMenuItem servicesMenuItem = new JMenuItem("Услуги");
 		servicesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-//				controller.openServicesView();
+				controller.openServicesView();
 			}
 		});
 

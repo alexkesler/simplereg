@@ -11,8 +11,8 @@ public class MainViewController {
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
 
-	public MainViewController(ReceptionsModel receptionsModel) {
-		this.receptionsModel = receptionsModel;
+	public MainViewController() {
+		this.receptionsModel = ReceptionsModel.getInstance();
 
 		openMainView();
 
@@ -32,6 +32,11 @@ public class MainViewController {
 	public void openReceptionView() {
 		ReceptionView receptionView = new ReceptionView(this);
 		receptionView.setVisible(true);
+	}
+
+	public void openServicesView() {
+		ServicesViewController servicesViewController = new ServicesViewController();
+		servicesViewController.openView();
 	}
 
 	public void addReception(Reception reception) {

@@ -12,8 +12,9 @@ import java.awt.event.ActionEvent;
 public class ServicesView extends JFrame{
 	private ServicesViewController controller;
 
-	public ServicesView() {
+	public ServicesView(ServicesViewController controller) {
 		super("Услуги");
+		this.controller = controller;
 		createGUI();
 	}
 
@@ -29,7 +30,7 @@ public class ServicesView extends JFrame{
 		JButton saveButton = new JButton("Сохранить");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				
+
 			}
 		});
 
@@ -43,6 +44,16 @@ public class ServicesView extends JFrame{
 
 		buttonPanel.add(saveButton);
 		buttonPanel.add(cancelButton);
+
+		mainPanel.add(BorderLayout.CENTER, servicesScrollPane);
+		mainPanel.add(BorderLayout.SOUTH, buttonPanel);
+
+		this.add(mainPanel, BorderLayout.CENTER);	
+
+		this.pack();	
+
+		this.setLocationRelativeTo(null);
+
 	}
 
 }

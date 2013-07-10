@@ -10,10 +10,18 @@ import org.kesler.simplereg.dao.DAOFactory;
 
 
 public class ReceptionsModel {
+	private static ReceptionsModel instance = null;
 	private List<Reception> receptions;
 
-	public ReceptionsModel() {
+	private ReceptionsModel() {
 		receptions = new ArrayList<Reception>();
+	}
+
+	public static synchronized ReceptionsModel getInstance() {
+		if (instance == null) {
+			instance = new ReceptionsModel();
+		}
+		return instance;
 	}
 
 

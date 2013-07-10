@@ -20,7 +20,7 @@ public class TestReceptionsModel {
 
 	@Test
 	public void testCreateEmpty() {
-		ReceptionsModel receptionsModel = new ReceptionsModel();
+		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
 		List<Reception> resultList = receptionsModel.getReceptions();
 		assertNotNull("List is null", resultList);
 	}
@@ -29,7 +29,7 @@ public class TestReceptionsModel {
 	@Test
 	public void testAddReception() {
 		// готовим данные для приема
-		ReceptionsModel receptionsModel = new ReceptionsModel();
+		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
 		Service service = new Service("Simple service");
 		Applicator applicator = new Applicator("Петров Петр Петрович");
 		Operator operator = new Operator("Операторов оператор");
@@ -52,7 +52,7 @@ public class TestReceptionsModel {
 	@Ignore
 	@Test
 	public void testSaveRead() {
-		ReceptionsModel receptionsModel = new ReceptionsModel();
+		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
 	}
 
 }
