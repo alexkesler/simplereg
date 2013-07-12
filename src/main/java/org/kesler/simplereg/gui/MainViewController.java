@@ -39,6 +39,12 @@ public class MainViewController {
 		servicesViewController.openView();
 	}
 
+	public void openLoginView() {
+		LoginView loginView = new LoginView(this);
+//		loginView.setOperators()
+		loginView.setVisible(true);
+	}
+
 	public void addReception(Reception reception) {
 		receptionsModel.addReception(reception);
 	}

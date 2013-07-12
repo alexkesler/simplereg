@@ -31,7 +31,7 @@ public class TestReceptionsModel {
 		// готовим данные для приема
 		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
 		Service service = new Service("Simple service");
-		Applicator applicator = new Applicator("Петров Петр Петрович");
+		Applicator applicator = new Applicator("Петр", "Петрович", "Петров");
 		Operator operator = new Operator("Операторов оператор");
 		Date date = new Date();
 		Reception reception = new Reception();

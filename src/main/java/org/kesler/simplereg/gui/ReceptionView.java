@@ -43,76 +43,99 @@ public class ReceptionView extends JFrame {
 
 		JPanel topPanel = new JPanel();
 		
-		JPanel dataPanel = new JPanel(new GridBagLayout());
+		JPanel dataPanel = new JPanel();
+		dataPanel.setLayout(new BoxLayout(dataPanel, BoxLayout.Y_AXIS));
 		dataPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5,5,5,5);
+
+		JPanel operatorPanel = new JPanel(new GridBagLayout());
 
 		JLabel operatorFIOLabel = new JLabel("Операторов Оператор Операторович");
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.gridwidth = 1;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		c.insets = new Insets(5,5,5,5);
-		c.anchor = GridBagConstraints.LINE_END;
-		dataPanel.add(operatorFIOLabel, c);
+		c.anchor = GridBagConstraints.CENTER;
+		operatorPanel.add(operatorFIOLabel, c);
 
 		JLabel curentTimeLabel = new JLabel("01-01-1970 21:00");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 2;
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 1;
 		c.gridy = 0;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		c.insets = new Insets(5,5,5,5);
-		c.anchor = GridBagConstraints.LINE_END;
-		dataPanel.add(curentTimeLabel, c);
+		c.anchor = GridBagConstraints.EAST;
+		operatorPanel.add(curentTimeLabel, c);
 
+		dataPanel.add(operatorPanel);
 
-		JLabel serviceLabel = new JLabel("Услуга:");
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 1;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		c.insets = new Insets(5,5,5,5);
-		c.anchor = GridBagConstraints.LINE_END;
-		dataPanel.add(serviceLabel, c);
+		JPanel servicePanel = new JPanel(new GridBagLayout());
+		servicePanel.setBorder(BorderFactory.createTitledBorder("Услуга"));
 
 		JLabel serviceNameLabel = new JLabel("Тестовая услуга");
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 1;
-		c.gridy = 1;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		dataPanel.add(serviceNameLabel, c);
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		servicePanel.add(serviceNameLabel, c);
 
 		JButton serviceSelectButton = new JButton("Выбрать");
-		c.fill = GridBagConstraints.LINE_END;
-		c.gridx = 2;
-		c.gridy = 1;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		dataPanel.add(serviceSelectButton, c);
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.EAST;
+		servicePanel.add(serviceSelectButton, c);
 
+		dataPanel.add(servicePanel);
 
-		JLabel applicatorLabel = new JLabel("Заявитель:");
+		// Панель заявителя
+		JPanel applicatorPanel = new JPanel(new GridBagLayout());
+		applicatorPanel.setBorder(BorderFactory.createTitledBorder("Заявитель"));
+		
+		JLabel applicatorSurNameLabel = new JLabel("Фамилия:");
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.EAST;
+		applicatorPanel.add(applicatorSurNameLabel, c);
+
+		JTextField applicatorSurNameText = new JTextField(20);
 		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.WEST;
+		applicatorPanel.add(applicatorSurNameText, c);
+
+		JLabel applicatorFirstNameLabel = new JLabel("Имя:");
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.EAST;
+		applicatorPanel.add(applicatorFirstNameLabel, c);
+
+		JTextField applicatorFirstNameText = new JTextField(20);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 1;
+		c.anchor = GridBagConstraints.WEST;
+		applicatorPanel.add(applicatorFirstNameText, c);
+
+
+		JLabel applicatorParentNameLabel = new JLabel("Отчество:");
+		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
 		c.gridy = 2;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		dataPanel.add(applicatorLabel, c);
+		c.anchor = GridBagConstraints.EAST;
+		applicatorPanel.add(applicatorParentNameLabel, c);
 
-		JTextField applicatorFIOText = new JTextField(50);
+		JTextField applicatorParentNameText = new JTextField(20);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridy = 2;
-		c.gridwidth = 2;
-		// c.ipadx = 10;
-		// c.ipady = 10;
-		dataPanel.add(applicatorFIOText, c);
+		c.anchor = GridBagConstraints.WEST;
+		applicatorPanel.add(applicatorParentNameText, c);
+
+		dataPanel.add(applicatorPanel);
 
 		Box buttonBox = new Box(BoxLayout.X_AXIS);
 		JButton saveButton = new JButton("Сохранить");

@@ -16,7 +16,7 @@ public class Operator extends AbstractEntity{
 	@Column(name="FIO", length=255)
 	private String fio;
 
-	@Column(name="FIOShort", length=255)
+	@Column(name="FIOShort", length=50)
 	private String fioShort;
 
 	@Column(name="Password", length=50)
