@@ -33,7 +33,7 @@ public class MainView extends JFrame {
 		JMenuItem loginMenuItem = new JMenuItem("Подключиться");
 		loginMenuItem.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
-
+				controller.openLoginView();
 			}
 		});
 		// Пункт меню
@@ -110,6 +110,8 @@ public class MainView extends JFrame {
 
 
 		JTable receptionTable = new JTable(tableModel);
+		receptionTable.getColumnModel().getColumn(0).setMaxWidth(30);
+		//receptionTable.getColumnModel().getColumn(0).setResizable(false);
 		JScrollPane receptionTableScrollPane = new JScrollPane(receptionTable);
 		JPanel tablePanel = new JPanel(new GridLayout(1,0));
 		tablePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));

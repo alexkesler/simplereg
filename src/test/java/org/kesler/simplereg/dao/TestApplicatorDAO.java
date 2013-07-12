@@ -13,8 +13,9 @@ public class TestApplicatorDAO {
 	public void testAddRead() {
 		Applicator a = new Applicator();
 
-		String initFIO = "Иванов Иван Иванович";
-		a.setFIO(initFIO);
+		a.setFirstName("Иван");
+		a.setParentName("Иванович");
+		a.setSurName("Иванов");
 
 		try {
 			DAOFactory.getInstance().getApplicatorDAO().addApplicator(a);
@@ -37,9 +38,13 @@ public class TestApplicatorDAO {
 		assertNotNull("Readed Applicator is null", resultApplicator);
 
 		// проверяем соответствие полей сохраненного и прочитанного объектов
-		String resultApplicatorFIO = "";
-		resultApplicatorFIO = resultApplicator.getFIO();
-		assertEquals("Applicator fio not the same", initFIO, resultApplicatorFIO);
+		String resultFirstName = resultApplicator.getFirstName();
+		assertEquals("Applicator firstName not the same", "Иван", resultFirstName);
+		String resultParentName = resultApplicator.getParentName();
+		assertEquals("Applicator parentName not the same", "Иванович", resultParentName);
+		String resultSurName = resultApplicator.getSurName();
+		assertEquals("Applicator surName not the same", "Иванов", resultSurName);
+		
 	}
 
 }

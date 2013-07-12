@@ -50,7 +50,8 @@ public class ServicesView extends JFrame{
 
 		this.add(mainPanel, BorderLayout.CENTER);	
 
-		this.pack();	
+		this.setSize(300, 300);
+		//this.pack();	
 
 		this.setLocationRelativeTo(null);
 
