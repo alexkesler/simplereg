@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,9 +22,12 @@ public class ServicesView extends JFrame{
 	public void createGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel treePanel = new JPanel();
+		JPanel treePanel = new JPanel(new BorderLayout());
+		treePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		JTree servicesTree = new JTree();
 		JScrollPane servicesScrollPane = new JScrollPane(servicesTree);
+
+		treePanel.add(BorderLayout.CENTER, servicesScrollPane);
 
 		JPanel buttonPanel = new JPanel();
 
@@ -37,7 +41,7 @@ public class ServicesView extends JFrame{
 		JButton cancelButton = new JButton("Отменить");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				setVisible(false);
 			}
 		});
 
@@ -45,7 +49,7 @@ public class ServicesView extends JFrame{
 		buttonPanel.add(saveButton);
 		buttonPanel.add(cancelButton);
 
-		mainPanel.add(BorderLayout.CENTER, servicesScrollPane);
+		mainPanel.add(BorderLayout.CENTER, treePanel);
 		mainPanel.add(BorderLayout.SOUTH, buttonPanel);
 
 		this.add(mainPanel, BorderLayout.CENTER);	

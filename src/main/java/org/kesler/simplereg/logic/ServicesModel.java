@@ -19,6 +19,15 @@ public class ServicesModel {
 		return instance;
 	}
 
+	public void readServices() {
+
+		try {
+			services = DAOFactory.getInstance().getServicesDAO().getAllServices();					
+		} catch (SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения из базы данных", JOptionPane.OK_OPTION);
+		}		
+	}
+
 	public List<Service> getAllServices() {
 		return services;
 	}

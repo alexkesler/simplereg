@@ -78,7 +78,7 @@ public class LoginView extends JFrame{
 		JButton cancelButton = new JButton("Отмена");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				setVisible(false);
 			}
 		});
 
