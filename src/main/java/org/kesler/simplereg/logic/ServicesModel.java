@@ -2,6 +2,10 @@ package org.kesler.simplereg.logic;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
+import org.kesler.simplereg.dao.DAOFactory;
 
 
 public class ServicesModel {
@@ -22,7 +26,7 @@ public class ServicesModel {
 	public void readServices() {
 
 		try {
-			services = DAOFactory.getInstance().getServicesDAO().getAllServices();					
+			services = DAOFactory.getInstance().getServiceDAO().getAllServices();					
 		} catch (SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения из базы данных", JOptionPane.OK_OPTION);
 		}		

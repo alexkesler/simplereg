@@ -71,4 +71,25 @@ public class Service extends AbstractEntity {
 		this.enabled = enabled;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (!(obj instanceof Service)) {
+			return false;
+		}
+
+		Service service = (Service)obj;
+		if (id == service.getId() &&
+			name == service.getName() &&
+			parentService.getId() == service.getParentService() &&
+			enabled == service.getEnabled()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

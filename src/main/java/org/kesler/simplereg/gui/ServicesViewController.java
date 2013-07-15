@@ -1,5 +1,8 @@
 package org.kesler.simplereg.gui;
 
+import java.util.List;
+
+import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.ServicesModel;
 
 public class ServicesViewController {
@@ -14,6 +17,12 @@ public class ServicesViewController {
 
 	public void openView() {
 		view.setVisible(true);
+	}
+
+	public void readServices() {
+		model.readServices();
+		List<Service> services = model.getAllServices();
+
 	}
 
 }
