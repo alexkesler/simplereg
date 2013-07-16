@@ -13,6 +13,8 @@ public class ServicesViewController {
 	public ServicesViewController() {
 		this.model = ServicesModel.getInstance();
 		view = new ServicesView(this);
+		openView();
+		readServices();
 	}
 
 	public void openView() {
@@ -22,6 +24,7 @@ public class ServicesViewController {
 	public void readServices() {
 		model.readServices();
 		List<Service> services = model.getAllServices();
+		view.getServicesTreeModel().setServiceList(services);
 
 	}
 

@@ -80,6 +80,11 @@ public class ReceptionView extends JFrame {
 		servicePanel.add(serviceNameLabel, c);
 
 		JButton serviceSelectButton = new JButton("Выбрать");
+		serviceSelectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.openServicesView();
+			}
+		});
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 1;
 		c.gridy = 0;

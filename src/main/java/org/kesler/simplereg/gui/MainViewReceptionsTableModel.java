@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import javax.swing.table.AbstractTableModel;
 
 import org.kesler.simplereg.logic.Reception;
@@ -45,12 +46,13 @@ class MainViewReceptionsTableModel extends AbstractTableModel {
 
 	public Object getValueAt(int row, int column) {
 		Object value = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		Reception reception = receptions.get(row);
 		if (reception != null) {
 			switch (column) {
 				case 0: value = reception.getId();
 				break;
-				case 1: value = reception.getOpenDate();
+				case 1: value = dateFormat.format(reception.getOpenDate());
 				break;
 				case 2: value = reception.getApplicatorFIO();
 				break;

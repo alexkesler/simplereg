@@ -12,6 +12,10 @@ class ServiceTreeNode implements TreeNode {
 	private ServiceTreeNode parent = null;
 	private Vector<ServiceTreeNode> children = new Vector<ServiceTreeNode>();
 
+	public ServiceTreeNode() {
+
+	}
+
 	public ServiceTreeNode(Service service) {
 		this.service = service;
 	}
@@ -40,12 +44,17 @@ class ServiceTreeNode implements TreeNode {
 		return children.size();
 	}
 
-	public int getIndex(ServiceTreeNode node) {
-		return children.indexOf(node);
+	public int getIndex(TreeNode node) {
+		ServiceTreeNode serviceTreeNode = (ServiceTreeNode)node;
+		return children.indexOf(serviceTreeNode);
 	}
 
 	public ServiceTreeNode getParent() {
 		return parent;
+	}
+
+	public void setParent(ServiceTreeNode parent) {
+		this.parent = parent;
 	}
 
 	public boolean isLeaf() {
@@ -62,6 +71,7 @@ class ServiceTreeNode implements TreeNode {
 		children.add(child);
 	}
 
+	@Override
 	public String toString() {
 		return service.getName();
 	}

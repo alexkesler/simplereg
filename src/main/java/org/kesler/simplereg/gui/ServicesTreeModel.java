@@ -1,6 +1,8 @@
 package org.kesler.simplereg.gui;
 
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import java.util.List;
 import java.util.ArrayList;
@@ -12,33 +14,56 @@ class ServicesTreeModel implements TreeModel {
 	private List<TreeModelListener> listeners;
 	private List<Service> services;
 	private List<ServiceTreeNode> serviceNodes;
+	private ServiceTreeNode rootNode = null;
+
+	public ServicesTreeModel() {
+		services = new ArrayList<Service>();
+		serviceNodes = new ArrayList<ServiceTreeNode>();
+		listeners = new ArrayList<TreeModelListener>();		
+	}
 
 	public ServicesTreeModel(List<Service> services) {
 		this.services = services;
 		serviceNodes = new ArrayList<ServiceTreeNode>();
 		listeners = new ArrayList<TreeModelListener>();
 		calculateNodes();
+		fireTreeStructureChanged();
+	}
+
+	public void setServiceList(List<Service> services) {
+		this.services = services;
+		calculateNodes();
+		fireTreeStructureChanged();
 	}
 
 	private void calculateNodes() {
+
 		for(Service service : services) {
 			serviceNodes.add(new ServiceTreeNode(service));
 		}
 
-		Service parentService = null;
+		Service currentService = null;
 		for(ServiceTreeNode node : serviceNodes) {
-			parentService = node.getService();
+			currentService = node.getService();
 			for (ServiceTreeNode nodeTmp : serviceNodes) {
-				if (nodeTmp.getParentService().equals(parentService)) {
+				if (currentService.equals(nodeTmp.getParentService())) {
 					node.addChild(nodeTmp);
+					nodeTmp.setParent(node);
 				}
 			}
 		}
 
-	}
 
-	public void addTreeModelListener(TreeModelListener tml) {
-		listeners.add(tml);
+		rootNode = new ServiceTreeNode(new Service("Корневая услуга"));
+
+		for(ServiceTreeNode node : serviceNodes) {
+			if (node.getParent()==null) {
+				node.setParent(rootNode);
+				rootNode.addChild(node);
+			}
+		}
+		serviceNodes.add(rootNode);
+
 	}
 
 	public Object getChild(Object parent, int index) {
@@ -61,9 +86,7 @@ class ServicesTreeModel implements TreeModel {
 				break;
 			}
 		}
-
 		return childCount;
-
 	}
 
 	public int getIndexOfChild(Object parent, Object child) {
@@ -72,16 +95,18 @@ class ServicesTreeModel implements TreeModel {
 			index = node.getIndex((ServiceTreeNode)child);
 			if (index >= 0) {
 				break;
-			}
-			
+			}			
 		}
-
 		return index;
 	}
 
 
 	public Object getRoot() {
-		return null;
+		return rootNode;
+	}
+
+	public void addTreeModelListener(TreeModelListener tml) {
+		listeners.add(tml);
 	}
 
 	public void removeTreeModelListener(TreeModelListener tml) {
@@ -90,6 +115,24 @@ class ServicesTreeModel implements TreeModel {
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		
+	}
+
+	public boolean isLeaf(Object node) {
+		ServiceTreeNode serviceNode = (ServiceTreeNode)node;
+		if (serviceNode.getChildCount() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	private void fireTreeStructureChanged() {
+		TreePath treePath = new TreePath(rootNode);
+		TreeModelEvent ev = new TreeModelEvent(this, treePath);
+		for (TreeModelListener listener : listeners) {
+			listener.treeStructureChanged(ev);
+		}
 	}
 
 }

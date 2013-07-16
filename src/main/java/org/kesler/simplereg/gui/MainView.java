@@ -13,7 +13,7 @@ public class MainView extends JFrame {
 		super("Регистрация заявителей в Росреестре");
 
 		this.controller = controller;
-		this.setSize(800,400);
+		this.setSize(800,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.tableModel = new MainViewReceptionsTableModel();
@@ -110,7 +110,11 @@ public class MainView extends JFrame {
 
 
 		JTable receptionTable = new JTable(tableModel);
-		receptionTable.getColumnModel().getColumn(0).setMaxWidth(30);
+		receptionTable.getColumnModel().getColumn(0).setMinWidth(30);
+		receptionTable.getColumnModel().getColumn(0).setMaxWidth(40);
+		receptionTable.getColumnModel().getColumn(1).setMinWidth(100);
+		receptionTable.getColumnModel().getColumn(1).setMaxWidth(500);
+
 		//receptionTable.getColumnModel().getColumn(0).setResizable(false);
 		JScrollPane receptionTableScrollPane = new JScrollPane(receptionTable);
 		JPanel tablePanel = new JPanel(new GridLayout(1,0));
@@ -122,7 +126,7 @@ public class MainView extends JFrame {
 
 		this.add(mainPanel, BorderLayout.CENTER);	
 
-		this.pack();	
+		//this.pack();	
 
 		this.setLocationRelativeTo(null);
 	}

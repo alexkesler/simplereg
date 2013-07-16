@@ -12,10 +12,12 @@ import java.awt.event.ActionEvent;
 
 public class ServicesView extends JFrame{
 	private ServicesViewController controller;
+	private ServicesTreeModel servicesTreeModel;
 
 	public ServicesView(ServicesViewController controller) {
 		super("Услуги");
 		this.controller = controller;
+		servicesTreeModel = new ServicesTreeModel();
 		createGUI();
 	}
 
@@ -24,12 +26,19 @@ public class ServicesView extends JFrame{
 
 		JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		JTree servicesTree = new JTree();
+		JTree servicesTree = new JTree(servicesTreeModel);
 		JScrollPane servicesScrollPane = new JScrollPane(servicesTree);
 
 		treePanel.add(BorderLayout.CENTER, servicesScrollPane);
 
 		JPanel buttonPanel = new JPanel();
+
+		JButton updateButton = new JButton("Обновить");
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.readServices();
+			}
+		});
 
 		JButton saveButton = new JButton("Сохранить");
 		saveButton.addActionListener(new ActionListener() {
@@ -46,6 +55,8 @@ public class ServicesView extends JFrame{
 		});
 
 
+
+		buttonPanel.add(updateButton);
 		buttonPanel.add(saveButton);
 		buttonPanel.add(cancelButton);
 
@@ -59,6 +70,10 @@ public class ServicesView extends JFrame{
 
 		this.setLocationRelativeTo(null);
 
+	}
+
+	public ServicesTreeModel getServicesTreeModel() {
+		return servicesTreeModel;
 	}
 
 }

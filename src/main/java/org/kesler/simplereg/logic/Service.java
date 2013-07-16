@@ -82,14 +82,26 @@ public class Service extends AbstractEntity {
 		}
 
 		Service service = (Service)obj;
-		if (id == service.getId() &&
-			name == service.getName() &&
-			parentService.getId() == service.getParentService() &&
-			enabled == service.getEnabled()) {
-			return true;
-		} else {
-			return false;
-		}
+		
+		if (this.getId() != null && this.getId() != service.getId()) return false;
+		if (this.name != null && this.name != service.getName()) return false;
+		if (this.enabled != null && this.enabled != service.getEnabled()) return false;
+		if (parentService != null && parentService != service.getParentService()) return false;
+		if (parentService == null && service.getParentService() != null) return false;
+
+		return true;
 	}
+
+	@Override
+	public int hashCode() {
+		int hash = 37;
+		hash = hash*17 + this.getId().hashCode();
+		hash = hash*17 + this.name.hashCode();
+		hash = hash*17 + this.enabled.hashCode();
+		hash = hash*17 + parentService.hashCode();
+
+		return hash;
+	}
+
 
 }
