@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.gui.services.ServicesViewController;
 
 
 public class MainViewController {

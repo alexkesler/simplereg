@@ -1,8 +1,18 @@
 package org.kesler.simplereg.gui;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JTable;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
+import java.awt.GridLayout;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class MainView extends JFrame {
@@ -19,8 +29,6 @@ public class MainView extends JFrame {
 		this.tableModel = new MainViewReceptionsTableModel();
 
 		createGUI();
-
-
 	}
 
 	private void createGUI () {
@@ -72,7 +80,7 @@ public class MainView extends JFrame {
 		JMenuItem operatorsMenuItem = new JMenuItem("Операторы");
 		operatorsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+//				controller.openOperatorsView();
 			}
 		});
 
