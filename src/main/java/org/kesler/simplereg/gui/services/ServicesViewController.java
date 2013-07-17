@@ -22,7 +22,7 @@ public class ServicesViewController {
 	}
 
 	public void readServices() {
-		model.readServices();
+//		model.readServices();
 		List<Service> services = model.getAllServices();
 		view.getServicesTreeModel().setServiceList(services);
 

@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui;
+package org.kesler.simplereg.gui.main;
 
 import java.util.List;
 import java.util.ArrayList;

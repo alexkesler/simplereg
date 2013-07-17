@@ -23,13 +23,13 @@ public class Operator extends AbstractEntity{
 	private String password;
 
 	@Column(name="IsControler")
-	private boolean isControler;
+	private Boolean isControler;
 
 	@Column(name="IsAdmin")
-	private boolean isAdmin;
+	private Boolean isAdmin;
 
 	@Column(name="Enabled")
-	private boolean enabled;
+	private Boolean enabled;
 
 	public Operator() {
 		// for Hibernate
@@ -38,9 +38,9 @@ public class Operator extends AbstractEntity{
 	public Operator(String fio, 
 					String fioShort, 
 					String password,
-					boolean isControler,
-					boolean isAdmin,
-					boolean enabled) { 
+					Boolean isControler,
+					Boolean isAdmin,
+					Boolean enabled) { 
 		this.fio = fio;
 		this.fioShort = fioShort;
 		this.password = password;
@@ -78,27 +78,32 @@ public class Operator extends AbstractEntity{
 		this.password = password;
 	}
 
-	public boolean getIsControler() {
+	public Boolean getIsControler() {
 		return isControler;
 	}
 
-	public void setIsControler(boolean isControler) {
+	public void setIsControler(Boolean isControler) {
 		this.isControler = isControler;
 	}
 
-	public boolean getIsAdmin() {
+	public Boolean getIsAdmin() {
 		return isAdmin;
 	}
 
-	public void setIsAdmin(boolean isAdmin) {
+	public void setIsAdmin(Boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
 
-	public boolean getEnabled() {
+	public Boolean getEnabled() {
 		return enabled;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	@Override 
+	public String toString() {
+		return fio;
 	}
 }

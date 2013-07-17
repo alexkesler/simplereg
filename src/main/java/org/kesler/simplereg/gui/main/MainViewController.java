@@ -1,28 +1,30 @@
-package org.kesler.simplereg.gui;
+package org.kesler.simplereg.gui.main;
 
 import java.util.List;
 
 
 import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.gui.services.ServicesViewController;
+import org.kesler.simplereg.logic.OperatorsModel;
 
 
 public class MainViewController {
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
+	private OperatorsModel operatorsModel;
 
 	public MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
+		this.operatorsModel = OperatorsModel.getInstance();
 
 		openMainView();
-
 	}
 
 	private void openMainView() {
 		List<Reception> receptions = receptionsModel.getReceptions();
-
-		
+	
 		mainView = new MainView(this);
 		mainView.getTableModel().setReceptions(receptions);
 
@@ -42,7 +44,8 @@ public class MainViewController {
 
 	public void openLoginView() {
 		LoginView loginView = new LoginView(this);
-//		loginView.setOperators()
+		List<Operator> operators = operatorsModel.getActiveOperators();
+		loginView.setOperators(operators);
 		loginView.setVisible(true);
 	}
 

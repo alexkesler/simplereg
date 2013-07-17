@@ -9,11 +9,11 @@ import org.kesler.simplereg.dao.DAOFactory;
 
 
 public class ServicesModel {
-	private static ServicesModel instance;
-	private List<Service> services;
+	private static ServicesModel instance = null;
+	private List<Service> services = null;
 
 	private ServicesModel() {
-		services = new ArrayList<Service>();
+		readServices();
 	}
 
 	public static synchronized ServicesModel getInstance() {
@@ -28,16 +28,26 @@ public class ServicesModel {
 		try {
 			services = DAOFactory.getInstance().getServiceDAO().getAllServices();					
 		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения из базы данных", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения услуг из базы данных", JOptionPane.OK_OPTION);
 		}		
 	}
 
 	public List<Service> getAllServices() {
+		if (services == null) {
+			readServices();
+		}
 		return services;
 	}
 
 	public void addService(Service service) {
 		services.add(service);
+		try {
+			DAOFactory.getInstance().getServiceDAO().addService(service);					
+		} catch (SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка сохранения услуги в базу данных", JOptionPane.OK_OPTION);
+			services.remove(service);
+		}		
+
 	}
 
 }

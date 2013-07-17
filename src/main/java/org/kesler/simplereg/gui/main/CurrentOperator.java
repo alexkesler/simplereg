@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui;
+package org.kesler.simplereg.gui.main;
 
 import org.kesler.simplereg.logic.Operator;
 

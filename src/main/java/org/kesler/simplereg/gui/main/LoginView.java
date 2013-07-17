@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui;
+package org.kesler.simplereg.gui.main;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -9,11 +9,13 @@ import javax.swing.JTextField;
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
 import java.awt.Insets;
+import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.util.List;
 
 
 import org.kesler.simplereg.logic.Operator;
@@ -22,6 +24,8 @@ public class LoginView extends JFrame{
 
 	private Operator operator;
 	private MainViewController controller;
+
+	private JComboBox loginComboBox;
 
 	public LoginView(MainViewController controller) {
 		super("Логин");
@@ -37,13 +41,7 @@ public class LoginView extends JFrame{
 
 		JLabel loginLabel = new JLabel("Оператор: ");
 
-		String[] operators = {
-			"Иванов И.И.",
-			"Петров П.П.",
-			"Сидоров С.С."
-		};
-
-		JComboBox loginComboBox = new JComboBox(operators);
+		loginComboBox = new JComboBox();
 
 		JLabel passwordLabel = new JLabel("Пароль: ");
 
@@ -55,13 +53,18 @@ public class LoginView extends JFrame{
 		c.gridy = 0;
 		dataPanel.add(loginLabel, c);
 
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.WEST;
 		c.gridx = 1;
 		dataPanel.add(loginComboBox, c);
+		c.fill = GridBagConstraints.NONE;
 
+		c.anchor = GridBagConstraints.EAST;
 		c.gridx = 0;
 		c.gridy = 1;
 		dataPanel.add(passwordLabel, c);
 
+		c.anchor = GridBagConstraints.WEST;
 		c.gridx = 1;
 		dataPanel.add(passwordTextField, c);
 
@@ -71,7 +74,7 @@ public class LoginView extends JFrame{
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				//controller.login();
 			}
 		});
 
@@ -92,7 +95,15 @@ public class LoginView extends JFrame{
 		this.add(mainPanel, BorderLayout.CENTER);
 
 		this.setLocationRelativeTo(null);
-		this.pack();
+		this.setMinimumSize(new Dimension(390,170));
+		//this.pack();
+	}
+
+	public void setOperators(List<Operator> operators) {
+		loginComboBox.removeAllItems();
+		for (Operator operator : operators) {
+			loginComboBox.addItem(operator);
+		}
 	}
 
 }
