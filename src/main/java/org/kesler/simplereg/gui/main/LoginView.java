@@ -6,6 +6,9 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
+
 import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
 import java.awt.Insets;
@@ -22,6 +25,8 @@ import org.kesler.simplereg.logic.Operator;
 
 public class LoginView extends JFrame{
 
+	public Action okAction, cancelAction;
+
 	private Operator operator;
 	private MainViewController controller;
 
@@ -30,6 +35,10 @@ public class LoginView extends JFrame{
 	public LoginView(MainViewController controller) {
 		super("Логин");
 		this.controller = controller;
+
+		okAction = new OkAction();
+		cancelAction = new CancelAction();
+
 		createGUI();
 	}
 
@@ -71,19 +80,9 @@ public class LoginView extends JFrame{
 
 		JPanel buttonPanel = new JPanel();
 
-		JButton okButton = new JButton("OK");
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				//controller.login();
-			}
-		});
+		JButton okButton = new JButton(okAction);
 
-		JButton cancelButton = new JButton("Отмена");
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				setVisible(false);
-			}
-		});
+		JButton cancelButton = new JButton(cancelAction);
 
 		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
@@ -105,5 +104,32 @@ public class LoginView extends JFrame{
 			loginComboBox.addItem(operator);
 		}
 	}
+
+
+	// классы Action для кнопок и управяющих элементов
+
+	class OkAction extends AbstractAction {
+		public OkAction() {
+			putValue(Action.NAME, "ОК");
+			putValue(Action.ACTION_COMMAND_KEY, "login");
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			controller.login();
+		}
+	}
+
+
+	class CancelAction extends AbstractAction {
+		public CancelAction() {
+			putValue(Action.NAME, "Отмена");
+			putValue(Action.ACTION_COMMAND_KEY, "cancel");
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			setVisible(false);
+		}
+	}
+
 
 }

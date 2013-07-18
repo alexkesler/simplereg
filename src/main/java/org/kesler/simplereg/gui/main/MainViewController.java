@@ -60,5 +60,13 @@ public class MainViewController {
 
 	}
 
+	public void login() {
+
+	}
+
+	public void openStatisticView() {
+		
+	}
+
 	
 }
