@@ -109,23 +109,17 @@ public class MainView extends JFrame {
 		JButton newReceptionButton = new JButton(newReceptionAction);
 
 		JButton updateButton = new JButton(updateReceptionsAction);
-		// updateButton.addActionListener(new ActionListener() {
-		// 	public void actionPerformed(ActionEvent ev) {
-		// 		controller.readReceptions();
-		// 	}
-		// });
 
 		buttonPanel.add(newReceptionButton);
 		buttonPanel.add(updateButton);
 
-
+		// поправляем ширину столбцов, чтобы было покрасивей
 		JTable receptionTable = new JTable(tableModel);
 		receptionTable.getColumnModel().getColumn(0).setMinWidth(30);
 		receptionTable.getColumnModel().getColumn(0).setMaxWidth(40);
 		receptionTable.getColumnModel().getColumn(1).setMinWidth(100);
 		receptionTable.getColumnModel().getColumn(1).setMaxWidth(500);
 
-		//receptionTable.getColumnModel().getColumn(0).setResizable(false);
 		JScrollPane receptionTableScrollPane = new JScrollPane(receptionTable);
 		JPanel tablePanel = new JPanel(new GridLayout(1,0));
 		tablePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
