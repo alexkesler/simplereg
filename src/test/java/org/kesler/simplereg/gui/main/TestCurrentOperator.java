@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui;
+package org.kesler.simplereg.gui.main;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

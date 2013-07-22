@@ -1,7 +1,7 @@
 package org.kesler.simplereg;
 
 import org.kesler.simplereg.logic.ReceptionsModel;
-import org.kesler.simplereg.gui.MainViewController;
+import org.kesler.simplereg.gui.main.MainViewController;
 
 public class SimpleReg {
 

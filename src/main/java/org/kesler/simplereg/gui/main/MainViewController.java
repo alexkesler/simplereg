@@ -29,7 +29,6 @@ public class MainViewController {
 		mainView.getTableModel().setReceptions(receptions);
 
 		mainView.setVisible(true);
-
 	}
 
 	public void openReceptionView() {
@@ -57,7 +56,6 @@ public class MainViewController {
 		receptionsModel.readReceptionsFromDB();
 		List<Reception> receptions = receptionsModel.getReceptions();
 		mainView.getTableModel().setReceptions(receptions);
-
 	}
 
 	public void login() {
