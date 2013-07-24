@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 import javax.swing.Action;
 import javax.swing.AbstractAction;
 
@@ -51,10 +51,12 @@ public class LoginView extends JFrame{
 		JLabel loginLabel = new JLabel("Оператор: ");
 
 		loginComboBox = new JComboBox();
+		loginComboBox.addActionListener(new SelectActionListener());
 
 		JLabel passwordLabel = new JLabel("Пароль: ");
 
-		JTextField passwordTextField = new JTextField(20);
+		JPasswordField passwordTextField = new JPasswordField(20);
+		passwordTextField.setActionCommand("login");
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5,5,5,5);
@@ -131,5 +133,11 @@ public class LoginView extends JFrame{
 		}
 	}
 
+
+	class SelectActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			operator = (Operator) loginComboBox.getSelectedItem();
+		}
+	}
 
 }

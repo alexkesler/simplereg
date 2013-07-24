@@ -12,7 +12,7 @@ public class OperatorsModel {
 	private static OperatorsModel instance = null;
 
 	private OperatorsModel() {
-		readOperators();
+//		readOperators();
 	}
 
 	public static synchronized OperatorsModel getInstance() {

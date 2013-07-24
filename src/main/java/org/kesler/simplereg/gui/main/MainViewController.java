@@ -14,6 +14,7 @@ public class MainViewController {
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsModel operatorsModel;
+	private MainViewState state;
 
 	public MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
@@ -23,10 +24,10 @@ public class MainViewController {
 	}
 
 	private void openMainView() {
-		List<Reception> receptions = receptionsModel.getReceptions();
+//		List<Reception> receptions = receptionsModel.getReceptions();
 	
 		mainView = new MainView(this);
-		mainView.getTableModel().setReceptions(receptions);
+//		mainView.getTableModel().setReceptions(receptions);
 
 		mainView.setVisible(true);
 	}

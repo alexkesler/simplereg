@@ -13,7 +13,8 @@ public class ServicesModel {
 	private List<Service> services = null;
 
 	private ServicesModel() {
-		readServices();
+//		readServices();
+		services = new ArrayList<Service>();
 	}
 
 	public static synchronized ServicesModel getInstance() {
