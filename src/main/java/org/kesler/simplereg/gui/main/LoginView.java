@@ -31,6 +31,7 @@ public class LoginView extends JFrame{
 	private MainViewController controller;
 
 	private JComboBox loginComboBox;
+	private JPasswordField passwordTextField;
 
 	public LoginView(MainViewController controller) {
 		super("Логин");
@@ -55,8 +56,9 @@ public class LoginView extends JFrame{
 
 		JLabel passwordLabel = new JLabel("Пароль: ");
 
-		JPasswordField passwordTextField = new JPasswordField(20);
-		passwordTextField.setActionCommand("login");
+		passwordTextField = new JPasswordField(20);
+//		passwordTextField.setActionCommand("login");
+		passwordTextField.addActionListener(new OkAction());
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(5,5,5,5);
@@ -105,6 +107,14 @@ public class LoginView extends JFrame{
 		for (Operator operator : operators) {
 			loginComboBox.addItem(operator);
 		}
+	}
+
+	public Operator getOperator() {
+		return operator;
+	}
+
+	public char[] getPassword() {
+		return passwordTextField.getPassword();
 	}
 
 
