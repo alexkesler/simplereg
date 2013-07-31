@@ -8,7 +8,9 @@ import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.gui.services.ServicesViewController;
+import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.logic.OperatorsModel;
+
 
 
 public class MainViewController {
@@ -78,7 +80,12 @@ public class MainViewController {
 		Arrays.fill(password, '0');
 	}
 
-	public void openStatisticView() {
+	public void openStatistic() {
+		
+	}
+
+	public void openOperators() {
+		OperatorsViewController.getInstance().openView();
 		
 	}
 
