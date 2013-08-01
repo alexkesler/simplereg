@@ -46,6 +46,24 @@ public class OperatorDAOImpl implements OperatorDAO {
 		}
 	}
 
+	public void saveOperators(List<Operator> operators) throws SQLException {
+		Session session = null;
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+			for (Operator operator: operators) {
+				session.saveOrUpdate(operator);
+			}
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+	}
+
 	public Operator getOperatorById(Long id) throws SQLException {
 		Session session = null;
 		Operator operator = null;

@@ -87,7 +87,7 @@ public class MainView extends JFrame {
 		JMenuItem operatorsMenuItem = new JMenuItem("Операторы");
 		operatorsMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-//				controller.openOperatorsView();
+				controller.openOperators();
 			}
 		});
 
@@ -242,7 +242,7 @@ public class MainView extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent ev) {
-			controller.openStatisticView();
+			controller.openStatistic();
 		}
 	}
 

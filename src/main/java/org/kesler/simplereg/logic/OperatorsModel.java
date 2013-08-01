@@ -65,4 +65,12 @@ public class OperatorsModel {
 		}
 	}
 
+	public void saveOperators() {
+		try {
+			DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
+		} catch (SQLException sqle) {
+			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка сохранения операторов в базу данных", JOptionPane.OK_OPTION);	
+		}
+	}
+
 }
