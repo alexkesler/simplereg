@@ -81,7 +81,7 @@ public class MainViewController {
 	}
 
 	public void openStatistic() {
-		
+		//StatisticViewController.getInstance().openView();
 	}
 
 	public void openOperators() {
