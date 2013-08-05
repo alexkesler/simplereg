@@ -44,7 +44,7 @@ public class OperatorsViewController {
 		int result;
 		if (changed) {
 			result = JOptionPane.showOptionDialog(null,
-												"В список операботов были внесены изменения. Сохранить?",
+												"В список операторов были внесены изменения. Сохранить?",
 												"Сохранить?",
 												JOptionPane.YES_NO_CANCEL_OPTION,
 												JOptionPane.QUESTION_MESSAGE,
