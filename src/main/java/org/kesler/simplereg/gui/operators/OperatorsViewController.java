@@ -37,18 +37,37 @@ public class OperatorsViewController {
 		Operator newOperator = new Operator();
 
 		int result = JOptionPane.showOptionDialog(null, 
-											view.getOperatorPanel(newOperator), 
-											"Добавление оператора",
-											JOptionPane.OK_CANCEL_OPTION,
-											JOptionPane.QUESTION_MESSAGE,
-											null,
-											new String[] {"Принять", "Отменить"},
-											"Принять");
+							view.getOperatorPanel(newOperator), 
+							"Добавление оператора",
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							new String[] {"Принять", "Отменить"},
+							"Принять");
 
 		if (result==JOptionPane.OK_OPTION) {
 			operators.add(newOperator);
 			view.getTableModel().fireTableDataChanged();
 		}
+
+	}
+
+	public void editOperator(int index) {
+		Operator operator = operators.get(index);
+		
+		int result = JOptionPane.showOptionDialog(null, 
+							view.getOperatorPanel(operator), 
+							"Добавление оператора",
+							JOptionPane.OK_CANCEL_OPTION,
+							JOptionPane.QUESTION_MESSAGE,
+							null,
+							new String[] {"Принять", "Отменить"},
+							"Принять");
+
+		if (result==JOptionPane.OK_OPTION) {
+			view.getOperatorPanel().readOperator();
+			view.getTableModel().fireTableDataChanged();
+		} 
 
 	}
 

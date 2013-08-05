@@ -33,6 +33,7 @@ import org.kesler.simplereg.logic.Operator;
 public class OperatorsView extends JFrame {
 
 	private OperatorsViewController controller;
+	private JTable operatorsTable;
 	private OperatorsTableModel tableModel;
 	private OperatorPanel operatorPanel;
 
@@ -52,7 +53,7 @@ public class OperatorsView extends JFrame {
 		GridBagConstraints c = new GridBagConstraints();
 		JPanel tablePanel = new JPanel(new BorderLayout());
 
-		JTable operatorsTable = new JTable(tableModel);
+		operatorsTable = new JTable(tableModel);
 		TableColumn column = null;
 		for (int i=0; i<5; i++) {
 			column = operatorsTable.getColumnModel().getColumn(i);
@@ -62,6 +63,8 @@ public class OperatorsView extends JFrame {
 				column.setMaxWidth(50);
 			}
 		}
+
+
 
 
 		JScrollPane tableScrollPane = new JScrollPane(operatorsTable);
@@ -79,11 +82,16 @@ public class OperatorsView extends JFrame {
 		JButton editButton = new JButton("Редактировать");	
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				
+				int selected = operatorsTable.getSelectedRow();
+				if (selected == -1) {
+					JOptionPane.showMessageDialog(null,"Ошибка","Ничего не выбрано",JOptionPane.ERROR_MESSAGE);
+				} else {
+					selected = operatorsTable.convertRowIndexToModel(selected);
+					controller.editOperator(selected);
+				}
 
 			}
 		});																										
-
 
 
 		tableButtonPanel.add(addButton);
@@ -125,18 +133,28 @@ public class OperatorsView extends JFrame {
 
 	}
 
-
+	/**
+	* 
+	*/
 	public OperatorsTableModel getTableModel() {
 		return tableModel;
 	}
 
+	/**
+	* 
+	*/
 	public OperatorPanel getOperatorPanel(Operator operator) {
 		operatorPanel.setOperator(operator);
 		return operatorPanel;
 	}
 
-	// панель для диалога добавлеия оператора
-	private class OperatorPanel extends JPanel implements ActionListener{
+	public OperatorPanel getOperatorPanel() {
+		return operatorPanel;
+	}
+
+
+	// панель для диалога добавления оператора
+	public class OperatorPanel extends JPanel {
 		private Operator operator;
 
 		private JTextField fioTextField;
@@ -155,30 +173,18 @@ public class OperatorsView extends JFrame {
 
 			JLabel fioLabel = new JLabel("ФИО");
 			fioTextField = new JTextField(20);
-			fioTextField.setActionCommand("FIO");
-			fioTextField.addActionListener(this);
 
 			JLabel fioShortLabel = new JLabel("ФИО сокр");
 			fioShortTextField = new JTextField(20);
-			fioShortTextField.setActionCommand("FIOShort");
-			fioShortTextField.addActionListener(this);
 
 			JLabel passwordLabel = new JLabel("Пароль");
 			passwordTextField = new JTextField(20);
-			passwordTextField.setActionCommand("password");
-			passwordTextField.addActionListener(this);
 
 			controlerCheckBox = new JCheckBox("Контролер",false);
-			controlerCheckBox.setActionCommand("isContr");
-			controlerCheckBox.addActionListener(this);
 
 			adminCheckBox = new JCheckBox("Админ",false);
-			adminCheckBox.setActionCommand("isAdmin");
-			adminCheckBox.addActionListener(this);
 
 			enabledCheckBox = new JCheckBox("Действ",true);
-			enabledCheckBox.setActionCommand("enabled");
-			enabledCheckBox.addActionListener(this);
 
 			GridBagConstraints c = new GridBagConstraints();
 
@@ -232,36 +238,31 @@ public class OperatorsView extends JFrame {
 			fioTextField.setText(operator.getFIO());
 			fioShortTextField.setText(operator.getFIOShort());
 			passwordTextField.setText(operator.getPassword());
-			controlerCheckBox.setSelected(operator.getIsControler());
-			adminCheckBox.setSelected(operator.getIsAdmin());
-			enabledCheckBox.setSelected(operator.getEnabled());
-		}
-
-		/**
-		* заполняет поля оператора при изменении значений управляющих элементов
-		*/
-		public void actionPerformed(ActionEvent ev) {
-			if ("FIO".equals(ev.getActionCommand())) {
-				String fio = ((JTextField)ev.getSource()).getText();
-				operator.setFIO(fio);
-			} else if ("FIOShort".equals(ev.getActionCommand())) {
-				String fioShort = ((JTextField)ev.getSource()).getText();
-				operator.setFIOShort(fioShort);
-			} else if ("password".equals(ev.getActionCommand())) {
-				String password = ((JTextField)ev.getSource()).getText();
-				operator.setPassword(password);
-			} else if ("isContr".equals(ev.getActionCommand())) {
-				Boolean isContr = ((JCheckBox)ev.getSource()).isSelected();
-				operator.setIsControler(isContr);
-			} else if ("isAdmin".equals(ev.getActionCommand())) {
-				Boolean isAdmin = ((JCheckBox)ev.getSource()).isSelected();
-				operator.setIsAdmin(isAdmin);
-			} else if ("enabled".equals(ev.getActionCommand())) {
-				Boolean enabled = ((JCheckBox)ev.getSource()).isSelected();
-				operator.setEnabled(enabled);
+			if (operator.getIsControler()==null) {
+				controlerCheckBox.setSelected(false);
+			}
+			if (operator.getIsAdmin()==null) {
+				adminCheckBox.setSelected(false);
+			}
+			if (operator.getEnabled()==null) {
+				enabledCheckBox.setSelected(true);
 			}
 		}
-	}
+
+
+		/**
+		* заполняет поля оператора значениями управляющих элементов
+		*/
+		public void readOperator() {
+			operator.setFIO(fioTextField.getText());
+			operator.setFIOShort(fioShortTextField.getText());
+			operator.setPassword(passwordTextField.getText());
+			operator.setIsControler(controlerCheckBox.isSelected());
+			operator.setIsAdmin(adminCheckBox.isSelected());
+			operator.setEnabled(enabledCheckBox.isSelected());
+		}
+    }
+		
 
 	// Модель данных для таблицы
 	public class OperatorsTableModel extends AbstractTableModel {
