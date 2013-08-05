@@ -12,7 +12,6 @@ public class OperatorsModel {
 	private static OperatorsModel instance = null;
 
 	private OperatorsModel() {
-//		readOperators();
 	}
 
 	public static synchronized OperatorsModel getInstance() {
@@ -24,7 +23,6 @@ public class OperatorsModel {
 	}
 
 	public void readOperators() {
-
 		try {
 			operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
 		} catch (SQLException sqle) {

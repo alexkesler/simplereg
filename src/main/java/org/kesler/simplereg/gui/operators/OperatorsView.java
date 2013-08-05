@@ -10,18 +10,26 @@ import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JCheckBox;
 import javax.swing.BorderFactory;
+import javax.swing.border.BevelBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.Component;
 import java.awt.Color;
 import java.awt.Insets;
+import java.awt.Font;
+import java.awt.font.TextAttribute;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.kesler.simplereg.logic.Operator;
 
@@ -53,21 +61,78 @@ public class OperatorsView extends JFrame {
 		GridBagConstraints c = new GridBagConstraints();
 		JPanel tablePanel = new JPanel(new BorderLayout());
 
+		// определяем ширину колонок
 		operatorsTable = new JTable(tableModel);
 		TableColumn column = null;
-		for (int i=0; i<5; i++) {
+		for (int i=0; i<6; i++) {
 			column = operatorsTable.getColumnModel().getColumn(i);
 			if (i == 1) {
 				column.setPreferredWidth(200);
-			} else {
+			} else if (i == 5) {
+				column.setMinWidth(0);
+				column.setMaxWidth(0);
+				column.setPreferredWidth(0);
+			}
+			else {
 				column.setMaxWidth(50);
 			}
 		}
 
+		// обозначаем удаленные/редактированные ячейки
+		column = operatorsTable.getColumnModel().getColumn(1);
+		column.setCellRenderer(new DefaultTableCellRenderer() {
 
+			@Override
+			public Component getTableCellRendererComponent(JTable table,
+															Object value,
+															boolean isSelected,
+															boolean hasFocus,
+															int row,
+															int column) 
+				{
+				
+				int state = ((Integer)table.getValueAt(row,5)).intValue();
+				switch (state) {
+					case Operator.EDITED_STATE: 
+					value = "<html><i>" + value.toString() + "</i></html>";	
+					break;
+					case Operator.DELETED_STATE: 
+					value = "<html><s>" + value.toString() + "</s></html>";	
+					break;
+					case Operator.NEW_STATE: 
+					value = "<html><i><b>" + value.toString() + "</b></i></html>";	
+					break;
+				}	
+
+				
+
+				Component component = super.getTableCellRendererComponent(table,
+																		value,
+																		isSelected,
+																		hasFocus,
+																		row,
+																		column);
+				
+
+
+
+				return component;
+			}
+		});
+
+		operatorsTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent ev) {
+				if (ev.getClickCount() == 2) {
+					int selected = operatorsTable.getSelectedRow();
+					selected = operatorsTable.convertRowIndexToModel(selected);
+					controller.editOperator(selected);
+				}
+			}
+		});
 
 
 		JScrollPane tableScrollPane = new JScrollPane(operatorsTable);
+		//tableScrollPane.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
 		// Панель кнопок управления списком операторов
 		JPanel tableButtonPanel = new JPanel();
@@ -91,16 +156,30 @@ public class OperatorsView extends JFrame {
 				}
 
 			}
-		});																										
+		});	
 
+		JButton deleteButton = new JButton("Удалить");																									
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				int selected = operatorsTable.getSelectedRow();
+				if (selected == -1) {
+					JOptionPane.showMessageDialog(null, "Ошибка", "Ничего не выбрано", JOptionPane.ERROR_MESSAGE);
+				} else {
+					selected = operatorsTable.convertRowIndexToModel(selected);
+					controller.deleteOperator(selected);
+				}
+			}
+		});
 
 		tableButtonPanel.add(addButton);
 		tableButtonPanel.add(editButton);
+		tableButtonPanel.add(deleteButton);
 
-		
 		// добавляем на панель таблицы
 		tablePanel.add(BorderLayout.CENTER, tableScrollPane);
 		tablePanel.add(BorderLayout.SOUTH, tableButtonPanel);
+		tablePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED));
+		
 
 
 		JPanel buttonPanel = new JPanel();
@@ -115,7 +194,7 @@ public class OperatorsView extends JFrame {
 		JButton closeButton = new JButton("Закрыть");
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				setVisible(false);
+				controller.closeView();
 			}
 		});
 
@@ -134,26 +213,31 @@ public class OperatorsView extends JFrame {
 	}
 
 	/**
-	* 
+	* Возвращает модель таблицы для установки свойств и вызова методов
 	*/
 	public OperatorsTableModel getTableModel() {
 		return tableModel;
 	}
 
 	/**
-	* 
+	* Возвращает панель редактирования свойств оператора для вызова её методов
+	*/
+	public OperatorPanel getOperatorPanel() {
+		return operatorPanel;
+	}
+
+	/**
+	* вызывает панель резактирования свойст оператора, заполняет её сведениями
+	* @param operator оператор, сведения о котором будут редактироваться при открытии диалога
 	*/
 	public OperatorPanel getOperatorPanel(Operator operator) {
 		operatorPanel.setOperator(operator);
 		return operatorPanel;
 	}
 
-	public OperatorPanel getOperatorPanel() {
-		return operatorPanel;
-	}
-
-
-	// панель для диалога добавления оператора
+	/**
+	* Панель для диалога добавления оператора
+	*/
 	public class OperatorPanel extends JPanel {
 		private Operator operator;
 
@@ -229,8 +313,8 @@ public class OperatorsView extends JFrame {
 		}
 
 		/**
-		* Устанавливает приватное свойство - оператора
-		* Заполняет поля сведениями об операторе
+		*<p> Устанавливает приватное свойство - оператора</p>
+		*<p> Заполняет поля сведениями об операторе</p>
 		*/
 		public void setOperator(Operator operator) {
 			this.operator = operator;
@@ -251,7 +335,7 @@ public class OperatorsView extends JFrame {
 
 
 		/**
-		* заполняет поля оператора значениями управляющих элементов
+		* Заполняет поля оператора значениями управляющих элементов
 		*/
 		public void readOperator() {
 			operator.setFIO(fioTextField.getText());
@@ -286,7 +370,7 @@ public class OperatorsView extends JFrame {
 
 		@Override
 		public int getColumnCount() {
-			return 5;
+			return 6;
 		}
 
 		@Override
@@ -322,6 +406,8 @@ public class OperatorsView extends JFrame {
 				break;
 				case 4: value=operator.getEnabled();
 				break;
+				case 5: value=operator.getState();
+				break;
 			}
 			return value;
 
@@ -337,7 +423,7 @@ public class OperatorsView extends JFrame {
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			boolean editable = true;
-			if (column == 0) {
+			if (column == 0 || column == 1 || column == 5) {
 				editable = false;
 			}
 
@@ -348,16 +434,20 @@ public class OperatorsView extends JFrame {
 		public void setValueAt(Object aValue, int row, int column) {
 			Operator operator = operators.get(row);
 			switch (column) {
-				case 1: operator.setFIO((String)aValue);
+				case 2: 
+				operator.setIsControler((Boolean)aValue);
+				operator.setState(Operator.EDITED_STATE);
 				break;
-				case 2: operator.setIsControler((Boolean)aValue);
+				case 3: 
+				operator.setIsAdmin((Boolean)aValue);
+				operator.setState(Operator.EDITED_STATE);
 				break;
-				case 3: operator.setIsAdmin((Boolean)aValue);
-				break;
-				case 4: operator.setEnabled((Boolean)aValue);
+				case 4: 
+				operator.setEnabled((Boolean)aValue);
+				operator.setState(Operator.EDITED_STATE);
 				break;
 			}
-			fireTableCellUpdated(row, column);
+			fireTableDataChanged();
 		} 
 
 	}
