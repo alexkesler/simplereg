@@ -90,4 +90,8 @@ public class MainViewController {
 	}
 
 	
+	public void openApplicators() {
+		
+	}
+
 }

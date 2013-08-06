@@ -31,6 +31,7 @@ public class MainView extends JFrame {
 					newReceptionAction, 
 					updateReceptionsAction,
 					statisticAction,
+					applicatorsAction,
 					exitAction;
 
 	public MainView(MainViewController controller) {
@@ -46,6 +47,7 @@ public class MainView extends JFrame {
 		newReceptionAction = new NewReceptionAction();
 		updateReceptionsAction = new UpdateReceptionsAction();
 		statisticAction = new StatisticAction();
+		applicatorsAction = new ApplicatorsAction();
 		exitAction = new ExitAction();
 
 		createGUI();
@@ -71,6 +73,7 @@ public class MainView extends JFrame {
 		JMenu statisticMenu = new JMenu("Статистика");
 
 		JMenuItem statisticMenuItem = new JMenuItem(statisticAction);
+		JMenuItem applicatorsMenuItem = new JMenuItem(applicatorsAction);
 
 		statisticMenu.add(statisticMenuItem);
 
@@ -243,6 +246,17 @@ public class MainView extends JFrame {
 
 		public void actionPerformed(ActionEvent ev) {
 			controller.openStatistic();
+		}
+	}
+
+	public class ApplicatorsAction extends AbstractAction {
+		public ApplicatorsAction() {
+			putValue(Action.NAME, "Заявители");
+			putValue(Action.ACTION_COMMAND_KEY, "applicators");
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			controller.openApplicators();
 		}
 	}
 
