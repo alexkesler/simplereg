@@ -18,7 +18,6 @@ public class MainViewController {
 	private LoginView loginView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsModel operatorsModel;
-	private MainViewState state;
 
 	public MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
@@ -28,13 +27,17 @@ public class MainViewController {
 	}
 
 	private void openMainView() {
-//		List<Reception> receptions = receptionsModel.getReceptions();
-	
 		mainView = new MainView(this);
-//		mainView.getTableModel().setReceptions(receptions);
-
 		mainView.setVisible(true);
 	}
+
+	private void setMainViewAccess() {
+		Operator currentOperator = CurrentOperator.getOperator();
+		if (currentOperator != null) {
+			
+		}
+	}
+
 
 	public void openReceptionView() {
 		ReceptionView receptionView = new ReceptionView(this);
@@ -47,6 +50,8 @@ public class MainViewController {
 	}
 
 	public void openLoginView() {
+		//int result = JOptionPane.showOptionDialog(null, null);
+
 		loginView = new LoginView(this);
 		List<Operator> operators = operatorsModel.getActiveOperators();
 		loginView.setOperators(operators);
@@ -89,7 +94,6 @@ public class MainViewController {
 		
 	}
 
-	
 	public void openApplicators() {
 		
 	}

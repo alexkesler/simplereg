@@ -23,8 +23,18 @@ import javax.swing.table.AbstractTableModel;
 
 import org.kesler.simplereg.logic.Reception;
 
-
+/**
+* Основной вид приложения. Содержит меню и управляющие компоненты для вызова дочерних окон. 
+*
+*/
 public class MainView extends JFrame {
+	public static String LOGIN_COMMAND = "login";
+	public static String NEW_RECEPTION_COMMAND = "newReception";
+	public static String UPDATE_RECEPTIONS_COMMAND = "updateReceptions";
+	public static String OPEN_STATISTIC_COMMAND = "statistic";
+	public static String OPEN_APPLICATORS_COMMAND = "applicators";
+	public static String EXIT_COMMAND = "exit";
+
 	private MainViewController controller = null;
 	private MainViewReceptionsTableModel tableModel = null;
 	protected Action loginAction,
@@ -76,6 +86,7 @@ public class MainView extends JFrame {
 		JMenuItem applicatorsMenuItem = new JMenuItem(applicatorsAction);
 
 		statisticMenu.add(statisticMenuItem);
+		statisticMenu.add(applicatorsMenuItem);
 
 		// Меню настроек
 		JMenu optionsMenu = new JMenu("Настройки");
@@ -209,7 +220,7 @@ public class MainView extends JFrame {
 	public class LoginAction extends AbstractAction {
 		public LoginAction() {
 			putValue(Action.NAME, "Подключиться");
-			putValue(Action.ACTION_COMMAND_KEY,"login");
+			putValue(Action.ACTION_COMMAND_KEY,LOGIN_COMMAND);
 		}
 
 		public void actionPerformed(ActionEvent ev) {
@@ -220,7 +231,7 @@ public class MainView extends JFrame {
 	public class NewReceptionAction extends AbstractAction {
 		public NewReceptionAction() {
 			putValue(Action.NAME,"Новый прием");
-			putValue(Action.ACTION_COMMAND_KEY, "NewReception");
+			putValue(Action.ACTION_COMMAND_KEY, NEW_RECEPTION_COMMAND);
 		}
 		public void actionPerformed(ActionEvent ev) {
 			controller.openReceptionView();			
@@ -230,7 +241,7 @@ public class MainView extends JFrame {
 	public class UpdateReceptionsAction extends AbstractAction {
 		public UpdateReceptionsAction() {
 			putValue(Action.NAME, "Обновить");
-			putValue(Action.ACTION_COMMAND_KEY, "updateReceptions");
+			putValue(Action.ACTION_COMMAND_KEY, UPDATE_RECEPTIONS_COMMAND);
 		}
 
 		public void actionPerformed(ActionEvent ev) {
@@ -241,7 +252,7 @@ public class MainView extends JFrame {
 	public class StatisticAction extends AbstractAction {
 		public StatisticAction() {
 			putValue(Action.NAME, "Статистика приемов");
-			putValue(Action.ACTION_COMMAND_KEY, "statistic");
+			putValue(Action.ACTION_COMMAND_KEY, OPEN_STATISTIC_COMMAND);
 		}
 
 		public void actionPerformed(ActionEvent ev) {
@@ -252,7 +263,7 @@ public class MainView extends JFrame {
 	public class ApplicatorsAction extends AbstractAction {
 		public ApplicatorsAction() {
 			putValue(Action.NAME, "Заявители");
-			putValue(Action.ACTION_COMMAND_KEY, "applicators");
+			putValue(Action.ACTION_COMMAND_KEY, OPEN_APPLICATORS_COMMAND);
 		}
 
 		public void actionPerformed(ActionEvent ev) {
@@ -263,7 +274,7 @@ public class MainView extends JFrame {
 	public class ExitAction extends AbstractAction {
 		public ExitAction() {
 			putValue(Action.NAME,"Выход");
-			putValue(Action.ACTION_COMMAND_KEY, "exit");
+			putValue(Action.ACTION_COMMAND_KEY, EXIT_COMMAND);
 		}
 		public void actionPerformed(ActionEvent ev) {
 			System.exit(0);
