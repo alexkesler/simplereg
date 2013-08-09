@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.kesler.simplereg.logic.Service;
@@ -47,10 +48,13 @@ public class TestReceptionDAO {
 
 		// создаем тестовый объект Operator
 		Operator o1 = new Operator("Операторов Оператор");
+		o1.setState(Operator.NEW_STATE);
+		List<Operator> os = new ArrayList<Operator>();
+		os.add(o1);
 
 		// сохраняем
 		try {
-			DAOFactory.getInstance().getOperatorDAO().addOperator(o1);
+			DAOFactory.getInstance().getOperatorDAO().saveOperators(os);
 
 		} catch (SQLException e) {
 			System.out.println("DB Error: " + e.getMessage());

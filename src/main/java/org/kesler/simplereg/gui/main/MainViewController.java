@@ -15,9 +15,9 @@ import org.kesler.simplereg.logic.OperatorsModel;
 
 public class MainViewController {
 	private MainView mainView;
-	private LoginView loginView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsModel operatorsModel;
+	private LoginDialog loginDialog;
 
 	public MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
@@ -49,14 +49,6 @@ public class MainViewController {
 		servicesViewController.openView();
 	}
 
-	public void openLoginView() {
-		//int result = JOptionPane.showOptionDialog(null, null);
-
-		loginView = new LoginView(this);
-		List<Operator> operators = operatorsModel.getActiveOperators();
-		loginView.setOperators(operators);
-		loginView.setVisible(true);
-	}
 
 	public void addReception(Reception reception) {
 		receptionsModel.addReception(reception);
@@ -69,20 +61,17 @@ public class MainViewController {
 	}
 
 	public void login() {
-		Operator operator = loginView.getOperator();
-		char[] password = operator.getPassword().toCharArray();
-		char[] input = loginView.getPassword();
-		if (input.length != password.length || !Arrays.equals(input, password)) {
-			JOptionPane.showMessageDialog(loginView,
-                "Неправильный пароль. Попробуйте еще раз.",
-                "Ошибка",
-                JOptionPane.ERROR_MESSAGE);
-		} else {
-			loginView.setVisible(false);
-			CurrentOperator.setOperator(operator);
-		}
-		Arrays.fill(input,'0');
-		Arrays.fill(password, '0');
+		//получаем список действующих операторов
+		List<Operator> operators = operatorsModel.getActiveOperators();
+		// создаем диалог ввода пароля
+		loginDialog = new LoginDialog(operators);
+		loginDialog.setLocationRelativeTo(mainView);
+		loginDialog.setVisible(true);
+
+		// сделать проверку на итог - назначить оператора
+		//int value = loginDialog
+			
+		
 	}
 
 	public void openStatistic() {

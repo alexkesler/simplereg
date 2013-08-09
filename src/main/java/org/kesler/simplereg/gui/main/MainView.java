@@ -224,7 +224,7 @@ public class MainView extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent ev) {
-			controller.openLoginView();
+			controller.login();
 		}
 	}
 
