@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.main;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -18,6 +19,7 @@ import javax.swing.Action;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.text.SimpleDateFormat;
 import javax.swing.table.AbstractTableModel;
 
@@ -28,21 +30,15 @@ import org.kesler.simplereg.logic.Reception;
 *
 */
 public class MainView extends JFrame {
-	public static String LOGIN_COMMAND = "login";
-	public static String NEW_RECEPTION_COMMAND = "newReception";
-	public static String UPDATE_RECEPTIONS_COMMAND = "updateReceptions";
-	public static String OPEN_STATISTIC_COMMAND = "statistic";
-	public static String OPEN_APPLICATORS_COMMAND = "applicators";
-	public static String EXIT_COMMAND = "exit";
+
 
 	private MainViewController controller = null;
 	private MainViewReceptionsTableModel tableModel = null;
-	protected Action loginAction,
-					newReceptionAction, 
-					updateReceptionsAction,
-					statisticAction,
-					applicatorsAction,
-					exitAction;
+	private JLabel currentOperatorLabel;
+	private List<Action> actions;
+
+	private List<MainViewListener> listeners;
+
 
 	public MainView(MainViewController controller) {
 		super("Регистрация заявителей в Росреестре");
@@ -53,12 +49,29 @@ public class MainView extends JFrame {
 
 		this.tableModel = new MainViewReceptionsTableModel();
 		
-		loginAction = new LoginAction();
-		newReceptionAction = new NewReceptionAction();
-		updateReceptionsAction = new UpdateReceptionsAction();
-		statisticAction = new StatisticAction();
-		applicatorsAction = new ApplicatorsAction();
-		exitAction = new ExitAction();
+		actions = new ArrayList<Action>();
+
+		listeners = new ArrayList<MainViewListener>();
+
+
+		// перебираем все комманды из перечисления
+		for (MainViewCommand command : MainViewCommand.values()) {
+			// Создаем действия с заданным обработчиком
+			Action action = new AbstractAction() {
+				public void actionPerformed(ActionEvent ev) {
+					notifyListeners((MainViewCommand)getValue("MainViewCommand"));
+				}
+			};
+
+			// определяем необходимые параметры
+			action.putValue(Action.NAME, command.getName());
+			action.putValue(Action.ACTION_COMMAND_KEY, command.getCommand());
+			action.putValue("MainViewCommand",command);
+
+			//добавлем в массив
+			actions.add(action);
+		}
+				
 
 		createGUI();
 	}
@@ -71,9 +84,9 @@ public class MainView extends JFrame {
 		JMenu mainMenu = new JMenu("Логин");
 
 		// Пункт меню 
-		JMenuItem loginMenuItem = new JMenuItem(loginAction);
+		JMenuItem loginMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Login));
 		// Пункт меню
-		JMenuItem exitMenuItem = new JMenuItem(exitAction);
+		JMenuItem exitMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Exit));
 
 		// Формируем основное меню
 		mainMenu.add(loginMenuItem);
@@ -82,8 +95,8 @@ public class MainView extends JFrame {
 		// Меню статистики
 		JMenu statisticMenu = new JMenu("Статистика");
 
-		JMenuItem statisticMenuItem = new JMenuItem(statisticAction);
-		JMenuItem applicatorsMenuItem = new JMenuItem(applicatorsAction);
+		JMenuItem statisticMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenStatistic));
+		JMenuItem applicatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenApplicators));
 
 		statisticMenu.add(statisticMenuItem);
 		statisticMenu.add(applicatorsMenuItem);
@@ -91,19 +104,9 @@ public class MainView extends JFrame {
 		// Меню настроек
 		JMenu optionsMenu = new JMenu("Настройки");
 
-		JMenuItem servicesMenuItem = new JMenuItem("Услуги");
-		servicesMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.openServicesView();
-			}
-		});
+		JMenuItem servicesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Services));
 
-		JMenuItem operatorsMenuItem = new JMenuItem("Операторы");
-		operatorsMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.openOperators();
-			}
-		});
+		JMenuItem operatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Operators));
 
 		optionsMenu.add(servicesMenuItem);
 		optionsMenu.add(operatorsMenuItem);
@@ -120,10 +123,14 @@ public class MainView extends JFrame {
 		this.setJMenuBar(menuBar);
 
 		JPanel buttonPanel = new JPanel();
-		JButton newReceptionButton = new JButton(newReceptionAction);
 
-		JButton updateButton = new JButton(updateReceptionsAction);
+		currentOperatorLabel = new JLabel();
 
+		JButton newReceptionButton = new JButton(getActionByCommand(MainViewCommand.NewReception));
+
+		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
+
+		buttonPanel.add(currentOperatorLabel);
 		buttonPanel.add(newReceptionButton);
 		buttonPanel.add(updateButton);
 
@@ -153,7 +160,9 @@ public class MainView extends JFrame {
 		return tableModel;
 	}
 
-
+	public void setCurrentOperatorLabel(String text) {
+		currentOperatorLabel.setText(text);
+	}
 
 	class MainViewReceptionsTableModel extends AbstractTableModel {
 		private List<Reception> receptions;
@@ -215,72 +224,26 @@ public class MainView extends JFrame {
 	}
 
 
-	/// классы Action для вида
-
-	public class LoginAction extends AbstractAction {
-		public LoginAction() {
-			putValue(Action.NAME, "Подключиться");
-			putValue(Action.ACTION_COMMAND_KEY,LOGIN_COMMAND);
+	public Action getActionByCommand(MainViewCommand command) {
+		Action selectedAction = null;
+		for (Action action: actions) {
+			if (command.equals(action.getValue("MainViewCommand"))) {
+				selectedAction = action;
+			}
 		}
 
-		public void actionPerformed(ActionEvent ev) {
-			controller.login();
-		}
+		return selectedAction;
 	}
 
-	public class NewReceptionAction extends AbstractAction {
-		public NewReceptionAction() {
-			putValue(Action.NAME,"Новый прием");
-			putValue(Action.ACTION_COMMAND_KEY, NEW_RECEPTION_COMMAND);
-		}
-		public void actionPerformed(ActionEvent ev) {
-			controller.openReceptionView();			
-		}
+	public void addMainViewListener(MainViewListener listener) {
+		listeners.add(listener);
 	}
 
-	public class UpdateReceptionsAction extends AbstractAction {
-		public UpdateReceptionsAction() {
-			putValue(Action.NAME, "Обновить");
-			putValue(Action.ACTION_COMMAND_KEY, UPDATE_RECEPTIONS_COMMAND);
-		}
-
-		public void actionPerformed(ActionEvent ev) {
-			controller.readReceptions();
-		} 
-	}
-
-	public class StatisticAction extends AbstractAction {
-		public StatisticAction() {
-			putValue(Action.NAME, "Статистика приемов");
-			putValue(Action.ACTION_COMMAND_KEY, OPEN_STATISTIC_COMMAND);
-		}
-
-		public void actionPerformed(ActionEvent ev) {
-			controller.openStatistic();
+	private void notifyListeners(MainViewCommand command) {
+		for (MainViewListener listener : listeners) {
+			listener.performMainViewCommand(command);
 		}
 	}
-
-	public class ApplicatorsAction extends AbstractAction {
-		public ApplicatorsAction() {
-			putValue(Action.NAME, "Заявители");
-			putValue(Action.ACTION_COMMAND_KEY, OPEN_APPLICATORS_COMMAND);
-		}
-
-		public void actionPerformed(ActionEvent ev) {
-			controller.openApplicators();
-		}
-	}
-
-	public class ExitAction extends AbstractAction {
-		public ExitAction() {
-			putValue(Action.NAME,"Выход");
-			putValue(Action.ACTION_COMMAND_KEY, EXIT_COMMAND);
-		}
-		public void actionPerformed(ActionEvent ev) {
-			System.exit(0);
-		}
-	}
-
 
 
 }

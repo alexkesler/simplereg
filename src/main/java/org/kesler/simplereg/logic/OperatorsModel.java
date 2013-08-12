@@ -18,7 +18,6 @@ public class OperatorsModel {
 		if (instance == null) {
 			instance = new OperatorsModel();
 		}
-
 		return instance;
 	}
 
@@ -48,20 +47,8 @@ public class OperatorsModel {
 		 		activeOperators.add(operator);
 		 	}
 		 } 
-
 		 return activeOperators;
-
 	}	
-
-	public void addOperator(Operator operator) {
-		operators.add(operator);
-		try {
-			DAOFactory.getInstance().getOperatorDAO().addOperator(operator);
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка записи оператора в базу данных", JOptionPane.OK_OPTION);	
-			operators.remove(operator);		
-		}
-	}
 
 	public void saveOperators() {
 		try {

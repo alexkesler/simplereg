@@ -165,6 +165,10 @@ class LoginDialog extends JDialog{
 						Arrays.fill(password, '0');
 						loginOk  = true;
 						setVisible(false);
+						JOptionPane.showMessageDialog(null,
+                										"Добро пожаловать, " + operator.getFIO() + "!",
+                										"Добро пожаловать!",
+                										JOptionPane.INFORMATION_MESSAGE);
 					}
 				} else {
 					setVisible(false);

@@ -1,21 +1,53 @@
 package org.kesler.simplereg.gui.main;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.kesler.simplereg.logic.Operator;
 
 public class CurrentOperator {
-	private static Operator operator = null;
+	private static CurrentOperator instance;
+	private Operator operator;
 
-	private CurrentOperator() {}
+	private List<CurrentOperatorListener> listeners;
 
-	public static void setOperator(Operator o) {
-		operator = o;
+	private CurrentOperator() {
+		operator = null;
+		listeners = new ArrayList<CurrentOperatorListener>();
 	}
 
-	public static Operator getOperator() {
+	public void setOperator(Operator o) {
+		operator = o;
+		notifyListeners();
+	}
+
+	public Operator getOperator() {
 		return operator;
 	} 
 
-	public static void resetOperator() {
+	public void resetOperator() {
 		operator = null;
+		notifyListeners();
 	}
+
+
+	public static synchronized CurrentOperator getInstance() {
+		if (instance == null) {
+			instance = new CurrentOperator();
+		}
+		return instance;
+	}
+
+	public void addCurrentOperatorListener(CurrentOperatorListener listener) {
+		listeners.add(listener);
+	}
+
+	private void notifyListeners() {
+		for (CurrentOperatorListener listener: listeners) {
+			listener.currentOperatorChanged(operator);
+		}
+	}
+
+
+
 }

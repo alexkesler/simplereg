@@ -13,7 +13,7 @@ import org.kesler.simplereg.logic.OperatorsModel;
 
 
 
-public class MainViewController {
+public class MainViewController implements MainViewListener, CurrentOperatorListener{
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsModel operatorsModel;
@@ -23,19 +23,80 @@ public class MainViewController {
 		this.receptionsModel = ReceptionsModel.getInstance();
 		this.operatorsModel = OperatorsModel.getInstance();
 
+		CurrentOperator.getInstance().addCurrentOperatorListener(this);
+
 		openMainView();
 	}
 
 	private void openMainView() {
 		mainView = new MainView(this);
+		mainView.addMainViewListener(this);
 		mainView.setVisible(true);
+		setMainViewAccess(null);
+
 	}
 
-	private void setMainViewAccess() {
-		Operator currentOperator = CurrentOperator.getOperator();
-		if (currentOperator != null) {
-			
+
+	public void performMainViewCommand(MainViewCommand command) {
+		switch (command) {
+			case Login: 
+				login();
+				break;
+			case NewReception: 
+				openReceptionView();
+				break;
+			case UpdateReceptions: 
+				readReceptions();
+				break;
+			case OpenStatistic: 
+				openStatistic();
+				break;
+			case OpenApplicators: 
+				openApplicators();
+				break;
+			case Services: 
+				openServicesView();
+				break;
+			case Operators: 
+				openOperators();
+				break;
+
 		}
+	}
+
+
+	private void setMainViewAccess(Operator operator) {
+
+
+		for (MainViewCommand command: MainViewCommand.values()) {
+			mainView.getActionByCommand(command).setEnabled(false);
+		}
+
+		mainView.getActionByCommand(MainViewCommand.Login).setEnabled(true);
+		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
+
+			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
+			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
+			
+
+		if (operator != null) {
+
+			
+			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
+			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
+			
+			if (operator.getIsControler()) {
+				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
+			}
+
+			if (operator.getIsAdmin()) {
+				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
+			}
+
+		} 
+
+
 	}
 
 
@@ -70,12 +131,23 @@ public class MainViewController {
 
 		// делаем проверку на итог - назначаем оператора
 		if (loginDialog.isLoginOk()) {
-			CurrentOperator.setOperator(loginDialog.getOperator());
+			CurrentOperator.getInstance().setOperator(loginDialog.getOperator());
 		} else {
-			CurrentOperator.resetOperator();
+			CurrentOperator.getInstance().resetOperator();
 		}
-			
 		
+	
+	}
+
+	public void currentOperatorChanged(Operator operator) {
+		
+		if (operator != null) {
+			mainView.setCurrentOperatorLabel(operator.getFIO());	
+		} else {
+			mainView.setCurrentOperatorLabel("");
+		}
+
+		setMainViewAccess(operator);
 	}
 
 	public void openStatistic() {
