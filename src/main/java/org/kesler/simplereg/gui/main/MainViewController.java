@@ -68,8 +68,12 @@ public class MainViewController {
 		loginDialog.setLocationRelativeTo(mainView);
 		loginDialog.setVisible(true);
 
-		// сделать проверку на итог - назначить оператора
-		//int value = loginDialog
+		// делаем проверку на итог - назначаем оператора
+		if (loginDialog.isLoginOk()) {
+			CurrentOperator.setOperator(loginDialog.getOperator());
+		} else {
+			CurrentOperator.resetOperator();
+		}
 			
 		
 	}

@@ -34,6 +34,7 @@ class LoginDialog extends JDialog{
 	private JComboBox loginComboBox;
 	private JPasswordField passwordTextField;
 	private JOptionPane optionPane;
+	private boolean loginOk = false;
 
 	private final String bth1String = "Ок";
 	private final String btn2String = "Отмена";
@@ -119,6 +120,10 @@ class LoginDialog extends JDialog{
 		}
 	}
 
+	public boolean isLoginOk() {
+		return loginOk;
+	}
+
 	public Operator getOperator() {
 		return operator;
 	}
@@ -158,6 +163,7 @@ class LoginDialog extends JDialog{
 						passwordTextField.setText(null);
 						Arrays.fill(input,'0');
 						Arrays.fill(password, '0');
+						loginOk  = true;
 						setVisible(false);
 					}
 				} else {
