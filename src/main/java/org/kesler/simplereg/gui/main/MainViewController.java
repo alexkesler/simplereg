@@ -73,11 +73,6 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		}
 
 		mainView.getActionByCommand(MainViewCommand.Login).setEnabled(true);
-		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
-
-			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
-			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
-			
 
 		if (operator != null) {
 
@@ -94,7 +89,10 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
 			}
 
-		} 
+		} else {
+			mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
+			
+		}
 
 
 	}
@@ -144,7 +142,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		if (operator != null) {
 			mainView.setCurrentOperatorLabel(operator.getFIO());	
 		} else {
-			mainView.setCurrentOperatorLabel("");
+			mainView.setCurrentOperatorLabel("Не определено");
 		}
 
 		setMainViewAccess(operator);
