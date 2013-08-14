@@ -322,15 +322,25 @@ public class OperatorsView extends JFrame {
 			fioTextField.setText(operator.getFIO());
 			fioShortTextField.setText(operator.getFIOShort());
 			passwordTextField.setText(operator.getPassword());
+			
 			if (operator.getIsControler()==null) {
 				controlerCheckBox.setSelected(false);
+			} else {
+				controlerCheckBox.setSelected(operator.getIsControler());
 			}
+
 			if (operator.getIsAdmin()==null) {
 				adminCheckBox.setSelected(false);
+			} else {
+				adminCheckBox.setSelected(operator.getIsAdmin());
 			}
+
 			if (operator.getEnabled()==null) {
 				enabledCheckBox.setSelected(true);
+			} else {
+				enabledCheckBox.setSelected(operator.getEnabled());
 			}
+
 		}
 
 

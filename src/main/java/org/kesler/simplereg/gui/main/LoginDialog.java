@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.main;
 
+import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -40,12 +41,11 @@ class LoginDialog extends JDialog{
 	private final String btn2String = "Отмена";
 
 
-	public LoginDialog(List<Operator> operators) {
-
+	public LoginDialog(JFrame frame, List<Operator> operators) {
+		super(frame,"Вход в систему", true);
 		createOptionPane();
 
 		this.setContentPane(optionPane);
-		this.setTitle("Вход в систему");
 		//this.setSize(400,200);
 
 		this.pack();
@@ -64,7 +64,7 @@ class LoginDialog extends JDialog{
 		// при выборе оператора - запоминаем его свойтство
 		loginComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				operator = (Operator) loginComboBox.getSelectedItem();
+				operator = (Operator) (loginComboBox.getSelectedItem());
 			}
 
 		});
@@ -163,7 +163,7 @@ class LoginDialog extends JDialog{
 						passwordTextField.setText(null);
 						Arrays.fill(input,'0');
 						Arrays.fill(password, '0');
-						loginOk  = true;
+						loginOk = true;
 						setVisible(false);
 						JOptionPane.showMessageDialog(null,
                 										"Добро пожаловать, " + operator.getFIO() + "!",

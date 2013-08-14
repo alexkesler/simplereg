@@ -11,10 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Dimension;
+
 import javax.swing.Action;
 
 import java.util.List;
@@ -27,7 +31,6 @@ import org.kesler.simplereg.logic.Reception;
 
 /**
 * Основной вид приложения. Содержит меню и управляющие компоненты для вызова дочерних окон. 
-*
 */
 public class MainView extends JFrame {
 
@@ -122,7 +125,8 @@ public class MainView extends JFrame {
 
 		this.setJMenuBar(menuBar);
 
-		JPanel buttonPanel = new JPanel();
+		Box buttonPanel = new Box(BoxLayout.X_AXIS);
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		currentOperatorLabel = new JLabel();
 
@@ -131,8 +135,11 @@ public class MainView extends JFrame {
 		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
 
 		buttonPanel.add(currentOperatorLabel);
+		buttonPanel.add(Box.createHorizontalGlue());
 		buttonPanel.add(newReceptionButton);
+		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		buttonPanel.add(updateButton);
+		buttonPanel.add(Box.createRigidArea(new Dimension(200,0)));
 
 		// поправляем ширину столбцов, чтобы было покрасивей
 		JTable receptionTable = new JTable(tableModel);

@@ -60,6 +60,8 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			case Operators: 
 				openOperators();
 				break;
+			case Exit:
+				System.exit(0);	
 
 		}
 	}
@@ -73,6 +75,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		}
 
 		mainView.getActionByCommand(MainViewCommand.Login).setEnabled(true);
+		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
 
 		if (operator != null) {
 
@@ -82,15 +85,18 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			
 			if (operator.getIsControler()) {
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 			}
 
 			if (operator.getIsAdmin()) {
+				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
 			}
 
 		} else {
-			mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
+			
 			
 		}
 
@@ -123,7 +129,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		//получаем список действующих операторов
 		List<Operator> operators = operatorsModel.getActiveOperators();
 		// создаем диалог ввода пароля
-		loginDialog = new LoginDialog(operators);
+		loginDialog = new LoginDialog(mainView, operators);
 		loginDialog.setLocationRelativeTo(mainView);
 		loginDialog.setVisible(true);
 
@@ -133,12 +139,10 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		} else {
 			CurrentOperator.getInstance().resetOperator();
 		}
-		
-	
 	}
 
 	public void currentOperatorChanged(Operator operator) {
-		
+
 		if (operator != null) {
 			mainView.setCurrentOperatorLabel(operator.getFIO());	
 		} else {
