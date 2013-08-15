@@ -57,7 +57,7 @@ class ServicesTreeModel implements TreeModel {
 		rootNode = new ServiceTreeNode(new Service("Корневая услуга"));
 
 		for(ServiceTreeNode node : serviceNodes) {
-			if (node.getParent()==null) {
+			if (node.getParent() == null) {
 				node.setParent(rootNode);
 				rootNode.addChild(node);
 			}
