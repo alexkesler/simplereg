@@ -21,7 +21,7 @@ public class ServicesView extends JFrame{
 		createGUI();
 	}
 
-	public void createGUI() {
+	private void createGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		JPanel treePanel = new JPanel(new BorderLayout());
@@ -72,6 +72,9 @@ public class ServicesView extends JFrame{
 
 	}
 
+	/**
+	* Возвращает модель дерева услуг, привязанную к виду 
+	*/
 	public ServicesTreeModel getServicesTreeModel() {
 		return servicesTreeModel;
 	}

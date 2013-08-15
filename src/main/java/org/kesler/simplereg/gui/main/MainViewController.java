@@ -42,6 +42,9 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			case Login: 
 				login();
 				break;
+			case Logout:
+				logout();
+				break;	
 			case NewReception: 
 				openReceptionView();
 				break;
@@ -69,63 +72,62 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	private void setMainViewAccess(Operator operator) {
 
-
+		// по умолчанию все элементы неактивны
 		for (MainViewCommand command: MainViewCommand.values()) {
 			mainView.getActionByCommand(command).setEnabled(false);
 		}
 
-		mainView.getActionByCommand(MainViewCommand.Login).setEnabled(true);
+		// Элемент Закрыть всегда активен
 		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
 
-		if (operator != null) {
+		
+		if (operator != null) { // оператор назначен
 
-			
+			mainView.getActionByCommand(MainViewCommand.Logout).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
 			
-			if (operator.getIsControler()) {
+			if (operator.getIsControler()) { // для контролера
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 			}
 
-			if (operator.getIsAdmin()) {
+			if (operator.getIsAdmin()) { // для администратора
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
 			}
 
-		} else {
-			
-			
+		} else { // если оператор не назначен
+			mainView.getActionByCommand(MainViewCommand.Login).setEnabled(true);			
 		}
-
 
 	}
 
 
-	public void openReceptionView() {
+	private void openReceptionView() {
 		ReceptionView receptionView = new ReceptionView(this);
 		receptionView.setVisible(true);
 	}
 
-	public void openServicesView() {
+	private void openServicesView() {
 		ServicesViewController servicesViewController = new ServicesViewController();
 		servicesViewController.openView();
 	}
 
 
-	public void addReception(Reception reception) {
+	private void addReception(Reception reception) {
 		receptionsModel.addReception(reception);
 	}
 
-	public void readReceptions() {
+	private void readReceptions() {
 		receptionsModel.readReceptionsFromDB();
 		List<Reception> receptions = receptionsModel.getReceptions();
 		mainView.getTableModel().setReceptions(receptions);
 	}
 
-	public void login() {
+	private void login() {
 		//получаем список действующих операторов
 		List<Operator> operators = operatorsModel.getActiveOperators();
 		// создаем диалог ввода пароля
@@ -141,27 +143,31 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		}
 	}
 
+	private void logout() {
+		CurrentOperator.getInstance().resetOperator();
+	}
+
 	public void currentOperatorChanged(Operator operator) {
 
 		if (operator != null) {
 			mainView.setCurrentOperatorLabel(operator.getFIO());	
 		} else {
-			mainView.setCurrentOperatorLabel("Не определено");
+			mainView.setCurrentOperatorLabel("");
 		}
 
 		setMainViewAccess(operator);
 	}
 
-	public void openStatistic() {
+	private void openStatistic() {
 		//StatisticViewController.getInstance().openView();
 	}
 
-	public void openOperators() {
+	private void openOperators() {
 		OperatorsViewController.getInstance().openView();
 		
 	}
 
-	public void openApplicators() {
+	private void openApplicators() {
 		
 	}
 

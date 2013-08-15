@@ -24,6 +24,9 @@ public class ServicesModel {
 		return instance;
 	}
 
+    /**
+    * Читает услуги из базы данных во внутренний список
+    */
 	public void readServices() {
 
 		try {
@@ -33,6 +36,9 @@ public class ServicesModel {
 		}		
 	}
 
+	/**
+	* Возвращает список всех услуг, сохраненных в внутреннем списке
+	*/
 	public List<Service> getAllServices() {
 		if (services == null) {
 			readServices();
@@ -40,6 +46,9 @@ public class ServicesModel {
 		return services;
 	}
 
+	/**
+	* Добавляет услугу, сохраняет её в базу данных
+	*/
 	public void addService(Service service) {
 		services.add(service);
 		try {

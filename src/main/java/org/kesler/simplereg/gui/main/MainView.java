@@ -89,10 +89,13 @@ public class MainView extends JFrame {
 		// Пункт меню 
 		JMenuItem loginMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Login));
 		// Пункт меню
+		JMenuItem logoutMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Logout));
+		// Пункт меню
 		JMenuItem exitMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Exit));
 
 		// Формируем основное меню
 		mainMenu.add(loginMenuItem);
+		mainMenu.add(logoutMenuItem);
 		mainMenu.add(exitMenuItem);
 
 		// Меню статистики

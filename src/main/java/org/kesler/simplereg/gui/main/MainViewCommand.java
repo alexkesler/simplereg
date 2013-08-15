@@ -1,14 +1,15 @@
 package org.kesler.simplereg.gui.main;
 
 public enum MainViewCommand {
-	Login("Подключиться","login"), 
+	Login("Войти","login"),
+	Logout("Выйти","logout"), 
 	NewReception("Новый прием","newReception"),
 	UpdateReceptions("Обновить","updateReceptions"),
 	OpenStatistic("Статистика","statistic"),
 	OpenApplicators("Заявители", "applicators"),
 	Services("Услуги", "services"),
 	Operators("Операторы", "operators"),
-	Exit("Выйти","exit");
+	Exit("Закрыть","exit");
 
 
 	private String name;
