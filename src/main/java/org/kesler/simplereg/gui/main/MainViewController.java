@@ -9,6 +9,7 @@ import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.gui.services.ServicesViewController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
+import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.logic.OperatorsModel;
 
 
@@ -159,7 +160,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	private void openStatistic() {
-		//StatisticViewController.getInstance().openView();
+		StatisticViewController.getInstance().openView();
 	}
 
 	private void openOperators() {

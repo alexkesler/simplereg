@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 
 public class StatisticView extends JFrame {
@@ -25,13 +26,19 @@ public class StatisticView extends JFrame {
 		JPanel filterPanel = new JPanel();
 
 		JPanel tablePanel = new JPanel(new BorderLayout());
+		tablePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
 		JTable statisticTable = new JTable();
 		JScrollPane tableScrollPane = new JScrollPane(statisticTable);
-
+		tablePanel.add(tableScrollPane);
 
 
 		JPanel buttonPanel = new JPanel();
+
+
+		mainPanel.add(filterPanel);
+		mainPanel.add(tablePanel);
+		mainPanel.add(buttonPanel);
 
 		this.setSize(500,500);
 

@@ -82,7 +82,7 @@ public class ReceptionView extends JFrame {
 		JButton serviceSelectButton = new JButton("Выбрать");
 		serviceSelectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openServicesView();
+//				controller.openServicesView();
 			}
 		});
 		c.fill = GridBagConstraints.NONE;

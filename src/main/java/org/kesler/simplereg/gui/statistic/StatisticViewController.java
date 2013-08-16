@@ -7,7 +7,7 @@ public class StatisticViewController {
 	private StatisticViewController() {
 		view = new StatisticView();
 	}
-
+	
 	public static synchronized StatisticViewController getInstance() {
 		if (instance == null) {
 			instance = new StatisticViewController();
