@@ -1,5 +1,8 @@
 package org.kesler.simplereg.gui.main;
 
+/**
+* Задает перечень команд для основного окна программы
+*/
 public enum MainViewCommand {
 	Login("Войти","login"),
 	Logout("Выйти","logout"), 
@@ -9,6 +12,7 @@ public enum MainViewCommand {
 	OpenApplicators("Заявители", "applicators"),
 	Services("Услуги", "services"),
 	Operators("Операторы", "operators"),
+	Options("Настройки", "options"),
 	Exit("Закрыть","exit");
 
 

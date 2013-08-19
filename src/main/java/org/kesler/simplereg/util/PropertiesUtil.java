@@ -1,0 +1,97 @@
+package org.kesler.simplereg.util;
+
+import java.util.Properties;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import javax.swing.JOptionPane;
+
+public class PropertiesUtil {
+
+	private static final String fileName = "init.properties";
+	private static String dirSeparator = System.getProperty("file.separator");
+
+	private static Properties properties = null;
+
+	public static void readProperties() {
+
+		File currentDir = new File(".");
+		FileInputStream fis = null;
+		try {			
+			String filePath = currentDir.getCanonicalPath() + dirSeparator + fileName;
+
+			fis = new FileInputStream(filePath);
+
+			properties.load(fis);
+
+		} catch (FileNotFoundException fnfe) {
+			JOptionPane.showMessageDialog(null,
+									"Файл не найден. Будут применены настройки по умолчанию. \nПроведите корректную настройку приложения.",
+									"Файл не найден",
+									JOptionPane.ERROR_MESSAGE);
+			setDefaultOptions();
+		} catch (IOException ioe) {
+			JOptionPane.showMessageDialog(null,
+									ioe.toString(),
+									"Ошибка ввода-вывода",
+									JOptionPane.ERROR_MESSAGE);
+		} finally {
+			try {
+				fis.close();
+			} catch (IOException ioe) {
+				JOptionPane.showMessageDialog(null,
+									ioe.toString(),
+									"Ошибка ввода-вывода",
+									JOptionPane.ERROR_MESSAGE);
+				
+			}
+		}
+	}
+
+	public static Properties getProperties() {
+		if (properties == null) {
+			readProperties();
+		}
+		return properties;
+	}
+
+	private static setDefaultOptions() {
+		properties = new Properties();
+		properties.setProperty("db.user","oper");
+		properties.setProperty("db.password", "qwerty123");
+		properties.setProperty("db.server","localhost");
+	}
+
+	public static void saveProperties() {
+
+		File currentDir = new File(".");
+		FileOutputStream fos = null;
+		try {			
+			String filePath = currentDir.getCanonicalPath() + dirSeparator + fileName;
+
+			fos = new FileOutputStream(filePath);
+
+			properties.store(fos,"blanc");
+
+		} catch (IOException ioe) {
+			JOptionPane.showMessageDialog(null,
+										ioe.getMessage(),
+										"Ошибка ввода-вывода",
+										JOptionPane.ERROR_MESSAGE);
+		} finally {
+			try {
+				fos.close();
+			} catch (IOException ioe) {
+				JOptionPane.showMessageDialog(null,
+									ioe.toString(),
+									"Ошибка ввода-вывода",
+									JOptionPane.ERROR_MESSAGE);				
+			}
+			
+		}
+
+	}
+
+}

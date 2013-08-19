@@ -13,31 +13,49 @@ import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.logic.OperatorsModel;
 
 
-
+/**
+* Управляет основным окном приложения
+*/
 public class MainViewController implements MainViewListener, CurrentOperatorListener{
+	private static MainViewController instance;
+
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsModel operatorsModel;
 	private LoginDialog loginDialog;
 
-	public MainViewController() {
+	private MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
 		this.operatorsModel = OperatorsModel.getInstance();
-
-		CurrentOperator.getInstance().addCurrentOperatorListener(this);
-
-		openMainView();
-	}
-
-	private void openMainView() {
+		
 		mainView = new MainView(this);
 		mainView.addMainViewListener(this);
-		mainView.setVisible(true);
-		setMainViewAccess(null);
-
+		
+		CurrentOperator.getInstance().addCurrentOperatorListener(this);
 	}
 
+	/**
+	* Реализует паттерн Одиночка
+	*/
+	public static synchronized MainViewController getInstance() {
+		if (instance == null) {
+			instance = new MainViewController();
+		}
+		return instance;
+	}
 
+	/**
+	* Открывает основное окно приложения
+	*/
+	public void openMainView() {
+		mainView.setVisible(true);
+		setMainViewAccess(null);
+	}
+
+	/**
+	* Обрабатывает команды основного вида, определенные в классе {@link org.kesler.simplereg.gui.main.MainViewCommand}
+	*/
+	@Override
 	public void performMainViewCommand(MainViewCommand command) {
 		switch (command) {
 			case Login: 
@@ -63,6 +81,9 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 				break;
 			case Operators: 
 				openOperators();
+				break;
+			case Options:	
+				openOptions();
 				break;
 			case Exit:
 				System.exit(0);	
@@ -98,6 +119,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.Options).setEnabled(true);
 			}
 
 		} else { // если оператор не назначен
@@ -116,7 +138,6 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		ServicesViewController servicesViewController = new ServicesViewController();
 		servicesViewController.openView();
 	}
-
 
 	private void addReception(Reception reception) {
 		receptionsModel.addReception(reception);
@@ -148,6 +169,27 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		CurrentOperator.getInstance().resetOperator();
 	}
 
+	private void openStatistic() {
+		StatisticViewController.getInstance().openView();
+	}
+
+	private void openOperators() {
+		OperatorsViewController.getInstance().openView();		
+	}
+
+	private void openApplicators() {
+		
+	}
+
+	private void openOptions() {
+
+	}
+
+
+	/**
+	* Обрабатывет событие смены оператора
+	*/
+	@Override
 	public void currentOperatorChanged(Operator operator) {
 
 		if (operator != null) {
@@ -157,19 +199,6 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		}
 
 		setMainViewAccess(operator);
-	}
-
-	private void openStatistic() {
-		StatisticViewController.getInstance().openView();
-	}
-
-	private void openOperators() {
-		OperatorsViewController.getInstance().openView();
-		
-	}
-
-	private void openApplicators() {
-		
 	}
 
 }

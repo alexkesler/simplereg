@@ -114,8 +114,11 @@ public class MainView extends JFrame {
 
 		JMenuItem operatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Operators));
 
+		JMenuItem optionsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Options));
+
 		optionsMenu.add(servicesMenuItem);
 		optionsMenu.add(operatorsMenuItem);
+		optionsMenu.add(optionsMenuItem);
 
 		// Меню О программе
 		JMenu aboutMenu = new JMenu("О программе");
