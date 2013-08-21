@@ -28,7 +28,8 @@ public class PropertiesUtil {
 
 		} catch (FileNotFoundException fnfe) {
 			JOptionPane.showMessageDialog(null,
-									"Файл не найден. Будут применены настройки по умолчанию. \nПроведите корректную настройку приложения.",
+									"Файл настроек не найден. Будут применены настройки по умолчанию."+
+									"\nПроведите корректную настройку приложения.",
 									"Файл не найден",
 									JOptionPane.ERROR_MESSAGE);
 			setDefaultOptions();
@@ -39,7 +40,9 @@ public class PropertiesUtil {
 									JOptionPane.ERROR_MESSAGE);
 		} finally {
 			try {
-				fis.close();
+				if (fis != null) {
+					fis.close();				
+				}					
 			} catch (IOException ioe) {
 				JOptionPane.showMessageDialog(null,
 									ioe.toString(),
@@ -57,11 +60,12 @@ public class PropertiesUtil {
 		return properties;
 	}
 
-	private static setDefaultOptions() {
+	private static void setDefaultOptions() {
 		properties = new Properties();
 		properties.setProperty("db.user","oper");
 		properties.setProperty("db.password", "qwerty123");
 		properties.setProperty("db.server","localhost");
+		properties.setProperty("db.driver", "h2");
 	}
 
 	public static void saveProperties() {
@@ -82,7 +86,9 @@ public class PropertiesUtil {
 										JOptionPane.ERROR_MESSAGE);
 		} finally {
 			try {
-				fos.close();
+				if (fos != null) {
+					fos.close();
+				}
 			} catch (IOException ioe) {
 				JOptionPane.showMessageDialog(null,
 									ioe.toString(),

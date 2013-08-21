@@ -101,6 +101,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 		// Элемент Закрыть всегда активен
 		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
+		mainView.getActionByCommand(MainViewCommand.Options).setEnabled(true);
 
 		
 		if (operator != null) { // оператор назначен
@@ -119,7 +120,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.Options).setEnabled(true);
+				
 			}
 
 		} else { // если оператор не назначен
