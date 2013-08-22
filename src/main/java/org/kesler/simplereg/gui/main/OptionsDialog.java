@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.main;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.BorderFactory;
 import java.util.Properties;
 
 import java.awt.GridBagLayout;
@@ -20,7 +21,7 @@ public class OptionsDialog extends JDialog {
 
 	private void createOptionsPane() {
 		JPanel dataPanel = new JPanel(new GridBagLayout());
-		dataPanel.setBorder();
+		dataPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
 	}
 
