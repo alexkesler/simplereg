@@ -67,7 +67,7 @@ public class PropertiesUtil {
 
 
 	/**
-	* Возвращает настройки приложения в классе {@link: java.util.Properties}
+	* Возвращает настройки приложения в классе {@link java.util.Properties}
 	*/
 	public static Properties getProperties() {
 		if (properties == null) {

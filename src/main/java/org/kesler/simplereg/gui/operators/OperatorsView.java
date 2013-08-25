@@ -178,7 +178,7 @@ public class OperatorsView extends JFrame {
 		// добавляем на панель таблицы
 		tablePanel.add(BorderLayout.CENTER, tableScrollPane);
 		tablePanel.add(BorderLayout.SOUTH, tableButtonPanel);
-		tablePanel.setBorder(BorderFactory.createSoftBevelBorder(BevelBorder.LOWERED));
+		tablePanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 		
 
 
