@@ -98,6 +98,12 @@
       <artifactId>hibernate-core</artifactId>
       <version>4.2.2.Final</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.miglayout</groupId>
+      <artifactId>miglayout</artifactId>
+      <version>3.7.4</version>
+    </dependency>  
             
   </dependencies>
 </project>

@@ -34,8 +34,9 @@ class LoginDialog extends JDialog{
 
 	private JComboBox loginComboBox;
 	private JPasswordField passwordTextField;
-	private JOptionPane optionPane;
 	private boolean loginOk = false;
+
+	private JOptionPane optionPane;
 
 	private final String bth1String = "Ок";
 	private final String btn2String = "Отмена";
@@ -43,17 +44,17 @@ class LoginDialog extends JDialog{
 
 	public LoginDialog(JFrame frame, List<Operator> operators) {
 		super(frame,"Вход в систему", true);
-		createOptionPane();
+		optionPane = createOptionPane();
 
 		this.setContentPane(optionPane);
-		//this.setSize(400,200);
+		this.setLocationRelativeTo(frame);
 
 		this.pack();
 		setOperators(operators);
 
 	}
 
-	private void createOptionPane() {
+	private JOptionPane createOptionPane() {
 
 		JPanel dataPanel = new JPanel(new GridBagLayout());
 		dataPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -109,7 +110,9 @@ class LoginDialog extends JDialog{
 									new String[] {bth1String, btn2String},
 									bth1String);
 		
-		optionPane.addPropertyChangeListener(new LoginPropretyChangeListener());
+		optionPane.addPropertyChangeListener(new LoginPropertyChangeListener());
+
+		return optionPane;
 
 	}
 
@@ -133,13 +136,14 @@ class LoginDialog extends JDialog{
 	}
 
 
-	class LoginPropretyChangeListener implements PropertyChangeListener {
+	class LoginPropertyChangeListener implements PropertyChangeListener {
 		public void propertyChange(PropertyChangeEvent ev) {
 			String prop = ev.getPropertyName();
+			//JOptionPane optionPane = (JOptionPane)(ev.getSource());
 
-			if ((ev.getSource() == optionPane)
-				&& (JOptionPane.VALUE_PROPERTY.equals(prop) ||
-					(JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)))) {
+			if (JOptionPane.VALUE_PROPERTY.equals(prop) ||
+				JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)) {
+				
 				Object value = optionPane.getValue();
 
 				if (value == JOptionPane.UNINITIALIZED_VALUE) {

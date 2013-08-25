@@ -13,8 +13,12 @@ public class PropertiesUtil {
 	private static final String fileName = "init.properties";
 	private static String dirSeparator = System.getProperty("file.separator");
 
-	private static Properties properties = null;
+	private static Properties properties = new Properties();
 
+
+	/**
+	* Считывает настройки приложения из файла
+	*/
 	public static void readProperties() {
 
 		File currentDir = new File(".");
@@ -24,7 +28,7 @@ public class PropertiesUtil {
 
 			fis = new FileInputStream(filePath);
 
-			properties.load(fis);
+			properties.loadFromXML(fis);
 
 		} catch (FileNotFoundException fnfe) {
 			JOptionPane.showMessageDialog(null,
@@ -53,6 +57,18 @@ public class PropertiesUtil {
 		}
 	}
 
+	private static void setDefaultOptions() {
+		properties = new Properties();
+		properties.setProperty("db.server","localhost");
+		properties.setProperty("db.driver", "h2");
+		properties.setProperty("db.user","oper");
+		properties.setProperty("db.password", "qwerty123");
+	}
+
+
+	/**
+	* Возвращает настройки приложения в классе {@link: java.util.Properties}
+	*/
 	public static Properties getProperties() {
 		if (properties == null) {
 			readProperties();
@@ -60,14 +76,10 @@ public class PropertiesUtil {
 		return properties;
 	}
 
-	private static void setDefaultOptions() {
-		properties = new Properties();
-		properties.setProperty("db.user","oper");
-		properties.setProperty("db.password", "qwerty123");
-		properties.setProperty("db.server","localhost");
-		properties.setProperty("db.driver", "h2");
-	}
 
+	/**
+	* Сохраняет настройки приложения в файл
+	*/
 	public static void saveProperties() {
 
 		File currentDir = new File(".");
@@ -77,7 +89,7 @@ public class PropertiesUtil {
 
 			fos = new FileOutputStream(filePath);
 
-			properties.store(fos,"blanc");
+			properties.storeToXML(fos,"blanc");
 
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(null,
