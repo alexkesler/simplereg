@@ -3,6 +3,8 @@ package org.kesler.simplereg.dao;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.sql.SQLException;
 
 import org.kesler.simplereg.logic.Operator;
@@ -10,38 +12,45 @@ import org.kesler.simplereg.logic.Operator;
 public class TestOperatorDAO {
 
 	@Test
-	public void testAddRead() {
-		Operator o = new Operator();
+	public void testSaveOperators() {
+		Operator operator = new Operator();
 
+		// Создаем оператора
 		String initFIO = "Операторов Оператор";
-		o.setFIO(initFIO);
+		operator.setFIO(initFIO);
+		// Определяем для него статус - новый оператор
+		operator.setState(Operator.NEW_STATE);
 
-		// сохраняем
+		List<Operator> operators = new ArrayList<Operator>();
+		operators.add(operator);
+
+		// Сохраняем коллекцию операторов
 		try {
-			DAOFactory.getInstance().getOperatorDAO().addOperator(o);
+			DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
 		} catch (SQLException sqle) {
 			System.out.println("DB Error: " + sqle.getMessage());									
 		}
 
 		// Проверяем получение id при сохранении
-		Long id = o.getId();
+		Long id = operator.getId();
 		assertNotNull("Writen Operator dont get id", id);
 
-		// проверяем чтение 
-		Operator resultOperator = null;
+		// Проверяем измемение статуса при сохранении
+		int resultState = operator.getState();
+		assertEquals("Operator saved, but state not changed",resultState,Operator.SAVED_STATE);
+
+
+		// Читаем список операторов 
+		List<Operator> resultOperators = null;
 		try {
-			resultOperator = DAOFactory.getInstance().getOperatorDAO().getOperatorById(id);
+			resultOperators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
 		} catch (SQLException sqle) {
 			System.out.println("DB Error: " + sqle.getMessage());												
 		}
 		
-		assertNotNull("Readed operator is null", resultOperator);
+			
+		// Необходимо добавить проверку на чтение списка операторов из БД
 
-		// проверяем соответствие одного из полей
-
-		String resultFIO = "";
-		resultFIO = resultOperator.getFIO();
-		assertEquals("Readed fio not equals writen", initFIO, resultFIO);
 
 	}
 

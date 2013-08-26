@@ -12,7 +12,7 @@ public class TestOperator {
 		assertEquals("Wronf FIO", "Adam Smith", resultString);
 		resultString = operator.getFIOShort();
 		assertEquals("Wrong FIO Short", "A.Smith",resultString);
-		boolean resultBoolean = operator.getEnabled();
+		Boolean resultBoolean = operator.getEnabled();
 		assertTrue("Wrong enabled",resultBoolean);
 		resultString = operator.getPassword();
 		assertEquals("Wrong password", "multipass", resultString);

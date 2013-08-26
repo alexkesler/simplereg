@@ -10,7 +10,7 @@ public class TestReception {
 	public void testCreate() {
 		Date date = new Date();
 		Service service = new Service("Service 1");
-		Applicator applicator = new Applicator("Вовка");
+		Applicator applicator = new Applicator("Иван", "Иванович", "Иванов");
 		Operator operator = new Operator("Adam Smith", "A.Smith", "multipass", false, false, true);
 		Reception reception = new Reception(service, applicator, operator, date);
 		Service resultService = reception.getService();
