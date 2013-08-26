@@ -1,6 +1,7 @@
 package org.kesler.simplereg.logic;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
@@ -8,10 +9,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Proxy;
 
 import org.kesler.simplereg.dao.AbstractEntity;
+import org.kesler.simplereg.logic.applicator.Applicator;
 
 @Entity
 @Proxy(lazy=false)
@@ -22,10 +25,13 @@ public class Reception extends AbstractEntity{
 	@JoinColumn(name="ServiceID")
 	private Service service;
 
-	@ManyToOne
-	@JoinColumn(name="ApplicatorID")
-	private Applicator applicator;
+	// @ManyToOne
+	// @JoinColumn(name="ApplicatorID")
+	// private Applicator applicator;
 	
+	@OneToMany
+	private List<Applicator> applicators;
+
 	@ManyToOne
 	@JoinColumn(name="OperatorID")
 	private Operator operator;
@@ -75,8 +81,8 @@ public class Reception extends AbstractEntity{
 		return applicatorFIO;
 	}
 
-	public void setApplicator(Applicator applicator) {
-		this.applicator = applicator;
+	public void setApplicators(List<Applicator> applicators) {
+		this.applicators = applicators;
 	}
 
 	public Operator getOperator() {
