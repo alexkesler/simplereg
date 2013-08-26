@@ -17,10 +17,12 @@ import java.util.ArrayList;
 
 import net.miginfocom.swing.MigLayout;
 
-
-
 import org.kesler.simplereg.util.PropertiesUtil;
 
+
+/**
+* Диалог настроек приложения
+*/
 public class OptionsDialog extends JDialog {
 	private Properties properties;
 
@@ -30,6 +32,10 @@ public class OptionsDialog extends JDialog {
 	private String btn1String = "Сохранить";
 	private String btn2String = "Отмена";
 
+	/**
+	* Создает модальный диалог  настроек программы
+	* @param frame ссылка на родительское окно
+	*/
 	public OptionsDialog(JFrame frame) {
 		super(frame, "Параметры приложения", true);
 		properties = PropertiesUtil.getProperties();
@@ -40,6 +46,13 @@ public class OptionsDialog extends JDialog {
 		this.pack();
 
 
+	}
+
+	/**
+	* Открывает модальный диалог (ожидает закрытия окна диалога)
+	*/
+	public void showDialog() {
+		setVisible(true);
 	}
 
 	private JOptionPane createOptionPane() {
@@ -79,7 +92,8 @@ public class OptionsDialog extends JDialog {
 
 	}
 
-	class OptionsPropertyChangeListener implements PropertyChangeListener {
+	private class OptionsPropertyChangeListener implements PropertyChangeListener {
+		
 		public void propertyChange(PropertyChangeEvent ev) {
 			String prop = ev.getPropertyName();
 			JOptionPane optionPane = (JOptionPane)(ev.getSource());

@@ -28,6 +28,11 @@ import java.util.Arrays;
 
 import org.kesler.simplereg.logic.Operator;
 
+
+/**
+* Диалог входа в систему
+* 
+*/
 class LoginDialog extends JDialog{
 
 	private Operator operator;
@@ -41,7 +46,11 @@ class LoginDialog extends JDialog{
 	private final String bth1String = "Ок";
 	private final String btn2String = "Отмена";
 
-
+	/**
+	* Создает модальный диалог входа в систему
+	* @param frame ссылка на родительское окно
+	* @param operators список операторов 
+	*/
 	public LoginDialog(JFrame frame, List<Operator> operators) {
 		super(frame,"Вход в систему", true);
 		optionPane = createOptionPane();
@@ -123,20 +132,34 @@ class LoginDialog extends JDialog{
 		}
 	}
 
+	/**
+	* Открывает модальный диалог (ожидает закрытия окна диалога)
+	*/
+	public void showDialog() {
+		setVisible(true);
+	}
+
+
+	/**
+	* Возвращает флаг удачного входа
+	*/
 	public boolean isLoginOk() {
 		return loginOk;
 	}
 
+	/**
+	* Возвращает выбранного оператора
+	*/
 	public Operator getOperator() {
 		return operator;
 	}
 
-	public char[] getPassword() {
-		return passwordTextField.getPassword();
-	}
+	// public char[] getPassword() {
+	// 	return passwordTextField.getPassword();
+	// }
 
 
-	class LoginPropertyChangeListener implements PropertyChangeListener {
+	private class LoginPropertyChangeListener implements PropertyChangeListener {
 		public void propertyChange(PropertyChangeEvent ev) {
 			String prop = ev.getPropertyName();
 			//JOptionPane optionPane = (JOptionPane)(ev.getSource());
@@ -154,7 +177,7 @@ class LoginDialog extends JDialog{
 
 				if (bth1String.equals(value)) {
 					char[] password = operator.getPassword().toCharArray();
-					char[] input = getPassword();
+					char[] input = passwordTextField.getPassword();
 					if (input.length != password.length || !Arrays.equals(input, password)) {
 						JOptionPane.showMessageDialog(null,
                 										"Неправильный пароль. Попробуйте еще раз.",

@@ -35,7 +35,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	/**
-	* Реализует паттерн Одиночка
+	* Всегда возвращает один и тот же экземпляр контроллера (паттерн Одиночка)
 	*/
 	public static synchronized MainViewController getInstance() {
 		if (instance == null) {
@@ -156,7 +156,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 		// создаем диалог ввода пароля
 		loginDialog = new LoginDialog(mainView, operators);
 		
-		loginDialog.setVisible(true);
+		loginDialog.showDialog();
 
 		// делаем проверку на итог - назначаем оператора
 		if (loginDialog.isLoginOk()) {
@@ -184,7 +184,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	private void openOptions() {
 		OptionsDialog optionsDialog = new OptionsDialog(mainView);
-		optionsDialog.setVisible(true);
+		optionsDialog.showDialog();
 	}
 
 
