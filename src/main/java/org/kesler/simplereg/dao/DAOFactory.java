@@ -1,15 +1,17 @@
 package org.kesler.simplereg.dao;
 
 import org.kesler.simplereg.dao.impl.ServiceDAOImpl;
-import org.kesler.simplereg.dao.impl.ApplicatorDAOImpl;
 import org.kesler.simplereg.dao.impl.OperatorDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
+import org.kesler.simplereg.dao.impl.FLDAOImpl;
+import org.kesler.simplereg.dao.impl.ULDAOImpl;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
-	private static ApplicatorDAO applicatorDAO = null;
 	private static OperatorDAO operatorDAO = null;
 	private static ReceptionDAO receptionDAO = null;
+	private static FLDAO flDAO = null;
+	private static ULDAO ulDAO = null;
 	private static DAOFactory instance = null;
 
 	public static synchronized DAOFactory getInstance() {
@@ -26,12 +28,6 @@ public class DAOFactory {
 		return serviceDAO;
 	}
 
-	public ApplicatorDAO getApplicatorDAO() {
-		if (applicatorDAO == null) {
-			applicatorDAO = new ApplicatorDAOImpl();
-		}
-		return applicatorDAO;
-	}
 
 	public OperatorDAO getOperatorDAO() {
 		if (operatorDAO == null) {
@@ -47,5 +43,18 @@ public class DAOFactory {
 		return receptionDAO;
 	}
 
+	public FLDAO getFLDAO() {
+		if (flDAO == null) {
+			flDAO = new FLDAOImpl();
+		}
+		return flDAO;
+	}
+
+	public ULDAO getULDAO() {
+		if (ulDAO == null) {
+			ulDAO = new ULDAOImpl();
+		}
+		return ulDAO;
+	}
 
 }

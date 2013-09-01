@@ -10,11 +10,18 @@ import javax.persistence.TemporalType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Proxy;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.applicator.Applicator;
+
+/**
+* Моделирует сущность приема заявителей
+*/
 
 @Entity
 @Proxy(lazy=false)
@@ -29,7 +36,8 @@ public class Reception extends AbstractEntity{
 	// @JoinColumn(name="ApplicatorID")
 	// private Applicator applicator;
 	
-	@OneToMany
+	@OneToMany (fetch = FetchType.EAGER, mappedBy="reception")
+	@Cascade ({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<Applicator> applicators;
 
 	@ManyToOne
@@ -44,9 +52,9 @@ public class Reception extends AbstractEntity{
 		// for Hibernate
 	}
 
-	public Reception(Service service, Applicator applicator, Operator operator, Date openDate) {
+	public Reception(Service service, List<Applicator> applicators, Operator operator, Date openDate) {
 		this.service = service;
-		this.applicator = applicator;
+		this.applicators = applicators;
 		this.operator = operator;
 		this.openDate = openDate;
 	}
@@ -69,17 +77,17 @@ public class Reception extends AbstractEntity{
 
 	}
 
-	public Applicator getApplicator() {
-		return applicator;
+	public List<Applicator> getApplicators() {
+		return applicators;
 	}
 
-	public String getApplicatorFIO() {
-		String applicatorFIO = "Заявитель не определен";
-		if (applicator!=null) {
-			applicatorFIO = applicator.getFIO();
-		}
-		return applicatorFIO;
-	}
+	// public String getApplicatorFIO() {
+	// 	String applicatorFIO = "Заявитель не определен";
+	// 	if (applicator!=null) {
+	// 		applicatorFIO = applicator.getFIO();
+	// 	}
+	// 	return applicatorFIO;
+	// }
 
 	public void setApplicators(List<Applicator> applicators) {
 		this.applicators = applicators;
@@ -95,6 +103,15 @@ public class Reception extends AbstractEntity{
 			operatorFIO = operator.getFIO();
 		}
 		return operatorFIO;
+	}
+
+	/**
+	* Возвращает строку содержащую список заявителей по данному делу
+	*/
+	public String getApplicatorsNames() {
+		String names = "";
+
+		return names;
 	}
 
 	public void setOperator(Operator operator) {

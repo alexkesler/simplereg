@@ -223,7 +223,7 @@ public class MainView extends JFrame {
 					break;
 					case 1: value = dateFormat.format(reception.getOpenDate());
 					break;
-					case 2: value = reception.getApplicatorFIO();
+					case 2: value = reception.getApplicatorsNames();
 					break;
 					case 3: value = reception.getServiceName();
 					break;

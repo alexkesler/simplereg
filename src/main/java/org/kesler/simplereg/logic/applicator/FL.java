@@ -1,8 +1,22 @@
 package org.kesler.simplereg.logic.applicator;
 
-public class FL {
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+
+import org.kesler.simplereg.dao.AbstractEntity;
+
+@Entity
+@Table(name="FL")
+public class FL extends AbstractEntity{
+	
+	@Column (name = "FirstName")
 	private String firstName;
+
+	@Column (name = "ParentName")
 	private String parentName;
+
+	@Column (name = "SurName")
 	private String surName;
 
 	public FL () {}

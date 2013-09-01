@@ -41,15 +41,11 @@ public class ReceptionsModel {
 	public void addReception(Reception reception) {
 		receptions.add(reception);
 		try {
-			DAOFactory.getInstance().getApplicatorDAO().addApplicator(reception.getApplicator());
+			//DAOFactory.getInstance().getApplicatorDAO().addApplicator(reception.getApplicator());
 			DAOFactory.getInstance().getReceptionDAO().addReception(reception);
 		} catch (SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка записи в базу данных", JOptionPane.OK_OPTION);
 		}
 	}
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 5b0b6f288f750b8271ae8980518be06e1ef33166

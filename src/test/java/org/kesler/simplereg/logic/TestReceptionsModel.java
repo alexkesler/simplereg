@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.kesler.simplereg.logic.applicator.Applicator;
+
 public class TestReceptionsModel {
 
 	// @Test
@@ -30,13 +32,13 @@ public class TestReceptionsModel {
 	public void testAddReception() {
 		// готовим данные для приема
 		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
-		Service service = new Service("Simple service");
-		Applicator applicator = new Applicator("Петр", "Петрович", "Петров");
-		Operator operator = new Operator("Операторов оператор");
+		Service service = new Service();
+		List<Applicator> applicators = new ArrayList<Applicator>();
+		Operator operator = new Operator();
 		Date date = new Date();
 		Reception reception = new Reception();
 		reception.setService(service);
-		reception.setApplicator(applicator);
+		reception.setApplicators(applicators);
 		reception.setOperator(operator);
 		reception.setOpenDate(date);
 		// добавляем

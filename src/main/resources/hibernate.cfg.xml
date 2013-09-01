@@ -12,8 +12,14 @@
 		<property name="show_sql">true</property> 
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 
+		<property name="hbm2ddl.auto">update</property>
+
 		<mapping class="org.kesler.simplereg.logic.Service" />
-		<mapping class="org.kesler.simplereg.logic.Applicator" />
+		<mapping class="org.kesler.simplereg.logic.applicator.FL" />
+		<mapping class="org.kesler.simplereg.logic.applicator.UL" />		
+		<mapping class="org.kesler.simplereg.logic.applicator.Applicator" />		
+		<mapping class="org.kesler.simplereg.logic.applicator.ApplicatorFL" />
+		<mapping class="org.kesler.simplereg.logic.applicator.ApplicatorUL" />
 		<mapping class="org.kesler.simplereg.logic.Operator" />
 		<mapping class="org.kesler.simplereg.logic.Reception" />
 
