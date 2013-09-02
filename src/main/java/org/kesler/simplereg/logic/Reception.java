@@ -81,14 +81,6 @@ public class Reception extends AbstractEntity{
 		return applicators;
 	}
 
-	// public String getApplicatorFIO() {
-	// 	String applicatorFIO = "Заявитель не определен";
-	// 	if (applicator!=null) {
-	// 		applicatorFIO = applicator.getFIO();
-	// 	}
-	// 	return applicatorFIO;
-	// }
-
 	public void setApplicators(List<Applicator> applicators) {
 		this.applicators = applicators;
 	}
@@ -97,8 +89,11 @@ public class Reception extends AbstractEntity{
 		return operator;
 	}
 
+	/**
+	* Возвращает ФИО оператора, если оператор не присоединен, возвращает пустую строку
+	*/
 	public String getOperatorFIO() {
-		String operatorFIO = "Оператор не определен";
+		String operatorFIO = "";
 		if (operator!=null) {
 			operatorFIO = operator.getFIO();
 		}
