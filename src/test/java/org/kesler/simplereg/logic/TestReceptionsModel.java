@@ -34,7 +34,7 @@ public class TestReceptionsModel {
 		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
 		Service service = new Service();
 		List<Applicator> applicators = new ArrayList<Applicator>();
-		Operator operator = new Operator();
+		Operator operator = new Operator(); 
 		Date date = new Date();
 		Reception reception = new Reception();
 		reception.setService(service);
@@ -51,7 +51,6 @@ public class TestReceptionsModel {
 
 	}
 
-	@Ignore
 	@Test
 	public void testSaveRead() {
 		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();

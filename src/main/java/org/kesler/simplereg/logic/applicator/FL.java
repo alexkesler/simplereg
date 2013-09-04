@@ -4,10 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 
+import org.hibernate.annotations.Proxy;
+
 import org.kesler.simplereg.dao.AbstractEntity;
 
 @Entity
 @Table(name="FL")
+@Proxy(lazy=false)
 public class FL extends AbstractEntity{
 	
 	@Column (name = "FirstName")

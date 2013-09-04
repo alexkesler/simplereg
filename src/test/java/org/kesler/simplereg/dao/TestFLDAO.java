@@ -50,6 +50,10 @@ public class TestFLDAO {
 
 		DAOFactory.getInstance().getFLDAO().delete(initFL);
 
+		List<FL> list = DAOFactory.getInstance().getFLDAO().getAllFLs();
+
+		assertFalse(list.contains(initFL));
+
 
 	}
 	

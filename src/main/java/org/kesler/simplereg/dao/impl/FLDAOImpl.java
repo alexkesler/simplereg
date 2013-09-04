@@ -100,6 +100,7 @@ public class FLDAOImpl implements FLDAO {
 			session.delete(fl);
 			tx.commit();
 		} catch (HibernateException he) {
+			if (tx != null) tx.rollback();
 			he.printStackTrace();
 		} finally {
 			if (session!=null && session.isOpen()) {
