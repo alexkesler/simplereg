@@ -10,6 +10,9 @@ import javax.persistence.InheritanceType;
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.Reception;
 
+/**
+* Представляет общий интерфейс для разных заявителей, которые могут быть связаны с приемом документов 
+*/
 @Entity
 @Table (name = "Applicators")
 @Inheritance (strategy = InheritanceType.JOINED)

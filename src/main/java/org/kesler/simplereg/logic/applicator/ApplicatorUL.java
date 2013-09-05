@@ -8,6 +8,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.hibernate.annotations.Proxy;
 
+/**
+* Класс представляет заявителя - юр. лица, привязанного к приему документов, включая информацию о представителе  
+*/
 @Entity
 @Table (name = "ApplicatorsUL")
 @PrimaryKeyJoinColumn(name="ID", referencedColumnName="ID")
@@ -43,6 +46,8 @@ public class ApplicatorUL extends Applicator {
 	@Override
 	public String getName() {
 		String name = "";
+
+		if (ul!=null) name += ul.getShortName();
 
 		return name;
 	}

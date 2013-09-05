@@ -8,6 +8,9 @@ import org.hibernate.annotations.Proxy;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 
+/**
+* Класс для физического лица
+*/
 @Entity
 @Table(name="FL")
 @Proxy(lazy=false)
@@ -51,7 +54,7 @@ public class FL extends AbstractEntity{
 	/**
 	* Возвращает фамилию и инициалы
 	*/
-	public String getFIOShort() {
+	public String getShortFIO() {
 		String firstNameShort = firstName.isEmpty()?"":firstName.substring(0,1);
 		String parentNameShort = parentName.isEmpty()?"":parentName.substring(0,1);
 		String fioShort = surName + " " + firstNameShort + "." + parentNameShort + ".";

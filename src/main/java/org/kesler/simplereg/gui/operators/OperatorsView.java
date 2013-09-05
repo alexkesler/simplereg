@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 
+import net.miginfocom.swing.MigLayout;
+
 import org.kesler.simplereg.logic.Operator;
 
 /**
@@ -242,6 +244,11 @@ public class OperatorsView extends JFrame {
 		private Operator operator;
 
 		private JTextField fioTextField;
+
+		private JTextField firstNameTextField;
+		private JTextField parentNameTextField;
+		private JTextField surNameTextField;
+
 		private JTextField fioShortTextField;
 		private JTextField passwordTextField;
 		private JCheckBox controlerCheckBox;
@@ -250,7 +257,7 @@ public class OperatorsView extends JFrame {
 
 
 		public OperatorPanel () {
-			super(new GridBagLayout());
+			super(new MigLayout("wrap 2", "[right][left]", ""));
 			operator = new Operator();
 
 			this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),"Добавить/изменить"));
@@ -258,8 +265,15 @@ public class OperatorsView extends JFrame {
 			JLabel fioLabel = new JLabel("ФИО");
 			fioTextField = new JTextField(20);
 
-			JLabel fioShortLabel = new JLabel("ФИО сокр");
-			fioShortTextField = new JTextField(20);
+			JLabel surNameLabel = new JLabel("Фамилия");
+			surNameTextField = new JTextField(20);
+
+			JLabel firstNameLabel = new JLabel("Имя");
+			firstNameTextField = new JTextField(20);
+
+			JLabel parentNameLabel = new JLabel("Отчество");
+			parentNameTextField = new JTextField(20);
+
 
 			JLabel passwordLabel = new JLabel("Пароль");
 			passwordTextField = new JTextField(20);
@@ -270,45 +284,28 @@ public class OperatorsView extends JFrame {
 
 			enabledCheckBox = new JCheckBox("Действ",true);
 
-			GridBagConstraints c = new GridBagConstraints();
+			// Добавляем элементы на панель 
 
-			c.insets = new Insets(5,5,5,5);
-			c.gridx = 0;
-			c.gridy = 0;
-			this.add(fioLabel,c);
+			this.add(fioLabel);
+			this.add(fioTextField);
 
-			c.gridx = 1;
-			c.gridy = 0;
-			this.add(fioTextField,c);
+			this.add(surNameLabel);
+			this.add(surNameTextField);
 
-			c.gridx = 0;
-			c.gridy = 1;
-			this.add(fioShortLabel,c);
+			this.add(firstNameLabel);
+			this.add(firstNameTextField);
 
-			c.gridx = 1;
-			c.gridy = 1;
-			this.add(fioShortTextField,c);
+			this.add(parentNameLabel);
+			this.add(parentNameTextField);
 
-			c.gridx = 0;
-			c.gridy = 2;
-			this.add(passwordLabel,c);
+			this.add(passwordLabel);
+			this.add(passwordTextField);
 
-			c.gridx = 1;
-			c.gridy = 2;
-			this.add(passwordTextField,c);
+			this.add(controlerCheckBox,"skip 1");
 
-			c.anchor = GridBagConstraints.WEST;
-			c.gridx = 1;
-			c.gridy = 3;
-			this.add(controlerCheckBox,c);
+			this.add(adminCheckBox,"skip 1");
 
-			c.gridx = 1;
-			c.gridy = 4;
-			this.add(adminCheckBox,c);
-
-			c.gridx = 1;
-			c.gridy = 5;
-			this.add(enabledCheckBox,c);
+			this.add(enabledCheckBox,"skip 1");
 
 		}
 
@@ -320,7 +317,9 @@ public class OperatorsView extends JFrame {
 			this.operator = operator;
 
 			fioTextField.setText(operator.getFIO());
-			fioShortTextField.setText(operator.getFIOShort());
+			surNameTextField.setText(operator.getSurName());
+			firstNameTextField.setText(operator.getFirstName());
+			parentNameTextField.setText(operator.getParentName());
 			passwordTextField.setText(operator.getPassword());
 			
 			if (operator.getIsControler()==null) {
@@ -349,7 +348,9 @@ public class OperatorsView extends JFrame {
 		*/
 		public void readOperator() {
 			operator.setFIO(fioTextField.getText());
-			operator.setFIOShort(fioShortTextField.getText());
+			operator.setSurName(surNameTextField.getText());
+			operator.setFirstName(firstNameTextField.getText());
+			operator.setParentName(parentNameTextField.getText());
 			operator.setPassword(passwordTextField.getText());
 			operator.setIsControler(controlerCheckBox.isSelected());
 			operator.setIsAdmin(adminCheckBox.isSelected());

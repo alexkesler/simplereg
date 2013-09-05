@@ -16,7 +16,12 @@ public class Operator extends AbstractEntity{
 	@Column(name="FIO", length=255)
 	private String fio;
 
-	@Column(name="FIOShort", length=50)
+	private String firstName;
+
+	private String parentName;
+
+	private String surName;
+
 	private String fioShort;
 
 	@Column(name="Password", length=50)
@@ -61,11 +66,35 @@ public class Operator extends AbstractEntity{
 		this.fio = fio;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getParentName() {
+		return parentName;
+	}
+
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	} 
+
+	public String getSurName() {
+		return surName;
+	}
+
+	public void setSurName(String surName) {
+		this.surName = surName;
+	}
+
 	public String getFIOShort() {
 		return fioShort;
 	}
 
-	public void setFIOShort(String fioShort) {
+	public void setFIOShort() {
 		this.fioShort = fioShort;
 	}
 

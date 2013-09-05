@@ -8,6 +8,9 @@ import org.hibernate.annotations.Proxy;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 
+/**
+* Класс для юридического лица
+*/
 @Entity
 @Table(name="UL")
 @Proxy(lazy=false)

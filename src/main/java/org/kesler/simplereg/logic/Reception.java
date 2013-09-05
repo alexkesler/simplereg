@@ -20,7 +20,7 @@ import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.applicator.Applicator;
 
 /**
-* Моделирует сущность приема заявителей
+* Класс предсталяет сущность приема заявителей
 */
 
 @Entity
@@ -32,10 +32,6 @@ public class Reception extends AbstractEntity{
 	@JoinColumn(name="ServiceID")
 	private Service service;
 
-	// @ManyToOne
-	// @JoinColumn(name="ApplicatorID")
-	// private Applicator applicator;
-	
 	@OneToMany (fetch = FetchType.EAGER, mappedBy="reception")
 	@Cascade ({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private List<Applicator> applicators;
@@ -105,6 +101,9 @@ public class Reception extends AbstractEntity{
 	*/
 	public String getApplicatorsNames() {
 		String names = "";
+		for (int i = 0; i < applicators.size(); i++) {
+			names += (i+1) + ". " + applicators.get(i).getName() + " "; 
+		}
 
 		return names;
 	}
