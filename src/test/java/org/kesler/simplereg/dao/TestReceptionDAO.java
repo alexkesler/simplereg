@@ -11,6 +11,7 @@ import java.util.Date;
 
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Reception;
 
@@ -24,19 +25,21 @@ public class TestReceptionDAO {
 	public void testAddRead() {
 		
 		// создаем тестовый объект Service
-		String serviceName = "Service1";
-		Service s1 = new Service(serviceName);
+		Service initService = new Service();
 
 		// сохраняем
 		try {
-			DAOFactory.getInstance().getServiceDAO().addService(s1);
+			DAOFactory.getInstance().getServiceDAO().addService(initService);
 
 		} catch (SQLException e) {
 			System.out.println("DB Error: " + e.getMessage());
 		}
 
 		// создаем тестовый объект Applicator
-		List<Applicator> applicators = new ArrayList<Applicator>();
+		List<Applicator> initApplicators = new ArrayList<Applicator>();
+
+		Applicator initApplicator = new ApplicatorFL();
+		initApplicators.add(initApplicator);
 
 		// сохраняем
 /*
@@ -48,34 +51,33 @@ public class TestReceptionDAO {
 		}
 */
 		// создаем тестовый объект Operator
-		Operator o1 = new Operator("Операторов Оператор");
-		o1.setState(Operator.NEW_STATE);
-		List<Operator> os = new ArrayList<Operator>();
-		os.add(o1);
+		Operator initOperator = new Operator();
+		initOperator.setState(Operator.NEW_STATE);
+		List<Operator> initOperators = new ArrayList<Operator>();
+		initOperators.add(initOperator);
 
 		// сохраняем
 		try {
-			DAOFactory.getInstance().getOperatorDAO().saveOperators(os);
+			DAOFactory.getInstance().getOperatorDAO().saveOperators(initOperators);
 
 		} catch (SQLException e) {
 			System.out.println("DB Error: " + e.getMessage());
 		}
 
 		// создаем тестовый объект Reception
-		Reception r1 = new Reception(s1,applicators,o1,new Date());
+		Reception initReception = new Reception(initService,initApplicators,initOperator,new Date());
 
 		Reception resultReception = null;
 
 		System.out.println("Writing Reception....");
 		try {
-			DAOFactory.getInstance().getReceptionDAO().addReception(r1);
-
+			DAOFactory.getInstance().getReceptionDAO().addReception(initReception);
 		} catch (SQLException e) {
 			System.out.println("DB Error: " + e.getMessage());
 		}
 
 		// получаем id сохраненнг объекта
-		Long id = r1.getId();
+		Long id = initReception.getId();
 
 		// читаем объект
 		try {
@@ -87,14 +89,16 @@ public class TestReceptionDAO {
 		assertNotNull("Readed Reception is null", resultReception);
 
 		// проверяем соответствие полей в членах объекта
-		String resultServiceName = resultReception.getServiceName();
-		assertEquals("ServiceName not same", serviceName, resultServiceName);
+		Service resultService = resultReception.getService();
+		assertEquals("Service not the same", initService, resultService);
 
-		// String applicatorFIO = resultReception.getApplicatorFIO();
-		// assertEquals("ApplicatorFIO not same", "Невструев Янус Полуэктович", applicatorFIO);
+		Operator resultOperator = resultReception.getOperator();
+		assertEquals("Operator not the same", initOperator, resultOperator);
 
-		String operatorFIO = resultReception.getOperatorFIO();
-		assertEquals("OperatorFIO not same", "Операторов Оператор", operatorFIO);
+		List<Applicator> resultApplicators = resultReception.getApplicators();
+		assertNotNull("Readed applicators list is null",resultApplicators);
+
+		assertTrue("Result applicators list not contains initApplicator",resultApplicators.contains(initApplicator));
 
 	}
 

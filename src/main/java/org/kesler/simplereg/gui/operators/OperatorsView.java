@@ -347,7 +347,6 @@ public class OperatorsView extends JFrame {
 		* Заполняет поля оператора значениями управляющих элементов
 		*/
 		public void readOperator() {
-			operator.setFIO(fioTextField.getText());
 			operator.setSurName(surNameTextField.getText());
 			operator.setFirstName(firstNameTextField.getText());
 			operator.setParentName(parentNameTextField.getText());

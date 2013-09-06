@@ -40,31 +40,13 @@ public class Operator extends AbstractEntity{
 		// for Hibernate
 	}
 
-	public Operator(String fio, 
-					String fioShort, 
-					String password,
-					Boolean isControler,
-					Boolean isAdmin,
-					Boolean enabled) { 
-		this.fio = fio;
-		this.fioShort = fioShort;
-		this.password = password;
-		this.isControler = isControler;
-		this.isAdmin = isAdmin;
-		this.enabled = enabled;
-	}
-
-	public Operator(String fio) {
-		this(fio,fio,"",false,false,true);
-	}
-
 	public String getFIO() {
-		return fio;
+		return surName + " " + firstName + " " + parentName;
 	}
 
-	public void setFIO(String fio) {
-		this.fio = fio;
-	}
+	// public void setFIO(String fio) {
+	// 	this.fio = fio;
+	// }
 
 	public String getFirstName() {
 		return firstName;

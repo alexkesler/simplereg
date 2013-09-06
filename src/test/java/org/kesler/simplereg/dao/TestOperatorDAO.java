@@ -13,11 +13,9 @@ public class TestOperatorDAO {
 
 	@Test
 	public void testSaveOperators() {
-		Operator operator = new Operator();
 
 		// Создаем оператора
-		String initFIO = "Операторов Оператор";
-		operator.setFIO(initFIO);
+		Operator operator = new Operator();
 		// Определяем для него статус - новый оператор
 		operator.setState(Operator.NEW_STATE);
 
@@ -50,6 +48,8 @@ public class TestOperatorDAO {
 		
 			
 		// Необходимо добавить проверку на чтение списка операторов из БД
+
+		assertTrue(resultOperators.contains(operator));
 
 
 	}
