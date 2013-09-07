@@ -151,6 +151,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	private void login() {
+		
 		//получаем список действующих операторов
 		List<Operator> operators = operatorsModel.getActiveOperators();
 		// создаем диалог ввода пароля

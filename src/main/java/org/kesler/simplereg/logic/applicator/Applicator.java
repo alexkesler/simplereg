@@ -19,7 +19,7 @@ import org.kesler.simplereg.logic.Reception;
 public abstract class Applicator extends AbstractEntity {
 	
 	@ManyToOne
-	@JoinColumn(name="ReceptionID")
+	@JoinColumn(name="ReceptionID", nullable=false)
 	private Reception reception;
 
 	public Reception getReception() {

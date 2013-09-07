@@ -77,8 +77,14 @@ public class Reception extends AbstractEntity{
 		return applicators;
 	}
 
+	/**
+	* Устанавливает список заявителей, для каждого заявителя назначает свойство reception на this
+	*/ 
 	public void setApplicators(List<Applicator> applicators) {
 		this.applicators = applicators;
+		for (Applicator a: applicators) {
+			a.setReception(this);
+		}
 	}
 
 	public Operator getOperator() {

@@ -2,6 +2,7 @@ package org.kesler.simplereg.dao;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.Ignore;
 
 
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.Date;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
+import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Reception;
 
@@ -19,8 +21,6 @@ import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.ReceptionDAO;
 
 public class TestReceptionDAO {
-
-
 	@Test
 	public void testAddRead() {
 		
@@ -35,21 +35,14 @@ public class TestReceptionDAO {
 			System.out.println("DB Error: " + e.getMessage());
 		}
 
-		// создаем тестовый объект Applicator
+		// создаем тестовые объекты Applicator
 		List<Applicator> initApplicators = new ArrayList<Applicator>();
 
-		Applicator initApplicator = new ApplicatorFL();
-		initApplicators.add(initApplicator);
+		Applicator initApplicatorFL = new ApplicatorFL();
+		initApplicators.add(initApplicatorFL);
+		Applicator initApplicatorUL = new ApplicatorUL();
+		initApplicators.add(initApplicatorUL);
 
-		// сохраняем
-/*
-		try {
-			DAOFactory.getInstance().getApplicatorDAO().addApplicator(a1);
-
-		} catch (SQLException e) {
-			System.out.println("DB Error: " + e.getMessage());
-		}
-*/
 		// создаем тестовый объект Operator
 		Operator initOperator = new Operator();
 		initOperator.setState(Operator.NEW_STATE);
@@ -65,7 +58,12 @@ public class TestReceptionDAO {
 		}
 
 		// создаем тестовый объект Reception
-		Reception initReception = new Reception(initService,initApplicators,initOperator,new Date());
+		Reception initReception = new Reception();
+
+		initReception.setService(initService);
+		initReception.setApplicators(initApplicators);
+		initReception.setOperator(initOperator);
+		initReception.setOpenDate(new Date());
 
 		Reception resultReception = null;
 
@@ -98,7 +96,14 @@ public class TestReceptionDAO {
 		List<Applicator> resultApplicators = resultReception.getApplicators();
 		assertNotNull("Readed applicators list is null",resultApplicators);
 
-		assertTrue("Result applicators list not contains initApplicator",resultApplicators.contains(initApplicator));
+		System.out.println("initApplicator UUID = " + initApplicatorFL.getUUID());
+
+		System.out.println("result operators size = " + resultApplicators.size());
+		for (Applicator a : resultApplicators) {
+			System.out.println("resultApplicator UUID" + a.getUUID());
+		}
+
+		assertTrue("Result applicators list not contains initApplicator",resultApplicators.contains(initApplicatorFL));
 
 	}
 
