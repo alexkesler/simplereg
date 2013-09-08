@@ -243,13 +243,10 @@ public class OperatorsView extends JFrame {
 	public class OperatorPanel extends JPanel {
 		private Operator operator;
 
-		private JTextField fioTextField;
-
 		private JTextField firstNameTextField;
 		private JTextField parentNameTextField;
 		private JTextField surNameTextField;
 
-		private JTextField fioShortTextField;
 		private JTextField passwordTextField;
 		private JCheckBox controlerCheckBox;
 		private JCheckBox adminCheckBox;
@@ -261,9 +258,6 @@ public class OperatorsView extends JFrame {
 			operator = new Operator();
 
 			this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK),"Добавить/изменить"));
-
-			JLabel fioLabel = new JLabel("ФИО");
-			fioTextField = new JTextField(20);
 
 			JLabel surNameLabel = new JLabel("Фамилия");
 			surNameTextField = new JTextField(20);
@@ -286,8 +280,6 @@ public class OperatorsView extends JFrame {
 
 			// Добавляем элементы на панель 
 
-			this.add(fioLabel);
-			this.add(fioTextField);
 
 			this.add(surNameLabel);
 			this.add(surNameTextField);
@@ -316,7 +308,6 @@ public class OperatorsView extends JFrame {
 		public void setOperator(Operator operator) {
 			this.operator = operator;
 
-			fioTextField.setText(operator.getFIO());
 			surNameTextField.setText(operator.getSurName());
 			firstNameTextField.setText(operator.getFirstName());
 			parentNameTextField.setText(operator.getParentName());
@@ -408,7 +399,7 @@ public class OperatorsView extends JFrame {
 			switch (column) {
 				case 0: value=operator.getId();
 				break;
-				case 1: value=operator.getFIO();
+				case 1: value=operator.getShortFIO();
 				break;
 				case 2: value=operator.getIsControler();
 				break;

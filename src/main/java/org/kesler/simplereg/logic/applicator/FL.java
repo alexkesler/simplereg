@@ -28,7 +28,9 @@ public class FL extends AbstractEntity{
 	public FL () {}
 
 	public String getFirstName() {
-		return firstName;
+		String notNullFirstName = "";
+		if (firstName!=null) notNullFirstName = firstName;
+		return notNullFirstName;
 	}
 
 	public void setFirstName(String firstName) {
@@ -36,7 +38,9 @@ public class FL extends AbstractEntity{
 	}
 
 	public String getParentName() {
-		return parentName;
+		String notNullParentName = "";
+		if(parentName!=null) notNullParentName = parentName;
+		return notNullParentName;
 	}
 
 	public void setParentName(String parentName) {
@@ -44,7 +48,9 @@ public class FL extends AbstractEntity{
 	}
 
 	public String getSurName() {
-		return surName;
+		String notNullSurname = "";
+		if(surName!=null) notNullSurname = surName;
+		return notNullSurname;
 	}
 
 	public void setSurName(String surName) {
@@ -55,9 +61,13 @@ public class FL extends AbstractEntity{
 	* Возвращает фамилию и инициалы
 	*/
 	public String getShortFIO() {
-		String firstNameShort = firstName.isEmpty()?"":firstName.substring(0,1);
-		String parentNameShort = parentName.isEmpty()?"":parentName.substring(0,1);
-		String fioShort = surName + " " + firstNameShort + "." + parentNameShort + ".";
+		String firstNameShort = "";
+		if (!getFirstName().isEmpty()) firstNameShort = getFirstName().substring(0,1);
+		String parentNameShort = "";
+		if(!getParentName().isEmpty()) parentNameShort = getParentName().substring(0,1);
+		String fioShort = getSurName() + " " +
+							(firstNameShort.isEmpty()?"":firstNameShort + ".") + 
+							(parentNameShort.isEmpty()?"":parentNameShort + ".");
 		return fioShort; 
 	}
 

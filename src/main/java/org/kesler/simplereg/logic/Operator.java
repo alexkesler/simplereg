@@ -13,16 +13,14 @@ import org.kesler.simplereg.dao.AbstractEntity;
 @Table(name="Operators")
 public class Operator extends AbstractEntity{
 
-	@Column(name="FIO", length=255)
-	private String fio;
-
+	@Column(name="FirstName")
 	private String firstName;
 
+	@Column(name="ParentName")
 	private String parentName;
 
+	@Column(name="SurName")
 	private String surName;
-
-	private String fioShort;
 
 	@Column(name="Password", length=50)
 	private String password;
@@ -41,15 +39,24 @@ public class Operator extends AbstractEntity{
 	}
 
 	public String getFIO() {
-		return surName + " " + firstName + " " + parentName;
+		return getSurName() + " " + getFirstName() + " " + getParentName();
 	}
 
-	// public void setFIO(String fio) {
-	// 	this.fio = fio;
-	// }
+	public String getShortFIO() {
+		String firstNameShort = "";
+		if (!getFirstName().isEmpty()) firstNameShort = getFirstName().substring(0,1);
+		String parentNameShort = "";
+		if(!getParentName().isEmpty()) parentNameShort = getParentName().substring(0,1);
+		String fioShort = getSurName() + " " +
+							(firstNameShort.isEmpty()?"":firstNameShort + ".") + 
+							(parentNameShort.isEmpty()?"":parentNameShort + ".");
+		return fioShort; 
+	}
 
 	public String getFirstName() {
-		return firstName;
+		String notNullFirstName = "";
+		if (firstName != null) notNullFirstName = firstName;
+		return notNullFirstName;
 	}
 
 	public void setFirstName(String firstName) {
@@ -57,7 +64,9 @@ public class Operator extends AbstractEntity{
 	}
 
 	public String getParentName() {
-		return parentName;
+		String notNullParentName = "";
+		if (parentName != null) notNullParentName = parentName;
+		return notNullParentName;
 	}
 
 	public void setParentName(String parentName) {
@@ -65,21 +74,14 @@ public class Operator extends AbstractEntity{
 	} 
 
 	public String getSurName() {
-		return surName;
+		String notNullSurName = "";
+		if (surName != null) notNullSurName = surName;
+		return notNullSurName;
 	}
 
 	public void setSurName(String surName) {
 		this.surName = surName;
 	}
-
-	public String getFIOShort() {
-		return fioShort;
-	}
-
-	public void setFIOShort() {
-		this.fioShort = fioShort;
-	}
-
 
 	public String getPassword() {
 		return password;
@@ -115,6 +117,6 @@ public class Operator extends AbstractEntity{
 
 	@Override 
 	public String toString() {
-		return fio;
+		return getFIO();
 	}
 }
