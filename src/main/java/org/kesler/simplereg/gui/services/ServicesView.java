@@ -3,6 +3,8 @@ package org.kesler.simplereg.gui.services;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
@@ -12,7 +14,7 @@ import java.awt.event.ActionEvent;
 
 public class ServicesView extends JFrame{
 	private ServicesViewController controller;
-	private ServicesTreeModel servicesTreeModel;
+	private JTree servicesTree;
 
 	public ServicesView(ServicesViewController controller) {
 		super("Услуги");
@@ -26,7 +28,8 @@ public class ServicesView extends JFrame{
 
 		JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		JTree servicesTree = new JTree(servicesTreeModel);
+		DefaultTreeNode rootNode = new DefaultTreeNode("Услуги");
+		servicesTree = new JTree(rootNode);
 		JScrollPane servicesScrollPane = new JScrollPane(servicesTree);
 
 		treePanel.add(BorderLayout.CENTER, servicesScrollPane);
@@ -75,8 +78,8 @@ public class ServicesView extends JFrame{
 	/**
 	* Возвращает модель дерева услуг, привязанную к виду 
 	*/
-	public ServicesTreeModel getServicesTreeModel() {
-		return servicesTreeModel;
+	public DefaultTreeModel getTreeModel() {
+		return servicesTree.getModel();
 	}
 
 }

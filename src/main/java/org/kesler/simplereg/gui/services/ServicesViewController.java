@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.services;
 
 import java.util.List;
+import javax.swing.tree.DefaultTreeModel;
 
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.ServicesModel;
@@ -21,10 +22,19 @@ public class ServicesViewController {
 		view.setVisible(true);
 	}
 
-	public void readServices() {
-//		model.readServices();
+	public void reloadTree() {
 		List<Service> services = model.getAllServices();
-		view.getServicesTreeModel().setServiceList(services);
+
+		DefaultTreeModel model = view.getTreeModel();
+		TreeNode root = model.getRoot();
+
+		root.removeAllChildren();
+
+		for (Service s : services) {
+			root.add(DefaultMutableTreeNode(s));
+		}
+
+
 
 	}
 
