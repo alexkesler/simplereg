@@ -33,7 +33,7 @@ public class ServicesModel {
 		try {
 			services = DAOFactory.getInstance().getServiceDAO().getAllServices();					
 		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения услуг из базы данных", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(null, sqle.getMessage(), "Ошибка чтения услуг из базы данных", JOptionPane.OK_OPTION);
 		}		
 	}
 
@@ -41,9 +41,9 @@ public class ServicesModel {
 	* Возвращает список всех услуг, сохраненных в внутреннем списке, если внутренний список не определен - читает его из базы
 	*/
 	public List<Service> getAllServices() {
-		if (services == null) {
+//		if (services == null) {
 			readServices();
-		}
+//		}
 		return services;
 	}
 
