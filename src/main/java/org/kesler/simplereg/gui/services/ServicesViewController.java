@@ -8,6 +8,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.ServicesModel;
 
+/**
+* Управляет видом услуг
+*/
 public class ServicesViewController {
 
 	private ServicesModel model;
@@ -20,23 +23,28 @@ public class ServicesViewController {
 		reloadTree();
 	}
 
+	/**
+	* Открывает окно с деревом услуг
+	*/
 	public void openView() {
 		view.setVisible(true);
 	}
 
+	/**
+	* Перезагружает дерево услуг из базы данных
+	*/
 	public void reloadTree() {
 		List<Service> services = model.getAllServices();
-
-		System.out.println("Num of services: " + services.size());
 
 		DefaultTreeModel model = (DefaultTreeModel)view.getTreeModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 
+		// Очищаем дерево
 		root.removeAllChildren();
 
+		// Добавляем все услуги
 		for (Service s : services) {
-			model.insertNodeInto(new DefaultMutableTreeNode(s), root, root.getChildCount());
-			//System.out.println("Incerting: " + s.getName() + " childCnt: " + root.getChildCount());
+			root.add(new DefaultMutableTreeNode(s));
 		}
 
 		DefaultMutableTreeNode node = null;
@@ -44,6 +52,7 @@ public class ServicesViewController {
 		Service service = null;
 		Service subService = null;
 
+		// Перебираем все элементы дерева 
 		Enumeration<DefaultMutableTreeNode> nodes = root.breadthFirstEnumeration();
 
 		while(nodes.hasMoreElements()) {
@@ -52,11 +61,12 @@ public class ServicesViewController {
 			service = (Service)node.getUserObject();
 			//System.out.println("Service: " + service.getName());
 			Enumeration<DefaultMutableTreeNode> subNodes = root.breadthFirstEnumeration();
+			// Для каждого элемента ищем все дочерние элементы
 			while(subNodes.hasMoreElements()) {
 				subNode = subNodes.nextElement();
-				if(subNode.isRoot()) continue;
+				if(subNode.isRoot()) continue; // Если корень - пропускаем
 				subService = (Service) subNode.getUserObject();
-				//System.out.println("   SubService: " + subService.getName());
+
 				if (subService == service) continue;
 				if (subService.getParentService() == null) continue;
 				if (subService.getParentService().equals(service)) {
@@ -68,6 +78,13 @@ public class ServicesViewController {
 
 		model.reload();
 
+
+	}
+
+	/**
+	* Сохраняет дерево услуг в базу данных
+	*/
+	public void saveTree() {
 
 	}
 

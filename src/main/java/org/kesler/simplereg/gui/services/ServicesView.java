@@ -6,6 +6,8 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
+// import javax.swing.DropMode;
+// import javax.swing.TransferHandler;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
@@ -30,6 +32,9 @@ public class ServicesView extends JFrame{
 		treePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Услуги");
 		servicesTree = new JTree(rootNode);
+		// servicesTree.setDragEnabled(true);
+		// servicesTree.setDropMode(DropMode.ON_OR_INSERT);
+		// servicesTree.setTransferHandler(new TransferHandler());
 		JScrollPane servicesScrollPane = new JScrollPane(servicesTree);
 
 		treePanel.add(BorderLayout.CENTER, servicesScrollPane);
@@ -46,7 +51,7 @@ public class ServicesView extends JFrame{
 		JButton saveButton = new JButton("Сохранить");
 		saveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				controller.saveTree();
 			}
 		});
 
