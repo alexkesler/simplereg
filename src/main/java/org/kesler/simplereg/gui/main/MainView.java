@@ -99,7 +99,7 @@ public class MainView extends JFrame {
 		mainMenu.add(exitMenuItem);
 
 		// Меню статистики
-		JMenu statisticMenu = new JMenu("Статистика");
+		JMenu statisticMenu = new JMenu("Задачи");
 
 		JMenuItem statisticMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenStatistic));
 		JMenuItem applicatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenApplicators));

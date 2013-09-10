@@ -10,6 +10,7 @@ import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.gui.services.ServicesViewController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
+import org.kesler.simplereg.gui.reception.ReceptionViewController;
 import org.kesler.simplereg.logic.OperatorsModel;
 
 
@@ -131,8 +132,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 
 	private void openReceptionView() {
-		ReceptionView receptionView = new ReceptionView(this);
-		receptionView.setVisible(true);
+		ReceptionViewController.getInstance().openView();
 	}
 
 	private void openServicesView() {

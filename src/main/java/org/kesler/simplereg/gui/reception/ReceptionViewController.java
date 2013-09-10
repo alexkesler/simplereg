@@ -7,7 +7,7 @@ public class ReceptionViewController {
 	private static ReceptionViewController instance;
 
 	private ReceptionViewController() {
-		view = new ReceptionView();
+		view = new ReceptionView(this);
 	}
 
 	public static synchronized ReceptionViewController getInstance() {
@@ -19,6 +19,10 @@ public class ReceptionViewController {
 
 	public void openView() {
 		view.setVisible(true);
+	}
+
+	public void cancel() {
+		view.setVisible(false);
 	}
 
 }

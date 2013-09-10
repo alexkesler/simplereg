@@ -3,10 +3,13 @@ package org.kesler.simplereg.gui.statistic;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class StatisticView extends JFrame {
 
@@ -35,12 +38,24 @@ public class StatisticView extends JFrame {
 
 		JPanel buttonPanel = new JPanel();
 
+		JButton okButton = new JButton("OK");
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				setVisible(false);
+			}
+		});
 
-		mainPanel.add(filterPanel);
-		mainPanel.add(tablePanel);
-		mainPanel.add(buttonPanel);
+		buttonPanel.add(okButton);
+
+
+		mainPanel.add(filterPanel, BorderLayout.NORTH);
+		mainPanel.add(tablePanel, BorderLayout.CENTER);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+		this.add(mainPanel, BorderLayout.CENTER);
 
 		this.setSize(500,500);
+		this.setLocationRelativeTo(null);
 
 	}
 
