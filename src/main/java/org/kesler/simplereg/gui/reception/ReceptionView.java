@@ -3,11 +3,16 @@ package org.kesler.simplereg.gui.reception;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.Reception;
 
@@ -35,6 +40,12 @@ class ReceptionView extends JFrame{
 		// создаем панель с вкладками
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setTabPlacement(JTabbedPane.LEFT);
+		//tabbedPane.setEnabled(false);
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ce) {
+				//
+			}
+		});
 
 		tabbedPane.add("Выбор услуги", createServicePanel());
 		tabbedPane.add("Заявители", createApplicatorsPanel());
@@ -88,8 +99,15 @@ class ReceptionView extends JFrame{
 		this.setLocationRelativeTo(null);
 	}
 
+	// Создаем панель выбоа услуги
 	private JPanel createServicePanel() {
-		JPanel servicePanel = new JPanel();
+		JPanel servicePanel = new JPanel(new MigLayout());
+
+		JLabel serviceName = new JLabel("Услуга не выбрана");
+		JButton selectServiceButton = new JButton("Выбрать");
+
+		servicePanel.add(serviceName,"growx 100");
+		servicePanel.add(selectServiceButton, "right, wrap");
 
 		return servicePanel;
 	}

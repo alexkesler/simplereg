@@ -9,7 +9,12 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 
 	@Override 
 	void init() {
+		view.getTabbedPane().setEnabledAt(0,false);
+		view.getTabbedPane().setEnabledAt(1,true);
+		view.getTabbedPane().setEnabledAt(2,false);
+
 		view.getTabbedPane().setSelectedIndex(1);
+
 		view.getBackButton().setVisible(true);
 		view.getNextButton().setVisible(true);
 		view.getReadyButton().setVisible(false);

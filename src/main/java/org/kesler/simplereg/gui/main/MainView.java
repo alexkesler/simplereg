@@ -204,7 +204,7 @@ public class MainView extends JFrame {
 					break;
 					case 1: columnName = "Создано";
 					break;
-					case 2: columnName = "ФИО заявителя";
+					case 2: columnName = "Заявители";
 					break;
 					case 3: columnName = "Услуга";
 					break;

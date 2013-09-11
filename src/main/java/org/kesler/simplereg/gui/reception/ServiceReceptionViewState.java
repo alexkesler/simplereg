@@ -9,7 +9,12 @@ class ServiceReceptionViewState extends ReceptionViewState {
 
 	@Override
 	void init() {
+		view.getTabbedPane().setEnabledAt(0,true);
+		view.getTabbedPane().setEnabledAt(1,false);
+		view.getTabbedPane().setEnabledAt(2,false);
+
 		view.getTabbedPane().setSelectedIndex(0);
+
 		view.getBackButton().setVisible(false);
 		view.getReadyButton().setVisible(false);
 	}

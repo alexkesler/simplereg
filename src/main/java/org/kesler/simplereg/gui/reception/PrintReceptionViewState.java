@@ -9,7 +9,12 @@ class PrintReceptionViewState extends ReceptionViewState {
 
 	@Override 
 	void init() {
+		view.getTabbedPane().setEnabledAt(0,false);
+		view.getTabbedPane().setEnabledAt(1,false);
+		view.getTabbedPane().setEnabledAt(2,true);
+
 		view.getTabbedPane().setSelectedIndex(2);
+
 		view.getBackButton().setVisible(true);
 		view.getNextButton().setVisible(false);
 		view.getReadyButton().setVisible(true);
