@@ -5,9 +5,11 @@ import org.kesler.simplereg.logic.Reception;
 public class ReceptionViewController {
 	private ReceptionView view;
 	private static ReceptionViewController instance;
+	private ReceptionViewState viewState;
 
 	private ReceptionViewController() {
 		view = new ReceptionView(this);
+		viewState = new ServiceReceptionViewState(this, view);
 	}
 
 	public static synchronized ReceptionViewController getInstance() {
@@ -21,8 +23,24 @@ public class ReceptionViewController {
 		view.setVisible(true);
 	}
 
+	public void back() {
+		viewState.back();
+	}
+
+	public void next() {
+		viewState.next();
+	}
+
+	public void ready() {
+		viewState.ready();
+	}
+
 	public void cancel() {
-		view.setVisible(false);
+		viewState.cancel();
+	}
+
+	void setState(ReceptionViewState viewState) {
+		this.viewState = viewState;
 	}
 
 }

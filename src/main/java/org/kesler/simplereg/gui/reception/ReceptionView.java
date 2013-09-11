@@ -14,10 +14,12 @@ import org.kesler.simplereg.logic.Reception;
 class ReceptionView extends JFrame{
 
 	private ReceptionViewController controller;
-	private JButton previousButton;
+	private JButton backButton;
 	private JButton nextButton;
 	private JButton readyButton;
 	private JButton cancelButton;
+
+	private JTabbedPane tabbedPane;
 
 	public ReceptionView(ReceptionViewController controller) {
 		super("Прием заявителя");
@@ -31,7 +33,8 @@ class ReceptionView extends JFrame{
 		JPanel padPanel = new JPanel(new GridLayout(1,1));
 
 		// создаем панель с вкладками
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setTabPlacement(JTabbedPane.LEFT);
 
 		tabbedPane.add("Выбор услуги", createServicePanel());
 		tabbedPane.add("Заявители", createApplicatorsPanel());
@@ -42,11 +45,26 @@ class ReceptionView extends JFrame{
 		// Создаем панель кнопок, добавляем кнопки
 		JPanel buttonPanel = new JPanel();
 
-		previousButton = new JButton("Назад");
+		backButton = new JButton("Назад");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.back();
+			}
+		});
 
 		nextButton = new JButton("Далее");
+		nextButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.next();
+			}
+		});
 
 		readyButton = new JButton("Готово");
+		readyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.ready();
+			}
+		});
 
 		cancelButton = new JButton("Отмена");
 		cancelButton.addActionListener(new ActionListener() {
@@ -55,7 +73,7 @@ class ReceptionView extends JFrame{
 			}
 		});
 
-		buttonPanel.add(previousButton);
+		buttonPanel.add(backButton);
 		buttonPanel.add(nextButton);
 		buttonPanel.add(readyButton); 
 		buttonPanel.add(cancelButton);
@@ -87,6 +105,23 @@ class ReceptionView extends JFrame{
 
 		return printPanel;
 	}
+
+	JButton getBackButton() {
+		return backButton;
+	}
+
+	JButton getNextButton() {
+		return nextButton;
+	}
+
+	JButton getReadyButton() {
+		return readyButton;
+	}
+
+	JTabbedPane getTabbedPane() {
+		return tabbedPane;
+	}
+
 
 
 }
