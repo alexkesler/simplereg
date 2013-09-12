@@ -18,9 +18,8 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 
+import net.miginfocom.swing.MigLayout;
 
 import java.util.List;
 import java.util.Arrays;
@@ -55,17 +54,18 @@ class LoginDialog extends JDialog{
 		super(frame,"Вход в систему", true);
 		optionPane = createOptionPane();
 
+		setOperators(operators);
+
 		this.setContentPane(optionPane);
 		this.setLocationRelativeTo(null);
 
 		this.pack();
-		setOperators(operators);
 
 	}
 
 	private JOptionPane createOptionPane() {
 
-		JPanel dataPanel = new JPanel(new GridBagLayout());
+		JPanel dataPanel = new JPanel(new MigLayout());
 		dataPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		JLabel loginLabel = new JLabel("Оператор: ");
@@ -89,27 +89,13 @@ class LoginDialog extends JDialog{
 			}
 		});
 
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(5,5,5,5);
-		c.gridx = 0;
-		c.gridy = 0;
-		dataPanel.add(loginLabel, c);
+		dataPanel.add(loginLabel);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridx = 1;
-		dataPanel.add(loginComboBox, c);
-		c.fill = GridBagConstraints.NONE;
+		dataPanel.add(loginComboBox, "wrap");
 
-		c.anchor = GridBagConstraints.EAST;
-		c.gridx = 0;
-		c.gridy = 1;
-		dataPanel.add(passwordLabel, c);
+		dataPanel.add(passwordLabel);
 
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.WEST;
-		c.gridx = 1;
-		dataPanel.add(passwordTextField, c);
+		dataPanel.add(passwordTextField, "wrap");
 
 	
 		optionPane = new JOptionPane(dataPanel,

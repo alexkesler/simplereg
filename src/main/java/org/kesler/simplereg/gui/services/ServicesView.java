@@ -16,6 +16,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class ServicesView extends JFrame{
+	public static final int SELECT = 0;
+	public static final int EDIT = 1;
+
 	private ServicesViewController controller;
 	private JTree servicesTree;
 

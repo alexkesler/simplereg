@@ -13,10 +13,20 @@ import org.kesler.simplereg.logic.ServicesModel;
 */
 public class ServicesViewController {
 
+	private static ServicesViewController instance;
 	private ServicesModel model;
 	private ServicesView view;
 
-	public ServicesViewController() {
+	
+	public static synchronized ServicesViewController getInstance() {
+		if (instance == null) {
+			instance = new ServicesViewController();
+		}
+
+		return instance;
+	}
+
+	private ServicesViewController() {
 		this.model = ServicesModel.getInstance();
 		view = new ServicesView(this);
 		openView();
@@ -28,6 +38,14 @@ public class ServicesViewController {
 	*/
 	public void openView() {
 		view.setVisible(true);
+	}
+
+	public Service openSelectDialog(JFrame frame) {
+
+	}
+
+	public void openEditDialog(JFrame frame) {
+
 	}
 
 	/**

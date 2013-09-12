@@ -105,6 +105,11 @@ class ReceptionView extends JFrame{
 
 		JLabel serviceName = new JLabel("Услуга не выбрана");
 		JButton selectServiceButton = new JButton("Выбрать");
+		selectServiceButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.selectService();
+			}
+		});
 
 		servicePanel.add(serviceName,"growx 100");
 		servicePanel.add(selectServiceButton, "right, wrap");
