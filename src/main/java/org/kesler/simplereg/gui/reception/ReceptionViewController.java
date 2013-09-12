@@ -1,10 +1,13 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.util.List;
+
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.Applicator;
+import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.gui.services.ServicesViewController;
+import org.kesler.simplereg.gui.services.ServicesDialogController;
+import org.kesler.simplereg.gui.main.CurrentOperator;
 
 public class ReceptionViewController {
 	private ReceptionView view;
@@ -32,11 +35,22 @@ public class ReceptionViewController {
 	public void openView() {
 		view.setVisible(true);
 		viewState = new ServiceReceptionViewState(this, view);
+
+		// Создаем экземпляр приема заявтеля
 		reception = new Reception();
+
+		//Получаем текущего оператора
+		operator = CurrentOperator.getInstance().getOperator();
+		reception.setOperator(operator);
 	}
 
 	public void selectService() {
-		ServicesViewController.getInstance().openSelectDialog();
+		service = ServicesDialogController.getInstance().openSelectDialog(view);
+		String serviceName = "Услуга не определена";
+		if (service != null) {
+			serviceName = service.getName();
+		}
+		view.getServiceNameLabel().setText(serviceName);
 	}
 
 	public void back() {
@@ -60,4 +74,7 @@ public class ReceptionViewController {
 		this.viewState = viewState;
 	}
 
+	Reception getReception() {
+		return reception;
+	}
 }

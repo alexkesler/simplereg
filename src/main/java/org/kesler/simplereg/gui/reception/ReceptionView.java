@@ -26,6 +26,8 @@ class ReceptionView extends JFrame{
 
 	private JTabbedPane tabbedPane;
 
+	private JLabel serviceName;
+
 	public ReceptionView(ReceptionViewController controller) {
 		super("Прием заявителя");
 		this.controller = controller;
@@ -103,7 +105,7 @@ class ReceptionView extends JFrame{
 	private JPanel createServicePanel() {
 		JPanel servicePanel = new JPanel(new MigLayout());
 
-		JLabel serviceName = new JLabel("Услуга не выбрана");
+		serviceName = new JLabel("Услуга не выбрана");
 		JButton selectServiceButton = new JButton("Выбрать");
 		selectServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -145,6 +147,9 @@ class ReceptionView extends JFrame{
 		return tabbedPane;
 	}
 
+	JLabel getServiceNameLabel() {
+		return serviceName;
+	}
 
 
 }

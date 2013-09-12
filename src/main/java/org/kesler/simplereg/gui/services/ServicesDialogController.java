@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.services;
 
 import java.util.List;
 import java.util.Enumeration;
+import javax.swing.JFrame;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -11,41 +12,45 @@ import org.kesler.simplereg.logic.ServicesModel;
 /**
 * Управляет видом услуг
 */
-public class ServicesViewController {
+public class ServicesDialogController {
 
-	private static ServicesViewController instance;
+	private static ServicesDialogController instance;
 	private ServicesModel model;
-	private ServicesView view;
+	private ServicesDialog dialog;
 
 	
-	public static synchronized ServicesViewController getInstance() {
+	public static synchronized ServicesDialogController getInstance() {
 		if (instance == null) {
-			instance = new ServicesViewController();
+			instance = new ServicesDialogController();
 		}
 
 		return instance;
 	}
 
-	private ServicesViewController() {
+	private ServicesDialogController() {
 		this.model = ServicesModel.getInstance();
-		view = new ServicesView(this);
-		openView();
-		reloadTree();
+//		view = new ServicesDialog(this);
+//		openView();
+//		reloadTree();
 	}
 
-	/**
-	* Открывает окно с деревом услуг
-	*/
-	public void openView() {
-		view.setVisible(true);
-	}
 
 	public Service openSelectDialog(JFrame frame) {
+		Service selectedService = null;
 
+		dialog = new ServicesDialog(frame, this, ServicesDialog.SELECT);
+		reloadTree();
+		dialog.setVisible(true);
+
+		selectedService = dialog.getSelectedService();
+
+		return selectedService;
 	}
 
 	public void openEditDialog(JFrame frame) {
-
+		dialog = new ServicesDialog(frame, this, ServicesDialog.EDIT);
+		reloadTree();
+		dialog.setVisible(true);
 	}
 
 	/**
@@ -54,8 +59,8 @@ public class ServicesViewController {
 	public void reloadTree() {
 		List<Service> services = model.getAllServices();
 
-		DefaultTreeModel model = (DefaultTreeModel)view.getTreeModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		DefaultTreeModel treeModel = (DefaultTreeModel) dialog.getTreeModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
 
 		// Очищаем дерево
 		root.removeAllChildren();
@@ -94,7 +99,7 @@ public class ServicesViewController {
 			}
 		}
 
-		model.reload();
+		treeModel.reload();
 
 
 	}

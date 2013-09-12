@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.gui.services.ServicesViewController;
+import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.ReceptionViewController;
@@ -136,8 +136,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	private void openServicesView() {
-		ServicesViewController servicesViewController = new ServicesViewController();
-		servicesViewController.openView();
+		ServicesDialogController.getInstance().openEditDialog(mainView);
 	}
 
 	private void addReception(Reception reception) {
