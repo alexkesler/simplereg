@@ -44,15 +44,6 @@ public class ReceptionViewController {
 		reception.setOperator(operator);
 	}
 
-	public void selectService() {
-		service = ServicesDialogController.getInstance().openSelectDialog(view);
-		String serviceName = "Услуга не определена";
-		if (service != null) {
-			serviceName = service.getName();
-		}
-		view.getServiceNameLabel().setText(serviceName);
-	}
-
 	public void back() {
 		viewState.back();
 	}
@@ -76,5 +67,13 @@ public class ReceptionViewController {
 
 	Reception getReception() {
 		return reception;
+	}
+
+	Service getService() {
+		return service;
+	}
+
+	void setService(Service service) {
+		this.service = service;
 	}
 }

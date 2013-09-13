@@ -1,5 +1,7 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.event.ActionEvent;
+
 class ApplicatorsReceptionViewState extends ReceptionViewState {
 
 	ApplicatorsReceptionViewState(ReceptionViewController controller, ReceptionView view) {
@@ -35,6 +37,11 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 	@Override
 	void ready() {
 		// Кнопка неактивна
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		
 	}
 
 }

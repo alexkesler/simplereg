@@ -1,5 +1,10 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.event.ActionEvent;
+
+import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.gui.services.ServicesDialogController;
+
 class ServiceReceptionViewState extends ReceptionViewState {
 	
 	ServiceReceptionViewState(ReceptionViewController controller, ReceptionView view) {
@@ -33,6 +38,25 @@ class ServiceReceptionViewState extends ReceptionViewState {
 	@Override
 	void ready() {
 		// Ничего не делаем - кнопка невидима
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		if ("Выбрать".equals(ev.getActionCommand())) selectService();
+		
+	}
+
+	private void selectService() {
+		Service service = ServicesDialogController.getInstance().openSelectDialog(view);
+		controller.setService(service);
+
+		String serviceName = "Услуга не определена";
+		if (service != null) {
+			serviceName = service.getName();
+		}
+		
+		view.getServicePanel().getServiceNameLabel().setText(serviceName);
+
 	}
 
 }

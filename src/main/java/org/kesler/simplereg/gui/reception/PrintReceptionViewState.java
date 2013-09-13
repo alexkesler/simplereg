@@ -1,5 +1,7 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.event.ActionEvent;
+
 class PrintReceptionViewState extends ReceptionViewState {
 
 	PrintReceptionViewState(ReceptionViewController controller, ReceptionView view) {
@@ -34,4 +36,10 @@ class PrintReceptionViewState extends ReceptionViewState {
 	void ready() {
 		// Написать обработчик
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		
+	}
+
 }

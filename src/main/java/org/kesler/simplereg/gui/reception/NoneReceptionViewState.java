@@ -1,5 +1,7 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.event.ActionEvent;
+
 class NoneReceptionViewState extends ReceptionViewState {
 
 	NoneReceptionViewState(ReceptionViewController controller, ReceptionView view) {
@@ -17,4 +19,10 @@ class NoneReceptionViewState extends ReceptionViewState {
 
 	@Override
 	void ready() {}
+
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		
+	}
+
 }

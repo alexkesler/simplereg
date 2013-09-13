@@ -26,7 +26,9 @@ class ReceptionView extends JFrame{
 
 	private JTabbedPane tabbedPane;
 
-	private JLabel serviceName;
+	private ServicePanel servicePanel;
+	private ApplicatorsPanel applicatorsPanel;
+	private PrintPanel printPanel;
 
 	public ReceptionView(ReceptionViewController controller) {
 		super("Прием заявителя");
@@ -49,9 +51,13 @@ class ReceptionView extends JFrame{
 			}
 		});
 
-		tabbedPane.add("Выбор услуги", createServicePanel());
-		tabbedPane.add("Заявители", createApplicatorsPanel());
-		tabbedPane.add("Печать", createPrintPanel());
+		servicePanel = new ServicePanel();
+		applicatorsPanel = new ApplicatorsPanel();
+		printPanel = new PrintPanel();
+
+		tabbedPane.add("Выбор услуги", servicePanel);
+		tabbedPane.add("Заявители", applicatorsPanel);
+		tabbedPane.add("Печать", printPanel);
 
 		padPanel.add(tabbedPane);
 
@@ -102,33 +108,42 @@ class ReceptionView extends JFrame{
 	}
 
 	// Создаем панель выбоа услуги
-	private JPanel createServicePanel() {
-		JPanel servicePanel = new JPanel(new MigLayout());
+	class ServicePanel extends JPanel {
+		
+		JLabel serviceNameLabel;
 
-		serviceName = new JLabel("Услуга не выбрана");
-		JButton selectServiceButton = new JButton("Выбрать");
-		selectServiceButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.selectService();
-			}
-		});
+		ServicePanel() {
+			super(new MigLayout());
 
-		servicePanel.add(serviceName,"growx 100");
-		servicePanel.add(selectServiceButton, "right, wrap");
+			serviceNameLabel = new JLabel("Услуга не выбрана");
+			JButton selectServiceButton = new JButton("Выбрать");
+			selectServiceButton.addActionListener(new ServiceReceptionViewState(controller, this));
 
-		return servicePanel;
+			this.add(serviceNameLabel,"growx 100");
+			this.add(selectServiceButton, "right, wrap");
+
+		}
+
+		JLabel getServiceNameLabel() {
+			return serviceNameLabel;
+		}
+
 	}
 
-	private JPanel createApplicatorsPanel() {
-		JPanel applicatorsPanel = new JPanel();
+	class ApplicatorsPanel extends JPanel {
 
-		return applicatorsPanel;
+		ApplicatorsPanel() {
+			super(new MigLayout());
+		}
+
 	}
 
-	private JPanel createPrintPanel() {
-		JPanel printPanel = new JPanel();
+	class PrintPanel extends JPanel {
 
-		return printPanel;
+		PrintPanel() {
+			super(new MigLayout());
+		}
+
 	}
 
 	JButton getBackButton() {
@@ -147,8 +162,9 @@ class ReceptionView extends JFrame{
 		return tabbedPane;
 	}
 
-	JLabel getServiceNameLabel() {
-		return serviceName;
+
+	JPanel getServicePanel() {
+		return servicePanel;
 	}
 
 
