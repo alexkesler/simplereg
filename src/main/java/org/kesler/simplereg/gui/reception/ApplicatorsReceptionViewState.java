@@ -1,7 +1,5 @@
 package org.kesler.simplereg.gui.reception;
 
-import java.awt.event.ActionEvent;
-
 class ApplicatorsReceptionViewState extends ReceptionViewState {
 
 	ApplicatorsReceptionViewState(ReceptionViewController controller, ReceptionView view) {
@@ -11,15 +9,17 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 
 	@Override 
 	void init() {
-		view.getTabbedPane().setEnabledAt(0,false);
-		view.getTabbedPane().setEnabledAt(1,true);
-		view.getTabbedPane().setEnabledAt(2,false);
+		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,true);
+		view.getTabbedPane().setEnabledAt(view.DATA_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,false);
 
-		view.getTabbedPane().setSelectedIndex(1);
+		view.getTabbedPane().setSelectedIndex(view.APPLICATORS_STATE);
 
-		view.getBackButton().setVisible(true);
-		view.getNextButton().setVisible(true);
-		view.getReadyButton().setVisible(false);
+		view.getBackButton().setEnabled(true);
+		view.getNextButton().setEnabled(true);
+		view.getReadyButton().setEnabled(false);
+
 	}
 
 	@Override
@@ -31,7 +31,7 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 	@Override
 	void next() {
 		// переходим к печати
-		controller.setState(new PrintReceptionViewState(controller, view));
+		controller.setState(new DataReceptionViewState(controller, view));
 	}
 
 	@Override
@@ -39,9 +39,5 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 		// Кнопка неактивна
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent ev) {
-		
-	}
 
 }

@@ -18,6 +18,11 @@ import org.kesler.simplereg.logic.Reception;
 
 class ReceptionView extends JFrame{
 
+	public static final int SERVICE_STATE = 0;
+	public static final int APPLICATORS_STATE = 1;
+	public static final int DATA_STATE = 2;
+	public static final int PRINT_STATE = 3;
+
 	private ReceptionViewController controller;
 	private JButton backButton;
 	private JButton nextButton;
@@ -28,6 +33,7 @@ class ReceptionView extends JFrame{
 
 	private ServicePanel servicePanel;
 	private ApplicatorsPanel applicatorsPanel;
+	private DataPanel dataPanel;
 	private PrintPanel printPanel;
 
 	public ReceptionView(ReceptionViewController controller) {
@@ -45,18 +51,16 @@ class ReceptionView extends JFrame{
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setTabPlacement(JTabbedPane.LEFT);
 		//tabbedPane.setEnabled(false);
-		tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent ce) {
-				//
-			}
-		});
+
 
 		servicePanel = new ServicePanel();
 		applicatorsPanel = new ApplicatorsPanel();
+		dataPanel = new DataPanel();
 		printPanel = new PrintPanel();
 
 		tabbedPane.add("Выбор услуги", servicePanel);
 		tabbedPane.add("Заявители", applicatorsPanel);
+		tabbedPane.add("Ввод данных", dataPanel);
 		tabbedPane.add("Печать", printPanel);
 
 		padPanel.add(tabbedPane);
@@ -117,7 +121,11 @@ class ReceptionView extends JFrame{
 
 			serviceNameLabel = new JLabel("Услуга не выбрана");
 			JButton selectServiceButton = new JButton("Выбрать");
-			selectServiceButton.addActionListener(new ServiceReceptionViewState(controller, this));
+			selectServiceButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.selectService();
+				}
+			});
 
 			this.add(serviceNameLabel,"growx 100");
 			this.add(selectServiceButton, "right, wrap");
@@ -133,6 +141,14 @@ class ReceptionView extends JFrame{
 	class ApplicatorsPanel extends JPanel {
 
 		ApplicatorsPanel() {
+			super(new MigLayout());
+		}
+
+	}
+
+	class DataPanel extends JPanel {
+
+		DataPanel() {
 			super(new MigLayout());
 		}
 
@@ -163,7 +179,7 @@ class ReceptionView extends JFrame{
 	}
 
 
-	JPanel getServicePanel() {
+	ServicePanel getServicePanel() {
 		return servicePanel;
 	}
 

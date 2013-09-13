@@ -1,8 +1,6 @@
 package org.kesler.simplereg.gui.reception;
 
-import java.awt.event.ActionListener;
-
-abstract class ReceptionViewState implements ActionListener {
+abstract class ReceptionViewState {
 	protected ReceptionViewController controller;
 	protected ReceptionView view;
 

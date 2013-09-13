@@ -1,6 +1,5 @@
 package org.kesler.simplereg.gui.reception;
 
-import java.awt.event.ActionEvent;
 
 class PrintReceptionViewState extends ReceptionViewState {
 
@@ -11,20 +10,21 @@ class PrintReceptionViewState extends ReceptionViewState {
 
 	@Override 
 	void init() {
-		view.getTabbedPane().setEnabledAt(0,false);
-		view.getTabbedPane().setEnabledAt(1,false);
-		view.getTabbedPane().setEnabledAt(2,true);
+		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.DATA_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,true);
 
-		view.getTabbedPane().setSelectedIndex(2);
+		view.getTabbedPane().setSelectedIndex(view.PRINT_STATE);
 
-		view.getBackButton().setVisible(true);
-		view.getNextButton().setVisible(false);
-		view.getReadyButton().setVisible(true);
+		view.getBackButton().setEnabled(true);
+		view.getNextButton().setEnabled(false);
+		view.getReadyButton().setEnabled(true);
 	}
 
 	@Override
 	void back() {
-		controller.setState(new ApplicatorsReceptionViewState(controller, view));
+		controller.setState(new DataReceptionViewState(controller, view));
 	}
 
 	@Override
@@ -37,9 +37,5 @@ class PrintReceptionViewState extends ReceptionViewState {
 		// Написать обработчик
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent ev) {
-		
-	}
 
 }
