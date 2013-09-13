@@ -57,9 +57,9 @@ class LoginDialog extends JDialog{
 		setOperators(operators);
 
 		this.setContentPane(optionPane);
-		this.setLocationRelativeTo(null);
 
 		this.pack();
+		this.setLocationRelativeTo(frame);
 
 	}
 

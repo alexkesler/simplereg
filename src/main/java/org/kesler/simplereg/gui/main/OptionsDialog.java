@@ -41,9 +41,9 @@ public class OptionsDialog extends JDialog {
 		properties = PropertiesUtil.getProperties();
 
 		this.setContentPane(createOptionPane());
-		this.setLocationRelativeTo(frame);
 
 		this.pack();
+		this.setLocationRelativeTo(frame);
 
 
 	}
