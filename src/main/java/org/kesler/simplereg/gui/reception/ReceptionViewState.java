@@ -20,4 +20,7 @@ abstract class ReceptionViewState {
 	void cancel() {
 		view.setVisible(false);
 	}
+
+	// Обновляет данные на панели
+	abstract void updatePanelData();
 }

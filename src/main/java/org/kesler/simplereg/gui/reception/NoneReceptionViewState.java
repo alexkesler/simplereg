@@ -19,5 +19,8 @@ class NoneReceptionViewState extends ReceptionViewState {
 	@Override
 	void ready() {}
 
+	@Override
+	void updatePanelData() {}
+
 
 }

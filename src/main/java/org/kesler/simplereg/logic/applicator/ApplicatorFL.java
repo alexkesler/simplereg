@@ -53,4 +53,14 @@ public class ApplicatorFL extends Applicator {
 
 		return name;
 	}
+
+	@Override
+	public String toString() {
+		String applicatorFIO = "";
+		if (fl!=null) applicatorFIO = fl.getFIO();
+
+		String represFIO = "";
+		if (repres!=null) represFIO = " (" + repres.getFIO() + ")";
+		return applicatorFIO + represFIO;
+	}
 }

@@ -71,5 +71,13 @@ public class FL extends AbstractEntity{
 		return fioShort; 
 	}
 
+	public String getFIO() {
+		String fio = "";
+
+		fio = getSurName() + " " + getFirstName() + " " + getParentName();
+
+		return fio;
+	}
+
 
 }

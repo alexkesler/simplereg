@@ -37,5 +37,10 @@ class PrintReceptionViewState extends ReceptionViewState {
 		// Написать обработчик
 	}
 
+	@Override
+	void updatePanelData() {
+		
+	}
+
 
 }

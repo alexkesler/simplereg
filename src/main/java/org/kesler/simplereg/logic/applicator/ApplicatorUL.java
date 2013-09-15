@@ -47,8 +47,19 @@ public class ApplicatorUL extends Applicator {
 	public String getName() {
 		String name = "";
 
-		if (ul!=null) name += ul.getShortName();
+		if (ul!=null) name = ul.getFullName();
 
 		return name;
+	}
+
+	@Override
+	public String toString() {
+		String ulShortName = "";
+		if (ul!=null) ulShortName = ul.getShortName();
+		String represFIO = "";
+		if (repres!=null) represFIO = " (" + repres.getFIO() + ")";
+
+		return ulShortName + represFIO;
+
 	}
 }

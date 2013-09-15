@@ -31,4 +31,6 @@ public abstract class Applicator extends AbstractEntity {
 	}
 
 	public abstract String getName();
+
+	public abstract String toString();
 } 	 

@@ -36,6 +36,8 @@ class LoginDialog extends JDialog{
 
 	private Operator operator;
 
+	private JFrame frame;
+
 	private JComboBox loginComboBox;
 	private JPasswordField passwordTextField;
 	private boolean loginOk = false;
@@ -52,6 +54,7 @@ class LoginDialog extends JDialog{
 	*/
 	public LoginDialog(JFrame frame, List<Operator> operators) {
 		super(frame,"Вход в систему", true);
+		this.frame = frame;
 		optionPane = createOptionPane();
 
 		setOperators(operators);
@@ -165,7 +168,7 @@ class LoginDialog extends JDialog{
 					char[] password = operator.getPassword().toCharArray();
 					char[] input = passwordTextField.getPassword();
 					if (input.length != password.length || !Arrays.equals(input, password)) {
-						JOptionPane.showMessageDialog(null,
+						JOptionPane.showMessageDialog(frame,
                 										"Неправильный пароль. Попробуйте еще раз.",
                 										"Ошибка",
                 										JOptionPane.ERROR_MESSAGE);
@@ -178,7 +181,7 @@ class LoginDialog extends JDialog{
 						Arrays.fill(password, '0');
 						loginOk = true;
 						setVisible(false);
-						JOptionPane.showMessageDialog(null,
+						JOptionPane.showMessageDialog(frame,
                 										"Добро пожаловать, " + operator.getFIO() + "!",
                 										"Добро пожаловать!",
                 										JOptionPane.INFORMATION_MESSAGE);

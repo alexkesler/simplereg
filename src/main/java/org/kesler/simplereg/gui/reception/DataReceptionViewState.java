@@ -39,5 +39,10 @@ class DataReceptionViewState extends ReceptionViewState {
 		// Ничего не делаем - кнопка невидима
 	}
 
+	@Override
+	void updatePanelData() {
+		
+	}
+
 
 }

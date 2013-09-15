@@ -9,17 +9,10 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 
 	@Override 
 	void init() {
-		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
-		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,true);
-		view.getTabbedPane().setEnabledAt(view.DATA_STATE,false);
-		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,false);
 
-		view.getTabbedPane().setSelectedIndex(view.APPLICATORS_STATE);
-
-		view.getBackButton().setEnabled(true);
-		view.getNextButton().setEnabled(true);
-		view.getReadyButton().setEnabled(false);
-
+		updateTabbedPaneState();
+		updateCommonButtons();
+		updatePanelData();
 	}
 
 	@Override
@@ -37,6 +30,26 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 	@Override
 	void ready() {
 		// Кнопка неактивна
+	}
+
+	private void updateTabbedPaneState() {
+		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,true);
+		view.getTabbedPane().setEnabledAt(view.DATA_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,false);
+
+		view.getTabbedPane().setSelectedIndex(view.APPLICATORS_STATE);
+	}
+
+	private void updateCommonButtons() {
+		view.getBackButton().setEnabled(true);
+		view.getNextButton().setEnabled(true);
+		view.getReadyButton().setEnabled(false);
+	}
+
+	void updatePanelData() {
+		view.getApplicatorsPanel().setApplicators(controller.getApplicators());
+		view.getApplicatorsPanel().setServiceName(controller.getService().getName());
 	}
 
 

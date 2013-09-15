@@ -1,10 +1,17 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.util.List;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTabbedPane;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.JScrollPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -15,6 +22,7 @@ import javax.swing.event.ChangeEvent;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.applicator.Applicator;
 
 class ReceptionView extends JFrame{
 
@@ -35,6 +43,8 @@ class ReceptionView extends JFrame{
 	private ApplicatorsPanel applicatorsPanel;
 	private DataPanel dataPanel;
 	private PrintPanel printPanel;
+
+
 
 	public ReceptionView(ReceptionViewController controller) {
 		super("Прием заявителя");
@@ -111,15 +121,15 @@ class ReceptionView extends JFrame{
 		this.setLocationRelativeTo(null);
 	}
 
-	// Создаем панель выбоа услуги
+	// Панель выбора услуги
 	class ServicePanel extends JPanel {
 		
 		JLabel serviceNameLabel;
 
 		ServicePanel() {
-			super(new MigLayout());
+			super(new MigLayout("fillx"));
 
-			serviceNameLabel = new JLabel("Услуга не выбрана");
+			serviceNameLabel = new JLabel();
 			JButton selectServiceButton = new JButton("Выбрать");
 			selectServiceButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
@@ -127,25 +137,118 @@ class ReceptionView extends JFrame{
 				}
 			});
 
-			this.add(serviceNameLabel,"growx 100");
+			this.add(new JLabel("Услуга: "));
+			this.add(serviceNameLabel,"growx");
 			this.add(selectServiceButton, "right, wrap");
 
 		}
 
-		JLabel getServiceNameLabel() {
-			return serviceNameLabel;
+		void setServiceName(String serviceName) {
+			serviceNameLabel.setText(serviceName);
 		}
 
 	}
 
+	// Панель выбора заявителей
 	class ApplicatorsPanel extends JPanel {
+		private JLabel serviceNameLabel;
+		private ApplicatorsListModel applicatorsListModel;
 
 		ApplicatorsPanel() {
-			super(new MigLayout());
+			super(new MigLayout("fillx"));
+			
+			this.add(new JLabel("Услуга: "), "gapbottom 10");
+			serviceNameLabel = new JLabel("Услуга не выбрана");
+			this.add(serviceNameLabel, "growx, left, wrap");
+
+			this.add(new JLabel("Заявители: "),"wrap");
+
+			applicatorsListModel = new ApplicatorsListModel(controller.getApplicators());
+			JList applicatorsList = new JList(applicatorsListModel);
+			JScrollPane applicatorsListScrollPane = new JScrollPane(applicatorsList);
+
+
+			this.add(applicatorsListScrollPane, "span, growx");
+
+			final JButton addButton = new JButton("+");
+
+			final JPopupMenu applicatorSelectorPopupMenu = new JPopupMenu();
+			JMenuItem flMenuItem = new JMenuItem("Физ. лицо");
+			flMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.addApplicatorFL();
+				}
+			});
+			JMenuItem ulMenuItem = new JMenuItem("Юр. лицо");
+			ulMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.addApplicatorUL();
+				}
+			});
+
+			applicatorSelectorPopupMenu.add(flMenuItem);
+			applicatorSelectorPopupMenu.add(ulMenuItem);
+
+			addButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					applicatorSelectorPopupMenu.show(addButton,addButton.getWidth(),0);
+				}
+			});
+
+			JButton deleteButton = new JButton("-");
+
+			this.add(addButton,"split");
+			this.add(deleteButton, "wrap");
+
 		}
+
+		// Модель данных для JList заявителей
+		class ApplicatorsListModel<Applicator> extends AbstractListModel {
+			List<Applicator> applicators;
+
+			ApplicatorsListModel(List<Applicator> applicators) {
+				this.applicators = applicators;
+			}
+
+			@Override
+			public Applicator getElementAt(int index) {
+				return applicators.get(index);
+			}
+
+			@Override
+			public int getSize() {
+				return applicators.size();
+			}
+
+			void applicatorAdded(int index) {
+				fireIntervalAdded(this,index,index);
+			}
+
+			void setApplicators(List<Applicator> applicators) {
+				this.applicators = applicators;
+			}
+		}
+
+		////// Методы для установки и обновления содержимого ApplicatorsPanel
+
+		// Вызывается контроллером при добавлении заявителя
+		void applicatorAdded(int index) {
+			applicatorsListModel.applicatorAdded(index);
+		}
+
+		// Вызывается ApplicatorsReceptionViewState
+		void setApplicators(List<Applicator> applicators) {
+			applicatorsListModel.setApplicators(applicators);
+		}
+
+		void setServiceName(String serviceName) {
+			serviceNameLabel.setText(serviceName);
+		} 
+
 
 	}
 
+	// панель для ввода даннных по услуге
 	class DataPanel extends JPanel {
 
 		DataPanel() {
@@ -154,6 +257,7 @@ class ReceptionView extends JFrame{
 
 	}
 
+	// панель для печати запроса
 	class PrintPanel extends JPanel {
 
 		PrintPanel() {
@@ -161,6 +265,8 @@ class ReceptionView extends JFrame{
 		}
 
 	}
+
+	// отработка нажатия общих кнопок
 
 	JButton getBackButton() {
 		return backButton;
@@ -179,8 +285,13 @@ class ReceptionView extends JFrame{
 	}
 
 
+	// возвращает панели для доступа к их содержимому
 	ServicePanel getServicePanel() {
 		return servicePanel;
+	}
+
+	ApplicatorsPanel getApplicatorsPanel() {
+		return applicatorsPanel;
 	}
 
 

@@ -1,14 +1,19 @@
 package org.kesler.simplereg.gui.reception;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.AbstractListModel;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.applicator.ApplicatorFL;
+import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
+import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 
 public class ReceptionViewController {
 
@@ -23,6 +28,7 @@ public class ReceptionViewController {
 
 
 	private ReceptionViewController() {
+		applicators = new ArrayList<Applicator>();
 		view = new ReceptionView(this);
 		viewState = new NoneReceptionViewState(this, view);
 	}
@@ -47,6 +53,9 @@ public class ReceptionViewController {
 		//Получаем текущего оператора
 		operator = CurrentOperator.getInstance().getOperator();
 		reception.setOperator(operator);
+
+		// Создаем пустой список заявителей
+		applicators = new ArrayList<Applicator>();
 	}
 
 	void back() {
@@ -74,17 +83,33 @@ public class ReceptionViewController {
 		return reception;
 	}
 
-	void selectService() {
-		service = ServicesDialogController.getInstance().openSelectDialog(view);
+	List<Applicator> getApplicators() {
+		return applicators;
+	}
 
-		String serviceName = "Услуга не определена";
-		if (service != null) {
-			serviceName = service.getName();
-		}
-		
-		view.getServicePanel().getServiceNameLabel().setText(serviceName);
+	Service getService() {
+		return service;
+	}
+
+	void selectService() {
+		service = ServicesDialogController.getInstance().openSelectDialog(view);		
+		viewState.updatePanelData();
 
 	}
 
+	void addApplicatorFL() {
+		ApplicatorFLDialog dialog = new ApplicatorFLDialog(view);
+		// Модальный диалог - ожидание закрытия
+		dialog.setVisible(true);
+		ApplicatorFL applicatorFL = dialog.getApplicatorFL();
+		if (applicatorFL != null) {
+			applicators.add(applicatorFL);
+			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
+		}
+	}
+
+	void addApplicatorUL() {
+
+	}
 
 }
