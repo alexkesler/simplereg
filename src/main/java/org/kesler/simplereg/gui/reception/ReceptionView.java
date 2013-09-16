@@ -197,8 +197,8 @@ class ReceptionView extends JFrame{
 
 			JButton deleteButton = new JButton("-");
 
-			this.add(addButton,"split");
-			this.add(deleteButton, "wrap");
+			this.add(addButton,"split, width 45!");
+			this.add(deleteButton, "width 45!, wrap");
 
 		}
 

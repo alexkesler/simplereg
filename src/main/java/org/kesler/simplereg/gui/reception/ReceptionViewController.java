@@ -112,4 +112,8 @@ public class ReceptionViewController {
 
 	}
 
+	void saveReception() {
+		model.addReception(reception);
+	}
+
 }
