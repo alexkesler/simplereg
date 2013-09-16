@@ -6,12 +6,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -126,12 +128,16 @@ class ReceptionView extends JFrame{
 	// Панель выбора услуги
 	class ServicePanel extends JPanel {
 		
-		JLabel serviceNameLabel;
+		JTextArea serviceNameTextArea;
 
 		ServicePanel() {
 			super(new MigLayout("fillx"));
 
-			serviceNameLabel = new JLabel();
+			serviceNameTextArea = new JTextArea();
+			serviceNameTextArea.setBorder(BorderFactory.createEtchedBorder());
+			serviceNameTextArea.setLineWrap(true);
+			serviceNameTextArea.setWrapStyleWord(true);
+			serviceNameTextArea.setEditable(false);
 			JButton selectServiceButton = new JButton("Выбрать");
 			selectServiceButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
@@ -140,28 +146,33 @@ class ReceptionView extends JFrame{
 			});
 
 			this.add(new JLabel("Услуга: "));
-			this.add(serviceNameLabel,"growx");
+			this.add(serviceNameTextArea,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");
 
 		}
 
 		void setServiceName(String serviceName) {
-			serviceNameLabel.setText(serviceName);
+			serviceNameTextArea.setText(serviceName);
 		}
 
 	}
 
 	// Панель выбора заявителей
 	class ApplicatorsPanel extends JPanel {
-		private JLabel serviceNameLabel;
+		private JTextArea serviceNameTextArea;
 		private ApplicatorsListModel applicatorsListModel;
 
 		ApplicatorsPanel() {
 			super(new MigLayout("fillx"));
 			
 			this.add(new JLabel("Услуга: "), "gapbottom 10");
-			serviceNameLabel = new JLabel("Услуга не выбрана");
-			this.add(serviceNameLabel, "growx, left, wrap");
+			serviceNameTextArea = new JTextArea("Услуга не выбрана");
+			serviceNameTextArea.setBorder(BorderFactory.createEtchedBorder());
+			serviceNameTextArea.setLineWrap(true);
+			serviceNameTextArea.setWrapStyleWord(true);
+			serviceNameTextArea.setEditable(false);
+
+			this.add(serviceNameTextArea, "growx, left, wrap");
 
 			this.add(new JLabel("Заявители: "),"wrap");
 
@@ -254,7 +265,7 @@ class ReceptionView extends JFrame{
 		}
 
 		void setServiceName(String serviceName) {
-			serviceNameLabel.setText(serviceName);
+			serviceNameTextArea.setText(serviceName);
 		} 
 
 
@@ -264,7 +275,7 @@ class ReceptionView extends JFrame{
 	class DataPanel extends JPanel {
 
 		DataPanel() {
-			super(new MigLayout());
+			super(new MigLayout("fillx"));
 		}
 
 	}
