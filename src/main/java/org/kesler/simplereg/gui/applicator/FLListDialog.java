@@ -32,13 +32,21 @@ public class FLListDialog extends JDialog{
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		// Панель данных
-		JPanel dataPanel = new JPanel(new BorderLayout());
+		JPanel dataPanel = new JPanel(new MigLayout("fillx"));
 
 		flListModel = new FLListModel(); 
 		JList flList = new JList(flListModel);
 		JScrollPane flListScrollPane = new JScrollPane(flList); 
 
-		dataPanel.add(flListScrollPane, BorderLayout.CENTER);
+		JButton addButton = new JButton("+");
+		JButton editButton = new JButton("Ред");
+		JButton deleteButton = new JButton("-");
+
+		dataPanel.add(flListScrollPane, "span, wrap");
+
+		dataPanel.add(addButton, "split");
+		dataPanel.add(editButton);
+		dataPanel.add(deleteButton,"wrap");
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -78,7 +86,7 @@ public class FLListDialog extends JDialog{
 			return fl;
 		}
 
-		setFLList(List<FL> flList) {
+		void setFLList(List<FL> flList) {
 			this.flList = flList;
 		}
 	}

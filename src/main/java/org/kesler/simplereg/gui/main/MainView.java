@@ -27,6 +27,8 @@ import java.util.EnumSet;
 import java.text.SimpleDateFormat;
 import javax.swing.table.AbstractTableModel;
 
+import org.kesler.simplereg.util.ResourcesUtil;
+
 import org.kesler.simplereg.logic.Reception;
 
 /**
@@ -137,8 +139,10 @@ public class MainView extends JFrame {
 		currentOperatorLabel = new JLabel();
 
 		JButton newReceptionButton = new JButton(getActionByCommand(MainViewCommand.NewReception));
+		newReceptionButton.setIcon(ResourcesUtil.getIcon("asterisk_yellow.png"));
 
 		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
+		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 
 		buttonPanel.add(currentOperatorLabel);
 		buttonPanel.add(Box.createHorizontalGlue());

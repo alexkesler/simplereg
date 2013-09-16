@@ -71,10 +71,10 @@ public class ApplicatorFLDialog extends JDialog {
 		});
 
 		dataPanel.add(new JLabel("Заявитель: "));
-		dataPanel.add(applicatorFIOLabel);
+		dataPanel.add(applicatorFIOLabel, "w 300!");
 		dataPanel.add(selectApplicatorFLButton, "wrap");
 		dataPanel.add(new JLabel("Представитель: "));
-		dataPanel.add(represFIOLabel);
+		dataPanel.add(represFIOLabel, "w 300!");
 		dataPanel.add(selectRepresFLButton);
 		dataPanel.add(eraseRepresFLButton);
 

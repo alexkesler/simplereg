@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.AbstractListModel;
+
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
@@ -112,8 +114,17 @@ public class ReceptionViewController {
 
 	}
 
+	void storeService() {
+		reception.setService(service);
+	}
+
+	void storeApplicators() {
+		reception.setApplicators(applicators);
+	}
+
 	void saveReception() {
-		model.addReception(reception);
+
+		ReceptionsModel.getInstance().addReception(reception);
 	}
 
 }

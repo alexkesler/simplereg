@@ -21,6 +21,8 @@ import javax.swing.event.ChangeEvent;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.util.ResourcesUtil;
+
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.applicator.Applicator;
 
@@ -170,7 +172,10 @@ class ReceptionView extends JFrame{
 
 			this.add(applicatorsListScrollPane, "span, growx");
 
-			final JButton addButton = new JButton("+");
+			
+			// Кнопка добавления заявителя
+			final JButton addButton = new JButton();
+			addButton.setIcon(ResourcesUtil.getIcon("add.png"));
 
 			final JPopupMenu applicatorSelectorPopupMenu = new JPopupMenu();
 			JMenuItem flMenuItem = new JMenuItem("Физ. лицо");
@@ -195,10 +200,15 @@ class ReceptionView extends JFrame{
 				}
 			});
 
-			JButton deleteButton = new JButton("-");
+			JButton editButton = new JButton();
+			editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
 
-			this.add(addButton,"split, width 45!");
-			this.add(deleteButton, "width 45!, wrap");
+			JButton deleteButton = new JButton();
+			deleteButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+
+			this.add(addButton,"split");
+			this.add(editButton);
+			this.add(deleteButton, "wrap");
 
 		}
 

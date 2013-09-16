@@ -29,6 +29,7 @@ class ServiceReceptionViewState extends ReceptionViewState {
 	void next() {
 		// Переходим в состояние приема заявителя, если все в порядке
 		if (controller.getService()!=null) {
+			controller.storeService();
 			controller.setState(new ApplicatorsReceptionViewState(controller, view));
 		} else {
 			JOptionPane.showMessageDialog(view,
