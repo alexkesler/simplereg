@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.util.ResourcesUtil;
+
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.FL;
 
@@ -29,7 +31,8 @@ public class ApplicatorFLDialog extends JDialog {
 	}
 
 	public ApplicatorFLDialog(JFrame frame, ApplicatorFL applicatorFL) {
-		super(frame, true);
+		super(frame,"Заявитель - физическое лицо", true);
+		this.setIconImage(ResourcesUtil.getIcon("user.png").getImage());
 		this.applicatorFL = applicatorFL;
 		createGUI();
 	}
@@ -45,6 +48,7 @@ public class ApplicatorFLDialog extends JDialog {
 
 		// Кнопка выбора заявителя 
 		JButton selectApplicatorFLButton = new JButton("Выбрать");
+		selectApplicatorFLButton.setIcon(ResourcesUtil.getIcon("user_add.png"));
 		selectApplicatorFLButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				selectApplicatorFL();
@@ -56,6 +60,7 @@ public class ApplicatorFLDialog extends JDialog {
 
 		// Кнопка выбора представителя заявителя
 		JButton selectRepresFLButton = new JButton("Выбрать");
+		selectRepresFLButton.setIcon(ResourcesUtil.getIcon("group_add.png"));
 		selectRepresFLButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				selectRepresFL();
@@ -64,6 +69,7 @@ public class ApplicatorFLDialog extends JDialog {
 
 		// Кнопка очистки представителя заявителя
 		JButton eraseRepresFLButton = new JButton("Очистить");
+		eraseRepresFLButton.setIcon(ResourcesUtil.getIcon("group_delete.png"));
 		eraseRepresFLButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				eraseRepresFL();

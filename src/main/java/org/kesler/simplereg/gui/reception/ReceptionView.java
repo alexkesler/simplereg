@@ -179,12 +179,14 @@ class ReceptionView extends JFrame{
 
 			final JPopupMenu applicatorSelectorPopupMenu = new JPopupMenu();
 			JMenuItem flMenuItem = new JMenuItem("Физ. лицо");
+			flMenuItem.setIcon(ResourcesUtil.getIcon("user.png"));
 			flMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					controller.addApplicatorFL();
 				}
 			});
 			JMenuItem ulMenuItem = new JMenuItem("Юр. лицо");
+			ulMenuItem.setIcon(ResourcesUtil.getIcon("user_suit.png"));
 			ulMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					controller.addApplicatorUL();
