@@ -18,6 +18,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
+import java.awt.Image;
 
 import javax.swing.Action;
 
@@ -51,6 +52,9 @@ public class MainView extends JFrame {
 		this.controller = controller;
 		this.setSize(800,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		List<Image> imageList = new ArrayList<Image>();
+		imageList.add(ResourcesUtil.getIcon("cabinet.png").getImage());
+		this.setIconImages(imageList);
 
 		this.tableModel = new MainViewReceptionsTableModel();
 		

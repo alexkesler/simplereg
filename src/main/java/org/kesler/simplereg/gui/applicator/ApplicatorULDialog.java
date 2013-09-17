@@ -2,7 +2,10 @@ package org.kesler.simplereg.gui.applicator;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
+
+import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.applicator.FL;
 import org.kesler.simplereg.logic.applicator.UL;
@@ -14,9 +17,14 @@ class ApplicatorULDialog extends JDialog {
 	private ApplicatorUL applicatorUL;
 
 	ApplicatorULDialog (JFrame frame) {
-		super(frame, true);
+		super(frame,"Заявитель - юридическое лицо", true);
 		this.frame = frame;
 
+	}
+
+	private void createGUI() {
+
+		JPanel mainPanel = new JPanel();
 	}
 
 }
