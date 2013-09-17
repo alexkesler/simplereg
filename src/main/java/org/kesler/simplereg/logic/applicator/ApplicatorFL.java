@@ -65,7 +65,7 @@ public class ApplicatorFL extends Applicator {
 	public String getName() {
 		String name = "Не определен";
 
-		if (fl!=null) name += fl.getShortFIO();
+		if (fl!=null) name = fl.getShortFIO();
 
 		return name;
 	}

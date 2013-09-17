@@ -94,7 +94,7 @@ public class FLListDialog extends JDialog{
 			}
 		});
 
-		dataPanel.add(flListScrollPane, "span, growx, wrap");
+		dataPanel.add(flListScrollPane, "span, growx, wrap, w 300:n:n");
 
 		dataPanel.add(addButton, "split");
 		dataPanel.add(editButton);

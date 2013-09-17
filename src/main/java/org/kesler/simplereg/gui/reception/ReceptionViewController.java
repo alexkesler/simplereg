@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.AbstractListModel;
+import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
@@ -16,6 +17,7 @@ import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
+import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
 
 public class ReceptionViewController {
 
@@ -107,17 +109,24 @@ public class ReceptionViewController {
 	////// Блок добавления, редактирования, удаления заявителей
 
 	void addApplicatorFL() {
-		ApplicatorFLDialog dialog = new ApplicatorFLDialog(view);
+		ApplicatorFLDialog flDialog = new ApplicatorFLDialog(view);
 		// Модальный диалог - ожидание закрытия
-		dialog.setVisible(true);
-		ApplicatorFL applicatorFL = dialog.getApplicatorFL();
-		if (applicatorFL != null) {
-			applicators.add(applicatorFL);
+		flDialog.setVisible(true);
+		 
+		if (flDialog.getResult() == ApplicatorFLDialog.OK) {
+			applicators.add(flDialog.getApplicatorFL());
 			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
 		}
 	}
 
 	void addApplicatorUL() {
+		ApplicatorULDialog ulDialog = new ApplicatorULDialog(view);
+
+		ulDialog.setVisible(true);
+		if (ulDialog.getResult() == ApplicatorULDialog.OK) {
+			applicators.add(ulDialog.getApplicatorUL());
+			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
+		}
 
 	}
 
@@ -132,15 +141,26 @@ public class ReceptionViewController {
 			ApplicatorFL currentApplicatorFL = (ApplicatorFL) currentApplicator;
 			ApplicatorFLDialog flDialog = new ApplicatorFLDialog(view, currentApplicatorFL);
 			flDialog.setVisible(true);
-			if (flDialog.getResult() == ApplicatorFLDialog.OK) view.applicatorUpdated(index);
+			if (flDialog.getResult() == ApplicatorFLDialog.OK) view.getApplicatorsPanel().applicatorUpdated(index);
 		} else if (currentApplicator instanceof ApplicatorUL) {
 			ApplicatorUL currentApplicatorUL = (ApplicatorUL) currentApplicator;
 			ApplicatorULDialog ulDialog = new ApplicatorULDialog(view, currentApplicatorUL);
 			ulDialog.setVisible(true);
-			if (ulDialog.getResult() == ApplicatorULDialog.OK) view.applicatorUpdated(index);
+			if (ulDialog.getResult() == ApplicatorULDialog.OK) view.getApplicatorsPanel().applicatorUpdated(index);
 		}
 
 	}
+
+	void removeApplicator(int index) {
+		if (index == -1) {
+			JOptionPane.showMessageDialog(view, "Заявитель не выбран.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return;		
+		}  
+
+		applicators.remove(index);
+		view.getApplicatorsPanel().applicatorRemoved(index);
+
+	} 
 
 	void storeService() {
 		reception.setService(service);

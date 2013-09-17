@@ -86,6 +86,7 @@ class ReceptionView extends JFrame{
 		JPanel buttonPanel = new JPanel();
 
 		backButton = new JButton("Назад");
+		backButton.setIcon(ResourcesUtil.getIcon("resultset_previous.png"));
 		backButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.back();
@@ -93,6 +94,7 @@ class ReceptionView extends JFrame{
 		});
 
 		nextButton = new JButton("Далее");
+		nextButton.setIcon(ResourcesUtil.getIcon("resultset_next.png"));
 		nextButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.next();
@@ -100,6 +102,7 @@ class ReceptionView extends JFrame{
 		});
 
 		readyButton = new JButton("Готово");
+		readyButton.setIcon(ResourcesUtil.getIcon("tick.png"));
 		readyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.ready();
@@ -107,6 +110,7 @@ class ReceptionView extends JFrame{
 		});
 
 		cancelButton = new JButton("Отмена");
+		cancelButton.setIcon(ResourcesUtil.getIcon("cross.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.cancel();
@@ -179,7 +183,7 @@ class ReceptionView extends JFrame{
 			applicatorsListModel = new ApplicatorsListModel(controller.getApplicators());
 			JList applicatorsList = new JList(applicatorsListModel);
 
-			applicatorsList.setselectionMode(ListSelectionModel.SINGLE_SELECTION);
+			applicatorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			applicatorsList.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent lse) {
 					selectedApplicatorIndex = lse.getFirstIndex();
@@ -230,8 +234,15 @@ class ReceptionView extends JFrame{
 				}
 			});
 
+			// Кнопка удаления заявителя
 			JButton deleteButton = new JButton();
 			deleteButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+			deleteButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.removeApplicator(selectedApplicatorIndex);
+				}
+			});
+
 
 			this.add(addButton,"split");
 			this.add(editButton);
@@ -258,7 +269,15 @@ class ReceptionView extends JFrame{
 			}
 
 			public void fireIntervalAdded(Object source, int index0, int index1) {
-				fireIntervalAdded(this,index,index);
+				super.fireIntervalAdded(source,index0,index1);
+			}
+
+			public void fireContentsChanged(Object source, int index0, int index1) {
+				super.fireContentsChanged(source,index0,index1);
+			}
+
+			public void fireIntervalRemoved(Object source, int index0, int index1) {
+				super.fireIntervalRemoved(source,index0,index1);
 			}
 
 			void setApplicators(List<Applicator> applicators) {
@@ -274,7 +293,11 @@ class ReceptionView extends JFrame{
 		}
 
 		void applicatorUpdated(int index) {
-			
+			applicatorsListModel.fireContentsChanged(this, index, index);
+		}
+
+		void applicatorRemoved(int index) {
+			applicatorsListModel.fireIntervalRemoved(this,index,index);
 		}
 
 		// Вызывается ApplicatorsReceptionViewState

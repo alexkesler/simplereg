@@ -128,7 +128,7 @@ public class ApplicatorFLDialog extends JDialog {
 
 	}
 
-	private updateLabels() {
+	private void updateLabels() {
 		applicatorFIOLabel.setText(applicatorFL.getFIO());
 		represFIOLabel.setText(applicatorFL.getRepresFIO());
 	}

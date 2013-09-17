@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.applicator;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -16,9 +17,15 @@ import org.kesler.simplereg.logic.applicator.FL;
 
 public class FLDialog extends JDialog {
 	
+	public static final int NONE = -1;
+	public static final int OK = 0;
+	public static final int CANCEL = 1;
+
 	private FL fl;
 	private JFrame frame;
 	private JDialog dialog;
+
+	private int result = NONE;
 
 	private JTextField surName;
 	private JTextField firstName;
@@ -27,6 +34,7 @@ public class FLDialog extends JDialog {
 	public FLDialog(JFrame frame) {
 		super(frame, true);
 		this.frame = frame;
+		fl = new FL();
 		createGUI();
 	}
 
@@ -35,12 +43,12 @@ public class FLDialog extends JDialog {
 		this.frame = frame;
 		this.fl = fl;
 		createGUI();
-		loadFLToGUI();
 	}
 
 	public FLDialog(JDialog dialog) {
 		super(dialog, true);
 		this.dialog = dialog;
+		fl = new FL();
 		createGUI();
 	}
 
@@ -49,11 +57,9 @@ public class FLDialog extends JDialog {
 		this.dialog = dialog;
 		this.fl = fl;
 		createGUI();
-		loadFLToGUI();
 	}
 
 	public FL getFL() {
-		saveFLFromGUI();
 		return fl;
 	}
 
@@ -63,12 +69,16 @@ public class FLDialog extends JDialog {
 		parentName.setText(fl.getParentName());
 	}
 
-	private void saveFLFromGUI() {
-		fl = new FL();
+	private boolean saveFLFromGUI() {
 		// Добавить проверку на пустые поля
+		if (surName.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this,"Поле фамилии не может быть пустым", "Ошибка",JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
 		fl.setSurName(surName.getText());
 		fl.setFirstName(firstName.getText());
 		fl.setParentName(parentName.getText());
+		return true;
 	}
 
 	private void createGUI() {
@@ -94,15 +104,17 @@ public class FLDialog extends JDialog {
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				saveFLFromGUI();
-				setVisible(false);
+				if(saveFLFromGUI()) {
+					result = OK;
+					setVisible(false);
+				}	
 			}
 		});
 
 		JButton cancelButton = new JButton("Отмена");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				fl = null;
+				result = CANCEL;
 				setVisible(false);
 			}
 		});
@@ -124,5 +136,9 @@ public class FLDialog extends JDialog {
 			this.setLocationRelativeTo(null);
 		}
 	} 
+
+	public int getResult() {
+		return result;
+	}
 
 }
