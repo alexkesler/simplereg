@@ -50,8 +50,9 @@ public class FLListDialog extends JDialog{
 
 		flListModel = new FLListModel(); 
 		JList flList = new JList(flListModel);
-		// При изменении выбора
+		// Можно выбрать только один элемент
 		flList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// Добавляем обработчик выбора
 		flList.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent lse) {

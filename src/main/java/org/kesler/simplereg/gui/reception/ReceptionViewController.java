@@ -104,6 +104,8 @@ public class ReceptionViewController {
 
 	}
 
+	////// Блок добавления, редактирования, удаления заявителей
+
 	void addApplicatorFL() {
 		ApplicatorFLDialog dialog = new ApplicatorFLDialog(view);
 		// Модальный диалог - ожидание закрытия
@@ -116,6 +118,27 @@ public class ReceptionViewController {
 	}
 
 	void addApplicatorUL() {
+
+	}
+
+	void editApplicator(int index) {
+		if (index == -1) {
+			JOptionPane.showMessageDialog(view, "Заявитель не выбран.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return;		
+		} 
+		Applicator currentApplicator = applicators.get(index);
+		// Проверяем тип заявителя и вызываем соответствующий диалогс
+		if (currentApplicator instanceof ApplicatorFL) {
+			ApplicatorFL currentApplicatorFL = (ApplicatorFL) currentApplicator;
+			ApplicatorFLDialog flDialog = new ApplicatorFLDialog(view, currentApplicatorFL);
+			flDialog.setVisible(true);
+			if (flDialog.getResult() == ApplicatorFLDialog.OK) view.applicatorUpdated(index);
+		} else if (currentApplicator instanceof ApplicatorUL) {
+			ApplicatorUL currentApplicatorUL = (ApplicatorUL) currentApplicator;
+			ApplicatorULDialog ulDialog = new ApplicatorULDialog(view, currentApplicatorUL);
+			ulDialog.setVisible(true);
+			if (ulDialog.getResult() == ApplicatorULDialog.OK) view.applicatorUpdated(index);
+		}
 
 	}
 

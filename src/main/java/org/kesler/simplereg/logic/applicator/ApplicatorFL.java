@@ -45,9 +45,25 @@ public class ApplicatorFL extends Applicator {
 		this.repres = repres;
 	}
 
+	public String getFIO() {
+		String fio = "Не определен";
+
+		if (fl!=null) fio = fl.getFIO();
+
+		return fio;
+	}
+
+	public String getRepresFIO() {
+		String fio = "Не определен";
+
+		if (repres!=null) fio = repres.getFIO();
+
+		return fio;
+	}
+
 	@Override
 	public String getName() {
-		String name = "";
+		String name = "Не определен";
 
 		if (fl!=null) name += fl.getShortFIO();
 
@@ -56,7 +72,7 @@ public class ApplicatorFL extends Applicator {
 
 	@Override
 	public String toString() {
-		String applicatorFIO = "";
+		String applicatorFIO = "Не определен";
 		if (fl!=null) applicatorFIO = fl.getFIO();
 
 		String represFIO = "";

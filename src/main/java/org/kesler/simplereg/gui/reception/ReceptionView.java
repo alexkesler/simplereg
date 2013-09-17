@@ -10,6 +10,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
@@ -143,7 +146,7 @@ class ReceptionView extends JFrame{
 				}
 			});
 
-			this.add(new JLabel("Услуга: "));
+			this.add(new JLabel("Услуга: "),"ay top");
 			this.add(serviceNameLabel,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");
 
@@ -159,6 +162,7 @@ class ReceptionView extends JFrame{
 	class ApplicatorsPanel extends JPanel {
 		private JLabel serviceNameLabel;
 		private ApplicatorsListModel applicatorsListModel;
+		private int selectedApplicatorIndex;
 
 		ApplicatorsPanel() {
 			super(new MigLayout("fillx"));
@@ -171,8 +175,17 @@ class ReceptionView extends JFrame{
 
 			this.add(new JLabel("Заявители: "),"wrap");
 
+			// Добавляем список заявителей
 			applicatorsListModel = new ApplicatorsListModel(controller.getApplicators());
 			JList applicatorsList = new JList(applicatorsListModel);
+
+			applicatorsList.setselectionMode(ListSelectionModel.SINGLE_SELECTION);
+			applicatorsList.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent lse) {
+					selectedApplicatorIndex = lse.getFirstIndex();
+				}
+			});
+
 			JScrollPane applicatorsListScrollPane = new JScrollPane(applicatorsList);
 
 
@@ -208,8 +221,14 @@ class ReceptionView extends JFrame{
 				}
 			});
 
+			// Кнопка редактирования заявителя 
 			JButton editButton = new JButton();
 			editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
+			editButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.editApplicator(selectedApplicatorIndex);
+				}
+			});
 
 			JButton deleteButton = new JButton();
 			deleteButton.setIcon(ResourcesUtil.getIcon("delete.png"));
@@ -238,7 +257,7 @@ class ReceptionView extends JFrame{
 				return applicators.size();
 			}
 
-			void applicatorAdded(int index) {
+			public void fireIntervalAdded(Object source, int index0, int index1) {
 				fireIntervalAdded(this,index,index);
 			}
 
@@ -251,7 +270,11 @@ class ReceptionView extends JFrame{
 
 		// Вызывается контроллером при добавлении заявителя
 		void applicatorAdded(int index) {
-			applicatorsListModel.applicatorAdded(index);
+			applicatorsListModel.fireIntervalAdded(this,index,index);
+		}
+
+		void applicatorUpdated(int index) {
+			
 		}
 
 		// Вызывается ApplicatorsReceptionViewState

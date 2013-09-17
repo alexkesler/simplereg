@@ -19,10 +19,16 @@ import org.kesler.simplereg.logic.applicator.FL;
 
 public class ApplicatorFLDialog extends JDialog {
 
+	public static final int OK = 0;
+	public static final int CANCEL = 1;
+	public static final int NONE = -1;
+
 	private JFrame frame;
 	private ApplicatorFL applicatorFL;
 	private JLabel applicatorFIOLabel;
  	private JLabel represFIOLabel;
+
+ 	private int result = NONE;
 
 	public ApplicatorFLDialog(JFrame frame){
 		super(frame, true);
@@ -45,7 +51,7 @@ public class ApplicatorFLDialog extends JDialog {
 		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout());
 
-		applicatorFIOLabel = new JLabel("Не опеределено");
+		applicatorFIOLabel = new JLabel();
 		applicatorFIOLabel.setBorder(BorderFactory.createEtchedBorder());
 
 		// Кнопка выбора заявителя 
@@ -58,7 +64,7 @@ public class ApplicatorFLDialog extends JDialog {
 		});
 
 
-		represFIOLabel = new JLabel("");
+		represFIOLabel = new JLabel();
 		represFIOLabel.setBorder(BorderFactory.createEtchedBorder());
 
 		// Кнопка выбора представителя заявителя
@@ -93,6 +99,7 @@ public class ApplicatorFLDialog extends JDialog {
 		JButton okButton = new JButton("Ok");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
+				result = OK;
 				setVisible(false);
 			}
 		});
@@ -100,7 +107,7 @@ public class ApplicatorFLDialog extends JDialog {
 		JButton cancelButton = new JButton("Отмена");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				applicatorFL = null;
+				result = CANCEL;
 				setVisible(false);
 			}
 		});
@@ -113,40 +120,41 @@ public class ApplicatorFLDialog extends JDialog {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
+
+		updateLabels();
+
 		this.pack();
 		this.setLocationRelativeTo(frame);
 
+	}
+
+	private updateLabels() {
+		applicatorFIOLabel.setText(applicatorFL.getFIO());
+		represFIOLabel.setText(applicatorFL.getRepresFIO());
 	}
 
 	public ApplicatorFL getApplicatorFL() {
 		return applicatorFL;
 	}
 
+	public int getResult() {
+		return result;
+	}
+
 	private void selectApplicatorFL() {
 		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
 		applicatorFL.setFL(fl);
-		if (fl != null) {
-			applicatorFIOLabel.setText(fl.getShortFIO());
-		} else {
-			applicatorFIOLabel.setText("");
-		}
-		
+		updateLabels();		
 	}
 
 	private void selectRepresFL() {
 		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
 		applicatorFL.setRepres(fl);
-		if (fl != null) {
-			represFIOLabel.setText(fl.getShortFIO());
-		} else {
-			represFIOLabel.setText("");
-		}
-
+		updateLabels();
 	}
 
 	private void eraseRepresFL() {
 		applicatorFL.setRepres(null);
-		represFIOLabel.setText("");
-
+		updateLabels();
 	}
 }
