@@ -5,10 +5,13 @@ class NoneReceptionViewState extends ReceptionViewState {
 
 	NoneReceptionViewState(ReceptionViewController controller, ReceptionView view) {
 		super(controller, view);
+		init();
 	}
 
 	@Override
-	void init() {}
+	void init() {
+		view.setVisible(false);
+	}
 
 	@Override
 	void back() {}

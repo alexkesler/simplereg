@@ -44,7 +44,6 @@ public class ReceptionViewController {
 
 	public void openView() {
 		view.setVisible(true);
-		viewState = new ServiceReceptionViewState(this, view);
 
 		// Создаем экземпляр приема заявтеля
 		reception = new Reception();
@@ -61,6 +60,9 @@ public class ReceptionViewController {
 
 		// Создаем пустой список заявителей
 		applicators = new ArrayList<Applicator>();
+
+		// Переключаем в начальное состояние
+		viewState = new ServiceReceptionViewState(this, view);
 	}
 
 	void back() {

@@ -15,6 +15,8 @@ import javax.persistence.FetchType;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.applicator.Applicator;
@@ -34,6 +36,7 @@ public class Reception extends AbstractEntity{
 
 	@OneToMany (fetch = FetchType.EAGER, mappedBy="reception")
 	@Cascade ({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	@Fetch(FetchMode.SUBSELECT)
 	private List<Applicator> applicators;
 
 	@ManyToOne

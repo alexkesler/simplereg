@@ -59,6 +59,7 @@ public class ApplicatorFLDialog extends JDialog {
 
 
 		represFIOLabel = new JLabel("");
+		represFIOLabel.setBorder(BorderFactory.createEtchedBorder());
 
 		// Кнопка выбора представителя заявителя
 		JButton selectRepresFLButton = new JButton("Выбрать");
@@ -133,12 +134,12 @@ public class ApplicatorFLDialog extends JDialog {
 	}
 
 	private void selectRepresFL() {
-		FLDialog flDialog = new FLDialog(frame);
-		flDialog.setVisible(true); //Модальный вызов
-		FL fl = flDialog.getFL();
+		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
+		applicatorFL.setRepres(fl);
 		if (fl != null) {
-			applicatorFL.setRepres(fl);
 			represFIOLabel.setText(fl.getShortFIO());
+		} else {
+			represFIOLabel.setText("");
 		}
 
 	}

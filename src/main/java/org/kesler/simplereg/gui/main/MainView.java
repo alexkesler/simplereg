@@ -94,10 +94,13 @@ public class MainView extends JFrame {
 
 		// Пункт меню 
 		JMenuItem loginMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Login));
+		loginMenuItem.setIcon(ResourcesUtil.getIcon("connect.png"));
 		// Пункт меню
 		JMenuItem logoutMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Logout));
+		logoutMenuItem.setIcon(ResourcesUtil.getIcon("disconnect.png"));
 		// Пункт меню
 		JMenuItem exitMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Exit));
+		exitMenuItem.setIcon(ResourcesUtil.getIcon("door_out.png"));
 
 		// Формируем основное меню
 		mainMenu.add(loginMenuItem);

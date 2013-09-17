@@ -136,6 +136,7 @@ class ReceptionView extends JFrame{
 			serviceNameLabel = new JLabel();
 			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
 			JButton selectServiceButton = new JButton("Выбрать");
+			selectServiceButton.setIcon(ResourcesUtil.getIcon("book_previous.png"));
 			selectServiceButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					controller.selectService();
@@ -162,11 +163,11 @@ class ReceptionView extends JFrame{
 		ApplicatorsPanel() {
 			super(new MigLayout("fillx"));
 			
-			this.add(new JLabel("Услуга: "), "gapbottom 10");
+			this.add(new JLabel("Услуга: "), "span, ay top");
 			serviceNameLabel = new JLabel("Не определена");
 			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
 
-			this.add(serviceNameLabel, "growx, left, wrap");
+			this.add(serviceNameLabel, "growx, wrap, gapbottom 10");
 
 			this.add(new JLabel("Заявители: "),"wrap");
 

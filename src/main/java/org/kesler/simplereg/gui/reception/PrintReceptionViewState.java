@@ -36,6 +36,7 @@ class PrintReceptionViewState extends ReceptionViewState {
 	void ready() {
 		// Сохраняем прием заявителя
 		controller.saveReception();
+		controller.setState(new NoneReceptionViewState(controller, view));
 	}
 
 	@Override
