@@ -18,6 +18,7 @@ public class FLDialog extends JDialog {
 	
 	private FL fl;
 	private JFrame frame;
+	private JDialog dialog;
 
 	private JTextField surName;
 	private JTextField firstName;
@@ -37,6 +38,20 @@ public class FLDialog extends JDialog {
 		loadFLToGUI();
 	}
 
+	public FLDialog(JDialog dialog) {
+		super(dialog, true);
+		this.dialog = dialog;
+		createGUI();
+	}
+
+	public FLDialog(JDialog dialog, FL fl) {
+		super(dialog, true);
+		this.dialog = dialog;
+		this.fl = fl;
+		createGUI();
+		loadFLToGUI();
+	}
+
 	public FL getFL() {
 		saveFLFromGUI();
 		return fl;
@@ -44,12 +59,13 @@ public class FLDialog extends JDialog {
 
 	private void loadFLToGUI() {
 		surName.setText(fl.getSurName());
-		firstName.setText(fl.getSurName());
+		firstName.setText(fl.getFirstName());
 		parentName.setText(fl.getParentName());
 	}
 
 	private void saveFLFromGUI() {
 		fl = new FL();
+		// Добавить проверку на пустые поля
 		fl.setSurName(surName.getText());
 		fl.setFirstName(firstName.getText());
 		fl.setParentName(parentName.getText());
@@ -100,7 +116,13 @@ public class FLDialog extends JDialog {
 
 		this.setContentPane(mainPanel);
 		this.pack();
-		this.setLocationRelativeTo(frame); // вызывать после pack()
+		if (frame != null) {
+			this.setLocationRelativeTo(frame); // вызывать после pack()
+		} else if (dialog != null) {
+			this.setLocationRelativeTo(dialog);
+		} else {
+			this.setLocationRelativeTo(null);
+		}
 	} 
 
 }

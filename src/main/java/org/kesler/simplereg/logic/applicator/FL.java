@@ -79,5 +79,10 @@ public class FL extends AbstractEntity{
 		return fio;
 	}
 
+	@Override
+	public String toString() {
+		return getFIO();
+	}
+
 
 }

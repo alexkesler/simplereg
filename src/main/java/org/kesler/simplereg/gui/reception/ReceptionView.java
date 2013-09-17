@@ -128,16 +128,13 @@ class ReceptionView extends JFrame{
 	// Панель выбора услуги
 	class ServicePanel extends JPanel {
 		
-		JTextArea serviceNameTextArea;
+		JLabel serviceNameLabel;
 
 		ServicePanel() {
 			super(new MigLayout("fillx"));
 
-			serviceNameTextArea = new JTextArea();
-			serviceNameTextArea.setBorder(BorderFactory.createEtchedBorder());
-			serviceNameTextArea.setLineWrap(true);
-			serviceNameTextArea.setWrapStyleWord(true);
-			serviceNameTextArea.setEditable(false);
+			serviceNameLabel = new JLabel();
+			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
 			JButton selectServiceButton = new JButton("Выбрать");
 			selectServiceButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
@@ -146,33 +143,30 @@ class ReceptionView extends JFrame{
 			});
 
 			this.add(new JLabel("Услуга: "));
-			this.add(serviceNameTextArea,"pushx, grow");
+			this.add(serviceNameLabel,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");
 
 		}
 
 		void setServiceName(String serviceName) {
-			serviceNameTextArea.setText(serviceName);
+			serviceNameLabel.setText("<html>"+serviceName+"</html>");
 		}
 
 	}
 
 	// Панель выбора заявителей
 	class ApplicatorsPanel extends JPanel {
-		private JTextArea serviceNameTextArea;
+		private JLabel serviceNameLabel;
 		private ApplicatorsListModel applicatorsListModel;
 
 		ApplicatorsPanel() {
 			super(new MigLayout("fillx"));
 			
 			this.add(new JLabel("Услуга: "), "gapbottom 10");
-			serviceNameTextArea = new JTextArea("Услуга не выбрана");
-			serviceNameTextArea.setBorder(BorderFactory.createEtchedBorder());
-			serviceNameTextArea.setLineWrap(true);
-			serviceNameTextArea.setWrapStyleWord(true);
-			serviceNameTextArea.setEditable(false);
+			serviceNameLabel = new JLabel("Не определена");
+			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
 
-			this.add(serviceNameTextArea, "growx, left, wrap");
+			this.add(serviceNameLabel, "growx, left, wrap");
 
 			this.add(new JLabel("Заявители: "),"wrap");
 
@@ -265,7 +259,7 @@ class ReceptionView extends JFrame{
 		}
 
 		void setServiceName(String serviceName) {
-			serviceNameTextArea.setText(serviceName);
+			serviceNameLabel.setText("<html>" + serviceName + "</html>");
 		} 
 
 

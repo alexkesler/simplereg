@@ -56,6 +56,9 @@ public class ReceptionViewController {
 		operator = CurrentOperator.getInstance().getOperator();
 		reception.setOperator(operator);
 
+		// Сбрасываем услугу
+		service = null;
+
 		// Создаем пустой список заявителей
 		applicators = new ArrayList<Applicator>();
 	}

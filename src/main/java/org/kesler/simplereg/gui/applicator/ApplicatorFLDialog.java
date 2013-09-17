@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -45,6 +46,7 @@ public class ApplicatorFLDialog extends JDialog {
 		JPanel dataPanel = new JPanel(new MigLayout());
 
 		applicatorFIOLabel = new JLabel("Не опеределено");
+		applicatorFIOLabel.setBorder(BorderFactory.createEtchedBorder());
 
 		// Кнопка выбора заявителя 
 		JButton selectApplicatorFLButton = new JButton("Выбрать");
@@ -120,12 +122,12 @@ public class ApplicatorFLDialog extends JDialog {
 	}
 
 	private void selectApplicatorFL() {
-		FLDialog flDialog = new FLDialog(frame);
-		flDialog.setVisible(true); //Модальный вызов
-		FL fl = flDialog.getFL();
+		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
+		applicatorFL.setFL(fl);
 		if (fl != null) {
-			applicatorFL.setFL(fl);
 			applicatorFIOLabel.setText(fl.getShortFIO());
+		} else {
+			applicatorFIOLabel.setText("");
 		}
 		
 	}
