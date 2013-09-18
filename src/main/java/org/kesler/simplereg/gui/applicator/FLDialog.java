@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.applicator.FL;
 
 public class FLDialog extends JDialog {
@@ -102,6 +103,7 @@ public class FLDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("OK");
+		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if(saveFLFromGUI()) {
@@ -112,6 +114,7 @@ public class FLDialog extends JDialog {
 		});
 
 		JButton cancelButton = new JButton("Отмена");
+		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				result = CANCEL;
