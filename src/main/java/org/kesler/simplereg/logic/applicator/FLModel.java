@@ -1,11 +1,13 @@
 package org.kesler.simplereg.logic.applicator;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.kesler.simplereg.dao.DAOFactory;
 
 public class FLModel {
 	private List<FL> flList;
+	private List<FL> filteredFLList;
 	private static FLModel instance = null;
 
 	public static synchronized FLModel getInstance() {
@@ -26,21 +28,31 @@ public class FLModel {
 		return flList;
 	}
 
-	public List<FL> getFilteredFLs(String filter) {
-		List<FL> list = getAllFLs();
-		List<FL> filteredList = new ArrayList<FL>();
-		// если строка фильтра пустая - возвращаем полный список
-		if (filter.isEmpty()) {
-			return filteredList;
-		} else {
-			for (FL fl: list) {
-				if (fl.getSurName().substring(0,filter.length-1).toLowerCase().equals(filter.toLowerCase())) {
-					filteredList.add(fl);
+	public void filterFLList(String filter) {
+		
+		// если строка фильтра не пустая - пересоздаем фильтрованный список
+		if (!filter.isEmpty()) {
+			System.out.println("Filter: " + filter);
+			filteredFLList = new ArrayList<FL>();
+			for (FL fl: flList) {
+				if (fl.getSurName().toLowerCase().indexOf(filter.toLowerCase(),0) != -1) {
+					filteredFLList.add(fl);
+					System.out.println("Added to filter: " + fl);
 				}
 			}
-			return filteredList;
+		} else {
+			filteredFLList = null;
 		}
 
+	}
+
+	public List<FL> getFilteredFLs() {
+		if (filteredFLList == null) {
+			return getAllFLs();
+		} else {
+			return filteredFLList;
+		}
+		
 	}
 
 	public int addFL(FL fl) {

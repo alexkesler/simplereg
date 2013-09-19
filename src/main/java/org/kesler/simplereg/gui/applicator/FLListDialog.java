@@ -39,6 +39,8 @@ public class FLListDialog extends JDialog{
 	private FL selectedFL;
 	private int selectedFLIndex;
 
+	private String filterString;
+
 	private FLListModel flListModel;
 	private JList flList;
 	private FLListDialogController controller;
@@ -52,6 +54,7 @@ public class FLListDialog extends JDialog{
 
 		selectedFLIndex = -1;
 		selectedFL = null;
+		filterString = "";
 	}
 
 	private void createGUI() {
@@ -68,7 +71,9 @@ public class FLListDialog extends JDialog{
 		filterButton.setIcon(ResourcesUtil.getIcon("find.png"));
 		filterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				filterString = filterTextField.getText();
+				controller.filterFLList(filterString);
+				flListModel.fireContentsChanged(this,0,controller.getFLList().size()-1);
 			}
 		});
 
@@ -182,6 +187,10 @@ public class FLListDialog extends JDialog{
 		return selectedFL;
 	}
 
+	public String getFilterString() {
+		return filterString;
+	}
+
 	public void addedFL(int index) {
 		flListModel.fireIntervalAdded(this,index,index);
 		flList.setSelectedIndex(index);
@@ -211,7 +220,11 @@ public class FLListDialog extends JDialog{
 		}
 
 		public FL getElementAt(int index) {
-			FL fl = flList.get(index);
+			FL fl = null;
+			if (index < flList.size()) {
+				fl = flList.get(index);
+			}
+			
 			return fl;
 		}
 

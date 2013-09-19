@@ -11,6 +11,8 @@ class FLListDialogController {
 	private FLListDialog dialog;
 	private static FLListDialogController instance = null;
 
+	private String filterString = "";
+
 	public static synchronized FLListDialogController getInstance() {
 		if (instance == null) {
 			instance = new FLListDialogController();
@@ -23,13 +25,24 @@ class FLListDialogController {
 	}
 
 	public List<FL> getFLList() {
-		return model.getAllFLs();
+		if (filterString.isEmpty()) {
+			return model.getAllFLs();
+		} else {
+			return model.getFilteredFLs();
+		}
+		
 	}
+
 
 	public FL openDialog(JFrame frame) {
 		dialog = new FLListDialog(frame, this);
 		dialog.setVisible(true);
 		return dialog.getSelectedFL();
+	} 
+
+	public void filterFLList(String filter) {
+		filterString = filter;
+		model.filterFLList(filterString);
 	}
 
 	public void openAddFLDialog() {
