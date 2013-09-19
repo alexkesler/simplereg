@@ -39,7 +39,7 @@ public class ApplicatorULDialog extends JDialog {
 	}
 
 	public ApplicatorULDialog(JFrame frame, ApplicatorUL applicatorUL) {
-		super(frame, "Заявитель - юридичееское лицо", true);
+		super(frame, "Заявитель - юридическое лицо", true);
 		this.frame = frame;
 		result = NONE;
 
@@ -52,6 +52,7 @@ public class ApplicatorULDialog extends JDialog {
 
 		JPanel dataPanel = new JPanel(new MigLayout());
 
+		
 
 
 		// Панель с кнопками

@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.AbstractListModel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -41,6 +42,7 @@ public class FLListDialog extends JDialog{
 	private FLListModel flListModel;
 	private JList flList;
 	private FLListDialogController controller;
+	private JTextField filterTextField;
 
 	public FLListDialog(JFrame frame, FLListDialogController controller) {
 		super(frame,"Список физических лиц", true);
@@ -57,7 +59,19 @@ public class FLListDialog extends JDialog{
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		// Панель данных
-		JPanel dataPanel = new JPanel(new MigLayout("fill"));
+		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
+
+
+		filterTextField = new JTextField(15);
+
+		JButton filterButton = new JButton();
+		filterButton.setIcon(ResourcesUtil.getIcon("find.png"));
+		filterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+
+			}
+		});
+
 
 		flListModel = new FLListModel(); 
 		flList = new JList(flListModel);
@@ -109,7 +123,10 @@ public class FLListDialog extends JDialog{
 			}
 		});
 
-		dataPanel.add(flListScrollPane, "span, pushy, grow, wrap, w 300:n:n");
+		dataPanel.add(filterTextField,"span");
+		dataPanel.add(filterButton, "wrap");
+
+		dataPanel.add(flListScrollPane, "span, pushy, grow, wrap, wmin 300");
 
 		dataPanel.add(addButton, "split");
 		dataPanel.add(editButton);
@@ -183,6 +200,10 @@ public class FLListDialog extends JDialog{
 
 		FLListModel() {
 			flList = controller.getFLList();
+		}
+
+		public void setFLList(List<FL> flList) {
+			this.flList = flList;
 		}
 
 		public int getSize() {

@@ -26,6 +26,23 @@ public class FLModel {
 		return flList;
 	}
 
+	public List<FL> getFilteredFLs(String filter) {
+		List<FL> list = getAllFLs();
+		List<FL> filteredList = new ArrayList<FL>();
+		// если строка фильтра пустая - возвращаем полный список
+		if (filter.isEmpty()) {
+			return filteredList;
+		} else {
+			for (FL fl: list) {
+				if (fl.getSurName().substring(0,filter.length-1).toLowerCase().equals(filter.toLowerCase())) {
+					filteredList.add(fl);
+				}
+			}
+			return filteredList;
+		}
+
+	}
+
 	public int addFL(FL fl) {
 		if (flList == null) {
 			readFromDB();
