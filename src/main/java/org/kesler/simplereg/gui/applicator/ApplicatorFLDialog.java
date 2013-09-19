@@ -97,6 +97,7 @@ public class ApplicatorFLDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
+		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				result = OK;
@@ -105,6 +106,7 @@ public class ApplicatorFLDialog extends JDialog {
 		});
 
 		JButton cancelButton = new JButton("Отмена");
+		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				result = CANCEL;

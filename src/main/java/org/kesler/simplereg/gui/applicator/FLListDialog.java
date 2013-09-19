@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -26,11 +27,19 @@ import org.kesler.simplereg.logic.applicator.FL;
 
 public class FLListDialog extends JDialog{
 	
+	public static final int NONE = -1;
+	public static final int OK = 0;
+	public static final int CANCEL = 1;
+
+	private int result;
+
 	private JFrame frame;
 
-	private FL fl;
+	private FL selectedFL;
+	private int selectedFLIndex;
 
 	private FLListModel flListModel;
+	private JList flList;
 	private FLListDialogController controller;
 
 	public FLListDialog(JFrame frame, FLListDialogController controller) {
@@ -38,7 +47,9 @@ public class FLListDialog extends JDialog{
 		this.frame = frame;
 		this.controller = controller;
 		createGUI();
-		fl = null;
+
+		selectedFLIndex = -1;
+		selectedFL = null;
 	}
 
 	private void createGUI() {
@@ -46,22 +57,26 @@ public class FLListDialog extends JDialog{
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		// Панель данных
-		JPanel dataPanel = new JPanel(new MigLayout("fillx"));
+		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
 		flListModel = new FLListModel(); 
-		JList flList = new JList(flListModel);
+		flList = new JList(flListModel);
 		// Можно выбрать только один элемент
 		flList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// Добавляем обработчик выбора
+		
+		// Добавляем обработчик выбора - запоминаем индекс выбранного физ лица и выбранное физическое лицо
 		flList.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent lse) {
-				int selectedIndex = lse.getFirstIndex();
-				if (selectedIndex!=-1) {
-					fl = controller.getFLList().get(selectedIndex);
-				} else {
-					fl = null;
-				}
+				if(lse.getValueIsAdjusting() == false) {
+					selectedFLIndex = flList.getSelectedIndex();
+					if (selectedFLIndex != -1) {
+						selectedFL = controller.getFLList().get(selectedFLIndex);
+					} else {
+						selectedFL = null;
+					}
+
+				}				
 			}
 		});
 
@@ -81,7 +96,7 @@ public class FLListDialog extends JDialog{
 		editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openEditFLDialog(fl);
+				controller.openEditFLDialog(selectedFLIndex);
 			}
 		});
 
@@ -90,11 +105,11 @@ public class FLListDialog extends JDialog{
 		deleteButton.setIcon(ResourcesUtil.getIcon("delete.png"));
 		deleteButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.deleteFL(fl);
+				controller.deleteFL(selectedFLIndex);
 			}
 		});
 
-		dataPanel.add(flListScrollPane, "span, growx, wrap, w 300:n:n");
+		dataPanel.add(flListScrollPane, "span, pushy, grow, wrap, w 300:n:n");
 
 		dataPanel.add(addButton, "split");
 		dataPanel.add(editButton);
@@ -107,7 +122,8 @@ public class FLListDialog extends JDialog{
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				if (fl != null) {
+				if (selectedFLIndex != -1) {
+					result = OK;
 					setVisible(false);
 				} else {
 					JOptionPane.showMessageDialog(frame,
@@ -122,7 +138,9 @@ public class FLListDialog extends JDialog{
 		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				fl = null;
+				selectedFLIndex = -1;
+				selectedFL = null;
+				result = CANCEL;
 				setVisible(false);
 			}
 		});
@@ -143,12 +161,13 @@ public class FLListDialog extends JDialog{
 
 	}
 
-	public FL getFL() {
-		return fl;
+	public FL getSelectedFL() {
+		return selectedFL;
 	}
 
 	public void addedFL(int index) {
 		flListModel.fireIntervalAdded(this,index,index);
+		flList.setSelectedIndex(index);
 	}
 
 	public void updatedFL(int index) {

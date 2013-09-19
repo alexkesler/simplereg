@@ -24,7 +24,6 @@ import net.miginfocom.swing.MigLayout;
 import java.util.List;
 import java.util.Arrays;
 
-
 import org.kesler.simplereg.logic.Operator;
 
 

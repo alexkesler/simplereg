@@ -29,32 +29,38 @@ class FLListDialogController {
 	public FL openDialog(JFrame frame) {
 		dialog = new FLListDialog(frame, this);
 		dialog.setVisible(true);
-		return dialog.getFL();
+		return dialog.getSelectedFL();
 	}
 
 	public void openAddFLDialog() {
 		FLDialog flDialog = new FLDialog(dialog);
 		flDialog.setVisible(true);
-		FL fl = flDialog.getFL();
-		if (fl != null) {
-			model.addFL(fl);
-			dialog.addedFL(model.getAllFLs().indexOf(fl));
+		if (flDialog.getResult() == FLDialog.OK) {
+			FL fl = flDialog.getFL();
+			int index = model.addFL(fl);
+			if (index != -1) {
+				dialog.addedFL(index);
+			}
+			
 		}
 	}
 
-	public void openEditFLDialog(FL fl) {
+	public void openEditFLDialog(int index) {
+		FL fl = model.getAllFLs().get(index);
 		FLDialog flDialog = new FLDialog(dialog, fl);
 		flDialog.setVisible(true);
-		fl = flDialog.getFL();
-		if (fl != null) {
+		
+		if (flDialog.getResult() == FLDialog.OK) {
 			model.updateFL(fl);
-			dialog.updatedFL(model.getAllFLs().indexOf(fl));
+			dialog.updatedFL(index);
 		}
 
 	}
 
-	public void deleteFL(FL fl) {
-
+	public void deleteFL(int index) {
+		FL fl = model.getAllFLs().get(index);
+		model.deleteFL(fl);
+		dialog.removedFL(index);
 	}
 
 }

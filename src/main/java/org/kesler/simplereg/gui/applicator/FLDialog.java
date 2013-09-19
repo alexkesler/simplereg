@@ -33,31 +33,33 @@ public class FLDialog extends JDialog {
 	private JTextField parentName;
 
 	public FLDialog(JFrame frame) {
-		super(frame, true);
+		super(frame,"Создать", true);
 		this.frame = frame;
 		fl = new FL();
 		createGUI();
 	}
 
 	public FLDialog(JFrame frame, FL fl) {
-		super(frame, true);
+		super(frame,"Изменить", true);
 		this.frame = frame;
 		this.fl = fl;
 		createGUI();
+		loadFLToGUI();
 	}
 
 	public FLDialog(JDialog dialog) {
-		super(dialog, true);
+		super(dialog,"Создать", true);
 		this.dialog = dialog;
 		fl = new FL();
 		createGUI();
 	}
 
 	public FLDialog(JDialog dialog, FL fl) {
-		super(dialog, true);
+		super(dialog, "Изменить", true);
 		this.dialog = dialog;
 		this.fl = fl;
 		createGUI();
+		loadFLToGUI();
 	}
 
 	public FL getFL() {
@@ -76,6 +78,11 @@ public class FLDialog extends JDialog {
 			JOptionPane.showMessageDialog(this,"Поле фамилии не может быть пустым", "Ошибка",JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
+		if (firstName.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this,"Поле имени не может быть пустым", "Ошибка",JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
 		fl.setSurName(surName.getText());
 		fl.setFirstName(firstName.getText());
 		fl.setParentName(parentName.getText());

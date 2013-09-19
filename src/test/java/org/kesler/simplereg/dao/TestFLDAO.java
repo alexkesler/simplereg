@@ -48,7 +48,7 @@ public class TestFLDAO {
 
 		DAOFactory.getInstance().getFLDAO().addFL(initFL);
 
-		DAOFactory.getInstance().getFLDAO().delete(initFL);
+		DAOFactory.getInstance().getFLDAO().deleteFL(initFL);
 
 		List<FL> list = DAOFactory.getInstance().getFLDAO().getAllFLs();
 

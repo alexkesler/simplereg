@@ -26,19 +26,27 @@ public class FLModel {
 		return flList;
 	}
 
-	public void addFL(FL fl) {
+	public int addFL(FL fl) {
 		if (flList == null) {
 			readFromDB();
 		}
 		Long id = DAOFactory.getInstance().getFLDAO().addFL(fl);
 		if (id != null) {
 			flList.add(fl);
+			return flList.size()-1;
+		} else {
+			return -1;
 		}
 		
 	}
 
 	public void updateFL(FL fl) {
-		// Написать обработчик
+		DAOFactory.getInstance().getFLDAO().updateFL(fl);
+	}
+
+	public void deleteFL(FL fl) {
+		DAOFactory.getInstance().getFLDAO().deleteFL(fl);
+		flList.remove(fl);
 	}
 
 	private void readFromDB() {

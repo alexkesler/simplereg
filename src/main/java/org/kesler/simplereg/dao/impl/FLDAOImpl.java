@@ -43,6 +43,30 @@ public class FLDAOImpl implements FLDAO {
 	}
 
 	/**
+	* Сохраняет в БД новое физ лицо
+	* @param fl физическое лицо 
+	*/
+	public void updateFL(FL fl) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.update(fl);
+			tx.commit();
+		} catch (HibernateException he) {
+			if (tx != null) tx.rollback();
+			he.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();		
+			}
+
+		}		
+	}
+
+
+
+	/**
 	* Читает из базы данных {@link org.kesler.simplereg.logic.applicator.FL}
 	* @param id код записи в базе данных
 	* @return объект {@link org.kesler.simplereg.logic.applicator.FL} из базы данных
@@ -91,7 +115,7 @@ public class FLDAOImpl implements FLDAO {
 	* Удаляет из базы данных запись, соответствующую объекту {@link org.kesler.simplereg.logic.applicator.FL}
 	* @param fl физическое лицо 
 	*/
-	public void delete(FL fl) {
+	public void deleteFL(FL fl) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
