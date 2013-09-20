@@ -54,6 +54,15 @@ public class FLDialog extends JDialog {
 		createGUI();
 	}
 
+	public FLDialog(JDialog dialog, String initSurName) {
+		super(dialog,"Создать", true);
+		this.dialog = dialog;
+		fl = new FL();
+		fl.setSurName(initSurName);
+		createGUI();
+		loadFLToGUI();
+	}
+
 	public FLDialog(JDialog dialog, FL fl) {
 		super(dialog, "Изменить", true);
 		this.dialog = dialog;

@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JTextField;
@@ -67,16 +69,23 @@ public class FLListDialog extends JDialog{
 
 		filterTextField = new JTextField(15);
 
-		JButton filterButton = new JButton();
-		filterButton.setIcon(ResourcesUtil.getIcon("find.png"));
-		filterButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
+		filterTextField.getDocument().addDocumentListener(new DocumentListener() {
+			public void insertUpdate(DocumentEvent event) {
 				filterString = filterTextField.getText();
 				controller.filterFLList(filterString);
-				flListModel.fireContentsChanged(this,0,controller.getFLList().size()-1);
+				flListModel.fireContentsChanged(this,0,controller.getFLList().size());
+				if(controller.getFLList().size() > 0) flList.setSelectedIndex(0);			
 			}
-		});
 
+			public void removeUpdate(DocumentEvent event) {
+				filterString = filterTextField.getText();
+				controller.filterFLList(filterString);
+				flListModel.fireContentsChanged(this,0,controller.getFLList().size());
+				if(controller.getFLList().size() > 0) flList.setSelectedIndex(0);			
+			}
+
+			public void changedUpdate(DocumentEvent event) {}
+		});
 
 		flListModel = new FLListModel(); 
 		flList = new JList(flListModel);
@@ -106,7 +115,14 @@ public class FLListDialog extends JDialog{
 		addButton.setIcon(ResourcesUtil.getIcon("add.png"));
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openAddFLDialog();
+				if (!filterString.isEmpty()) {	
+					String filter = filterString;
+					filterTextField.setText("");								
+					controller.openAddFLDialog(filter);
+				} else {
+					controller.openAddFLDialog();
+				}
+								
 			}
 		});
 		
@@ -128,8 +144,8 @@ public class FLListDialog extends JDialog{
 			}
 		});
 
-		dataPanel.add(filterTextField,"span");
-		dataPanel.add(filterButton, "wrap");
+		dataPanel.add(new JLabel("Поиск: "),"span");
+		dataPanel.add(filterTextField,"wrap");
 
 		dataPanel.add(flListScrollPane, "span, pushy, grow, wrap, wmin 300");
 
@@ -194,6 +210,7 @@ public class FLListDialog extends JDialog{
 	public void addedFL(int index) {
 		flListModel.fireIntervalAdded(this,index,index);
 		flList.setSelectedIndex(index);
+		flList.ensureIndexIsVisible(index);	
 	}
 
 	public void updatedFL(int index) {
@@ -205,24 +222,24 @@ public class FLListDialog extends JDialog{
 	}
 
 	class FLListModel extends AbstractListModel {
-		private List<FL> flList;
+		//private List<FL> flList;
 
 		FLListModel() {
-			flList = controller.getFLList();
+			//flList = controller.getFLList();
 		}
 
-		public void setFLList(List<FL> flList) {
-			this.flList = flList;
-		}
+		// public void setFLList(List<FL> flList) {
+		// 	this.flList = flList;
+		// }
 
 		public int getSize() {
-			return flList.size();
+			return controller.getFLList().size();
 		}
 
 		public FL getElementAt(int index) {
 			FL fl = null;
-			if (index < flList.size()) {
-				fl = flList.get(index);
+			if (index < controller.getFLList().size()) {
+				fl = controller.getFLList().get(index);
 			}
 			
 			return fl;

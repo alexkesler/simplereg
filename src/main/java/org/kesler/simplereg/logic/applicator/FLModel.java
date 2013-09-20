@@ -32,12 +32,10 @@ public class FLModel {
 		
 		// если строка фильтра не пустая - пересоздаем фильтрованный список
 		if (!filter.isEmpty()) {
-			System.out.println("Filter: " + filter);
 			filteredFLList = new ArrayList<FL>();
 			for (FL fl: flList) {
-				if (fl.getSurName().toLowerCase().indexOf(filter.toLowerCase(),0) != -1) {
+				if (fl.getSurName().toLowerCase().indexOf(filter.toLowerCase(),0) == 0) {
 					filteredFLList.add(fl);
-					System.out.println("Added to filter: " + fl);
 				}
 			}
 		} else {

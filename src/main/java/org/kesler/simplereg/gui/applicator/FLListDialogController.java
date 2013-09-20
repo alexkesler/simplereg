@@ -11,8 +11,6 @@ class FLListDialogController {
 	private FLListDialog dialog;
 	private static FLListDialogController instance = null;
 
-	private String filterString = "";
-
 	public static synchronized FLListDialogController getInstance() {
 		if (instance == null) {
 			instance = new FLListDialogController();
@@ -25,11 +23,8 @@ class FLListDialogController {
 	}
 
 	public List<FL> getFLList() {
-		if (filterString.isEmpty()) {
-			return model.getAllFLs();
-		} else {
-			return model.getFilteredFLs();
-		}
+		// Возвращаем фильтрованный список
+		return model.getFilteredFLs();
 		
 	}
 
@@ -40,9 +35,12 @@ class FLListDialogController {
 		return dialog.getSelectedFL();
 	} 
 
+	/**
+	* Создает в модели фильтрованный список
+	* @param filter определяет фильтр для записей. Если строка пустая - модель будет возвращать полный список.
+	*/
 	public void filterFLList(String filter) {
-		filterString = filter;
-		model.filterFLList(filterString);
+		model.filterFLList(filter.trim());
 	}
 
 	public void openAddFLDialog() {
@@ -57,6 +55,24 @@ class FLListDialogController {
 			
 		}
 	}
+
+	public void openAddFLDialog(String initSurName) {
+		initSurName = initSurName.toLowerCase();
+		String firstLetter = initSurName.substring(0,1);
+		firstLetter = firstLetter.toUpperCase();
+		initSurName = firstLetter + initSurName.substring(1, initSurName.length());
+		FLDialog flDialog = new FLDialog(dialog, initSurName);
+		flDialog.setVisible(true);
+		if (flDialog.getResult() == FLDialog.OK) {
+			FL fl = flDialog.getFL();
+			int index = model.addFL(fl);
+			if (index != -1) {
+				dialog.addedFL(index);
+			}
+			
+		}
+	}
+
 
 	public void openEditFLDialog(int index) {
 		FL fl = model.getAllFLs().get(index);
