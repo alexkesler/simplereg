@@ -28,7 +28,9 @@ class FLListDialogController {
 		
 	}
 
-
+	/**
+	* Открывает диалог заявителя - физического лица
+	*/
 	public FL openDialog(JFrame frame) {
 		dialog = new FLListDialog(frame, this);
 		dialog.setVisible(true);
@@ -43,6 +45,9 @@ class FLListDialogController {
 		model.filterFLList(filter.trim());
 	}
 
+	/**
+	* Открывает диалог добавления нового физического лица
+	*/
 	public void openAddFLDialog() {
 		FLDialog flDialog = new FLDialog(dialog);
 		flDialog.setVisible(true);
@@ -56,6 +61,10 @@ class FLListDialogController {
 		}
 	}
 
+	/**
+	* Открывает диалог добавления физического лица с введенной фамилией
+	* @param initSurName строка, на основнии которой создается фамилия 
+	*/
 	public void openAddFLDialog(String initSurName) {
 		initSurName = initSurName.toLowerCase();
 		String firstLetter = initSurName.substring(0,1);
