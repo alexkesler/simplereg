@@ -5,10 +5,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import javax.swing.BorderFactory;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 
 import net.miginfocom.swing.MigLayout;
 
@@ -29,30 +32,76 @@ public class ApplicatorULDialog extends JDialog {
 	private JFrame frame;
 	private ApplicatorUL applicatorUL;
 
+	private JLabel nameLabel;
+	private JLabel represLabel;
+
 	public ApplicatorULDialog (JFrame frame) {
 		super(frame,"Заявитель - юридическое лицо", true);
 		this.frame = frame;
-		result = NONE;
-		createGUI();
 
+		result = NONE;
 		this.applicatorUL = new ApplicatorUL();
+
+		createGUI();
 	}
 
 	public ApplicatorULDialog(JFrame frame, ApplicatorUL applicatorUL) {
 		super(frame, "Заявитель - юридическое лицо", true);
 		this.frame = frame;
+
+		this.applicatorUL = applicatorUL;
 		result = NONE;
 
-		this.applicatorUL = applicatorUL; 
+		createGUI(); 
 	}
 
 	private void createGUI() {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel dataPanel = new JPanel(new MigLayout());
+		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-		
+		nameLabel = new JLabel();
+		nameLabel.setBorder(BorderFactory.createEtchedBorder());
+
+		JButton selectULButton = new JButton("Выбрать");
+		selectULButton.setIcon(ResourcesUtil.getIcon("chart_organisation_add.png"));
+		selectULButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				selectApplicatorUL();
+			}
+		});
+
+		represLabel = new JLabel();
+		represLabel.setBorder(BorderFactory.createEtchedBorder());
+
+		JButton selectRepresFLButton = new JButton("Выбрать");
+		selectRepresFLButton.setIcon(ResourcesUtil.getIcon("group_add.png"));
+		selectRepresFLButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				selectRepresFL();
+			}
+		});
+
+
+		JButton clearRepresFLButton = new JButton("Очистить");
+		clearRepresFLButton.setIcon(ResourcesUtil.getIcon("group_delete.png"));
+		clearRepresFLButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				clearRepresFL();
+			}
+		});
+
+
+
+		dataPanel.add(new JLabel("Юр. лицо:"),"span, wrap");
+		dataPanel.add(nameLabel,"grow, push, w 500, h 50");
+		dataPanel.add(selectULButton, "wrap");
+	
+		dataPanel.add(new JLabel("Представитель:"), "wrap");
+		dataPanel.add(represLabel,"growx,pushx, w 500");
+		dataPanel.add(selectRepresFLButton);
+		dataPanel.add(clearRepresFLButton,"wrap");
 
 
 		// Панель с кнопками
@@ -62,8 +111,12 @@ public class ApplicatorULDialog extends JDialog {
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				result = OK;
-				setVisible(false);
+				boolean checkResult = checkUL();
+				if (checkResult) {
+					result = OK;
+					setVisible(false);					
+				}
+
 			}
 		});
 
@@ -86,6 +139,8 @@ public class ApplicatorULDialog extends JDialog {
 		this.setContentPane(mainPanel);
 		this.pack();
 		this.setLocationRelativeTo(frame);
+
+		updateLabels();
 	}
 
 	public int getResult() {
@@ -94,5 +149,42 @@ public class ApplicatorULDialog extends JDialog {
 
 	public ApplicatorUL getApplicatorUL() {
 		return applicatorUL;
+	}
+
+	private void updateLabels() {
+		nameLabel.setText("<html>" + applicatorUL.getName() + "</html>");
+		represLabel.setText(applicatorUL.getRepresFIO());
 	}	
+
+	private void selectApplicatorUL() {
+		UL ul = ULListDialogController.getInstance().openDialog(frame);
+		applicatorUL.setUL(ul);
+		updateLabels();
+	}
+
+	private void selectRepresFL() {
+		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
+		applicatorUL.setRepres(fl);
+		updateLabels();
+	}
+
+	private void clearRepresFL() {
+		applicatorUL.setRepres(null);
+		updateLabels();
+	}
+
+	private boolean checkUL() {
+		if(applicatorUL.getUL() == null) {
+			JOptionPane.showMessageDialog(this, "Юр лицо не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		if (applicatorUL.getRepres() == null) {
+			JOptionPane.showMessageDialog(this,"Представитель не выбран", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		return true;
+	}
+
 }

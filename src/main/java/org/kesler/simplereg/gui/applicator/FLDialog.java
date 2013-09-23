@@ -92,9 +92,9 @@ public class FLDialog extends JDialog {
 			return false;
 		}
 
-		fl.setSurName(surName.getText());
-		fl.setFirstName(firstName.getText());
-		fl.setParentName(parentName.getText());
+		fl.setSurName(surName.getText().trim());
+		fl.setFirstName(firstName.getText().trim());
+		fl.setParentName(parentName.getText().trim());
 		return true;
 	}
 

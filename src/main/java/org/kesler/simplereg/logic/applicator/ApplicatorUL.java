@@ -43,11 +43,19 @@ public class ApplicatorUL extends Applicator {
 		this.repres = repres;
 	}
 
+	public String getRepresFIO() {
+		String fio = "Не определен";
+
+		if (repres!=null) fio = repres.getFIO();
+
+		return fio;
+	}	
+
 	@Override
 	public String getName() {
-		String name = "";
+		String name = "Не определено";
 
-		if (ul!=null) name = ul.getFullName();
+		if (ul!=null) name = ul.getShortName();
 
 		return name;
 	}

@@ -32,6 +32,7 @@ class FLListDialogController {
 	* Открывает диалог заявителя - физического лица
 	*/
 	public FL openDialog(JFrame frame) {
+		filterFLList("");
 		dialog = new FLListDialog(frame, this);
 		dialog.setVisible(true);
 		return dialog.getSelectedFL();
@@ -52,6 +53,9 @@ class FLListDialogController {
 		FLDialog flDialog = new FLDialog(dialog);
 		flDialog.setVisible(true);
 		if (flDialog.getResult() == FLDialog.OK) {
+			// очищаем фильтр
+			filterFLList("");
+			// запоминаем новое физ лицо		
 			FL fl = flDialog.getFL();
 			int index = model.addFL(fl);
 			if (index != -1) {

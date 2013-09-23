@@ -209,7 +209,7 @@ class ReceptionView extends JFrame{
 				}
 			});
 			JMenuItem ulMenuItem = new JMenuItem("Юр. лицо");
-			ulMenuItem.setIcon(ResourcesUtil.getIcon("user_suit.png"));
+			ulMenuItem.setIcon(ResourcesUtil.getIcon("chart_organisation.png"));
 			ulMenuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					controller.addApplicatorUL();

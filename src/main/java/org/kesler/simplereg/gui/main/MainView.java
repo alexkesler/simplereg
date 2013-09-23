@@ -144,6 +144,7 @@ public class MainView extends JFrame {
 		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
 		currentOperatorLabel = new JLabel();
+		currentOperatorLabel.setBorder(BorderFactory.createRaisedBevelBorder());
 
 		JButton newReceptionButton = new JButton(getActionByCommand(MainViewCommand.NewReception));
 		newReceptionButton.setIcon(ResourcesUtil.getIcon("asterisk_yellow.png"));
@@ -151,6 +152,7 @@ public class MainView extends JFrame {
 		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 
+		buttonPanel.add(new JLabel("Оператор: "));
 		buttonPanel.add(currentOperatorLabel);
 		buttonPanel.add(Box.createHorizontalGlue());
 		buttonPanel.add(newReceptionButton);

@@ -9,7 +9,13 @@ public interface ULDAO {
 	* Сохраняет юр лицо в базу данных
 	* @param ul объект юр лица
 	*/
-	public Long add(UL ul);
+	public Long addUL(UL ul);
+
+	/**
+	* Обновляет юр лицо в базе данных
+	* @param ul объект юр лица
+	*/
+	public void updateUL(UL ul);
 
 	/**
 	* Читаем юр лицо из базы данных
@@ -28,5 +34,5 @@ public interface ULDAO {
 	* Удаляет юр лицо из базы данных
 	* @param ul объект юр лица
 	*/
-	public void delete(UL ul);
+	public void deleteUL(UL ul);
 }

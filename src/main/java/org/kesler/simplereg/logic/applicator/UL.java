@@ -25,7 +25,9 @@ public class UL extends AbstractEntity {
 	public UL () {}
 
 	public String getFullName() {
-		return fullName;
+		String notNullFullName = "";
+		if (fullName!=null) notNullFullName = fullName;
+		return notNullFullName;
 	}
 
 	public void setFullName(String fullName) {
@@ -33,10 +35,17 @@ public class UL extends AbstractEntity {
 	}
 
 	public String getShortName() {
-		return shortName;
+		String notNullShortName = "";
+		if(shortName!=null) notNullShortName = shortName;
+		return notNullShortName;
 	}
 
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
+	}
+
+	@Override
+	public String toString() {
+		return getShortName();
 	}
 }

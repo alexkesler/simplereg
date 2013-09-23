@@ -74,14 +74,26 @@ public class FLListDialog extends JDialog{
 				filterString = filterTextField.getText();
 				controller.filterFLList(filterString);
 				flListModel.fireContentsChanged(this,0,controller.getFLList().size());
-				if(controller.getFLList().size() > 0) flList.setSelectedIndex(0);			
+				// выбираем первый из списка
+				if(controller.getFLList().size() > 0) {
+					selectedFLIndex = 0;
+					flList.setSelectedIndex(selectedFLIndex);
+					selectedFL = controller.getFLList().get(selectedFLIndex);
+				}	
+				System.out.println("list size: " + controller.getFLList().size());			
 			}
 
 			public void removeUpdate(DocumentEvent event) {
 				filterString = filterTextField.getText();
 				controller.filterFLList(filterString);
 				flListModel.fireContentsChanged(this,0,controller.getFLList().size());
-				if(controller.getFLList().size() > 0) flList.setSelectedIndex(0);			
+				// Выбираем первый из списка
+				if(controller.getFLList().size() > 0) {
+					selectedFLIndex = 0;
+					flList.setSelectedIndex(selectedFLIndex);
+					selectedFL = controller.getFLList().get(selectedFLIndex);
+				}	
+
 			}
 
 			public void changedUpdate(DocumentEvent event) {}
@@ -98,6 +110,7 @@ public class FLListDialog extends JDialog{
 			public void valueChanged(ListSelectionEvent lse) {
 				if(lse.getValueIsAdjusting() == false) {
 					selectedFLIndex = flList.getSelectedIndex();
+					System.out.println("selected item: " + selectedFLIndex);
 					if (selectedFLIndex != -1) {
 						selectedFL = controller.getFLList().get(selectedFLIndex);
 					} else {
@@ -117,7 +130,7 @@ public class FLListDialog extends JDialog{
 			public void actionPerformed(ActionEvent ev) {
 				if (!filterString.isEmpty()) {	
 					String filter = filterString;
-					filterTextField.setText("");								
+					//filterTextField.setText("");								
 					controller.openAddFLDialog(filter);
 				} else {
 					controller.openAddFLDialog();

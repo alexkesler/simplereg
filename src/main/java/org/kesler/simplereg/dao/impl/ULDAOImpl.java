@@ -14,7 +14,7 @@ import org.kesler.simplereg.logic.applicator.UL;
 
 public class ULDAOImpl implements ULDAO {
 
-	public Long add(UL ul) {
+	public Long addUL(UL ul) {
 		Long id = null;
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -36,6 +36,25 @@ public class ULDAOImpl implements ULDAO {
 
 		return id;
 	}
+
+	public void updateUL(UL ul) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.update(ul);
+			tx.commit();
+		} catch (HibernateException he) {
+			if (tx != null) tx.rollback();
+			he.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();		
+			}
+
+		}		
+	}
+
 
 	public UL getULById(Long id) {
 		UL ul = null;
@@ -71,7 +90,7 @@ public class ULDAOImpl implements ULDAO {
 		return list;
 	}
 
-	public void delete(UL ul) {
+	public void deleteUL(UL ul) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;

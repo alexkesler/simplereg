@@ -13,7 +13,7 @@ public class TestULDAO {
 	public void testAddRead() {
 		UL initUL = new UL();
 
-		Long id = DAOFactory.getInstance().getULDAO().add(initUL);
+		Long id = DAOFactory.getInstance().getULDAO().addUL(initUL);
 		assertNotNull(id);
 
 		UL resultUL = DAOFactory.getInstance().getULDAO().getULById(id);
@@ -26,7 +26,7 @@ public class TestULDAO {
 
 		UL initUL = new UL();
 
-		DAOFactory.getInstance().getULDAO().add(initUL);
+		DAOFactory.getInstance().getULDAO().addUL(initUL);
 
 		List<UL> resultList = DAOFactory.getInstance().getULDAO().getAllULs();
 		assertTrue(resultList.contains(initUL));
@@ -37,9 +37,9 @@ public class TestULDAO {
 	public void testDelete() {
 		UL initUL = new UL();
 
-		DAOFactory.getInstance().getULDAO().add(initUL);
+		DAOFactory.getInstance().getULDAO().addUL(initUL);
 
-		DAOFactory.getInstance().getULDAO().delete(initUL);
+		DAOFactory.getInstance().getULDAO().deleteUL(initUL);
 
 		List<UL> list = DAOFactory.getInstance().getULDAO().getAllULs();
 		assertFalse(list.contains(initUL));

@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -100,8 +101,11 @@ public class ApplicatorFLDialog extends JDialog {
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				result = OK;
-				setVisible(false);
+				boolean checkResult = checkFL();
+				if (checkResult) {
+					result = OK;
+					setVisible(false);					
+				}
 			}
 		});
 
@@ -158,5 +162,13 @@ public class ApplicatorFLDialog extends JDialog {
 	private void eraseRepresFL() {
 		applicatorFL.setRepres(null);
 		updateLabels();
+	}
+
+	private boolean checkFL() {
+		if (applicatorFL.getFL() == null) {
+			JOptionPane.showMessageDialog(this,"Физ лицо не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
 	}
 }
