@@ -5,7 +5,7 @@ import java.util.List;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public interface ReceptionStatusDAO {
-	public List<ReceptionStatus> getAllStatuses();
+	public List<ReceptionStatus> getAllReceptionStatuses();
 	public Long addReceptionStatus(ReceptionStatus receptionStatus);
 	public void updateReceptionStatus(ReceptionStatus receptionStatus);
 	public void removeReceptionStatus(ReceptionStatus receptionStatus);

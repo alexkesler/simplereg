@@ -5,6 +5,7 @@ import org.kesler.simplereg.dao.impl.OperatorDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
 import org.kesler.simplereg.dao.impl.FLDAOImpl;
 import org.kesler.simplereg.dao.impl.ULDAOImpl;
+import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
@@ -12,6 +13,7 @@ public class DAOFactory {
 	private static ReceptionDAO receptionDAO = null;
 	private static FLDAO flDAO = null;
 	private static ULDAO ulDAO = null;
+	private static ReceptionStatusDAO receptionStatusDAO = null;
 	private static DAOFactory instance = null;
 
 	public static synchronized DAOFactory getInstance() {
@@ -55,6 +57,13 @@ public class DAOFactory {
 			ulDAO = new ULDAOImpl();
 		}
 		return ulDAO;
+	}
+
+	public ReceptionStatusDAO getReceptionStatusDAO() {
+		if (receptionStatusDAO == null) {
+			receptionStatusDAO = new ReceptionStatusDAOImpl();
+		}
+		return receptionStatusDAO;
 	}
 
 }
