@@ -71,6 +71,9 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			case UpdateReceptions: 
 				readReceptions();
 				break;
+			case OpenReceptionsReestr: 
+				openReceptionsReestr();
+				break;
 			case OpenStatistic: 
 				openStatistic();
 				break;
@@ -112,11 +115,13 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
 			
 			if (operator.getIsControler()) { // для контролера
+				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 			}
 
 			if (operator.getIsAdmin()) { // для администратора
+				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
@@ -180,6 +185,10 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	private void openApplicators() {
 		
+	}
+
+	private void openReceptionsReestr() {
+
 	}
 
 	private void openOptions() {

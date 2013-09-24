@@ -108,24 +108,43 @@ public class MainView extends JFrame {
 		mainMenu.add(exitMenuItem);
 
 		// Меню статистики
-		JMenu statisticMenu = new JMenu("Задачи");
+		JMenu tasksMenu = new JMenu("Задачи");
+
+		JMenuItem reestrMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenReceptionsReestr));
+		reestrMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenReceptionsReestr.getIconName()));
 
 		JMenuItem statisticMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenStatistic));
+		statisticMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenStatistic.getIconName()));
+		
 		JMenuItem applicatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenApplicators));
+		applicatorsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenApplicators.getIconName()));
 
-		statisticMenu.add(statisticMenuItem);
-		statisticMenu.add(applicatorsMenuItem);
+		// Собираем меню задач
+		tasksMenu.add(reestrMenuItem);
+		tasksMenu.add(statisticMenuItem);
+		tasksMenu.add(applicatorsMenuItem);
+
+		// Меню справочников
+		JMenu dictMenu = new JMenu("Справочники");
+
+
+		JMenuItem servicesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Services));
+		servicesMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.Services.getIconName()));
+
+		
+		dictMenu.add(servicesMenuItem);
 
 		// Меню настроек
 		JMenu optionsMenu = new JMenu("Настройки");
 
-		JMenuItem servicesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Services));
 
 		JMenuItem operatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Operators));
+		operatorsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.Operators.getIconName()));
 
 		JMenuItem optionsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Options));
+		optionsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.Options.getIconName()));
 
-		optionsMenu.add(servicesMenuItem);
+		// Собираем меню настроек
 		optionsMenu.add(operatorsMenuItem);
 		optionsMenu.add(optionsMenuItem);
 
@@ -134,7 +153,8 @@ public class MainView extends JFrame {
 
 		// Формируем меню окна
 		menuBar.add(mainMenu);
-		menuBar.add(statisticMenu);
+		menuBar.add(tasksMenu);
+		menuBar.add(dictMenu);
 		menuBar.add(optionsMenu);
 		menuBar.add(aboutMenu);
 
@@ -147,10 +167,10 @@ public class MainView extends JFrame {
 		currentOperatorLabel.setBorder(BorderFactory.createRaisedBevelBorder());
 
 		JButton newReceptionButton = new JButton(getActionByCommand(MainViewCommand.NewReception));
-		newReceptionButton.setIcon(ResourcesUtil.getIcon("asterisk_yellow.png"));
+		newReceptionButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.NewReception.getIconName()));
 
 		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
-		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
+		updateButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.UpdateReceptions.getIconName()));
 
 		buttonPanel.add(new JLabel("Оператор: "));
 		buttonPanel.add(currentOperatorLabel);

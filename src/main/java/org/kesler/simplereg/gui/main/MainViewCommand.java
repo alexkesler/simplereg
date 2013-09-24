@@ -4,24 +4,32 @@ package org.kesler.simplereg.gui.main;
 * Задает перечень команд для основного окна программы
 */
 public enum MainViewCommand {
-	Login("Войти","login"),
-	Logout("Выйти","logout"), 
-	NewReception("Новый прием","newReception"),
-	UpdateReceptions("Обновить","updateReceptions"),
-	OpenStatistic("Статистика","statistic"),
-	OpenApplicators("Заявители", "applicators"),
-	Services("Услуги", "services"),
-	Operators("Операторы", "operators"),
-	Options("Настройки", "options"),
-	Exit("Закрыть","exit");
+	Login("Войти","login","connect.png"),
+	Logout("Выйти","logout", "disconnect.png"), 
+	NewReception("Новый прием","newReception", "asterisk_yellow.png"),
+	UpdateReceptions("Обновить","updateReceptions", "arrow_refresh.png"),
+	OpenStatistic("Статистика","statistic", "chart_pie.png"),
+	OpenReceptionsReestr("Реестр","reestr","table.png"),
+	OpenApplicators("Заявители", "applicators", "group.png"),
+	Services("Услуги", "services", "book.png"),
+	Operators("Операторы", "operators", "user_suit.png"),
+	Options("Настройки", "options", "wrench.png"),
+	Exit("Закрыть","exit", "door_out.png");
 
 
 	private String name;
 	private String command;
+	private String iconName;
 
 	MainViewCommand(String name, String command) {
 		this.name = name;
 		this.command = command;
+	}
+
+	MainViewCommand(String name, String command, String iconName) {
+		this.name = name;
+		this.command = command;
+		this.iconName = iconName;
 	}
 
 	String getName() {
@@ -30,5 +38,9 @@ public enum MainViewCommand {
 
 	String getCommand() {
 		return command;
+	}
+
+	String getIconName() {
+		return iconName;
 	}
 }
