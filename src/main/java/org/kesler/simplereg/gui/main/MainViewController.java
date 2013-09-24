@@ -115,12 +115,14 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
 			
 			if (operator.getIsControler()) { // для контролера
+				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
 			}
 
 			if (operator.getIsAdmin()) { // для администратора
+				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);

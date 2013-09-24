@@ -131,8 +131,12 @@ public class MainView extends JFrame {
 		JMenuItem servicesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Services));
 		servicesMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.Services.getIconName()));
 
+		JMenuItem statusesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.ReceptionStatuses));
+		statusesMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.ReceptionStatuses.getIconName()));
+
 		
 		dictMenu.add(servicesMenuItem);
+		dictMenu.add(statusesMenuItem);
 
 		// Меню настроек
 		JMenu optionsMenu = new JMenu("Настройки");

@@ -22,6 +22,8 @@
 		<mapping class="org.kesler.simplereg.logic.applicator.ApplicatorUL" />
 		<mapping class="org.kesler.simplereg.logic.Operator" />
 		<mapping class="org.kesler.simplereg.logic.Reception" />
+		<mapping class="org.kesler.simplereg.logic.reception.ReceptionStatus" />
+
 
 	</session-factory>
 </hibernate-configuration>		

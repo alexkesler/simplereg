@@ -12,6 +12,7 @@ public enum MainViewCommand {
 	OpenReceptionsReestr("Реестр","reestr","table.png"),
 	OpenApplicators("Заявители", "applicators", "group.png"),
 	Services("Услуги", "services", "book.png"),
+	ReceptionStatuses("Статусы дел","statuses","flag_yellow.png"),
 	Operators("Операторы", "operators", "user_suit.png"),
 	Options("Настройки", "options", "wrench.png"),
 	Exit("Закрыть","exit", "door_out.png");

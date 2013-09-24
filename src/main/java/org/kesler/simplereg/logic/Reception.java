@@ -20,6 +20,7 @@ import org.hibernate.annotations.FetchMode;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 /**
 * Класс предсталяет сущность приема заявителей
@@ -46,6 +47,10 @@ public class Reception extends AbstractEntity{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="OpenDate")
 	private Date openDate;
+
+	@ManyToOne
+	@JoinColumn(name="ReceptionStatusID")
+	private ReceptionStatus status;
 
 	public Reception() {
 		// for Hibernate
@@ -129,5 +134,11 @@ public class Reception extends AbstractEntity{
 		this.openDate = openDate;
 	}
 
+	public ReceptionStatus getStatus() {
+		return status;
+	}
 
+	public void setStatus(ReceptionStatus status) {
+		this.status = status;
+	}
 }
