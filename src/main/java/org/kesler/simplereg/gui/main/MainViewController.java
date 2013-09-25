@@ -11,6 +11,7 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.ReceptionViewController;
+import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.logic.OperatorsModel;
 
 
@@ -190,7 +191,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	private void openReceptionsReestr() {
-
+		ReestrViewController.getInstance().openView();
 	}
 
 	private void openOptions() {
