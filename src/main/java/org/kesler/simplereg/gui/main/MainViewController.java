@@ -11,6 +11,7 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.ReceptionViewController;
+import org.kesler.simplereg.gui.reception.ReceptionStatusListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.logic.OperatorsModel;
 
@@ -83,6 +84,9 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 				break;
 			case Services: 
 				openServicesView();
+				break;
+			case ReceptionStatuses: 
+				openReceptionStatuses();
 				break;
 			case Operators: 
 				openOperators();
@@ -184,6 +188,10 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	private void openOperators() {
 		OperatorsViewController.getInstance().openView();		
+	}
+
+	private void openReceptionStatuses() {
+		ReceptionStatusListDialogController.getInstance().openDialog(mainView);
 	}
 
 	private void openApplicators() {

@@ -11,7 +11,7 @@ public class ReceptionStatusesModel {
 
 	private ReceptionStatusesModel() {}
 
-	public ReceptionStatusesModel getInstance() {
+	public static synchronized ReceptionStatusesModel getInstance() {
 		if (instance == null) {
 			instance = new ReceptionStatusesModel();
 		}

@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.AbstractListModel;
 
 import java.awt.event.ActionListener;
@@ -107,12 +108,12 @@ public class ReceptionStatusListDialog extends JDialog {
 
 		@Override
 		public int getSize() {
-
+			return controller.getReceptionStatuses().size();
 		}
 
 		@Override
 		public ReceptionStatus getElementAt(int index) {
-
+			return controller.getReceptionStatuses().get(index);
 		}
 	}
 }
