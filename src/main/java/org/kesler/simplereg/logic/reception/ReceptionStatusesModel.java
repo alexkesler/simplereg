@@ -7,7 +7,7 @@ import org.kesler.simplereg.dao.DAOFactory;
 public class ReceptionStatusesModel {
 
 	private static ReceptionStatusesModel instance = null;
-	private List<ReceptionStatus> receptionStatusesList;
+	private List<ReceptionStatus> receptionStatuses;
 
 	private ReceptionStatusesModel() {}
 
@@ -18,27 +18,27 @@ public class ReceptionStatusesModel {
 		return instance;
 	}
 
-	public List<ReceptionStatus> getReceptionStatusesList() {
-		if (receptionStatusesList == null) {
+	public List<ReceptionStatus> getReceptionStatuses() {
+		if (receptionStatuses == null) {
 			readFromDB();
 		}
-		return receptionStatusesList;
+		return receptionStatuses;
 	}
 
 
 	private void readFromDB() {
-		receptionStatusesList = DAOFactory.getInstance().getReceptionStatusDAO().getAllReceptionStatuses();
+		receptionStatuses = DAOFactory.getInstance().getReceptionStatusDAO().getAllReceptionStatuses();
 	}
 
 
 	public int addReceptionStatus(ReceptionStatus receptionStatus) {
-		if (receptionStatusesList == null) {
+		if (receptionStatuses == null) {
 			readFromDB();
 		}
 		Long id = DAOFactory.getInstance().getReceptionStatusDAO().addReceptionStatus(receptionStatus);
 		if (id != null) {
-			receptionStatusesList.add(receptionStatus);
-			return receptionStatusesList.size()-1;
+			receptionStatuses.add(receptionStatus);
+			return receptionStatuses.size()-1;
 		} else {
 			return -1;
 		}
