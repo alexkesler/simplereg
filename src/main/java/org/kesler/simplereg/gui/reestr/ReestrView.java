@@ -98,6 +98,8 @@ public class ReestrView extends JFrame {
 
 				case 3: value = reception.getServiceName(); break;	
 
+				case 4: value = reception.getStatusName(); break;
+
 			}
 
 			return value;

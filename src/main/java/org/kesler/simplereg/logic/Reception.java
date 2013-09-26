@@ -141,4 +141,12 @@ public class Reception extends AbstractEntity{
 	public void setStatus(ReceptionStatus status) {
 		this.status = status;
 	}
+
+	public String getStatusName() {
+		String statusName = "Не определено";
+		if (status != null) {
+			statusName = status.getName();
+		}
+		return statusName;
+	}
 }
