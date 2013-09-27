@@ -8,18 +8,18 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
 
-public class PropertiesUtil {
+public class OptionsUtil {
 
 	private static final String fileName = "init.properties";
 	private static String dirSeparator = System.getProperty("file.separator");
 
-	private static Properties properties = new Properties();
+	private static Properties options = new Properties();
 
 
 	/**
 	* Считывает настройки приложения из файла
 	*/
-	public static void readProperties() {
+	public static void readOptions() {
 
 		File currentDir = new File(".");
 		FileInputStream fis = null;
@@ -28,7 +28,7 @@ public class PropertiesUtil {
 
 			fis = new FileInputStream(filePath);
 
-			properties.loadFromXML(fis);
+			options.loadFromXML(fis);
 
 		} catch (FileNotFoundException fnfe) {
 			JOptionPane.showMessageDialog(null,
@@ -58,29 +58,39 @@ public class PropertiesUtil {
 	}
 
 	private static void setDefaultOptions() {
-		properties = new Properties();
-		properties.setProperty("db.server","localhost");
-		properties.setProperty("db.driver", "h2");
-		properties.setProperty("db.user","oper");
-		properties.setProperty("db.password", "qwerty123");
+		options = new Properties();
+		options.setProperty("db.server","localhost");
+		options.setProperty("db.driver", "h2");
+		options.setProperty("db.user","oper");
+		options.setProperty("db.password", "qwerty123");
+		options.setProperty("logic.initRecStatusCode", "1");
 	}
 
 
 	/**
 	* Возвращает настройки приложения в классе {@link java.util.Properties}
 	*/
-	public static Properties getProperties() {
-		if (properties == null) {
-			readProperties();
+	public static Properties getOptions() {
+		if (options == null) {
+			readOptions();
 		}
-		return properties;
+		return options;
+	}
+
+	/**
+	* Возвращает опцию из настроек приложения, по имени
+	* @param propName Наименоание опции
+	*/
+	public static String getOption(String propName) {
+		readOptions();
+		return options.getProperty(propName);
 	}
 
 
 	/**
 	* Сохраняет настройки приложения в файл
 	*/
-	public static void saveProperties() {
+	public static void saveOptions() {
 
 		File currentDir = new File(".");
 		FileOutputStream fos = null;
@@ -89,7 +99,7 @@ public class PropertiesUtil {
 
 			fos = new FileOutputStream(filePath);
 
-			properties.storeToXML(fos,"blanc");
+			options.storeToXML(fos,"blanc");
 
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(null,

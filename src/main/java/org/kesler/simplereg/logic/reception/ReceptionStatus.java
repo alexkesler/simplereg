@@ -13,10 +13,10 @@ import org.kesler.simplereg.dao.AbstractEntity;
 @Table(name="ReceptionStatuses")
 public class ReceptionStatus extends AbstractEntity {
 	
-	@Column(name="Name", length=50)
+	@Column(name="Name", length=50, nullable=false)
 	private String name;
 
-	@Column(name="Code")
+	@Column(name="Code", nullable=false, unique=true)
 	private Integer code;
 
 
@@ -36,6 +36,11 @@ public class ReceptionStatus extends AbstractEntity {
 
 	public void setCode(Integer code) {
 		this.code = code;
+	}
+
+	@Override
+	public String toString() {
+		return getCode() + " - " + getName(); 
 	}
 
 

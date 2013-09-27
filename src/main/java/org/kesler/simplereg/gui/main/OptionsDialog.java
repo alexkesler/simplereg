@@ -17,14 +17,14 @@ import java.util.ArrayList;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.util.PropertiesUtil;
+import org.kesler.simplereg.util.OptionsUtil;
 
 
 /**
 * Диалог настроек приложения
 */
 public class OptionsDialog extends JDialog {
-	private Properties properties;
+	private Properties options;
 
 	private String[] propNamesArray;
 	private List<JTextField> textFieds;
@@ -33,12 +33,12 @@ public class OptionsDialog extends JDialog {
 	private String btn2String = "Отмена";
 
 	/**
-	* Создает модальный диалог  настроек программы
+	* Создает модальный диалог настроек программы
 	* @param frame ссылка на родительское окно
 	*/
 	public OptionsDialog(JFrame frame) {
 		super(frame, "Параметры приложения", true);
-		properties = PropertiesUtil.getProperties();
+		options = OptionsUtil.getOptions();
 
 		this.setContentPane(createOptionPane());
 
@@ -64,7 +64,7 @@ public class OptionsDialog extends JDialog {
 
 		JPanel dataPanel = new JPanel(layout);
 		
-        Set<String> propNamesSet = properties.stringPropertyNames();
+        Set<String> propNamesSet = options.stringPropertyNames();
         
         propNamesArray = new String[propNamesSet.size()];
         propNamesArray = propNamesSet.toArray(propNamesArray);
@@ -74,7 +74,7 @@ public class OptionsDialog extends JDialog {
         for (int i = 0; i < propNamesArray.length; i++) {
         	dataPanel.add(new JLabel(propNamesArray[i]));
         	JTextField textField = new JTextField(20);
-        	textField.setText(properties.getProperty(propNamesArray[i]));
+        	textField.setText(options.getProperty(propNamesArray[i]));
         	textFieds.add(textField);
         	dataPanel.add(textField);
         }
@@ -111,9 +111,9 @@ public class OptionsDialog extends JDialog {
 
 				if (value == btn1String) {
 					for (int i = 0; i < propNamesArray.length; i++) {
-						properties.setProperty(propNamesArray[i], textFieds.get(i).getText());
+						options.setProperty(propNamesArray[i], textFieds.get(i).getText());
 					}
-					PropertiesUtil.saveProperties();
+					OptionsUtil.saveOptions();
 
 					setVisible(false);
 				}

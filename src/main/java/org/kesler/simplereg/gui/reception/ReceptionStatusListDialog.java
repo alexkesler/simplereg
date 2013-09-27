@@ -20,6 +20,12 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class ReceptionStatusListDialog extends JDialog {
 
+	public static int NONE = -1;
+	public static int OK = 0;
+	public static int CANCEL  1;
+
+	private int result = NONE;
+
 	private JFrame frame;
 	private ReceptionStatusListDialogController controller;
 
@@ -29,6 +35,10 @@ public class ReceptionStatusListDialog extends JDialog {
 		this.controller = controller;
 
 		createGUI();
+	}
+
+	public int getResult() {
+		return result;
 	}
 
 	private void createGUI() {
@@ -73,7 +83,7 @@ public class ReceptionStatusListDialog extends JDialog {
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
-		JButton okButton = new JButton();
+		JButton okButton = new JButton("Ok");
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -82,11 +92,11 @@ public class ReceptionStatusListDialog extends JDialog {
 		});
 
 
-		JButton cancelButton = new JButton();
+		JButton cancelButton = new JButton("Отмена");
 		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				setVisible(false);
 			}
 		});
 
@@ -116,4 +126,6 @@ public class ReceptionStatusListDialog extends JDialog {
 			return controller.getReceptionStatuses().get(index);
 		}
 	}
+
+
 }

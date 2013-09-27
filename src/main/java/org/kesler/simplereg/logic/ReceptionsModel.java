@@ -7,6 +7,8 @@ import javax.swing.JOptionPane;
 import java.sql.SQLException;
 
 import org.kesler.simplereg.dao.DAOFactory;
+import org.kesler.simplereg.util.OptionsUtil;
+import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 
 
 public class ReceptionsModel {
@@ -39,10 +41,12 @@ public class ReceptionsModel {
 	}
 
 	public void addReception(Reception reception) {
-		receptions.add(reception);
+		reception.setStatus(ReceptionStatusesModel.getInstance().getInitReceptionStatus());
+
 		try {
 			//DAOFactory.getInstance().getApplicatorDAO().addApplicator(reception.getApplicator());
 			DAOFactory.getInstance().getReceptionDAO().addReception(reception);
+			receptions.add(reception);
 		} catch (SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка записи в базу данных", JOptionPane.OK_OPTION);
 		}
