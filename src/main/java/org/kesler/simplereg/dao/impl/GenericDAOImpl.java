@@ -15,7 +15,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements DAO <T> {
 
 	private Class<T> type;
 
-	public DAOImpl(Class<T> type) {
+	public GenericDAOImpl(Class<T> type) {
 		this.type = type;
 	}
 

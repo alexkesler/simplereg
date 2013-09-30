@@ -62,6 +62,7 @@ public class ReceptionStatusDialog extends JDialog {
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
 		codeField = new JTextField(5);
+		codeField.setToolTipText("Введите код состояния (число)");
 		nameField = new JTextField(20);
 
 		// Собираем панель данных
@@ -142,7 +143,13 @@ public class ReceptionStatusDialog extends JDialog {
 
 		}
 
-		receptionStatus.setCode(Integer.parseInt(codeField.getText()));
+		try {
+			receptionStatus.setCode(Integer.parseInt(codeField.getText()));
+		} catch (NumberFormatException nfe) {
+			JOptionPane.showMessageDialog(parentDialog, "Поле 'Код' должно быть числом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		
 		receptionStatus.setName(nameField.getText());
 
 		return true;
