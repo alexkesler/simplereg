@@ -2,9 +2,9 @@ package org.kesler.simplereg.gui.reception;
 
 import javax.swing.JOptionPane;
 
-class ApplicatorsReceptionViewState extends ReceptionViewState {
+class ApplicatorsMakeReceptionViewState extends MakeReceptionViewState {
 
-	ApplicatorsReceptionViewState(ReceptionViewController controller, ReceptionView view) {
+	ApplicatorsMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
 		super(controller, view);
 		init();
 	} 
@@ -20,7 +20,7 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 	@Override
 	void back() {
 		// Переходим назад к выбору услуги
-		controller.setState(new ServiceReceptionViewState(controller, view));
+		controller.setState(new ServiceMakeReceptionViewState(controller, view));
 	}
 
 	@Override
@@ -28,7 +28,7 @@ class ApplicatorsReceptionViewState extends ReceptionViewState {
 		// переходим к печати, если есть заявители
 		if (controller.getApplicators().size() > 0) {
 			controller.storeApplicators();
-			controller.setState(new DataReceptionViewState(controller, view));
+			controller.setState(new DataMakeReceptionViewState(controller, view));
 		} else {
 			JOptionPane.showMessageDialog(view,
     									"Нет ни одного заявителя. Пожалуйста, добавьте заявителей.",

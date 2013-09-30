@@ -6,12 +6,12 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
 
-import org.kesler.simplereg.dao.DAO;
+import org.kesler.simplereg.dao.GenericDAO;
 import org.kesler.simplereg.dao.AbstractEntity;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
-public class GenericDAOImpl<T extends AbstractEntity> implements DAO <T> {
+public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> {
 
 	private Class<T> type;
 

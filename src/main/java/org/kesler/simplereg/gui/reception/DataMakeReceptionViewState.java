@@ -1,8 +1,8 @@
 package org.kesler.simplereg.gui.reception;
 
-class DataReceptionViewState extends ReceptionViewState {
+class DataMakeReceptionViewState extends MakeReceptionViewState {
 
-	DataReceptionViewState(ReceptionViewController controller, ReceptionView view) {
+	DataMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
 		super(controller, view);
 		init();
 	}
@@ -25,13 +25,13 @@ class DataReceptionViewState extends ReceptionViewState {
 	@Override
 	void back() {
 		// Переходим в состояние ввода данных о заявителях
-		controller.setState(new ApplicatorsReceptionViewState(controller, view));
+		controller.setState(new ApplicatorsMakeReceptionViewState(controller, view));
 	} 
 
 	@Override
 	void next() {
 		// Переходим в состояние печати запроса
-		controller.setState(new PrintReceptionViewState(controller, view));
+		controller.setState(new PrintMakeReceptionViewState(controller, view));
 	}
 
 	@Override

@@ -12,7 +12,7 @@ import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
-import org.kesler.simplereg.gui.reception.ReceptionViewController;
+import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.ReceptionStatusListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
@@ -73,7 +73,7 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 				logout();
 				break;	
 			case NewReception: 
-				openReceptionView();
+				openMakeReceptionView();
 				break;
 			case UpdateReceptions: 
 				readReceptions();
@@ -148,8 +148,8 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 
-	private void openReceptionView() {
-		ReceptionViewController.getInstance().openView();
+	private void openMakeReceptionView() {
+		MakeReceptionViewController.getInstance().openView();
 	}
 
 	private void openServicesView() {

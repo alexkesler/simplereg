@@ -1,9 +1,9 @@
 package org.kesler.simplereg.gui.reception;
 
 
-class NoneReceptionViewState extends ReceptionViewState {
+class NoneMakeReceptionViewState extends MakeReceptionViewState {
 
-	NoneReceptionViewState(ReceptionViewController controller, ReceptionView view) {
+	NoneMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
 		super(controller, view);
 		init();
 	}

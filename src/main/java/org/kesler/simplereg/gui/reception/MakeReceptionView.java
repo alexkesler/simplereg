@@ -31,14 +31,14 @@ import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.applicator.Applicator;
 
-class ReceptionView extends JFrame{
+class MakeReceptionView extends JFrame{
 
 	public static final int SERVICE_STATE = 0;
 	public static final int APPLICATORS_STATE = 1;
 	public static final int DATA_STATE = 2;
 	public static final int PRINT_STATE = 3;
 
-	private ReceptionViewController controller;
+	private MakeReceptionViewController controller;
 	private JButton backButton;
 	private JButton nextButton;
 	private JButton readyButton;
@@ -53,7 +53,7 @@ class ReceptionView extends JFrame{
 
 
 
-	public ReceptionView(ReceptionViewController controller) {
+	public MakeReceptionView(MakeReceptionViewController controller) {
 		super("Прием заявителя");
 		this.controller = controller;
 		createGUI();

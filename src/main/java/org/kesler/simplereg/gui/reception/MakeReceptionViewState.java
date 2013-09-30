@@ -1,10 +1,10 @@
 package org.kesler.simplereg.gui.reception;
 
-abstract class ReceptionViewState {
-	protected ReceptionViewController controller;
-	protected ReceptionView view;
+abstract class MakeReceptionViewState {
+	protected MakeReceptionViewController controller;
+	protected MakeReceptionView view;
 
-	public ReceptionViewState(ReceptionViewController controller, ReceptionView view) {
+	public MakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
 		this.controller = controller;
 		this.view = view;
 	}

@@ -5,9 +5,9 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 
-class ServiceReceptionViewState extends ReceptionViewState {
+class ServiceMakeReceptionViewState extends MakeReceptionViewState {
 	
-	ServiceReceptionViewState(ReceptionViewController controller, ReceptionView view) {
+	ServiceMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
 		super(controller, view);
 		init();
 	}
@@ -30,7 +30,7 @@ class ServiceReceptionViewState extends ReceptionViewState {
 		// Переходим в состояние приема заявителя, если все в порядке
 		if (controller.getService()!=null) {
 			controller.storeService();
-			controller.setState(new ApplicatorsReceptionViewState(controller, view));
+			controller.setState(new ApplicatorsMakeReceptionViewState(controller, view));
 		} else {
 			JOptionPane.showMessageDialog(view,
     									"Услуга не выбрана. Пожалуйста, выберите услугу.",

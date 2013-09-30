@@ -19,11 +19,11 @@ import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
 
-public class ReceptionViewController {
+public class MakeReceptionViewController {
 
-	private ReceptionView view;
-	private static ReceptionViewController instance;
-	private ReceptionViewState viewState;
+	private MakeReceptionView view;
+	private static MakeReceptionViewController instance;
+	private MakeReceptionViewState viewState;
 	
 	private Operator operator;
 	private Service service;
@@ -31,15 +31,15 @@ public class ReceptionViewController {
 	private Reception reception;
 
 
-	private ReceptionViewController() {
+	private MakeReceptionViewController() {
 		applicators = new ArrayList<Applicator>();
-		view = new ReceptionView(this);
-		viewState = new NoneReceptionViewState(this, view);
+		view = new MakeReceptionView(this);
+		viewState = new NoneMakeReceptionViewState(this, view);
 	}
 
-	public static synchronized ReceptionViewController getInstance() {
+	public static synchronized MakeReceptionViewController getInstance() {
 		if (instance == null) {
-			instance = new ReceptionViewController();
+			instance = new MakeReceptionViewController();
 		}
 		return instance;
 	}
@@ -64,7 +64,7 @@ public class ReceptionViewController {
 		applicators = new ArrayList<Applicator>();
 
 		// Переключаем в начальное состояние
-		viewState = new ServiceReceptionViewState(this, view);
+		viewState = new ServiceMakeReceptionViewState(this, view);
 	}
 
 	void back() {
@@ -84,7 +84,7 @@ public class ReceptionViewController {
 		viewState.cancel();
 	}
 
-	void setState(ReceptionViewState viewState) {
+	void setState(MakeReceptionViewState viewState) {
 		this.viewState = viewState;
 	}
 
