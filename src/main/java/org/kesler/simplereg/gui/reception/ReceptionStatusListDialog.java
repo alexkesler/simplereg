@@ -6,6 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.AbstractListModel;
 
@@ -22,17 +26,23 @@ public class ReceptionStatusListDialog extends JDialog {
 
 	public static int NONE = -1;
 	public static int OK = 0;
-	public static int CANCEL  1;
+	public static int CANCEL = 1;
 
 	private int result = NONE;
 
 	private JFrame frame;
 	private ReceptionStatusListDialogController controller;
 
+	private JList statusesList;
+	private StatusesListModel statusesListModel;
+	private int selectedIndex;
+
 	public ReceptionStatusListDialog(JFrame frame, ReceptionStatusListDialogController controller) {
-		super(frame, true);
+		super(frame, "Статусы дел", true);
 		this.frame = frame;
 		this.controller = controller;
+
+		selectedIndex = -1;
 
 		createGUI();
 	}
@@ -49,8 +59,21 @@ public class ReceptionStatusListDialog extends JDialog {
 		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout("fill,nogrid"));
 
-		StatusesListModel statusesListModel = new StatusesListModel();
-		JList statusesList = new JList(statusesListModel);
+		statusesListModel = new StatusesListModel();
+		statusesList = new JList(statusesListModel);
+		// Можно выбрать только один элемент
+		statusesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		statusesList.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent lse) {
+				if(lse.getValueIsAdjusting() == false) {
+					selectedIndex = statusesList.getSelectedIndex();
+				}				
+			}
+		});
+
+
 		JScrollPane statusesListScrollPane = new JScrollPane(statusesList);
 
 		JButton addStatusButton = new JButton();
@@ -65,29 +88,43 @@ public class ReceptionStatusListDialog extends JDialog {
 		editStatusButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
 		editStatusButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openEditStatusDialog();
+				if (selectedIndex != -1) {
+					controller.openEditStatusDialog(selectedIndex);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+				}
+				
 			}
 		});
 
 		JButton removeStatusButton = new JButton();
 		removeStatusButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+		removeStatusButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				if (selectedIndex != -1) {
+					controller.removeReceptionStatus(selectedIndex);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+				}
 
+			}
+		});
 
-
-
-		dataPanel.add(statusesListScrollPane, "grow, wrap");
-		dataPanel.add(addStatusButton,"span");
+		// собираем панель данных
+		dataPanel.add(statusesListScrollPane, "push, grow, wrap, w 200");
+		dataPanel.add(addStatusButton);
 		dataPanel.add(editStatusButton);
-		dataPanel.add(removeStatusButton, "wrap");
+		dataPanel.add(removeStatusButton);
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
-		JButton okButton = new JButton("Ok");
+        JButton okButton = new JButton("Ok");         
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				result = OK;
+				setVisible(false);
 			}
 		});
 
@@ -96,6 +133,7 @@ public class ReceptionStatusListDialog extends JDialog {
 		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
+				result = CANCEL;
 				setVisible(false);
 			}
 		});
@@ -114,6 +152,18 @@ public class ReceptionStatusListDialog extends JDialog {
 
 	}
 
+	void addedStatus(int index) {
+		statusesListModel.addedStatus(index);
+	}
+
+	void updatedStatus(int index) {
+		statusesListModel.updatedStatus(index);
+	}
+
+	void removedStatus(int index) {
+		statusesListModel.removedStatus(index);
+	}
+
 	class StatusesListModel extends AbstractListModel {
 
 		@Override
@@ -124,6 +174,18 @@ public class ReceptionStatusListDialog extends JDialog {
 		@Override
 		public ReceptionStatus getElementAt(int index) {
 			return controller.getReceptionStatuses().get(index);
+		}
+
+		void addedStatus(int index) {
+			fireIntervalAdded(this, index, index);
+		}
+
+		void updatedStatus(int index) {
+			fireContentsChanged(this, index, index);
+		}
+
+		void removedStatus(int index) {
+			fireIntervalRemoved(this, index, index);
 		}
 	}
 

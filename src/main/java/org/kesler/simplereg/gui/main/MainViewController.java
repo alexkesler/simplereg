@@ -6,20 +6,22 @@ import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.operator.OperatorsModelListener;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.ReceptionViewController;
 import org.kesler.simplereg.gui.reception.ReceptionStatusListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
-import org.kesler.simplereg.logic.OperatorsModel;
+import org.kesler.simplereg.logic.operator.OperatorsModel;
 
 
 /**
 * Управляет основным окном приложения
 */
-public class MainViewController implements MainViewListener, CurrentOperatorListener{
+public class MainViewController implements MainViewListener, CurrentOperatorListener, OperatorsModelListener{
 	private static MainViewController instance;
 
 	private MainView mainView;
@@ -27,9 +29,12 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	private OperatorsModel operatorsModel;
 	private LoginDialog loginDialog;
 
+	private ProcessDialog processDialog;
+
 	private MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
 		this.operatorsModel = OperatorsModel.getInstance();
+		operatorsModel.addOperatorsModelListener(this);
 		
 		mainView = new MainView(this);
 		mainView.addMainViewListener(this);
@@ -163,20 +168,46 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	private void login() {
 		
-		//получаем список действующих операторов
-		List<Operator> operators = operatorsModel.getActiveOperators();
-		// создаем диалог ввода пароля
-		
-		loginDialog = new LoginDialog(mainView, operators);
-		loginDialog.showDialog();
+		processDialog = new ProcessDialog(mainView, "Подключение", "Получаем список операторов...");
 
-		// делаем проверку на итог - назначаем оператора
-		if (loginDialog.isLoginOk()) {
-			CurrentOperator.getInstance().setOperator(loginDialog.getOperator());
+		operatorsModel.readOperators();
+		processDialog.setVisible(true);
+
+		if (processDialog.getResult() != ProcessDialog.CANCEL) {
+			//получаем список действующих операторов
+			List<Operator> operators = operatorsModel.getActiveOperators();
+			// создаем диалог ввода пароля
+			
+			loginDialog = new LoginDialog(mainView, operators);
+			loginDialog.showDialog();
+
+			// делаем проверку на итог - назначаем оператора
+			if (loginDialog.isLoginOk()) {
+				CurrentOperator.getInstance().setOperator(loginDialog.getOperator());
+			} else {
+				CurrentOperator.getInstance().resetOperator();
+			}
+			
 		} else {
-			CurrentOperator.getInstance().resetOperator();
+			operatorsModel.stopReadOperators();
+		}
+
+	}
+
+	public void operatorsChanged(int status) {
+		switch (status) {
+			case OperatorsModel.STATUS_UPDATING:
+				break;
+			case OperatorsModel.STATUS_UPDATED:
+				processDialog.setVisible(false);
+				break;
+			case OperatorsModel.STATUS_ERROR:
+				break;	
+			
 		}
 	}
+
+
 
 	private void logout() {
 		CurrentOperator.getInstance().resetOperator();

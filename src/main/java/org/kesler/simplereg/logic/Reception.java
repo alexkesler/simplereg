@@ -19,6 +19,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import org.kesler.simplereg.dao.AbstractEntity;
+import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 

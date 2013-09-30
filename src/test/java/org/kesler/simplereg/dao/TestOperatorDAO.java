@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.sql.SQLException;
 
-import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.operator.Operator;
 
 public class TestOperatorDAO {
 

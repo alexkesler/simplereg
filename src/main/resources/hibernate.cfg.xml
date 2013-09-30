@@ -20,7 +20,7 @@
 		<mapping class="org.kesler.simplereg.logic.applicator.Applicator" />		
 		<mapping class="org.kesler.simplereg.logic.applicator.ApplicatorFL" />
 		<mapping class="org.kesler.simplereg.logic.applicator.ApplicatorUL" />
-		<mapping class="org.kesler.simplereg.logic.Operator" />
+		<mapping class="org.kesler.simplereg.logic.operator.Operator" />
 		<mapping class="org.kesler.simplereg.logic.Reception" />
 		<mapping class="org.kesler.simplereg.logic.reception.ReceptionStatus" />
 

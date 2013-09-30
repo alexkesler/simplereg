@@ -53,6 +53,7 @@ public class ReceptionStatusesModel {
 
 	public void removeReceptionStatus(ReceptionStatus receptionStatus) {
 		DAOFactory.getInstance().getReceptionStatusDAO().removeReceptionStatus(receptionStatus);
+		receptionStatuses.remove(receptionStatus);
 	}
 
 	public ReceptionStatus getInitReceptionStatus() {

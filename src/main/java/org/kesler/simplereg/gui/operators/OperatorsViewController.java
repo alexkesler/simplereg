@@ -3,16 +3,18 @@ package org.kesler.simplereg.gui.operators;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.OperatorsModel;
+import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.operator.OperatorsModel;
+import org.kesler.simplereg.logic.operator.OperatorsModelListener;
 
-public class OperatorsViewController {
+public class OperatorsViewController implements OperatorsModelListener{
 	private OperatorsView view;
 	private List<Operator> operators;
 	private static OperatorsViewController instance = null;
 
 	private OperatorsViewController() {
 		view = new OperatorsView(this);
+		OperatorsModel.getInstance().addOperatorsModelListener(this);
 	}
 
 	public static synchronized OperatorsViewController getInstance() {
@@ -30,6 +32,18 @@ public class OperatorsViewController {
 		operators = OperatorsModel.getInstance().getAllOperators();
 		view.getTableModel().setOperators(operators);
 		view.setVisible(true);
+	}
+
+	public void operatorsChanged(int status) {
+		switch (status) {
+			case OperatorsModel.STATUS_UPDATING:
+				break;
+			case OperatorsModel.STATUS_UPDATED:
+				break;
+			case OperatorsModel.STATUS_ERROR:
+				break;	
+			
+		}
 	}
 
 

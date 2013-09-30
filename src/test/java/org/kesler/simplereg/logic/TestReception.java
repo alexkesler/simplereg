@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.operator.Operator;
 
 public class TestReception {
 

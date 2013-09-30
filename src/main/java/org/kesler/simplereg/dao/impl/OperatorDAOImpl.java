@@ -11,7 +11,7 @@ import org.hibernate.Session;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.OperatorDAO;
-import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.operator.Operator;
 
 public class OperatorDAOImpl implements OperatorDAO {
 
@@ -91,10 +91,11 @@ public class OperatorDAOImpl implements OperatorDAO {
 		Session session = null;
 		List<Operator> operators = new ArrayList<Operator>();
 		try {
+			System.out.println("Open session to read operators...");
 			session = HibernateUtil.getSessionFactory().openSession();
 			operators = session.createCriteria(Operator.class).list();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+			//JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();

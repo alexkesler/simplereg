@@ -33,7 +33,7 @@ import java.util.Map;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.operator.Operator;
 
 /**
 *<p>Используеся для отображения и редактирования списка операторов</p>

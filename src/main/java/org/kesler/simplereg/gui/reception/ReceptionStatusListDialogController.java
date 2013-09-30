@@ -36,11 +36,30 @@ public class ReceptionStatusListDialogController {
 	}
 
 	public void openAddStatusDialog() {
-
+		ReceptionStatusDialog statusDialog = new ReceptionStatusDialog(dialog);
+		statusDialog.setVisible(true);
+		if (statusDialog.getResult() == ReceptionStatusDialog.OK) {
+			int index = model.addReceptionStatus(statusDialog.getReceptionStatus());
+			if (index != -1) {
+				dialog.addedStatus(index);
+			}
+		}
 	}
 
-	public void openEditStatusDialog() {
+	public void openEditStatusDialog(int index) {
+		ReceptionStatus receptionStatus = getReceptionStatuses().get(index);
+		ReceptionStatusDialog statusDialog = new ReceptionStatusDialog(dialog, receptionStatus);
+		statusDialog.setVisible(true);
+		if (statusDialog.getResult() == ReceptionStatusDialog.OK) {
+			model.updateReceptionStatus(receptionStatus);
+			dialog.updatedStatus(index);
+		}
+	}
 
+	public void removeReceptionStatus(int index) {
+		ReceptionStatus receptionStatus = getReceptionStatuses().get(index);
+		model.removeReceptionStatus(receptionStatus);
+		dialog.removedStatus(index);
 	}
 
 }

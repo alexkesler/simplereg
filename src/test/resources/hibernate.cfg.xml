@@ -15,7 +15,7 @@
 		<property name="hbm2ddl.auto">create</property>
 
 		<mapping class="org.kesler.simplereg.logic.Service" />
-		<mapping class="org.kesler.simplereg.logic.Operator" />
+		<mapping class="org.kesler.simplereg.logic.operator.Operator" />
 		<mapping class="org.kesler.simplereg.logic.applicator.FL" />
 		<mapping class="org.kesler.simplereg.logic.applicator.UL" />		
 		<mapping class="org.kesler.simplereg.logic.applicator.Applicator" />		

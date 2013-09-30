@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic;
+package org.kesler.simplereg.logic.operator;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,10 +8,20 @@ import java.sql.SQLException;
 import org.kesler.simplereg.dao.DAOFactory;
 
 public class OperatorsModel {
+
+
+	public static final int STATUS_UPDATED = 0;
+	public static final int STATUS_UPDATING = 1;
+	public static final int STATUS_ERROR = -1;
+
 	private List<Operator> operators = null;
 	private static OperatorsModel instance = null;
+	private Thread readerThread;
+
+	private List<OperatorsModelListener> listeners;
 
 	private OperatorsModel() {
+		listeners = new ArrayList<OperatorsModelListener>();
 	}
 
 	public static synchronized OperatorsModel getInstance() {
@@ -21,11 +31,24 @@ public class OperatorsModel {
 		return instance;
 	}
 
+	public void addOperatorsModelListener(OperatorsModelListener listener) {
+		listeners.add(listener);
+	}
+
 	public void readOperators() {
-		try {
-			operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка чтения из базы данных", JOptionPane.OK_OPTION);			
+		readerThread = new Thread(new Reader()); 
+		notifyListeners(STATUS_UPDATING);
+		readerThread.start();
+
+	}
+
+	public void stopReadOperators() {
+		readerThread.interrupt();
+	}
+
+	private void notifyListeners(int status) {
+		for (OperatorsModelListener listener : listeners) {
+			listener.operatorsChanged(status);			
 		}
 	}
 
@@ -56,6 +79,18 @@ public class OperatorsModel {
 		} catch (SQLException sqle) {
 			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка сохранения операторов в базу данных", JOptionPane.OK_OPTION);	
 		}
+	}
+
+	class Reader implements Runnable {
+		public void run() {
+			try {
+				operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
+				notifyListeners(STATUS_UPDATED);
+			} catch (SQLException sqle) {
+				System.out.println("Error reading operators");
+				notifyListeners(STATUS_ERROR);			
+			}
+		}		
 	}
 
 }
