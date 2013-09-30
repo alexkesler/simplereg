@@ -13,5 +13,4 @@ public interface DAO <T extends AbstractEntity> {
 	public List<T> getAll();
 
 	public void remove(T o);
-
 }
