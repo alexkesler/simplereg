@@ -2,7 +2,7 @@ package org.kesler.simplereg.dao;
 
 import java.util.List;
 
-public interface DAO <T extends AbstractEntity> {
+public interface GenericDAO <T extends AbstractEntity> {
 	
 	public Long add(T o);
 
