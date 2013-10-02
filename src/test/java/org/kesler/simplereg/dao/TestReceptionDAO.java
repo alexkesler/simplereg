@@ -15,7 +15,7 @@ import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.operator.Operator;
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.Reception;
 
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.ReceptionDAO;
