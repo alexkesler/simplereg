@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
-import org.kesler.simplereg.logic.ReceptionsModel;
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.ReceptionsModel;
+import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModelListener;
 import org.kesler.simplereg.gui.util.ProcessDialog;

@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic;
+package org.kesler.simplereg.logic.reception;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Service;
 
 public class TestReception {
 

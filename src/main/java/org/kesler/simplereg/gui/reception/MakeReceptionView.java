@@ -28,7 +28,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.applicator.Applicator;
 
 class MakeReceptionView extends JFrame{

@@ -10,7 +10,7 @@ import org.hibernate.Session;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.ReceptionDAO;
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.Reception;
 
 public class ReceptionDAOImpl implements ReceptionDAO {
 

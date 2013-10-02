@@ -2,8 +2,8 @@ package org.kesler.simplereg.gui.reestr;
 
 import java.util.List;
 
-import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.ReceptionsModel;
+import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.reception.ReceptionsModel;
 
 public class ReestrViewController {
 

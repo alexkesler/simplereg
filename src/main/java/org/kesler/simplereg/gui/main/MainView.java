@@ -30,7 +30,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.Reception;
 
 /**
 * Основной вид приложения. Содержит меню и управляющие компоненты для вызова дочерних окон. 

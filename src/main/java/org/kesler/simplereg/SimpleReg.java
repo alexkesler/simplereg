@@ -2,7 +2,6 @@ package org.kesler.simplereg;
 
 import javax.swing.SwingUtilities;
 
-import org.kesler.simplereg.logic.ReceptionsModel;
 import org.kesler.simplereg.gui.main.MainViewController;
 import org.kesler.simplereg.util.OptionsUtil;
 

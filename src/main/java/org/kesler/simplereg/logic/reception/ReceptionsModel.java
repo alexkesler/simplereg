@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic;
+package org.kesler.simplereg.logic.reception;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.util.OptionsUtil;
-import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 
 
 public class ReceptionsModel {

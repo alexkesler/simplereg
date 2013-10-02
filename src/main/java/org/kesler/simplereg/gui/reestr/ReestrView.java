@@ -13,7 +13,7 @@ import java.awt.BorderLayout;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.Reception;
 
 
 public class ReestrView extends JFrame {

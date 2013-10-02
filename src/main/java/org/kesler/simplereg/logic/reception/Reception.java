@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic;
+package org.kesler.simplereg.logic.reception;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +21,8 @@ import org.hibernate.annotations.FetchMode;
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.applicator.Applicator;
-import org.kesler.simplereg.logic.reception.ReceptionStatus;
+import org.kesler.simplereg.logic.Service;
+
 
 /**
 * Класс предсталяет сущность приема заявителей

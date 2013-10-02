@@ -3,7 +3,7 @@ package org.kesler.simplereg.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.Reception;
 
 public interface ReceptionDAO {
 	public void addReception(Reception r) throws SQLException;
