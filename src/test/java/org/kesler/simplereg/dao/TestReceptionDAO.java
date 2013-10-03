@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Ignore;
 
-
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,12 +26,7 @@ public class TestReceptionDAO {
 		Service initService = new Service();
 
 		// сохраняем
-		try {
-			DAOFactory.getInstance().getServiceDAO().addService(initService);
-
-		} catch (SQLException e) {
-			System.out.println("DB Error: " + e.getMessage());
-		}
+		DAOFactory.getInstance().getServiceDAO().addService(initService);
 
 		// создаем тестовые объекты Applicator
 		List<Applicator> initApplicators = new ArrayList<Applicator>();
@@ -50,12 +43,7 @@ public class TestReceptionDAO {
 		initOperators.add(initOperator);
 
 		// сохраняем
-		try {
-			DAOFactory.getInstance().getOperatorDAO().saveOperators(initOperators);
-
-		} catch (SQLException e) {
-			System.out.println("DB Error: " + e.getMessage());
-		}
+		DAOFactory.getInstance().getOperatorDAO().saveOperators(initOperators);
 
 		// создаем тестовый объект Reception
 		Reception initReception = new Reception();
@@ -68,21 +56,13 @@ public class TestReceptionDAO {
 		Reception resultReception = null;
 
 		System.out.println("Writing Reception....");
-		try {
-			DAOFactory.getInstance().getReceptionDAO().addReception(initReception);
-		} catch (SQLException e) {
-			System.out.println("DB Error: " + e.getMessage());
-		}
+		DAOFactory.getInstance().getReceptionDAO().addReception(initReception);
 
 		// получаем id сохраненнг объекта
 		Long id = initReception.getId();
 
 		// читаем объект
-		try {
-			resultReception = DAOFactory.getInstance().getReceptionDAO().getReceptionById(id);
-		} catch (SQLException e) {
-			System.out.println("DB Error: " + e.getMessage());
-		}
+		resultReception = DAOFactory.getInstance().getReceptionDAO().getReceptionById(id);
 
 		assertNotNull("Readed Reception is null", resultReception);
 

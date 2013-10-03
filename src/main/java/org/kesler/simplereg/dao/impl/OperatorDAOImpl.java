@@ -1,12 +1,11 @@
 package org.kesler.simplereg.dao.impl;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import javax.swing.JOptionPane;
 
 import org.hibernate.Session;
+import org.hibernate.HibernateException;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
@@ -32,7 +31,7 @@ public class OperatorDAOImpl implements OperatorDAO {
 	* @see org.kesler.simplereg.logic.Operator
 	* @see org.kesler.simplereg.dao.AbstractEntity
 	*/
-	public void saveOperators(List<Operator> operators) throws SQLException {
+	public void saveOperators(List<Operator> operators) {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
@@ -74,8 +73,10 @@ public class OperatorDAOImpl implements OperatorDAO {
 				}
 			}	
 
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.toString(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while saving operators");
+			he.printStackTrace();
+
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -87,15 +88,16 @@ public class OperatorDAOImpl implements OperatorDAO {
 	* 
 	*@return список всех операторов из базы данных, состояние всех операторов Operator.SAVED_STATE по умолчанию
 	*/
-	public List<Operator> getAllOperators() throws SQLException {
+	public List<Operator> getAllOperators() {
 		Session session = null;
 		List<Operator> operators = new ArrayList<Operator>();
 		try {
 			System.out.println("Open session to read operators...");
 			session = HibernateUtil.getSessionFactory().openSession();
 			operators = session.createCriteria(Operator.class).list();
-		} catch (Exception e) {
-			//JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while reading operators");
+			he.printStackTrace();
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();

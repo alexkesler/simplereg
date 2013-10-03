@@ -1,11 +1,11 @@
 package org.kesler.simplereg.dao.impl;
 
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 import org.hibernate.Session;
+import org.hibernate.HibernateException;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
@@ -14,15 +14,16 @@ import org.kesler.simplereg.logic.Service;
 
 public class ServiceDAOImpl implements ServiceDAO {
 
-	public void addService(Service service) throws SQLException {
+	public void addService(Service service) {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 			session.save(service);
 			session.getTransaction().commit();			
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while saving service");
+			he.printStackTrace();
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -30,15 +31,16 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	} 
 
-	public void updateService(Service service) throws SQLException {
+	public void updateService(Service service) {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 			session.update(service);
 			session.getTransaction().commit();			
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while saving service");
+			he.printStackTrace();
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -46,14 +48,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	}
 
-	public Service getServiceById(Long id) throws SQLException {
+	public Service getServiceById(Long id) {
 		Session session = null;
 		Service service = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			service = (Service) session.load(Service.class, id);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while saving service");
+			he.printStackTrace();
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -62,14 +65,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 		return service;
 	}
 
-	public List<Service> getAllServices() throws SQLException {
+	public List<Service> getAllServices() {
 		Session session = null;
 		List<Service> services = new ArrayList<Service>();
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			services = session.createCriteria(Service.class).list();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while reading services");
+			he.printStackTrace();
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -78,15 +82,16 @@ public class ServiceDAOImpl implements ServiceDAO {
 		return  services;
 	}
 
-	public void deleteService(Service service) throws SQLException {
+	public void deleteService(Service service) {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 			session.delete(service);
 			session.getTransaction().commit();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Ошибка I/O", JOptionPane.OK_OPTION);
+		} catch (HibernateException he) {
+			System.err.println("Error while removing service");
+			he.printStackTrace();
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
