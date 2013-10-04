@@ -16,21 +16,13 @@ public class TestServiceDAO {
 
 		s1.setName("Service # 1");
 
-		try{
-			DAOFactory.getInstance().getServiceDAO().addService(s1);
-		} catch (SQLException sqle) {
-			System.out.println("DB Error: " + sqle.getMessage());			
-		}
+		DAOFactory.getInstance().getServiceDAO().addService(s1);
 
 		Long id = s1.getId();
 		assertNotNull("Writed service dont get id", id);
 
 		Service resultService = null;
-		try {
-			resultService = DAOFactory.getInstance().getServiceDAO().getServiceById(id);
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		}
+		resultService = DAOFactory.getInstance().getServiceDAO().getServiceById(id);
 		assertNotNull("Result service is null", resultService);
 
 
@@ -48,24 +40,15 @@ public class TestServiceDAO {
 		s21.setParentService(s2);
 
 		System.out.println("Writing Services....");
-		try {
-			DAOFactory.getInstance().getServiceDAO().addService(s1);
-			DAOFactory.getInstance().getServiceDAO().addService(s2);
-			DAOFactory.getInstance().getServiceDAO().addService(s21);
-
-		} catch (SQLException sqle) {
-			System.out.println("DB Error: " + sqle.getMessage());
-		}
+		DAOFactory.getInstance().getServiceDAO().addService(s1);
+		DAOFactory.getInstance().getServiceDAO().addService(s2);
+		DAOFactory.getInstance().getServiceDAO().addService(s21);
 
 		Long id = s21.getId();
 		assertNotNull("Writed service dont get id", id);
 		
 		Service resultService = null;
-		try {
-			resultService = DAOFactory.getInstance().getServiceDAO().getServiceById(id);
-		} catch (SQLException sqle) {
-			System.out.println(sqle.getMessage());
-		}
+		resultService = DAOFactory.getInstance().getServiceDAO().getServiceById(id);
 		assertNotNull("Result service is null", resultService);
 
 		String parentServiceName = resultService.getParentServiceName();
@@ -84,21 +67,13 @@ public class TestServiceDAO {
 		s2.setName("Service # 2");
 
 		// записываем
-		try {
-			DAOFactory.getInstance().getServiceDAO().addService(s1);
-			DAOFactory.getInstance().getServiceDAO().addService(s2);
-		} catch (SQLException sqle) {
-			System.out.println("DB Error: " + sqle.getMessage());			
-		}
+		DAOFactory.getInstance().getServiceDAO().addService(s1);
+		DAOFactory.getInstance().getServiceDAO().addService(s2);
 
 		// Проверяем чтение листа
 		List<Service> resultServiceList = null;
 
-		try {
-			resultServiceList = DAOFactory.getInstance().getServiceDAO().getAllServices();
-		} catch (SQLException sqle) {
-			System.out.println("DB Error: " + sqle.getMessage());						
-		}
+		resultServiceList = DAOFactory.getInstance().getServiceDAO().getAllServices();
 
 		assertNotNull("Readed service list is null", resultServiceList);
 

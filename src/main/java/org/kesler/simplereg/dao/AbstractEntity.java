@@ -15,11 +15,6 @@ import org.hibernate.annotations.GenericGenerator;
 */
 @MappedSuperclass
 public abstract class AbstractEntity {
-	
-	public static final int SAVED_STATE = 0;
-	public static final int NEW_STATE = 1;
-	public static final int EDITED_STATE = 2;
-	public static final int DELETED_STATE = 3;
 
 	@Id
 	@GeneratedValue(generator="increment")
@@ -30,7 +25,7 @@ public abstract class AbstractEntity {
 	@Column(name="UUID",length=36)
 	private String uuid = UUID.randomUUID().toString();
 	
-	private transient int state = 0;
+	private transient EntityState state = EntityState.SAVED;
 
 	public Long getId() {
 		return id;
@@ -44,11 +39,11 @@ public abstract class AbstractEntity {
 		return uuid;
 	}
 
-	public int getState() {
+	public EntityState getState() {
 		return state;
 	}
 
-	public void setState(int state) {
+	public void setState(EntityState state) {
 		this.state = state;
 	}
 

@@ -2,12 +2,14 @@ package org.kesler.simplereg.gui.services;
 
 import java.util.List;
 import java.util.Enumeration;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.ServicesModel;
+import org.kesler.simplereg.dao.EntityState;
 
 /**
 * Управляет видом услуг
@@ -29,9 +31,6 @@ public class ServicesDialogController {
 
 	private ServicesDialogController() {
 		this.model = ServicesModel.getInstance();
-//		view = new ServicesDialog(this);
-//		openView();
-//		reloadTree();
 	}
 
 
@@ -59,13 +58,14 @@ public class ServicesDialogController {
 	public void reloadTree() {
 		List<Service> services = model.getAllServices();
 
+		// Получаем модель дерева
 		DefaultTreeModel treeModel = (DefaultTreeModel) dialog.getTreeModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
 
 		// Очищаем дерево
 		root.removeAllChildren();
 
-		// Добавляем все услуги
+		// Добавляем все услуги в первый уровень дерева
 		for (Service s : services) {
 			root.add(new DefaultMutableTreeNode(s));
 		}
@@ -75,9 +75,10 @@ public class ServicesDialogController {
 		Service service = null;
 		Service subService = null;
 
-		// Перебираем все элементы дерева 
+		// Получаем список всех узлов дерева
 		Enumeration<DefaultMutableTreeNode> nodes = root.breadthFirstEnumeration();
 
+		// Перебираем все элементы дерева 
 		while(nodes.hasMoreElements()) {
 			node = nodes.nextElement();
 			if(node.isRoot()) continue;
@@ -108,6 +109,45 @@ public class ServicesDialogController {
 	* Сохраняет дерево услуг в базу данных
 	*/
 	public void saveTree() {
+
+		DefaultTreeModel treeModel = (DefaultTreeModel) dialog.getTreeModel();
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
+
+		Enumeration<DefaultMutableTreeNode> nodes = root.breadthFirstEnumeration();
+
+		DefaultMutableTreeNode node = null;
+		DefaultMutableTreeNode parentNode = null;
+		Service service = null;
+		Service parentService = null;
+
+		List<Service> treeServices = new ArrayList<Service>();
+
+		// строим список услуг на основе дерева
+		while(nodes.hasMoreElements()) {
+			node = nodes.nextElement();
+			if(node.isRoot()) continue; // корневой элемент не трогаем
+			parentNode = (DefaultMutableTreeNode)node.getParent(); // получаем родительский элемент
+			service = (Service)node.getUserObject();
+			if (!parentNode.isRoot()) {
+				parentService = (Service)parentNode.getUserObject();
+				if (!parentService.equals(service.getParentService())) { // если текущий родитель не равен родителю, полученному из дерева
+					service.setParentService(parentService); // меняем ролителя
+					service.setState(EntityState.CHANGED);   // помечаем услуга как изменившуюся
+				}
+				
+			} else { // если родитель для узла - корневой узел, родитель для услуги - пустой
+				if (service.getParentService() != null) {
+					service.setParentService(null);
+					service.setState(EntityState.CHANGED);
+				}
+				
+			}
+			treeServices.add(service);
+		}
+
+		// сохраняем измененный список
+
+		model.saveServices(treeServices);
 
 	}
 

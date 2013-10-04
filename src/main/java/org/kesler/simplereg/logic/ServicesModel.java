@@ -2,7 +2,6 @@ package org.kesler.simplereg.logic;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.dao.DAOFactory;
@@ -30,11 +29,8 @@ public class ServicesModel {
     */
 	public void readServices() {
 
-		try {
-			services = DAOFactory.getInstance().getServiceDAO().getAllServices();					
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null, sqle.getMessage(), "Ошибка чтения услуг из базы данных", JOptionPane.OK_OPTION);
-		}		
+		services = DAOFactory.getInstance().getServiceDAO().getAllServices();					
+
 	}
 
 	/**
@@ -52,24 +48,14 @@ public class ServicesModel {
 	*/
 	public void addService(Service service) {
 		services.add(service);
-		try {
-			DAOFactory.getInstance().getServiceDAO().addService(service);					
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка сохранения услуги в базу данных", JOptionPane.OK_OPTION);
-			services.remove(service);
-		}		
-
+		DAOFactory.getInstance().getServiceDAO().addService(service);							
 	}
 
 	/**
 	* Обновляет услугу в базе данных
 	*/
 	public void updateService(Service service) {
-		try {
-			DAOFactory.getInstance().getServiceDAO().updateService(service);
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка обновления услуги в базе данных", JOptionPane.OK_OPTION);			
-		}
+		DAOFactory.getInstance().getServiceDAO().updateService(service);
 	}
 
 
@@ -77,11 +63,12 @@ public class ServicesModel {
 	* Удаляет услугу из базы данных
 	*/
 	public void deleteService(Service service) {
-		try {
-			DAOFactory.getInstance().getServiceDAO().deleteService(service);
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка удаления услуги из базы данных", JOptionPane.OK_OPTION);			
-		}
+		DAOFactory.getInstance().getServiceDAO().deleteService(service);
 	}
+
+	public void saveServices(List<Service> services) {
+		
+	}
+
 
 }

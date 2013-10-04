@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 import org.kesler.simplereg.logic.operator.OperatorsModelListener;
+import org.kesler.simplereg.dao.EntityState;
 
 public class OperatorsViewController implements OperatorsModelListener{
 	private OperatorsView view;
@@ -50,7 +51,7 @@ public class OperatorsViewController implements OperatorsModelListener{
 	public void closeView() {
 		boolean changed = false;
 		for (Operator operator : operators) {
-			if (operator.getState()!=Operator.SAVED_STATE) {
+			if (operator.getState()!=EntityState.SAVED) {
 				changed = true;
 			}
 		}
@@ -69,7 +70,7 @@ public class OperatorsViewController implements OperatorsModelListener{
 				saveOperators();
 			} else if (result == JOptionPane.NO_OPTION) {
 				for (Operator operator : operators) {
-					operator.setState(Operator.SAVED_STATE);
+					operator.setState(EntityState.SAVED);
 				}
 			} else {
 				return ;
@@ -94,7 +95,7 @@ public class OperatorsViewController implements OperatorsModelListener{
 	*/
 	public void newOperator() {
 		Operator newOperator = new Operator();
-		newOperator.setState(Operator.NEW_STATE);
+		newOperator.setState(EntityState.NEW);
 
 		int result = JOptionPane.showOptionDialog(null, 
 							view.getOperatorPanel(newOperator), 
@@ -131,7 +132,7 @@ public class OperatorsViewController implements OperatorsModelListener{
 
 		if (result==JOptionPane.OK_OPTION) {
 			view.getOperatorPanel().readOperator();
-			operator.setState(Operator.EDITED_STATE);
+			operator.setState(EntityState.CHANGED);
 			view.getTableModel().fireTableDataChanged();
 		} 
 
@@ -150,7 +151,7 @@ public class OperatorsViewController implements OperatorsModelListener{
 												JOptionPane.OK_CANCEL_OPTION,
 												JOptionPane.WARNING_MESSAGE);
 		if (result==JOptionPane.OK_OPTION) {
-			operator.setState(Operator.DELETED_STATE);
+			operator.setState(EntityState.DELETED);
 			view.getTableModel().fireTableDataChanged();
 			
 		}

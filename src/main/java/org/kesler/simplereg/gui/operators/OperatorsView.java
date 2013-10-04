@@ -34,6 +34,7 @@ import java.util.Map;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.dao.EntityState;
 
 /**
 *<p>Используеся для отображения и редактирования списка операторов</p>
@@ -93,15 +94,15 @@ public class OperatorsView extends JFrame {
 															int column) 
 				{
 				
-				int state = ((Integer)table.getValueAt(row,5)).intValue();
+				EntityState state = (EntityState)table.getValueAt(row,5);
 				switch (state) {
-					case Operator.EDITED_STATE: 
+					case CHANGED: 
 					value = "<html><i>" + value.toString() + "</i></html>";	
 					break;
-					case Operator.DELETED_STATE: 
+					case DELETED: 
 					value = "<html><s>" + value.toString() + "</s></html>";	
 					break;
-					case Operator.NEW_STATE: 
+					case NEW: 
 					value = "<html><i><b>" + value.toString() + "</b></i></html>";	
 					break;
 				}	
@@ -437,15 +438,15 @@ public class OperatorsView extends JFrame {
 			switch (column) {
 				case 2: 
 				operator.setIsControler((Boolean)aValue);
-				operator.setState(Operator.EDITED_STATE);
+				operator.setState(EntityState.CHANGED);
 				break;
 				case 3: 
 				operator.setIsAdmin((Boolean)aValue);
-				operator.setState(Operator.EDITED_STATE);
+				operator.setState(EntityState.CHANGED);
 				break;
 				case 4: 
 				operator.setEnabled((Boolean)aValue);
-				operator.setState(Operator.EDITED_STATE);
+				operator.setState(EntityState.CHANGED);
 				break;
 			}
 			fireTableDataChanged();

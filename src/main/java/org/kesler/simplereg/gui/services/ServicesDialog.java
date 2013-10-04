@@ -18,6 +18,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import org.kesler.simplereg.util.ResourcesUtil;
+
 import org.kesler.simplereg.logic.Service;
 
 public class ServicesDialog extends JDialog{

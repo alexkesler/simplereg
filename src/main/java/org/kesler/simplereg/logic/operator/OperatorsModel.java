@@ -74,22 +74,13 @@ public class OperatorsModel {
 	}	
 
 	public void saveOperators() {
-		try {
-			DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
-		} catch (SQLException sqle) {
-			JOptionPane.showMessageDialog(null,sqle.getMessage(),"Ошибка сохранения операторов в базу данных", JOptionPane.OK_OPTION);	
-		}
+		DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
 	}
 
 	class Reader implements Runnable {
 		public void run() {
-			try {
-				operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
-				notifyListeners(STATUS_UPDATED);
-			} catch (SQLException sqle) {
-				System.out.println("Error reading operators");
-				notifyListeners(STATUS_ERROR);			
-			}
+			operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
+			notifyListeners(STATUS_UPDATED);
 		}		
 	}
 

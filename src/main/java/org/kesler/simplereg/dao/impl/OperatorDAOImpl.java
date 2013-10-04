@@ -11,18 +11,19 @@ import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.OperatorDAO;
 import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.dao.EntityState;
 
 public class OperatorDAOImpl implements OperatorDAO {
 
 
 
 	/**
-	* <p>Сохраняет список операторов в зависимости от их статуса {@link org.kesler.simplereg.logic.Operator}:
+	* <p>Сохраняет список операторов в зависимости от их статуса {@link org.kesler.simplereg.dao.EntityState}:
 	*<ul> 
-	*<li>Operator.SAVED_STATE - <b>сохранен в базе данных</b> - ничего не делаем</li>
-	*<li>Operator.NEW_STATE - <b>новый</b> - создаем новую запись в базе данных</li>
-	*<li>Operator.EDITED_STATE - <b>изменен</b> - сохраняем измемения в базу данных</li>
-	*<li>Operator.DELETED_STATE - <b>удален</b> - помечен для удаления - удаляем запись из базы данных</li>
+	*<li>EntityState.SAVED - <b>сохранен в базе данных</b> - ничего не делаем</li>
+	*<li>EntityState.NEW- <b>новый</b> - создаем новую запись в базе данных</li>
+	*<li>EntityState.CHANGED - <b>изменен</b> - сохраняем измемения в базу данных</li>
+	*<li>EntityState.DELETED - <b>удален</b> - помечен для удаления - удаляем запись из базы данных</li>
 	*</ul> 
 	*</p>
 	* <p>
@@ -30,6 +31,7 @@ public class OperatorDAOImpl implements OperatorDAO {
 	* </p>
 	* @see org.kesler.simplereg.logic.Operator
 	* @see org.kesler.simplereg.dao.AbstractEntity
+	* @see org.kesler.simplereg.dao.EntityState
 	*/
 	public void saveOperators(List<Operator> operators) {
 		Session session = null;
@@ -38,15 +40,15 @@ public class OperatorDAOImpl implements OperatorDAO {
 			session.beginTransaction();
 			for (Operator operator: operators) {
 				switch (operator.getState()) {
-					case Operator.SAVED_STATE:
+					case SAVED:
 					break;
-					case Operator.NEW_STATE:
+					case NEW:
 						session.save(operator);
 					break;
-					case Operator.EDITED_STATE:
+					case CHANGED:
 						session.update(operator);
 					break;
-					case Operator.DELETED_STATE:
+					case DELETED:
 						session.delete(operator);
 					break;			
 					
@@ -58,15 +60,15 @@ public class OperatorDAOImpl implements OperatorDAO {
 			for (Iterator<Operator> it = operators.iterator(); it.hasNext();) {
 				Operator operator = it.next();
 				switch (operator.getState()) {
-					case Operator.SAVED_STATE:
+					case SAVED:
 					break;
-					case Operator.NEW_STATE:
-						operator.setState(Operator.SAVED_STATE);
+					case NEW:
+						operator.setState(EntityState.SAVED);
 					break;
-					case Operator.EDITED_STATE:
-						operator.setState(Operator.SAVED_STATE);
+					case CHANGED:
+						operator.setState(EntityState.SAVED);
 					break;
-					case Operator.DELETED_STATE:
+					case DELETED:
 						it.remove();
 					break;			
 					

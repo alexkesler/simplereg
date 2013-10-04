@@ -38,7 +38,7 @@ public class TestReceptionDAO {
 
 		// создаем тестовый объект Operator
 		Operator initOperator = new Operator();
-		initOperator.setState(Operator.NEW_STATE);
+		initOperator.setState(EntityState.NEW);
 		List<Operator> initOperators = new ArrayList<Operator>();
 		initOperators.add(initOperator);
 
