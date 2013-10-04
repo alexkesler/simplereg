@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.Proxy;
 
 import org.kesler.simplereg.dao.AbstractEntity;
+import org.kesler.simplereg.dao.EntityState;
 
 
 @Entity
@@ -45,6 +46,7 @@ public class Service extends AbstractEntity {
 
 	public void setParentService(Service parentService) {
 		this.parentService = parentService;
+		state = EntityState.CHANGED;
 	}
 
 	public String getParentServiceName() {
@@ -61,6 +63,7 @@ public class Service extends AbstractEntity {
 
 	public void setName(String name) {
 		this.name = name;
+		state = EntityState.CHANGED;
 	}
 
 	public Boolean getEnabled() {
@@ -69,6 +72,7 @@ public class Service extends AbstractEntity {
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
+		state = EntityState.CHANGED;
 	}
 
 	@Override

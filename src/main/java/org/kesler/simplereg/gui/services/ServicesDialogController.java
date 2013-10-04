@@ -132,13 +132,11 @@ public class ServicesDialogController {
 				parentService = (Service)parentNode.getUserObject();
 				if (!parentService.equals(service.getParentService())) { // если текущий родитель не равен родителю, полученному из дерева
 					service.setParentService(parentService); // меняем ролителя
-					service.setState(EntityState.CHANGED);   // помечаем услуга как изменившуюся
 				}
 				
 			} else { // если родитель для узла - корневой узел, родитель для услуги - пустой
 				if (service.getParentService() != null) {
 					service.setParentService(null);
-					service.setState(EntityState.CHANGED);
 				}
 				
 			}

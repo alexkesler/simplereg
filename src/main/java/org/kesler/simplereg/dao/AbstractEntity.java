@@ -25,7 +25,7 @@ public abstract class AbstractEntity {
 	@Column(name="UUID",length=36)
 	private String uuid = UUID.randomUUID().toString();
 	
-	private transient EntityState state = EntityState.SAVED;
+	protected transient EntityState state = EntityState.SAVED;
 
 	public Long getId() {
 		return id;
