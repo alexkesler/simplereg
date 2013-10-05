@@ -67,7 +67,7 @@ public class ServicesModel {
 	}
 
 	public void saveServices(List<Service> services) {
-		
+		DAOFactory.getInstance().getServiceDAO().saveServices(services);
 	}
 
 

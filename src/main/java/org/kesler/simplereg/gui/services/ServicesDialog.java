@@ -183,7 +183,7 @@ public class ServicesDialog extends JDialog{
 		addButton.setIcon(ResourcesUtil.getIcon("add.png"));
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				controller.addService();
 			}
 		});
 
@@ -191,7 +191,12 @@ public class ServicesDialog extends JDialog{
 		editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-
+				if (selectedService != null) {
+					controller.editService(selectedService);
+				} else {
+					
+				}
+				
 			}
 		});
 
@@ -199,6 +204,11 @@ public class ServicesDialog extends JDialog{
 		removeButton.setIcon(ResourcesUtil.getIcon("delete.png"));
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
+				if (selectedService != null) {
+					controller.removeService(selectedService);
+				} else {
+					
+				}
 				
 			}
 		});

@@ -52,6 +52,21 @@ public class ServicesDialogController {
 		dialog.setVisible(true);
 	}
 
+	public void addService() {
+		ServiceDialog serviceDialog = new ServiceDialog(dialog);
+		serviceDialog.setVisible(true);
+	}
+
+
+	public void editService(Service service) {
+		ServiceDialog serviceDialog = new ServiceDialog(dialog, service);
+		serviceDialog.setVisible(true);
+	}
+
+	public void removeService(Service service) {
+		service.setState(EntityState.DELETED);
+	}
+
 	/**
 	* Перезагружает дерево услуг из базы данных
 	*/
