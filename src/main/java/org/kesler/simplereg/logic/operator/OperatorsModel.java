@@ -6,12 +6,15 @@ import javax.swing.JOptionPane;
 import java.sql.SQLException;
 
 import org.kesler.simplereg.dao.DAOFactory;
+import org.kesler.simplereg.dao.DAOListener;
+import org.kesler.simplereg.dao.DAOState;
 
-public class OperatorsModel {
+public class OperatorsModel implements DAOListener{
 
 
 	public static final int STATUS_UPDATED = 0;
-	public static final int STATUS_UPDATING = 1;
+	public static final int STATUS_CONNECTING = 1;	
+	public static final int STATUS_UPDATING = 2;
 	public static final int STATUS_ERROR = -1;
 
 	private List<Operator> operators = null;
@@ -22,6 +25,7 @@ public class OperatorsModel {
 
 	private OperatorsModel() {
 		listeners = new ArrayList<OperatorsModelListener>();
+		DAOFactory.getInstance().getOperatorDAO().addDAOListener(this);
 	}
 
 	public static synchronized OperatorsModel getInstance() {
@@ -37,13 +41,28 @@ public class OperatorsModel {
 
 	public void readOperators() {
 		readerThread = new Thread(new Reader()); 
-		notifyListeners(STATUS_UPDATING);
 		readerThread.start();
 
 	}
 
 	public void stopReadOperators() {
 		readerThread.interrupt();
+	}
+
+	@Override
+	public void changedDAOState(DAOState state) {
+		switch (state) {
+			case CONNECTING:
+			notifyListeners(STATUS_CONNECTING);
+			break;
+			case READING:
+			notifyListeners(STATUS_UPDATING);
+			break;
+			case READY:			
+			break;
+			case ERROR:
+			notifyListeners(STATUS_ERROR);
+		}
 	}
 
 	private void notifyListeners(int status) {

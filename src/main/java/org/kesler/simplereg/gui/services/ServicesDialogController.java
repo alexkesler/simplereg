@@ -55,12 +55,19 @@ public class ServicesDialogController {
 	public void addService() {
 		ServiceDialog serviceDialog = new ServiceDialog(dialog);
 		serviceDialog.setVisible(true);
+		if (serviceDialog.getResult() == ServiceDialog.OK) {
+			Service newService = serviceDialog.getService();
+			model.addService(newService);
+		}
 	}
 
 
 	public void editService(Service service) {
 		ServiceDialog serviceDialog = new ServiceDialog(dialog, service);
 		serviceDialog.setVisible(true);
+		if (serviceDialog.getResult() == ServiceDialog.OK) {
+			model.updateService(service);
+		}
 	}
 
 	public void removeService(Service service) {

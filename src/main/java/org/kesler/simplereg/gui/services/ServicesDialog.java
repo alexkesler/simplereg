@@ -60,20 +60,23 @@ public class ServicesDialog extends JDialog{
 		JPanel buttonPanel = new JPanel();
 
 		JButton updateButton = new JButton("Обновить");
+		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.reloadTree();
 			}
 		});
 
-		JButton saveButton = new JButton("Сохранить");
-		saveButton.addActionListener(new ActionListener() {
+		JButton okButton = new JButton("Ok");
+		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.saveTree();
+				setVisible(false);
 			}
 		});
 
 		JButton cancelButton = new JButton("Отменить");
+		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				setVisible(false);
@@ -82,7 +85,7 @@ public class ServicesDialog extends JDialog{
 
 
 		buttonPanel.add(updateButton);
-		buttonPanel.add(saveButton);
+		buttonPanel.add(okButton);
 		buttonPanel.add(cancelButton);
 
 		mainPanel.add(BorderLayout.CENTER, treePanel);
@@ -101,6 +104,7 @@ public class ServicesDialog extends JDialog{
 		JPanel buttonPanel = new JPanel();
 
 		JButton selectButton = new JButton("Выбрать");
+		selectButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		selectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedService == null) {
@@ -115,6 +119,7 @@ public class ServicesDialog extends JDialog{
 		});
 
 		JButton cancelButton = new JButton("Отменить");
+		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				setVisible(false);
@@ -194,7 +199,7 @@ public class ServicesDialog extends JDialog{
 				if (selectedService != null) {
 					controller.editService(selectedService);
 				} else {
-					
+					JOptionPane.showMessageDialog(null, "Услуга не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}
@@ -207,7 +212,7 @@ public class ServicesDialog extends JDialog{
 				if (selectedService != null) {
 					controller.removeService(selectedService);
 				} else {
-					
+					JOptionPane.showMessageDialog(null, "Услуга не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}

@@ -43,6 +43,10 @@ public class ServicesModel {
 		return services;
 	}
 
+	public List<Service> getActiveServces() {
+		return services;
+	}
+
 	/**
 	* Добавляет услугу, сохраняет её в базу данных
 	*/

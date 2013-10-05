@@ -10,11 +10,20 @@ import org.hibernate.HibernateException;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.OperatorDAO;
-import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.dao.EntityState;
+import org.kesler.simplereg.dao.DAOListener;
+import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.operator.Operator;
+
 
 public class OperatorDAOImpl implements OperatorDAO {
 
+
+	private List<DAOListener> listeners = new ArrayList<DAOListener>(); 
+
+	public void addDAOListener(DAOListener listener) {
+		listeners.add(listener);
+	}
 
 
 	/**
@@ -95,11 +104,15 @@ public class OperatorDAOImpl implements OperatorDAO {
 		List<Operator> operators = new ArrayList<Operator>();
 		try {
 			System.out.println("Open session to read operators...");
+			notifyListeners(DAOState.CONNECTING);
 			session = HibernateUtil.getSessionFactory().openSession();
+			notifyListeners(DAOState.READING);
 			operators = session.createCriteria(Operator.class).list();
+			// notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			System.err.println("Error while reading operators");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -108,5 +121,13 @@ public class OperatorDAOImpl implements OperatorDAO {
 		return  operators;
 	}
 
+	/**
+	* 
+	*/
+	private void notifyListeners(DAOState state) {
+		for (DAOListener listener : listeners) {
+			listener.changedDAOState(state);
+		}
+	}
 
 }

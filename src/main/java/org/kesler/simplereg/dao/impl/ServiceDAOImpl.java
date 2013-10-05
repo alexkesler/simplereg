@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
+import org.hibernate.criterion.Restrictions;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
@@ -82,6 +84,26 @@ public class ServiceDAOImpl implements ServiceDAO {
 		return  services;
 	}
 
+	public List<Service> getActiveServices() {
+		Session session = null;
+		List<Service> services = new ArrayList<Service>();
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
+			services = session.createCriteria(Service.class)
+			.add(Restrictions.eq("enabled",new Boolean(true)))
+			.list();
+		} catch (HibernateException he) {
+			System.err.println("Error while reading services");
+			he.printStackTrace();
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}				
+		}
+		return  services;
+	}
+
+
 	public void deleteService(Service service) {
 		Session session = null;
 		try {
@@ -97,6 +119,13 @@ public class ServiceDAOImpl implements ServiceDAO {
 				session.close();
 			}				
 		}
+	}
+
+	public void saveServices(List<Service> services) {
+		Session session = null;
+		Transaction tx = null;
+
+
 	}
 
 }

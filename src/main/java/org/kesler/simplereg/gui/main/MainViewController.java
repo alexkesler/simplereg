@@ -168,12 +168,13 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	private void login() {
 		
-		processDialog = new ProcessDialog(mainView, "Подключение", "Получаем список операторов...");
 
 		operatorsModel.readOperators();
+		
+		processDialog = new ProcessDialog(mainView, "Подключение", "Получаем список операторов");
 		processDialog.setVisible(true);
 
-		if (processDialog.getResult() != ProcessDialog.CANCEL) {
+		 if (processDialog.getResult() != ProcessDialog.CANCEL) {
 			//получаем список действующих операторов
 			List<Operator> operators = operatorsModel.getActiveOperators();
 			// создаем диалог ввода пароля
@@ -196,12 +197,17 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 
 	public void operatorsChanged(int status) {
 		switch (status) {
+			case OperatorsModel.STATUS_CONNECTING:
+				if (processDialog != null) processDialog.setContent("Соединяемся...");
+				break;
 			case OperatorsModel.STATUS_UPDATING:
+				if (processDialog != null) processDialog.setContent("Читаем из базы...");
 				break;
 			case OperatorsModel.STATUS_UPDATED:
 				processDialog.setVisible(false);
 				break;
 			case OperatorsModel.STATUS_ERROR:
+				JOptionPane.showMessageDialog(mainView, "Ошибка", "Ошибка при подключении к базе данных", JOptionPane.ERROR_MESSAGE);
 				break;	
 			
 		}
