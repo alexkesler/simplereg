@@ -13,19 +13,33 @@ import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.ServiceDAO;
 import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.dao.DAOListener;
 
 public class ServiceDAOImpl implements ServiceDAO {
+
+	private List<DAOListener> listeners = new ArrayList<DAOListener>();
+
+	@Override
+	public void addDAOListener(DAOListener listener) {
+		listeners.add(listener);
+	}
+
 
 	public void addService(Service service) {
 		Session session = null;
 		try {
+			notifyListeners(DAOState.CONNECTING); // оповещаем о начале соединения
 			session = HibernateUtil.getSessionFactory().openSession();
+			notifyListeners(DAOState.WRITING);    
 			session.beginTransaction();
 			session.save(service);
-			session.getTransaction().commit();			
+			session.getTransaction().commit();
+			notifyListeners(DAOState.READY);			
 		} catch (HibernateException he) {
 			System.err.println("Error while saving service");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);			
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -36,13 +50,17 @@ public class ServiceDAOImpl implements ServiceDAO {
 	public void updateService(Service service) {
 		Session session = null;
 		try {
+			notifyListeners(DAOState.CONNECTING);
 			session = HibernateUtil.getSessionFactory().openSession();
+			notifyListeners(DAOState.WRITING);
 			session.beginTransaction();
 			session.update(service);
 			session.getTransaction().commit();			
+			notifyListeners(DAOState.READY);			
 		} catch (HibernateException he) {
 			System.err.println("Error while saving service");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);			
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -59,6 +77,7 @@ public class ServiceDAOImpl implements ServiceDAO {
 		} catch (HibernateException he) {
 			System.err.println("Error while saving service");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);			
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -71,11 +90,15 @@ public class ServiceDAOImpl implements ServiceDAO {
 		Session session = null;
 		List<Service> services = new ArrayList<Service>();
 		try {
+			notifyListeners(DAOState.CONNECTING);
 			session = HibernateUtil.getSessionFactory().openSession();
+			notifyListeners(DAOState.READING);
 			services = session.createCriteria(Service.class).list();
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			System.err.println("Error while reading services");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -88,13 +111,17 @@ public class ServiceDAOImpl implements ServiceDAO {
 		Session session = null;
 		List<Service> services = new ArrayList<Service>();
 		try {
+			notifyListeners(DAOState.CONNECTING);
 			session = HibernateUtil.getSessionFactory().openSession();
+			notifyListeners(DAOState.READING);
 			services = session.createCriteria(Service.class)
-			.add(Restrictions.eq("enabled",new Boolean(true)))
-			.list();
+							  .add(Restrictions.eq("enabled",new Boolean(true)))
+							  .list();
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			System.err.println("Error while reading services");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);			
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -114,6 +141,7 @@ public class ServiceDAOImpl implements ServiceDAO {
 		} catch (HibernateException he) {
 			System.err.println("Error while removing service");
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);			
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();
@@ -121,11 +149,10 @@ public class ServiceDAOImpl implements ServiceDAO {
 		}
 	}
 
-	public void saveServices(List<Service> services) {
-		Session session = null;
-		Transaction tx = null;
-
-
+	private void notifyListeners(DAOState state) {
+		for (DAOListener listener: listeners) {
+			listener.changedDAOState(state);
+		}
 	}
 
 }

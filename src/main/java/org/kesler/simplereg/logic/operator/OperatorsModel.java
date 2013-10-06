@@ -58,7 +58,8 @@ public class OperatorsModel implements DAOListener{
 			case READING:
 			notifyListeners(STATUS_UPDATING);
 			break;
-			case READY:			
+			case READY:
+			// ничего не делаем			
 			break;
 			case ERROR:
 			notifyListeners(STATUS_ERROR);

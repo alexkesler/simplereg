@@ -37,6 +37,8 @@ public class ServiceDialog extends JDialog {
 		result = NONE;
 
 		service = new Service();
+		//service.setName("Новая услуга");
+		service.setEnabled(true);
 		createGUI();
 	}
 
@@ -71,7 +73,7 @@ public class ServiceDialog extends JDialog {
 		JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);
 		//nameTextAreaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-		enabledCheckBox = new JCheckBox("Действ.");
+		enabledCheckBox = new JCheckBox("Действующая");
 
 
 		dataPanel.add(new JLabel("Наименование: "), "wrap");
@@ -115,6 +117,8 @@ public class ServiceDialog extends JDialog {
 		this.setLocationRelativeTo(parentDialog);
 
 		loadGUIFromService();
+
+		nameTextArea.requestFocus();
 
 	}
 

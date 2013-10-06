@@ -5,16 +5,24 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.dao.DAOFactory;
+import org.kesler.simplereg.dao.DAOListener;
+import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.service.ServicesModelState;
+import org.kesler.simplereg.logic.service.ServicesModelListener;
 
 /**
 * Реализует методы доступа к услугам, сохраненным в базе данных, хранит список услуг, прочитанный из базы, записывает изменения в базу
 */
-public class ServicesModel {
+public class ServicesModel implements DAOListener{
 	private static ServicesModel instance = null;
 	private List<Service> services = null;
 
+	private List<ServicesModelListener> listeners; 
+
 	private ServicesModel() {
 		services = new ArrayList<Service>();
+		DAOFactory.getInstance().getServiceDAO().addDAOListener(this);
+		listeners = new ArrayList<ServicesModelListener>();
 	}
 
 	public static synchronized ServicesModel getInstance() {
@@ -24,22 +32,26 @@ public class ServicesModel {
 		return instance;
 	}
 
+
+	public void addServicesModelListener(ServicesModelListener listener) {
+		listeners.add(listener);
+	}
+
     /**
-    * Читает услуги из базы данных во внутренний список
+    * Читает услуги из базы данных во внутренний список в отдельном потоке
     */
 	public void readServices() {
-
-		services = DAOFactory.getInstance().getServiceDAO().getAllServices();					
-
+		services = DAOFactory.getInstance().getServiceDAO().getAllServices();
+		notifyListeners(ServicesModelState.READY);		
 	}
 
 	/**
 	* Возвращает список всех услуг, сохраненных в внутреннем списке, если внутренний список не определен - читает его из базы
 	*/
 	public List<Service> getAllServices() {
-//		if (services == null) {
+		if (services == null) {
 			readServices();
-//		}
+		}
 		return services;
 	}
 
@@ -74,5 +86,31 @@ public class ServicesModel {
 		DAOFactory.getInstance().getServiceDAO().saveServices(services);
 	}
 
+	/**
+	* получает оповещения от DAO оповещает своих слушателей о состоянии чтения данных
+	*/
+	@Override
+	public void changedDAOState(DAOState state) {
+		switch (state) {
+			case CONNECTING:
+				notifyListeners(ServicesModelState.CONNECTING);
+			break;
+			case READING:
+				notifyListeners(ServicesModelState.READING);
+			break;
+			case READY:
+			// ничего не делаем, статус объявится при получении списка 
+			break;
+			case ERROR:
+				notifyListeners(ServicesModelState.ERROR);
+			break;
+		}
+	}
+
+	private void notifyListeners(ServicesModelState state) {
+		for (ServicesModelListener listener: listeners) {
+			listener.modelStateChanged(state);
+		}
+	}
 
 }

@@ -9,9 +9,12 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.TreePath;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
@@ -29,6 +32,8 @@ public class ServicesDialog extends JDialog{
 
 	private ServicesDialogController controller;
 	private JTree servicesTree;
+
+	private DefaultMutableTreeNode selectedNode = null;
 	private Service selectedService = null;
 
 
@@ -53,6 +58,7 @@ public class ServicesDialog extends JDialog{
 
 
 	private JPanel createEditContentPane() {
+		// Основная панель
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		JPanel treePanel = createEditTreePanel();
@@ -63,7 +69,12 @@ public class ServicesDialog extends JDialog{
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
+				TreePath selectionPath = servicesTree.getSelectionModel().getSelectionPath();
 				controller.reloadTree();
+				if (selectionPath != null) {
+					servicesTree.getSelectionModel().setSelectionPath(selectionPath);
+					servicesTree.makeVisible(selectionPath);
+				}
 			}
 		});
 
@@ -100,7 +111,7 @@ public class ServicesDialog extends JDialog{
 
 		JPanel treePanel = createSelectTreePanel();
 
-		
+		// панель кнопок
 		JPanel buttonPanel = new JPanel();
 
 		JButton selectButton = new JButton("Выбрать");
@@ -126,7 +137,7 @@ public class ServicesDialog extends JDialog{
 			}
 		});
 
-
+		// собираем панель кнопок
 		buttonPanel.add(selectButton);
 		buttonPanel.add(cancelButton);
 
@@ -137,7 +148,7 @@ public class ServicesDialog extends JDialog{
 
 	}
 
-
+	// создает панель с возможностью выбора услуги без возможности редактирования
 	private JPanel createSelectTreePanel() {
 		JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -163,6 +174,7 @@ public class ServicesDialog extends JDialog{
 		return treePanel;		
 	}
 
+	// создает панель дерева с возможностью редактирования
 	private JPanel createEditTreePanel() {
 		JPanel treePanel = new JPanel(new BorderLayout());
 		treePanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -176,19 +188,43 @@ public class ServicesDialog extends JDialog{
 				if (node == null) return;
 				if (node.isRoot()) return ;
 
+				selectedNode = node;
 				selectedService = (Service)node.getUserObject();
+				System.out.println("Selected service: " + selectedService);
 			}
 		});
 
 		JScrollPane servicesScrollPane = new JScrollPane(servicesTree);
 
+		// панель кнопок управления деревом
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		JButton addButton = new JButton();
+		final JButton addButton = new JButton();
 		addButton.setIcon(ResourcesUtil.getIcon("add.png"));
+
+		final JPopupMenu addServicePopupMenu = new JPopupMenu();
+		// пункт меню добавления услуги на том же уровне
+		JMenuItem addServiceMenuItem = new JMenuItem("Добавить услугу на том же уровне");
+		addServiceMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				if (selectedNode.isRoot()) return; /// Добавить вывод сообщения о том, что нельзя добавить
+				controller.addSubService((DefaultMutableTreeNode)selectedNode.getParent());
+			}
+		});
+		// пункт меню добавления подуслуги
+		JMenuItem addSubServiceMenuItem = new JMenuItem("Добавить подуслугу");
+		addSubServiceMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addSubService(selectedNode);
+			}
+		});
+
+		addServicePopupMenu.add(addServiceMenuItem);
+		addServicePopupMenu.add(addSubServiceMenuItem);
+		// кнопка для вызова вариантов добавления услуги
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addService();
+				addServicePopupMenu.show(addButton, addButton.getWidth(), 0);
 			}
 		});
 
@@ -197,7 +233,7 @@ public class ServicesDialog extends JDialog{
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedService != null) {
-					controller.editService(selectedService);
+					controller.editService(selectedNode);
 				} else {
 					JOptionPane.showMessageDialog(null, "Услуга не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
 				}
@@ -210,7 +246,7 @@ public class ServicesDialog extends JDialog{
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedService != null) {
-					controller.removeService(selectedService);
+					controller.removeService(selectedNode);
 				} else {
 					JOptionPane.showMessageDialog(null, "Услуга не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
 				}

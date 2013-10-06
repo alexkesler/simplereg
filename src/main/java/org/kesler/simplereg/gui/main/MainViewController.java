@@ -167,14 +167,14 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	private void login() {
-		
-
-		operatorsModel.readOperators();
-		
+		// создаем диалог отображения процесса получения списка операторов
 		processDialog = new ProcessDialog(mainView, "Подключение", "Получаем список операторов");
-		processDialog.setVisible(true);
+		// читаем операторов (выполняется в отдельном потоке)
+		operatorsModel.readOperators();
+		// открываем окно с процессом выполнения - окно модальное, ожидаем закрытия
+		processDialog.setVisible(true);	
 
-		 if (processDialog.getResult() != ProcessDialog.CANCEL) {
+		if (processDialog.getResult() != ProcessDialog.CANCEL) {
 			//получаем список действующих операторов
 			List<Operator> operators = operatorsModel.getActiveOperators();
 			// создаем диалог ввода пароля
@@ -198,10 +198,10 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	public void operatorsChanged(int status) {
 		switch (status) {
 			case OperatorsModel.STATUS_CONNECTING:
-				if (processDialog != null) processDialog.setContent("Соединяемся...");
+				if (processDialog != null) processDialog.setContent("Соединяюсь...");
 				break;
 			case OperatorsModel.STATUS_UPDATING:
-				if (processDialog != null) processDialog.setContent("Читаем из базы...");
+				if (processDialog != null) processDialog.setContent("Читаю список операторов из базы...");
 				break;
 			case OperatorsModel.STATUS_UPDATED:
 				processDialog.setVisible(false);

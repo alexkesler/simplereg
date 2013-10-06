@@ -106,9 +106,10 @@ public class OperatorDAOImpl implements OperatorDAO {
 			System.out.println("Open session to read operators...");
 			notifyListeners(DAOState.CONNECTING);
 			session = HibernateUtil.getSessionFactory().openSession();
-			notifyListeners(DAOState.READING);
+			System.out.println("Reading operators...");
+			notifyListeners(DAOState.READING);			
 			operators = session.createCriteria(Operator.class).list();
-			// notifyListeners(DAOState.READY);
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			System.err.println("Error while reading operators");
 			he.printStackTrace();

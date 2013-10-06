@@ -16,10 +16,12 @@ import org.kesler.simplereg.util.ResourcesUtil;
 
 public class ProcessDialog extends JDialog {
 
-	public static final int NONE = -1;
+	public static final int NONE = 0;
 	public static final int CANCEL = 1;
+	public static final int ERROR = -1;
 
 	private JFrame parentFrame;
+	private JDialog parentDialog;
 	private JLabel contentLabel;
 
 	private int result;
@@ -33,8 +35,21 @@ public class ProcessDialog extends JDialog {
 		setContent(content);
 	}
 
+	public ProcessDialog(JDialog parentDialog, String name, String content) {
+		super(parentDialog, name, true);
+		this.parentDialog = parentDialog;
+		result = NONE;
+
+		createGUI();
+		setContent(content);
+	}
+
 	public int getResult() {
 		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
 	}
 
 	public void setContent(String content) {
@@ -77,7 +92,14 @@ public class ProcessDialog extends JDialog {
 
 		this.setContentPane(mainPanel);
 		this.setSize(300,140);
-		this.setLocationRelativeTo(parentFrame);
+		if (parentFrame != null) {
+			this.setLocationRelativeTo(parentFrame);
+		} else if (parentDialog != null) {
+			this.setLocationRelativeTo(parentDialog);			
+		} else {
+			this.setLocationRelativeTo(null);			
+		}
+		
 
 
 	}
