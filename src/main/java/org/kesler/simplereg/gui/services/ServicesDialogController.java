@@ -181,50 +181,6 @@ public class ServicesDialogController implements ServicesModelListener{
 
 	}
 
-	/**
-	* Сохраняет дерево услуг в базу данных
-	*/
-	public void saveTree() {
-
-		DefaultTreeModel treeModel = (DefaultTreeModel) dialog.getTreeModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
-
-		Enumeration<DefaultMutableTreeNode> nodes = root.breadthFirstEnumeration();
-
-		DefaultMutableTreeNode node = null;
-		DefaultMutableTreeNode parentNode = null;
-		Service service = null;
-		Service parentService = null;
-
-		List<Service> treeServices = new ArrayList<Service>();
-
-		// строим список услуг на основе дерева
-		while(nodes.hasMoreElements()) {
-			node = nodes.nextElement();
-			if(node.isRoot()) continue; // корневой элемент не трогаем
-			parentNode = (DefaultMutableTreeNode)node.getParent(); // получаем родительский элемент
-			service = (Service)node.getUserObject();
-			if (!parentNode.isRoot()) {
-				parentService = (Service)parentNode.getUserObject();
-				if (!parentService.equals(service.getParentService())) { // если текущий родитель не равен родителю, полученному из дерева
-					service.setParentService(parentService); // меняем ролителя
-				}
-				
-			} else { // если родитель для узла - корневой узел, родитель для услуги - пустой
-				if (service.getParentService() != null) {
-					service.setParentService(null);
-				}
-				
-			}
-			treeServices.add(service);
-		}
-
-		// сохраняем измененный список
-
-		model.saveServices(treeServices);
-
-	}
-
 	public void modelStateChanged(ServicesModelState state) {
 		switch (state) {
 			case CONNECTING:

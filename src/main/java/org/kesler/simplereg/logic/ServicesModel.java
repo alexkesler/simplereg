@@ -82,10 +82,6 @@ public class ServicesModel implements DAOListener{
 		DAOFactory.getInstance().getServiceDAO().deleteService(service);
 	}
 
-	public void saveServices(List<Service> services) {
-		DAOFactory.getInstance().getServiceDAO().saveServices(services);
-	}
-
 	/**
 	* получает оповещения от DAO оповещает своих слушателей о состоянии чтения данных
 	*/
