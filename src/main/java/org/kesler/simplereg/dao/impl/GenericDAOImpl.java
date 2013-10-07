@@ -8,10 +8,14 @@ import org.hibernate.HibernateException;
 
 import org.kesler.simplereg.dao.GenericDAO;
 import org.kesler.simplereg.dao.AbstractEntity;
+import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.dao.DAOListener;
 
 import org.kesler.simplereg.util.HibernateUtil;
 
 public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> {
+
+	private List<DAOListener> listeners = new ArrayList<DAOListener>();
 
 	private Class<T> type;
 
@@ -19,7 +23,12 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		this.type = type;
 	}
 
-	public Long add(T item) {
+	@Override
+	public void addDAOListener(DAOListener listener) {
+		listeners.add(listener);
+	}
+
+	public Long addItem(T item) {
 		Long id = null;
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -42,7 +51,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		return id;
 	}
 
-	public void update(T item) {
+	public void updateItem(T item) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
@@ -61,7 +70,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	}
 
-	public T getById(int id) {
+	public T getItemById(int id) {
 		T item = null;
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -78,7 +87,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		return item;
 	}
 
-	public List<T> getAll() {
+	public List<T> getAllItems() {
 		List<T> list = new ArrayList<T>();
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -95,7 +104,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		return list;
 	}
 
-	public void remove(T item) {
+	public void removeItem(T item) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
@@ -112,6 +121,12 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 			}			
 		}
 
+	}
+
+	private void notifyListeners(DAOState state) {
+		for (DAOListener listener: listeners) {
+			listener.daoStateChanged(state);
+		}
 	}
 
 }

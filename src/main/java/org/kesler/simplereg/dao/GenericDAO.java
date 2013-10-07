@@ -2,15 +2,15 @@ package org.kesler.simplereg.dao;
 
 import java.util.List;
 
-public interface GenericDAO <T extends AbstractEntity> {
+public interface GenericDAO <T extends AbstractEntity> extends DAOObservable{
 	
-	public Long add(T o);
+	public Long addItem(T item);
 
-	public void update(T o);
+	public void updateItem(T item);
 
-	public T getById(int id);
+	public T getItemById(int id);
 
-	public List<T> getAll();
+	public List<T> getAllItems();
 
-	public void remove(T o);
+	public void removeItem(T item);
 }
