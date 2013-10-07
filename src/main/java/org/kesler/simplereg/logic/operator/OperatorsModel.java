@@ -11,20 +11,13 @@ import org.kesler.simplereg.dao.DAOState;
 
 public class OperatorsModel implements DAOListener{
 
-
-	public static final int STATUS_UPDATED = 0;
-	public static final int STATUS_CONNECTING = 1;	
-	public static final int STATUS_UPDATING = 2;
-	public static final int STATUS_ERROR = -1;
-
 	private List<Operator> operators = null;
 	private static OperatorsModel instance = null;
-	private Thread readerThread;
 
-	private List<OperatorsModelListener> listeners;
+	private List<OperatorsModelStateListener> listeners;
 
 	private OperatorsModel() {
-		listeners = new ArrayList<OperatorsModelListener>();
+		listeners = new ArrayList<OperatorsModelStateListener>();
 		DAOFactory.getInstance().getOperatorDAO().addDAOListener(this);
 	}
 
@@ -35,40 +28,36 @@ public class OperatorsModel implements DAOListener{
 		return instance;
 	}
 
-	public void addOperatorsModelListener(OperatorsModelListener listener) {
+	public void addOperatorsModelStateListener(OperatorsModelStateListener listener) {
 		listeners.add(listener);
 	}
 
 	public void readOperators() {
-		readerThread = new Thread(new Reader()); 
-		readerThread.start();
+		operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
+		notifyListeners(OperatorsModelState.UPDATED);
 
-	}
-
-	public void stopReadOperators() {
-		readerThread.interrupt();
 	}
 
 	@Override
-	public void changedDAOState(DAOState state) {
+	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-			notifyListeners(STATUS_CONNECTING);
+			notifyListeners(OperatorsModelState.CONNECTING);
 			break;
 			case READING:
-			notifyListeners(STATUS_UPDATING);
+			notifyListeners(OperatorsModelState.READING);
 			break;
 			case READY:
 			// ничего не делаем			
 			break;
 			case ERROR:
-			notifyListeners(STATUS_ERROR);
+			notifyListeners(OperatorsModelState.ERROR);
 		}
 	}
 
-	private void notifyListeners(int status) {
-		for (OperatorsModelListener listener : listeners) {
-			listener.operatorsChanged(status);			
+	private void notifyListeners(OperatorsModelState state) {
+		for (OperatorsModelStateListener listener : listeners) {
+			listener.operatorsModelStateChanged(state);			
 		}
 	}
 
@@ -95,13 +84,6 @@ public class OperatorsModel implements DAOListener{
 
 	public void saveOperators() {
 		DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
-	}
-
-	class Reader implements Runnable {
-		public void run() {
-			operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
-			notifyListeners(STATUS_UPDATED);
-		}		
 	}
 
 }

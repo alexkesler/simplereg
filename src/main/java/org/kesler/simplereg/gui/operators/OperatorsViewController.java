@@ -5,17 +5,18 @@ import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
-import org.kesler.simplereg.logic.operator.OperatorsModelListener;
+import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
+import org.kesler.simplereg.logic.operator.OperatorsModelState;
 import org.kesler.simplereg.dao.EntityState;
 
-public class OperatorsViewController implements OperatorsModelListener{
+public class OperatorsViewController implements OperatorsModelStateListener{
 	private OperatorsView view;
 	private List<Operator> operators;
 	private static OperatorsViewController instance = null;
 
 	private OperatorsViewController() {
 		view = new OperatorsView(this);
-		OperatorsModel.getInstance().addOperatorsModelListener(this);
+		OperatorsModel.getInstance().addOperatorsModelStateListener(this);
 	}
 
 	public static synchronized OperatorsViewController getInstance() {
@@ -30,18 +31,19 @@ public class OperatorsViewController implements OperatorsModelListener{
 	* Читает список операторов из базы, открывает окно редактирования
 	*/ 
 	public void openView() {
+
 		operators = OperatorsModel.getInstance().getAllOperators();
 		view.getTableModel().setOperators(operators);
 		view.setVisible(true);
 	}
 
-	public void operatorsChanged(int status) {
-		switch (status) {
-			case OperatorsModel.STATUS_UPDATING:
+	public void operatorsModelStateChanged(OperatorsModelState state) {
+		switch (state) {
+			case READING:
 				break;
-			case OperatorsModel.STATUS_UPDATED:
+			case UPDATED:
 				break;
-			case OperatorsModel.STATUS_ERROR:
+			case ERROR:
 				break;	
 			
 		}

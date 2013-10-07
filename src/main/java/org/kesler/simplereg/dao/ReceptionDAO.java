@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.kesler.simplereg.logic.reception.Reception;
 
-public interface ReceptionDAO {
+public interface ReceptionDAO extends DAOObservable{
 	public void addReception(Reception r);
 	public void updateReception(Reception r);
 	public Reception getReceptionById(Long id);

@@ -190,7 +190,7 @@ public class ServicesDialog extends JDialog{
 
 				selectedNode = node;
 				selectedService = (Service)node.getUserObject();
-				System.out.println("Selected service: " + selectedService);
+				// System.out.println("Selected service: " + selectedService);
 			}
 		});
 

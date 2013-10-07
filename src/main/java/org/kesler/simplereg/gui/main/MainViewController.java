@@ -6,8 +6,11 @@ import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
+import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.operator.Operator;
-import org.kesler.simplereg.logic.operator.OperatorsModelListener;
+import org.kesler.simplereg.logic.operator.OperatorsModelState;
+import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
@@ -21,7 +24,10 @@ import org.kesler.simplereg.logic.operator.OperatorsModel;
 /**
 * Управляет основным окном приложения
 */
-public class MainViewController implements MainViewListener, CurrentOperatorListener, OperatorsModelListener{
+public class MainViewController implements MainViewListener, 
+								CurrentOperatorListener, 
+								OperatorsModelStateListener, 
+								ReceptionsModelStateListener{
 	private static MainViewController instance;
 
 	private MainView mainView;
@@ -34,7 +40,8 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	private MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
 		this.operatorsModel = OperatorsModel.getInstance();
-		operatorsModel.addOperatorsModelListener(this);
+		operatorsModel.addOperatorsModelStateListener(this);
+		receptionsModel.addReceptionsModelStateListener(this);
 		
 		mainView = new MainView(this);
 		mainView.addMainViewListener(this);
@@ -161,16 +168,54 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 	}
 
 	private void readReceptions() {
-		receptionsModel.readReceptionsFromDB();
+		processDialog = new ProcessDialog(mainView,"Работаю", "Обновляю список приемов");
+		// Читаем список опреаторов в отдельном потоке
+		Thread receptionsReaderThread = new Thread(new ReceptionsReader());
+		receptionsReaderThread.start();
+		// открываем модальное окно  - ожидаем его закрытия (закрывается при оповещении от модели о завершении)
+		processDialog.setVisible(true);
 		List<Reception> receptions = receptionsModel.getReceptions();
 		mainView.getTableModel().setReceptions(receptions);
 	}
 
+	class ReceptionsReader implements Runnable {
+		public void run() {
+			receptionsModel.readReceptionsFromDB();
+		}
+	}
+
+	@Override 
+	public void receptionsModelStateChanged(ReceptionsModelState state) {
+		switch (state) {
+			case UPDATED:
+				if(processDialog != null) processDialog.setVisible(false);
+			break;
+			
+			case CONNECTING:
+				if(processDialog != null) processDialog.setContent("Соединяюсь...");
+			break;
+
+			case READING:
+				if(processDialog != null) processDialog.setContent("Получаю список приемов");
+			break;	
+			
+			case ERROR:
+				if(processDialog != null) {
+					processDialog.setContent("Ошибка");
+					processDialog.setResult(ProcessDialog.ERROR);
+					processDialog.setVisible(false);
+				}
+			break;		
+
+		}
+	}
+
 	private void login() {
 		// создаем диалог отображения процесса получения списка операторов
-		processDialog = new ProcessDialog(mainView, "Подключение", "Получаем список операторов");
-		// читаем операторов (выполняется в отдельном потоке)
-		operatorsModel.readOperators();
+		processDialog = new ProcessDialog(mainView, "Работаю", "Читаю список операторов");
+		// читаем операторов в отдельном потоке
+		Thread operatorsReaderThread = new Thread(new OperatorsReader());
+		operatorsReaderThread.start();
 		// открываем окно с процессом выполнения - окно модальное, ожидаем закрытия
 		processDialog.setVisible(true);	
 
@@ -190,29 +235,35 @@ public class MainViewController implements MainViewListener, CurrentOperatorList
 			}
 			
 		} else {
-			operatorsModel.stopReadOperators();
+			// operatorsModel.stopReadOperators();
 		}
 
 	}
 
-	public void operatorsChanged(int status) {
-		switch (status) {
-			case OperatorsModel.STATUS_CONNECTING:
+	public void operatorsModelStateChanged(OperatorsModelState state) {
+		switch (state) {
+			case CONNECTING:
 				if (processDialog != null) processDialog.setContent("Соединяюсь...");
 				break;
-			case OperatorsModel.STATUS_UPDATING:
+			case READING:
 				if (processDialog != null) processDialog.setContent("Читаю список операторов из базы...");
 				break;
-			case OperatorsModel.STATUS_UPDATED:
+			case UPDATED:
 				processDialog.setVisible(false);
 				break;
-			case OperatorsModel.STATUS_ERROR:
+			case ERROR:
 				JOptionPane.showMessageDialog(mainView, "Ошибка", "Ошибка при подключении к базе данных", JOptionPane.ERROR_MESSAGE);
 				break;	
 			
 		}
 	}
 
+
+	class OperatorsReader implements Runnable {
+		public void run() {
+			operatorsModel.readOperators();
+		}
+	}
 
 
 	private void logout() {

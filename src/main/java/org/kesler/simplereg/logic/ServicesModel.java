@@ -86,7 +86,7 @@ public class ServicesModel implements DAOListener{
 	* получает оповещения от DAO оповещает своих слушателей о состоянии чтения данных
 	*/
 	@Override
-	public void changedDAOState(DAOState state) {
+	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
 				notifyListeners(ServicesModelState.CONNECTING);

@@ -151,7 +151,7 @@ public class ServiceDAOImpl implements ServiceDAO {
 
 	private void notifyListeners(DAOState state) {
 		for (DAOListener listener: listeners) {
-			listener.changedDAOState(state);
+			listener.daoStateChanged(state);
 		}
 	}
 

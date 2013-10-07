@@ -126,8 +126,8 @@ public class OperatorDAOImpl implements OperatorDAO {
 	* 
 	*/
 	private void notifyListeners(DAOState state) {
-		for (DAOListener listener : listeners) {
-			listener.changedDAOState(state);
+		for (DAOListener listener: listeners) {
+			listener.daoStateChanged(state);
 		}
 	}
 
