@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.reception;
 
 
+/// класс, представляющий пустое состояние
 class NoneMakeReceptionViewState extends MakeReceptionViewState {
 
 	NoneMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {

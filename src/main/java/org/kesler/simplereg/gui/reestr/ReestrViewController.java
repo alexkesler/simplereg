@@ -29,8 +29,20 @@ public class ReestrViewController {
 		view.setVisible(true);
 	}
 
-	List<Reception> getReceptionsList() {
+	List<Reception> getReceptions() {
 		return model.getReceptions();
 	}
 
+	public void openFilterDialog() {
+		ReestrFilterDialog filterDialog = new ReestrFilterDialog(view);
+		filterDialog.setVisible(true);
+	}
+
+	public void applyFilter() {
+
+	}
+
+	public void resetFilter() {
+
+	}
 }

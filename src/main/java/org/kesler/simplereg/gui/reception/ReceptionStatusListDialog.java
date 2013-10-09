@@ -147,7 +147,7 @@ public class ReceptionStatusListDialog extends JDialog {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
-		this.pack();
+		this.setSize(300,300);
 		this.setLocationRelativeTo(frame);
 
 	}

@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.reestr;
 
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -14,7 +15,8 @@ import java.awt.BorderLayout;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.reception.Reception;
-
+import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
+import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 
 public class ReestrView extends JFrame {
 	
@@ -32,8 +34,6 @@ public class ReestrView extends JFrame {
 	}
 	
 
-	
-
 	private void createGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -41,11 +41,34 @@ public class ReestrView extends JFrame {
 
 		filterLabel = new JLabel();
 		JButton setFilterButton = new JButton("Изменить");
+		setFilterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.openFilterDialog();
+			}
+		});
 
+		JButton resetFilterButton = new JButton("Очистить");
+		resetFilterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.resetFilter();
+			}
+		});
+
+		JButton applyFilterButton = new JButton("Применить");
+		applyFilterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.applyFilter();
+			}
+		});
+
+		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтр: "));
 		filterPanel.add(filterLabel, "growx");
-		filterPanel.add(setFilterButton);
+		filterPanel.add(setFilterButton, "wrap");
+		filterPanel.add(applyFilterButton);
 
+
+		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
 
 
@@ -55,7 +78,7 @@ public class ReestrView extends JFrame {
 
 		dataPanel.add(reestrTableScrollPane, "push, grow");
 
-
+		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
@@ -79,27 +102,39 @@ public class ReestrView extends JFrame {
 	class ReestrTableModel extends AbstractTableModel {
 
 		public int getRowCount() {
-			return controller.getReceptionsList().size();
+			return controller.getReceptions().size();
 		}
 
 		public int getColumnCount() {
-			return 5;
+			return ReestrColumns.getInstance().getActiveColumns().size() + 1;
+		}
+
+		public String getColumnName(int column) {
+			List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();			
+
+			String name = "Не опр";
+
+			if (column == 0) {
+				name = "№";
+			} else {
+				name = reestrColumns.get(column - 1).getName();
+			}
+
+		return name;
 		}
 
 		public Object getValueAt(int row, int column) {
-			Reception reception = controller.getReceptionsList().get(row);
+			Reception reception = controller.getReceptions().get(row);
+			
+			List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();			
+
+
 			Object value = null;
-			switch (column) {
-				case 0:	value = row + 1; break;
 
-				case 1: value = reception.getOpenDate(); break;
-				
-				case 2:	value = reception.getApplicatorsNames(); break;
-
-				case 3: value = reception.getServiceName(); break;	
-
-				case 4: value = reception.getStatusName(); break;
-
+			if (column == 0) {
+				value = row + 1;
+			} else {
+				value = reestrColumns.get(column - 1).getValue(reception);
 			}
 
 			return value;

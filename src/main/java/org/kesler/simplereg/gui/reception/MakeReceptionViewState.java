@@ -24,3 +24,4 @@ abstract class MakeReceptionViewState {
 	// Обновляет данные на панели
 	abstract void updatePanelData();
 }
+
