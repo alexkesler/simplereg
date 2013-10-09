@@ -38,6 +38,11 @@ public class ReestrViewController {
 		filterDialog.setVisible(true);
 	}
 
+	public void openColumnsDialog() {
+		ReestrColumnsDialog reestrColumnsDialog  = new ReestrColumnsDialog(view);
+		reestrColumnsDialog.setVisible(true);
+	}
+
 	public void applyFilter() {
 
 	}

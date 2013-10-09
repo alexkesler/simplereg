@@ -80,7 +80,7 @@ public class FLListDialog extends JDialog{
 					flList.setSelectedIndex(selectedFLIndex);
 					selectedFL = controller.getFLList().get(selectedFLIndex);
 				}	
-				System.out.println("list size: " + controller.getFLList().size());			
+				// System.out.println("list size: " + controller.getFLList().size());			
 			}
 
 			public void removeUpdate(DocumentEvent event) {
@@ -110,7 +110,7 @@ public class FLListDialog extends JDialog{
 			public void valueChanged(ListSelectionEvent lse) {
 				if(lse.getValueIsAdjusting() == false) {
 					selectedFLIndex = flList.getSelectedIndex();
-					System.out.println("selected item: " + selectedFLIndex);
+					// System.out.println("selected item: " + selectedFLIndex);
 					if (selectedFLIndex != -1) {
 						selectedFL = controller.getFLList().get(selectedFLIndex);
 					} else {

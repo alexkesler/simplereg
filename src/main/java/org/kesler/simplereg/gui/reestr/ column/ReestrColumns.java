@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.reestr.column;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class ReestrColumns {
@@ -9,6 +10,7 @@ public class ReestrColumns {
 	private List<ReestrColumn> allColumns;
 
 	private List<ReestrColumn> activeColumns;
+	private List<ReestrColumn> inactiveColumns;
 
 	private static ReestrColumns instance = null;
 
@@ -26,12 +28,16 @@ public class ReestrColumns {
 		allColumns.add(new ApplicatorsReestrColumn());
 		allColumns.add(new ServiceReestrColumn());
 		allColumns.add(new StatusReestrColumn());
+		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
 
 		// временно - добавляем в активные поля все поля 
 		activeColumns = new ArrayList<ReestrColumn>();
 		for (ReestrColumn column: allColumns) {
 			activeColumns.add(column);
 		}
+
+		// список неактивных полей
+		inactiveColumns = new ArrayList<ReestrColumn>();
 	}
 
 	public List<ReestrColumn> getAllColumns() {
@@ -42,5 +48,29 @@ public class ReestrColumns {
 		return activeColumns;
 	}
 
+	public List<ReestrColumn> getInactiveColumns() {
+		return inactiveColumns;
+	}
+
+
+	public boolean activateColumn(ReestrColumn column) {
+		if (inactiveColumns.contains(column)) {
+			inactiveColumns.remove(column);
+			activeColumns.add(column);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean deactivateColumn(ReestrColumn column) {
+		if (activeColumns.contains(column)) {
+			activeColumns.remove(column);
+			inactiveColumns.add(column);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }

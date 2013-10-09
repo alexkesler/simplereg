@@ -61,11 +61,20 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		JButton selectColumnsButton = new JButton("Колонки");
+		selectColumnsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.openColumnsDialog();
+				reestrTableModel.fireTableStructureChanged();
+			}
+		});
+
 		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтр: "));
 		filterPanel.add(filterLabel, "growx");
 		filterPanel.add(setFilterButton, "wrap");
 		filterPanel.add(applyFilterButton);
+		filterPanel.add(selectColumnsButton);
 
 
 		// Панель данных
