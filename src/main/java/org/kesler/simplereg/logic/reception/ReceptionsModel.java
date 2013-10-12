@@ -10,16 +10,19 @@ import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.util.OptionsUtil;
+import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
 
 
 public class ReceptionsModel implements DAOListener{
 	private static ReceptionsModel instance = null;
-	private List<Reception> receptions;
+	private List<Reception> allReceptions;
+	private List<Reception> filteredReceptions;
 
 	private List<ReceptionsModelStateListener> listeners;
 
 	private ReceptionsModel() {
-		receptions = new ArrayList<Reception>();
+		allReceptions = new ArrayList<Reception>();
+		filteredReceptions = new ArrayList<Reception>();
 		listeners = new ArrayList<ReceptionsModelStateListener>();
 		DAOFactory.getInstance().getReceptionDAO().addDAOListener(this);
 	}
@@ -36,22 +39,45 @@ public class ReceptionsModel implements DAOListener{
 	}
 
 
-	public List<Reception> getReceptions() {
-		return receptions;
+	public List<Reception> getAllReceptions() {
+		return allReceptions;
 	}
+
+
+	public List<Reception> getFilteredReceptions() {
+		return filteredReceptions;
+	}
+
 
 	// читаем данные из БД
 	public void readReceptionsFromDB() {
-		receptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
+		allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
 		notifyListeners(ReceptionsModelState.UPDATED);
 	}
+
+	// применяем фильтры
+	public void applyFilters(List<ReceptionsFilter> filters) {
+		filteredReceptions = new ArrayList<Reception>();
+		notifyListeners(ReceptionsModelState.FILTERING);
+		for (Reception reception: allReceptions) {
+			boolean fit = true;		
+			for (ReceptionsFilter filter: filters) {
+				if (!filter.checkReception(reception)) fit = false;
+			}
+			if (fit) filteredReceptions.add(reception);
+		}
+		notifyListeners(ReceptionsModelState.FILTERED);
+
+	}
+
+
 
 	public void addReception(Reception reception) {
 		reception.setStatus(ReceptionStatusesModel.getInstance().getInitReceptionStatus());
 
 			//DAOFactory.getInstance().getApplicatorDAO().addApplicator(reception.getApplicator());
 		DAOFactory.getInstance().getReceptionDAO().addReception(reception);
-		receptions.add(reception);
+		allReceptions.add(reception);
 	}
 
 	/**

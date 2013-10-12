@@ -25,7 +25,7 @@ public class TestReceptionsModel {
 	@Test
 	public void testCreateEmpty() {
 		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
-		List<Reception> resultList = receptionsModel.getReceptions();
+		List<Reception> resultList = receptionsModel.getAllReceptions();
 		assertNotNull("List is null", resultList);
 	}
 
@@ -47,7 +47,7 @@ public class TestReceptionsModel {
 		receptionsModel.addReception(reception);
 
 		// получаем лист приемов и проверяем наличие нашего объекта
-		List<Reception> resultList = receptionsModel.getReceptions();
+		List<Reception> resultList = receptionsModel.getAllReceptions();
 		boolean resultBoolean = resultList.contains(reception);
 		assertTrue("Reception don't added", resultBoolean);
 

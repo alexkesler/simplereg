@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr;
+package org.kesler.simplereg.gui.reestr.column;
 
 import java.util.List;
 import javax.swing.JDialog;
@@ -18,8 +18,6 @@ import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
-import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 
 public class ReestrColumnsDialog extends JDialog {
 
@@ -39,7 +37,7 @@ public class ReestrColumnsDialog extends JDialog {
 
 
 
-	ReestrColumnsDialog(JFrame frame) {
+	public ReestrColumnsDialog(JFrame frame) {
 		super(frame, true);
 		this.frame = frame;
 		reestrColumns = ReestrColumns.getInstance();
@@ -53,8 +51,11 @@ public class ReestrColumnsDialog extends JDialog {
 
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
+		
+		// Модель для списка неактиыных полей
 		inactiveColumnsListModel = new InactiveColumnsListModel();
 
+		// Список неактивных полей
 		final JList inactiveColumnsList = new JList(inactiveColumnsListModel);
 		inactiveColumnsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		inactiveColumnsList.addListSelectionListener(new ListSelectionListener() {
@@ -103,9 +104,10 @@ public class ReestrColumnsDialog extends JDialog {
 			}
 		});
 
-
+		// Модель для списка активных полей
 		activeColumnsListModel = new ActiveColumnsListModel();
 
+		// Список активных полей
 		final JList activeColumnsList = new JList(activeColumnsListModel);
 		activeColumnsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		activeColumnsList.addListSelectionListener(new ListSelectionListener() {
@@ -134,7 +136,7 @@ public class ReestrColumnsDialog extends JDialog {
 		dataPanel.add(activeColumnsListScrollPane, "push, grow, w 70, spany 2");
 
 
-
+		/// Панель кнопок 
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
@@ -146,6 +148,7 @@ public class ReestrColumnsDialog extends JDialog {
 
 		buttonPanel.add(okButton);
 
+		// Собираем основную панель
 		mainPanel.add(dataPanel, BorderLayout.CENTER);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 

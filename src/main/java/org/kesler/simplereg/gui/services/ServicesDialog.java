@@ -86,18 +86,11 @@ public class ServicesDialog extends JDialog{
 			}
 		});
 
-		JButton cancelButton = new JButton("Отменить");
-		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				setVisible(false);
-			}
-		});
 
 
 		buttonPanel.add(updateButton);
 		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
+
 
 		mainPanel.add(BorderLayout.CENTER, treePanel);
 		mainPanel.add(BorderLayout.SOUTH, buttonPanel);

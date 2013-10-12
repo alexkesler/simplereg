@@ -174,7 +174,7 @@ public class MainViewController implements MainViewListener,
 		receptionsReaderThread.start();
 		// открываем модальное окно  - ожидаем его закрытия (закрывается при оповещении от модели о завершении)
 		processDialog.setVisible(true);
-		List<Reception> receptions = receptionsModel.getReceptions();
+		List<Reception> receptions = receptionsModel.getAllReceptions();
 		mainView.getTableModel().setReceptions(receptions);
 	}
 
@@ -219,7 +219,7 @@ public class MainViewController implements MainViewListener,
 		// открываем окно с процессом выполнения - окно модальное, ожидаем закрытия
 		processDialog.setVisible(true);	
 
-		if (processDialog.getResult() != ProcessDialog.CANCEL) {
+		if (processDialog.getResult() == ProcessDialog.NONE) {
 			//получаем список действующих операторов
 			List<Operator> operators = operatorsModel.getActiveOperators();
 			// создаем диалог ввода пароля
@@ -234,8 +234,10 @@ public class MainViewController implements MainViewListener,
 				CurrentOperator.getInstance().resetOperator();
 			}
 			
-		} else {
-			// operatorsModel.stopReadOperators();
+		} else  if (processDialog.getResult() == ProcessDialog.ERROR) {
+			JOptionPane.showMessageDialog(mainView, "Ошибка при подключении к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
+		} else if (processDialog.getResult() == ProcessDialog.CANCEL) {
+			/// действия при отмене чтения  - пока ничего не делаем
 		}
 
 	}
@@ -252,7 +254,8 @@ public class MainViewController implements MainViewListener,
 				processDialog.setVisible(false);
 				break;
 			case ERROR:
-				JOptionPane.showMessageDialog(mainView, "Ошибка", "Ошибка при подключении к базе данных", JOptionPane.ERROR_MESSAGE);
+				processDialog.setResult(ProcessDialog.ERROR);
+				// JOptionPane.showMessageDialog(mainView, "Ошибка", "Ошибка при подключении к базе данных", JOptionPane.ERROR_MESSAGE);
 				break;	
 			
 		}
