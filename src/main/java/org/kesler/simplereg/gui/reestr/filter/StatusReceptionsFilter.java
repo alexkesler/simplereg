@@ -14,6 +14,10 @@ public class StatusReceptionsFilter implements ReceptionsFilter {
 		this.filterReceptionStatuses = filterReceptionStatuses;
 	}
 
+	public List<ReceptionStatus> getStatuses() {
+		return filterReceptionStatuses;
+	}
+
 	@Override
 	public boolean checkReception(Reception reception) {
 		if (reception == null) {
@@ -33,10 +37,11 @@ public class StatusReceptionsFilter implements ReceptionsFilter {
 
 	@Override
 	public String toString() {
-		String filterString  = "По состоянию дел: ";
+		String filterString  = "По состоянию дел: (";
 		for (ReceptionStatus receptionStatus: filterReceptionStatuses) {
-			filterString += receptionStatus.getName();
+			filterString += receptionStatus.getName() + ";";
 		}
+		filterString += ")";
 
 		return filterString;
 	}

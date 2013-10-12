@@ -103,10 +103,28 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		// Пункт меню - добавление фильтра по услугам
+		JMenuItem serviceFilterMenuItem = new JMenuItem("По услуге");
+		serviceFilterMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addFilter(ReceptionsFiltersEnum.SERVICE);
+			}
+		});
+
+
+		// Пункт меню - добавление фильтра по операторам
+		JMenuItem operatorFilterMenuItem = new JMenuItem("По оператору");
+		operatorFilterMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addFilter(ReceptionsFiltersEnum.OPERATOR);
+			}
+		});
 
 		// собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
 		filtersPopupMenu.add(statusFilterMenuItem);
+		filtersPopupMenu.add(serviceFilterMenuItem);
+		filtersPopupMenu.add(operatorFilterMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();
@@ -118,9 +136,14 @@ public class ReestrView extends JFrame {
 		});
 
 
-		// кнопка удаления
+		// кнопка удаления фильтра
 		JButton removeFilterButton = new JButton();
 		removeFilterButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+		removeFilterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.removeFilter(selectedFilterIndex);
+			}
+		});
 
 		JButton resetFiltersButton = new JButton("Очистить");
 		resetFiltersButton.addActionListener(new ActionListener() {

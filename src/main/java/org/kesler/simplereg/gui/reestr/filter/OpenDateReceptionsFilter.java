@@ -56,16 +56,20 @@ public class OpenDateReceptionsFilter implements ReceptionsFilter {
 
 	@Override
 	public String toString() {
-		String filterString = "По дате открытия дела:";
+		String filterString = "По дате открытия дела: ";
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
+		filterString += "(";
+
 		if (fromDate != null) {
-			filterString += " с " + dateFormat.format(fromDate);
+			filterString += "с " + dateFormat.format(fromDate);
 		}
 
 		if (toDate != null) {
 			filterString += " по " + dateFormat.format(toDate);
 		}
+
+		filterString += ")";
 
 		return filterString;
 	}

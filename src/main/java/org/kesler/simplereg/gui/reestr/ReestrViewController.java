@@ -16,11 +16,15 @@ import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilter;
+import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilter;
+import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilter;
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
 
 
 public class ReestrViewController implements ReceptionsModelStateListener{
@@ -50,9 +54,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		
 	}
 
+	// Открывает основной вид
 	public void openView() {
 		view.setVisible(true);
 	}
+
 
 	List<Reception> getReceptions() {
 		return model.getAllReceptions();
@@ -69,6 +75,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	// добавление фильра - вызывается из вида
 	public void addFilter(ReceptionsFiltersEnum filter) {
 		ReceptionsFilterDialog receptionsFilterDialog = null;
+		/// Создаем диалог на основнии сведений о необходимом типе диалога
 		switch (filter) {
 			case OPEN_DATE:
 				receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view);
@@ -76,11 +83,17 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			case STATUS:
 				receptionsFilterDialog = new StatusReceptionsFilterDialog(view);	
 			break;
+			case SERVICE:
+				receptionsFilterDialog = new ServiceReceptionsFilterDialog(view);	
+			break;
+			case OPERATOR:
+				receptionsFilterDialog = new OperatorReceptionsFilterDialog(view);	
+			break;
 			default:
 				return;
 		}
 		
-
+		/// Дальнейшие действия одинаковы для всех диалогов
 		receptionsFilterDialog.setVisible(true);
 		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
 			filters.add(receptionsFilterDialog.getReceptionsFilter());
@@ -88,7 +101,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 	}
 
-	// Редактирование фильта - вызывается из вида
+	// Редактирование фильтра - вызывается из вида
 	public void editFilter(int filterIndex) {
 		if (filterIndex == -1) {
 			JOptionPane.showMessageDialog(view, "Фильтр не выбран", " Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -100,14 +113,29 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		ReceptionsFilter receptionsFilter = filters.get(filterIndex);
 
 		// По классу фильтра определяем какой диалог создавать
-		if (receptionsFilter instanceof OpenDateReceptionsFilter) {
+		if (receptionsFilter instanceof OpenDateReceptionsFilter) { // Фильтр по дате открытия
+
 			OpenDateReceptionsFilter openDateReceptionsFilter = (OpenDateReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view, openDateReceptionsFilter);
-		} else if (receptionsFilter instanceof StatusReceptionsFilter) {
+
+		} else if (receptionsFilter instanceof StatusReceptionsFilter) { // Фильтр по состоянию
+
 			StatusReceptionsFilter statusReceptionsFilter = (StatusReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new StatusReceptionsFilterDialog(view, statusReceptionsFilter);
+
+		} else if (receptionsFilter instanceof ServiceReceptionsFilter) { // Фильтр по услуге
+
+			ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
+			receptionsFilterDialog = new ServiceReceptionsFilterDialog(view, serviceReceptionsFilter);
+
+		} else if (receptionsFilter instanceof OperatorReceptionsFilter) { // Фильтр по оператору
+
+			OperatorReceptionsFilter operatorReceptionsFilter = (OperatorReceptionsFilter) receptionsFilter;
+			receptionsFilterDialog = new OperatorReceptionsFilterDialog(view, operatorReceptionsFilter);
+
 		} else return;
 
+		// дальнейшие действия одинаковы для всех диалогов
 		receptionsFilterDialog.setVisible(true);
 		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
 			view.getFilterListModel().filterUpdated(filterIndex);
@@ -115,11 +143,23 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	}
 
+	public void removeFilter(int index) {
+		if (index == -1) {
+			JOptionPane.showMessageDialog(view, "Фильтр не выбран", " Ошибка", JOptionPane.ERROR_MESSAGE);
+			return ;
+		}
+
+		filters.remove(index);
+		view.getFilterListModel().filterRemoved(index);
+	}
+
+	// открывает диалог редактирования видимых колонок - вызывается из вида
 	public void openColumnsDialog() {
 		ReestrColumnsDialog reestrColumnsDialog  = new ReestrColumnsDialog(view);
 		reestrColumnsDialog.setVisible(true);
 	}
 
+	// применяет созданный набор фильтров - вызывается из вида
 	public void applyFilters() {
 
 		// сначала читаем последние сведения из базы данных в отдельном потоке
@@ -141,24 +181,29 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	}
 
+	// Очищает все фильтры
 	public void resetFilters() {
 		int count = filters.size();
 		filters = new ArrayList<ReceptionsFilter>();
 		view.getFilterListModel().filtersCleared(count);
 	}
 
+	// класс для чтения данных о приемах в отдельном потоке
 	private class ReceptionsReader implements Runnable {
 		public void run() {
 			model.readReceptionsFromDB();
 		}
 	}
 
+	// класс для фильтрации в отдельном потоке
 	private class ReceptionsFilterer implements Runnable {
 		public void run() {
 			model.applyFilters(filters);
 		}
 	}
 
+
+	// реализует интерфейс для слушателя модели приемов 
 	@Override
 	public void receptionsModelStateChanged(ReceptionsModelState state) {
 		if(processDialog == null) return; // Управление происходит через processDialog поэтому если не задан - выходим
