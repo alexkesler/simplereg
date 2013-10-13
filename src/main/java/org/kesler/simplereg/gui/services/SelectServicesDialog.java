@@ -1,21 +1,25 @@
 package org.kesler.simplereg.gui.services;
 
+import java.util.Enumeration;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.DefaultTreeModel;
+// import javax.swing.tree.TreeModel;
+// import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.tree.TreePath;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-import javax.swing.JMenuItem;
+// import javax.swing.JPopupMenu;
+// import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
@@ -32,10 +36,12 @@ public class SelectServicesDialog extends ServicesDialog{
 	private DefaultMutableTreeNode originalRootNode;
 	private DefaultMutableTreeNode filteredRootNode;
 
+	// private String filterString;
+
 	public SelectServicesDialog(JFrame frame, ServicesDialogController controller) {
 		super(frame, controller);
 		originalRootNode = (DefaultMutableTreeNode) servicesTreeModel.getRoot();
-		filteredRootNode = new DefaultMutableTreeNode();
+		filteredRootNode = new DefaultMutableTreeNode("Услуги");
 	}
 
 	@Override
@@ -44,9 +50,38 @@ public class SelectServicesDialog extends ServicesDialog{
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		//панель фильтра
-		JPanel filterPanel = new JPanel();
+		JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		JTextField filterTextField = new JTextField(15);
+		final JTextField filterTextField = new JTextField(15);
+		filterTextField.getDocument().addDocumentListener(new DocumentListener() {
+			public void insertUpdate(DocumentEvent event) {
+				String filterString = filterTextField.getText().trim();
+				filterServicesTree(filterString);
+				//flListModel.fireContentsChanged(this,0,controller.getFLList().size());
+				// выбираем первый из списка
+				// if(controller.getFLList().size() > 0) {
+				// 	selectedFLIndex = 0;
+				// 	flList.setSelectedIndex(selectedFLIndex);
+				// 	selectedFL = controller.getFLList().get(selectedFLIndex);
+				// }	
+				// System.out.println("list size: " + controller.getFLList().size());			
+			}
+
+			public void removeUpdate(DocumentEvent event) {
+				String filterString = filterTextField.getText().trim();
+				filterServicesTree(filterString);
+				//flListModel.fireContentsChanged(this,0,controller.getFLList().size());
+				// Выбираем первый из списка
+				// if(controller.getFLList().size() > 0) {
+				// 	selectedFLIndex = 0;
+				// 	flList.setSelectedIndex(selectedFLIndex);
+				// 	selectedFL = controller.getFLList().get(selectedFLIndex);
+				// }	
+
+			}
+
+			public void changedUpdate(DocumentEvent event) {}
+		});
 
 
 		filterPanel.add(filterTextField);
@@ -119,9 +154,11 @@ public class SelectServicesDialog extends ServicesDialog{
 		servicesTree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent ev) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) servicesTree.getLastSelectedPathComponent();
-				if (node == null) return;
-				if (node.isRoot()) return;
-
+				if (node == null || node.isRoot()) {
+					selectedNode = null;
+					selectedService = null;
+					return;
+				}	
 				selectedNode = node;
 				selectedService = (Service)node.getUserObject();
 			}
@@ -133,6 +170,87 @@ public class SelectServicesDialog extends ServicesDialog{
 
 
 		return treePanel;		
+	}
+
+	// создает дерево от нового корня, отфильтрованное по строке поиска
+	private void filterServicesTree(String filterString) {
+		
+		// если строка поиска пустая - используем оригинальное дерево
+		if (filterString.isEmpty()) {
+			servicesTreeModel.setRoot(originalRootNode);
+		} else {
+
+			// создаем дерево на основе существующего
+			filteredRootNode = copyNode(originalRootNode);
+			
+			// фильтруем дерево
+			boolean badLeaves = true;
+			while(badLeaves) {
+				badLeaves = removeBadLives(filteredRootNode, filterString);
+			}
+			
+			servicesTreeModel.setRoot(filteredRootNode);	
+
+            for (int i = 0; i < servicesTree.getRowCount(); i++) {
+                servicesTree.expandRow(i);
+            }
+            // выбираем первый лист
+            DefaultMutableTreeNode firstLeaf = filteredRootNode.getFirstLeaf();
+            if (!firstLeaf.isRoot()) {
+            	servicesTree.setSelectionPath(new TreePath(firstLeaf.getPath()));
+            } else {
+            	selectedNode = null;
+            	selectedService = null;
+            }
+            
+
+		}
+
+	}
+
+	private DefaultMutableTreeNode copyNode(DefaultMutableTreeNode origNode) {
+	 	
+	 	DefaultMutableTreeNode newNode = new DefaultMutableTreeNode();
+	 	newNode.setUserObject(origNode.getUserObject());
+
+	 	Enumeration<DefaultMutableTreeNode> children = origNode.children();
+
+	 	while(children.hasMoreElements()) {
+	 		DefaultMutableTreeNode child = children.nextElement();
+	 		newNode.add(copyNode(child));
+	 	}
+
+	 	return newNode;
+	}
+
+	private boolean removeBadLives(DefaultMutableTreeNode root, String filterString) {
+
+		boolean badLeaves = false;
+
+		DefaultMutableTreeNode leaf = root.getFirstLeaf();
+
+		if(leaf.isRoot()) return false; // root - единственный узел
+
+		int leafCount = root.getLeafCount(); //this get method changes if in for loop so have to define outside of it
+		
+		for (int i = 0; i < leafCount; i++) {
+
+			DefaultMutableTreeNode nextLeaf = leaf.getNextLeaf();
+
+			//if it does not start with the text then snip it off its parent
+			if (leaf.getUserObject().toString().toLowerCase().indexOf(filterString.toLowerCase(),0) == -1) {
+			    DefaultMutableTreeNode parent = (DefaultMutableTreeNode) leaf.getParent();
+
+			    if (parent != null)
+			        parent.remove(leaf);
+
+			    badLeaves = true;
+			}
+			leaf = nextLeaf;
+		}
+
+		return badLeaves;
+
 	}
 
 }

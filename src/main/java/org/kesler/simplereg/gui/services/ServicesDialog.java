@@ -108,7 +108,7 @@ public abstract class ServicesDialog extends JDialog{
 			if(node.isRoot()) continue;
 			Service service = (Service)node.getUserObject();
 			// System.out.println("ServiceID: " + service.getId());
-			Enumeration<DefaultMutableTreeNode> subNodes = root.breadthFirstEnumeration();
+			// Enumeration<DefaultMutableTreeNode> subNodes = root.breadthFirstEnumeration();
 			// Для каждого элемента ищем все дочерние элементы
 			for (DefaultMutableTreeNode subNode: nodeList) {
 				//subNode = subNodes.nextElement();
