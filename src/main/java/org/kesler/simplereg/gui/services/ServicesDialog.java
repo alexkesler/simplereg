@@ -116,9 +116,20 @@ public class ServicesDialog extends JDialog{
                 				"Услуга не выбрана",
                 				"Ошибка",
                 				JOptionPane.ERROR_MESSAGE);
-				} else {
-					setVisible(false);
+					return ;
+				} 
+
+				if (!selectedNode.isLeaf()) {
+					JOptionPane.showMessageDialog(null,
+                				"Нельзя выбрать обобщающую услугу",
+                				"Ошибка",
+                				JOptionPane.ERROR_MESSAGE);
+					return ;
+					
 				}
+
+				setVisible(false);
+
 			}
 		});
 
@@ -153,8 +164,9 @@ public class ServicesDialog extends JDialog{
 			public void valueChanged(TreeSelectionEvent ev) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) servicesTree.getLastSelectedPathComponent();
 				if (node == null) return;
-				if (node.isRoot()) return ;
+				if (node.isRoot()) return;
 
+				selectedNode = node;
 				selectedService = (Service)node.getUserObject();
 			}
 		});
