@@ -9,8 +9,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
-// import javax.swing.tree.TreeModel;
-// import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -18,8 +16,6 @@ import javax.swing.tree.TreePath;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.JButton;
-// import javax.swing.JPopupMenu;
-// import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
@@ -57,27 +53,11 @@ public class SelectServicesDialog extends ServicesDialog{
 			public void insertUpdate(DocumentEvent event) {
 				String filterString = filterTextField.getText().trim();
 				filterServicesTree(filterString);
-				//flListModel.fireContentsChanged(this,0,controller.getFLList().size());
-				// выбираем первый из списка
-				// if(controller.getFLList().size() > 0) {
-				// 	selectedFLIndex = 0;
-				// 	flList.setSelectedIndex(selectedFLIndex);
-				// 	selectedFL = controller.getFLList().get(selectedFLIndex);
-				// }	
-				// System.out.println("list size: " + controller.getFLList().size());			
 			}
 
 			public void removeUpdate(DocumentEvent event) {
 				String filterString = filterTextField.getText().trim();
 				filterServicesTree(filterString);
-				//flListModel.fireContentsChanged(this,0,controller.getFLList().size());
-				// Выбираем первый из списка
-				// if(controller.getFLList().size() > 0) {
-				// 	selectedFLIndex = 0;
-				// 	flList.setSelectedIndex(selectedFLIndex);
-				// 	selectedFL = controller.getFLList().get(selectedFLIndex);
-				// }	
-
 			}
 
 			public void changedUpdate(DocumentEvent event) {}
