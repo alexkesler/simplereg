@@ -1,8 +1,6 @@
 package org.kesler.simplereg.gui.services;
 
 import java.util.List;
-import java.util.Enumeration;
-import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
@@ -45,7 +43,7 @@ public class ServicesDialogController implements ServicesModelListener{
 	public Service openSelectDialog(JFrame frame) {
 		Service selectedService = null;
 
-		dialog = new ServicesDialog(frame, this, ServicesDialog.SELECT);
+		dialog = new SelectServicesDialog(frame, this);
 		reloadTree();
 		dialog.setVisible(true);
 
@@ -55,54 +53,43 @@ public class ServicesDialogController implements ServicesModelListener{
 	}
 
 	public void openEditDialog(JFrame frame) {
-		dialog = new ServicesDialog(frame, this, ServicesDialog.EDIT);
+		dialog = new EditServicesDialog(frame, this);
 		reloadTree();
 		dialog.setVisible(true);
 	}
 
 
 
-	public void addSubService(DefaultMutableTreeNode parentNode) {
-		ServiceDialog serviceDialog = new ServiceDialog(dialog);
+	public Service addSubService(Service parentService) {
+		Service newService = null;
+
+		ServiceDialog serviceDialog = new ServiceDialog(dialog); // вызываем диалог создания услуги
 		serviceDialog.setVisible(true);
 		if (serviceDialog.getResult() == ServiceDialog.OK) {
-			Service newService = serviceDialog.getService();
-			Service parentService;
-			if (!parentNode.isRoot()) {
-				parentService = (Service) parentNode.getUserObject();
-			} else {
-				parentService = null;
-			}
-			newService.setParentService(parentService);
-			model.addService(newService);
-			DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newService);
-			DefaultTreeModel treeModel = (DefaultTreeModel)dialog.getTreeModel();
+			newService = serviceDialog.getService();    // получаем услугу с наименованием и признаком действующей
+			newService.setParentService(parentService); // назначаем ей родительскую услугу
+			model.addService(newService);               // сохраняем услугу в базу	
+		} 
 
-			treeModel.insertNodeInto(newNode ,parentNode, parentNode.getChildCount());
-		}
+		return newService;
+
 	}
 
 
-	public void editService(DefaultMutableTreeNode node) {
-		Service service = (Service)node.getUserObject();
+	public boolean editService(Service service) {
 		ServiceDialog serviceDialog = new ServiceDialog(dialog, service);
 		serviceDialog.setVisible(true);
 		if (serviceDialog.getResult() == ServiceDialog.OK) {
-			DefaultTreeModel treeModel = (DefaultTreeModel)dialog.getTreeModel();
 			model.updateService(service);
-			treeModel.nodeChanged(node);
+			return true;
+		} else {
+			return false;	
 		}
 	}
 
-	public void removeService(DefaultMutableTreeNode node) {
-		Service service = (Service)node.getUserObject();
-		int result = JOptionPane.showConfirmDialog(dialog, "Удалить услугу: " + service + "?", "Удалить?", JOptionPane.YES_NO_OPTION);
-		if (result == JOptionPane.OK_OPTION) {
-			DefaultTreeModel treeModel = (DefaultTreeModel)dialog.getTreeModel();
-			treeModel.removeNodeFromParent(node);			
-			model.deleteService(service);
-		}
+	public void removeService(Service service) {
 
+		model.deleteService(service);
 		
 	}
 
@@ -116,6 +103,7 @@ public class ServicesDialogController implements ServicesModelListener{
 		Thread servicesReaderThread = new Thread(new ServicesReader());
 		processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список услуг...");
 		servicesReaderThread.start(); 	// Запускаем чтение услуг в отдельном потоке
+		
 		processDialog.setVisible(true); // Выводим модальный диалог с кнопкой "Отмена" - ожидаем завершения потока (модальный диалог закроется)
 
 		if (processDialog.getResult() == ProcessDialog.CANCEL) {
@@ -127,56 +115,10 @@ public class ServicesDialogController implements ServicesModelListener{
 			return ;
 		}
 
+		// получаем загруженый список
 		List<Service> services = model.getAllServices();
 
-
-
-		// Получаем модель дерева
-		DefaultTreeModel treeModel = (DefaultTreeModel) dialog.getTreeModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
-
-		// Очищаем дерево
-		root.removeAllChildren();
-
-		// Добавляем все услуги в первый уровень дерева
-		for (Service s : services) {
-			root.add(new DefaultMutableTreeNode(s));
-		}
-
-		// Получаем список всех узлов дерева
-		Enumeration<DefaultMutableTreeNode> nodes = root.breadthFirstEnumeration();
-
-		// копируем все узлы в отдельный список
-
-		List<DefaultMutableTreeNode> nodeList = new ArrayList<DefaultMutableTreeNode>();
-		while (nodes.hasMoreElements()) {
-			DefaultMutableTreeNode node = nodes.nextElement();
-			nodeList.add(node);			
-		}		
-
-		// Перебираем все элементы дерева 
-		for (DefaultMutableTreeNode node: nodeList) {
-			if(node.isRoot()) continue;
-			Service service = (Service)node.getUserObject();
-			// System.out.println("ServiceID: " + service.getId());
-			Enumeration<DefaultMutableTreeNode> subNodes = root.breadthFirstEnumeration();
-			// Для каждого элемента ищем все дочерние элементы
-			for (DefaultMutableTreeNode subNode: nodeList) {
-				//subNode = subNodes.nextElement();
-				if(subNode.isRoot()) continue; // Если корень - пропускаем
-				Service subService = (Service) subNode.getUserObject();
-				// System.out.println("Subservice? ID: " + subService.getId());
-
-				if (subService == service) continue;
-				if (subService.getParentService() == null) continue;
-				if (subService.getParentService().equals(service)) {
-					node.add(subNode);
-					// System.out.println("adding child:" + subService.getName() +" to parent: " + service.getName());
-				}	
-			}
-		}
-
-		treeModel.reload();
+		dialog.reloadTree(services);
 
 
 	}
