@@ -9,6 +9,7 @@ public class OpenDateReestrColumn extends ReestrColumn {
 	public OpenDateReestrColumn() {
 		name = "Дата открытия";
 		alias = "openDate";
+		width = 50;
 	}
 
 	public String getValue(Reception reception) {

@@ -5,8 +5,9 @@ import org.kesler.simplereg.logic.reception.Reception;
 public class StatusReestrColumn extends ReestrColumn {
 	
 	public StatusReestrColumn() {
-		name = "Статус";
+		name = "Состояние";
 		alias = "status";
+		width = 50;
 	}
 
 	public String getValue(Reception reception) {

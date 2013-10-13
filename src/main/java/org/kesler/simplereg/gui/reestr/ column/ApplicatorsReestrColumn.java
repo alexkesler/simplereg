@@ -7,6 +7,7 @@ public class ApplicatorsReestrColumn extends ReestrColumn {
 	public ApplicatorsReestrColumn() {
 		name = "Заявители";
 		alias = "applicators";
+		width = 200;
 	}
 
 	public String getValue(Reception reception) {

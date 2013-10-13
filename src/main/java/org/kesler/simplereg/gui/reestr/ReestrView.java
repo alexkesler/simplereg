@@ -158,6 +158,7 @@ public class ReestrView extends JFrame {
 			public void actionPerformed(ActionEvent ev) {
 				controller.applyFilters();
 				reestrTableModel.fireTableDataChanged();
+				setReestrTableColumnsWidth();
 			}
 		});
 
@@ -248,6 +249,15 @@ public class ReestrView extends JFrame {
 
 	public FilterListModel getFilterListModel() {
 		return filterListModel;
+	}
+
+	// устанавливает ширину полей таблички
+	private void setReestrTableColumnsWidth() {
+		List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();
+		reestrTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+		for (int i = 1; i < reestrColumns.size(); i++) {
+			reestrTable.getColumnModel().getColumn(i).setPreferredWidth(reestrColumns.get(i).getWidth());
+		}
 	}
 
 	class ReestrTableModel extends AbstractTableModel {

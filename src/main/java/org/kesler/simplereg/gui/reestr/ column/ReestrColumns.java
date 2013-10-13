@@ -24,20 +24,32 @@ public class ReestrColumns {
 
 	private ReestrColumns() {
 		allColumns = new ArrayList<ReestrColumn>();
-		allColumns.add(new OpenDateReestrColumn());
-		allColumns.add(new ApplicatorsReestrColumn());
-		allColumns.add(new ServiceReestrColumn());
-		allColumns.add(new StatusReestrColumn());
+		ReestrColumn openDateReestrColumn = new OpenDateReestrColumn();
+		ReestrColumn applicatorsReestrColumn = new ApplicatorsReestrColumn();
+		ReestrColumn serviceReestrColumn = new ServiceReestrColumn();
+		ReestrColumn statusReestrColumn = new StatusReestrColumn();
+		ReestrColumn operatorReestrColumn = new OperatorReestrColumn();
+
+		allColumns.add(openDateReestrColumn);
+		allColumns.add(applicatorsReestrColumn);
+		allColumns.add(serviceReestrColumn);
+		allColumns.add(statusReestrColumn);
+		allColumns.add(operatorReestrColumn);
+
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
 
-		// временно - добавляем в активные поля все поля 
+		// добавляем в активные поля 
 		activeColumns = new ArrayList<ReestrColumn>();
-		for (ReestrColumn column: allColumns) {
-			activeColumns.add(column);
-		}
+
+		activeColumns.add(openDateReestrColumn);
+		activeColumns.add(applicatorsReestrColumn);
+		activeColumns.add(serviceReestrColumn);
+		activeColumns.add(statusReestrColumn);
+
 
 		// список неактивных полей
 		inactiveColumns = new ArrayList<ReestrColumn>();
+		inactiveColumns.add(operatorReestrColumn);
 	}
 
 	public List<ReestrColumn> getAllColumns() {
