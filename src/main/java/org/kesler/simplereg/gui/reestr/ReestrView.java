@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Dimension;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -41,6 +42,8 @@ public class ReestrView extends JFrame {
 	private FilterListModel filterListModel;
 	private int selectedFilterIndex = -1;
 	private ReceptionsFilter selectedFilter = null;
+
+	private Reception selectedReception = null;
 
 	public ReestrView(ReestrViewController controller) {
 		super("Реестр запросов");
@@ -158,7 +161,7 @@ public class ReestrView extends JFrame {
 			public void actionPerformed(ActionEvent ev) {
 				controller.applyFilters();
 				reestrTableModel.fireTableDataChanged();
-				setReestrTableColumnsWidth();
+				//setReestrTableColumnsWidth();
 			}
 		});
 
@@ -179,6 +182,7 @@ public class ReestrView extends JFrame {
 		final JButton columnsButton = new JButton();
 		columnsButton.setIcon(ResourcesUtil.getIcon("bullet_wrench.png"));
 		columnsButton.setToolTipText("Изменить набор отображаемых колонок");
+		columnsButton.setPreferredSize(new Dimension(16,16));
 		columnsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.openColumnsDialog();
@@ -299,6 +303,17 @@ public class ReestrView extends JFrame {
 			}
 
 			return value;
+		}
+
+		public String getToolTipText(java.awt.event.MouseEvent e) {
+			String tip = null;
+			java.awt.Point p = e.getPoint();
+			int rowIndex = reestrTable.rowAtPoint(p);
+			int colIndex = reestrTable.columnAtPoint(p);
+			int realColumnIndex = reestrTable.convertColumnIndexToModel(colIndex);
+			tip = getValueAt(rowIndex, realColumnIndex).toString();
+
+			return tip;
 		}
 
 	}

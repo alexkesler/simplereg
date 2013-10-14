@@ -11,6 +11,9 @@ public class OperatorReestrColumn extends ReestrColumn {
 	}
 
 	public String getValue(Reception reception) {
+		if (reception.getOperator() == null) {
+			return "Не опеределен";
+		}
 		return reception.getOperator().getShortFIO();
 	}
 }

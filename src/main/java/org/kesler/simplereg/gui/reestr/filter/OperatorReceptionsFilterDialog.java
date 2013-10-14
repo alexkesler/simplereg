@@ -26,11 +26,11 @@ public class OperatorReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	public OperatorReceptionsFilterDialog(JFrame frame) {
 		super(frame, "Фильтр по операторам");
+
 	}
 
 	public OperatorReceptionsFilterDialog(JFrame frame, OperatorReceptionsFilter filter) {
 		super(frame, "Фильтр по операторам", filter);
-		this.filterOperators = filter.getOperators();
 	}
 
 	@Override
@@ -65,6 +65,10 @@ public class OperatorReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	@Override 
 	protected void loadGUIDataFromReceptionsFilter() {
+
+		OperatorReceptionsFilter operatorReceptionsFilter = (OperatorReceptionsFilter) receptionsFilter;
+		this.filterOperators = operatorReceptionsFilter.getOperators();
+
 
 		for (int i = 0; i < allOperators.size(); i++) {
 			Operator operator = allOperators.get(i);

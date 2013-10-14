@@ -30,7 +30,7 @@ public class StatusReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	public StatusReceptionsFilterDialog(JFrame frame, StatusReceptionsFilter filter) {
 		super(frame, "Фильтр по состоянию", filter);
-		this.filterStatuses = filter.getStatuses();
+		
 	}
 
 	@Override
@@ -65,6 +65,8 @@ public class StatusReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	@Override 
 	protected void loadGUIDataFromReceptionsFilter() {
+		StatusReceptionsFilter statusReceptionsFilter = (StatusReceptionsFilter) receptionsFilter;
+		this.filterStatuses = statusReceptionsFilter.getStatuses();
 
 		for (int i = 0; i < allStatuses.size(); i++) {
 			ReceptionStatus status = allStatuses.get(i);
