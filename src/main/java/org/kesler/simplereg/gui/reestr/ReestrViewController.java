@@ -10,6 +10,7 @@ import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
+import org.kesler.simplereg.gui.reception.ReceptionDialog;
 
 import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
 
@@ -186,6 +187,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		int count = filters.size();
 		filters = new ArrayList<ReceptionsFilter>();
 		view.getFilterListModel().filtersCleared(count);
+	}
+
+
+	public void openReceptionDialog(Reception reception) {
+		
 	}
 
 	// класс для чтения данных о приемах в отдельном потоке

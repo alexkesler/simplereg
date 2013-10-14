@@ -28,6 +28,7 @@ import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
+
 import org.kesler.simplereg.util.ResourcesUtil;
 
 public class ReestrView extends JFrame {
@@ -42,8 +43,6 @@ public class ReestrView extends JFrame {
 	private FilterListModel filterListModel;
 	private int selectedFilterIndex = -1;
 	private ReceptionsFilter selectedFilter = null;
-
-	private Reception selectedReception = null;
 
 	public ReestrView(ReestrViewController controller) {
 		super("Реестр запросов");
@@ -190,6 +189,7 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		//////// Основная таблица для приемов
 		reestrTableModel = new ReestrTableModel();
 		reestrTable = new JTable(reestrTableModel);
 		//добавляем кнопку изменения столбцов
@@ -197,6 +197,25 @@ public class ReestrView extends JFrame {
 		reestrTable.getTableHeader().add(columnsButton, BorderLayout.EAST);
 
 		JScrollPane reestrTableScrollPane = new JScrollPane(reestrTable);
+
+		// всплывающее меню для таблицы
+		JPopupMenu reestrPopupMenu = new JPopupMenu();
+
+
+		JMenuItem openReceptionMenuItem = new JMenuItem("Открыть прием");
+		openReceptionMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				
+				controller.openReceptionDialog();
+			}
+		});
+
+		JMenuItem setReceptionStatusMenuItem = new JMenuItem("Изменить состояние");
+
+		reestrPopupMenu.add(openReceptionMenuItem);
+		reestrPopupMenu.add(setReceptionStatusMenuItem);
+
+		reestrTable.setComponentPopupMenu(reestrPopupMenu);
 
 		dataPanel.add(reestrTableScrollPane, "push, grow");
 

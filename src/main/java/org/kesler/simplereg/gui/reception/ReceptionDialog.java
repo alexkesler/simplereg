@@ -13,9 +13,10 @@ public class ReceptionView extends JDialog {
 	private JFrame parentFrame;
 	private Reception reception;
 
-	public ReceptionView(JFrame parentFrame) {
+	public ReceptionView(JFrame parentFrame, Reception reception) {
 		super(parentFrame, true);
 		this.parentFrame = parentFrame;
+		this.reception = reception;
 
 		createGUI();
 	}
