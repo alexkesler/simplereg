@@ -206,7 +206,7 @@ public class ReestrView extends JFrame {
 		openReceptionMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				
-				controller.openReceptionDialog();
+				//controller.openReceptionDialog();
 			}
 		});
 

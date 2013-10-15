@@ -80,6 +80,10 @@ public class ReceptionsModel implements DAOListener{
 		allReceptions.add(reception);
 	}
 
+	public void updateReception(Reception reception) {
+		DAOFactory.getInstance().getReceptionDAO().updateReception(reception);
+	}
+
 	/**
 	* Реализует интерфейс {@link org.kesler.simplereg.dao.DAOListener}
 	*/
