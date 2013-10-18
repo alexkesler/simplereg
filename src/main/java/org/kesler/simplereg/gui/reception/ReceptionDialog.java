@@ -13,6 +13,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -31,7 +33,7 @@ import org.kesler.simplereg.util.ResourcesUtil;
 
 public class ReceptionDialog extends JDialog {
 
-	private final boolean DEBUG = true;
+	private final boolean DEBUG = false;
 
 	private JFrame parentFrame;
 	private Reception reception;
@@ -69,16 +71,22 @@ public class ReceptionDialog extends JDialog {
 
 		// получаем новый статус дела
 		statusesComboBox = new JComboBox();
-		statusesComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
-				if (DEBUG) System.out.println("Selected status: " + newReceptionStatus + " current status: " + currentReceptionStatus);
-				if (newReceptionStatus != null && newReceptionStatus != currentReceptionStatus) {
-					saveNewReceptionStatusButton.setEnabled(true);
-				} else {
-					saveNewReceptionStatusButton.setEnabled(false);
+		statusesComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent ev) {
+				if (ev.getStateChange() == ItemEvent.SELECTED) {
+					newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
+	
+					if (DEBUG) System.out.println("Selected status: " + newReceptionStatus + " current status: " + currentReceptionStatus);
+
+					if (!newReceptionStatus.equals(currentReceptionStatus)) {
+						if (DEBUG) System.out.println("enabled");
+						saveNewReceptionStatusButton.setEnabled(true);
+					} else {
+						if (DEBUG) System.out.println("disabled");
+						saveNewReceptionStatusButton.setEnabled(false);
+					}
+					
 				}
-				
 			}
 		});
 
