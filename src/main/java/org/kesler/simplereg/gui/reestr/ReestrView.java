@@ -17,6 +17,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Dimension;
@@ -196,6 +198,17 @@ public class ReestrView extends JFrame {
 		reestrTable.getTableHeader().setLayout(new BorderLayout());
 		reestrTable.getTableHeader().add(columnsButton, BorderLayout.EAST);
 
+		/// добавление реакции на двойной клик
+		reestrTable.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent ev) {
+				if (ev.getClickCount() == 2) {
+					int selectedReceptionIndex = reestrTable.getSelectedRow();
+					Reception selectedReception = controller.getFilteredReceptions().get(selectedReceptionIndex);
+					controller.openReceptionDialog(selectedReception);
+				}
+			}
+		});
+
 		JScrollPane reestrTableScrollPane = new JScrollPane(reestrTable);
 
 		// всплывающее меню для таблицы
@@ -324,7 +337,7 @@ public class ReestrView extends JFrame {
 			return value;
 		}
 
-		public String getToolTipText(java.awt.event.MouseEvent e) {
+		public String getToolTipText(MouseEvent e) {
 			String tip = null;
 			java.awt.Point p = e.getPoint();
 			int rowIndex = reestrTable.rowAtPoint(p);

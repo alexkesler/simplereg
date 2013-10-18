@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -17,6 +18,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
+import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
@@ -51,14 +53,16 @@ public class ReceptionDialog extends JDialog {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
+		JPanel dataPanel = new JPanel(new MigLayout("fillx, nogrid"));
 
 		serviceNameLabel = new JLabel();
+		serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
 
-		applicatorsPanel = new JPanel(new GridLayout(0,2));
+		applicatorsPanel = new JPanel(new MigLayout("fillx"));
 		JScrollPane applicatorsPanelScrollPane = new JScrollPane(applicatorsPanel);
 		final JButton saveNewReceptionStatusButton = new JButton();
 		saveNewReceptionStatusButton.setIcon(ResourcesUtil.getIcon("disk.png"));
+		saveNewReceptionStatusButton.setEnabled(false);
 
 		// получаем новый статус дела
 		statusesComboBox = new JComboBox();
@@ -82,7 +86,7 @@ public class ReceptionDialog extends JDialog {
 		dataPanel.add(new JLabel("Услуга:"),"wrap");
 		dataPanel.add(serviceNameLabel,"growx, wrap");
 		dataPanel.add(new JLabel("Заявители:"), "wrap");
-		dataPanel.add(applicatorsPanelScrollPane,"growx,wrap");
+		dataPanel.add(applicatorsPanelScrollPane,"push, grow, wrap");
 		dataPanel.add(new JLabel("Состояние дела"), "right");
 		dataPanel.add(statusesComboBox, "w 50");
 		dataPanel.add(saveNewReceptionStatusButton, "wrap");
@@ -106,15 +110,24 @@ public class ReceptionDialog extends JDialog {
 
 	private void loadGUIDataFromReception() {
 		// определяем наименование услуги
-		serviceNameLabel.setText(reception.getServiceName());
+		serviceNameLabel.setText("<html>" + reception.getServiceName() + "</html>");
 		
 		// определяем перечень заявителей
 		List<Applicator> applicators = reception.getApplicators();
 		for (Applicator applicator: applicators) {
-			JLabel applicatorLabel = new JLabel(applicator.toString());
-			JButton applicatorButton = new JButton("#");
-			applicatorsPanel.add(applicatorLabel);
-			applicatorsPanel.add(applicatorButton);
+			JLabel applicatorLabel = new JLabel("<html>" + applicator.toString() + "</html>");
+			applicatorLabel.setBorder(BorderFactory.createEtchedBorder());
+			// JButton applicatorButton = new JButton();
+			// applicatorButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
+			// applicatorButton.addActionListener(new ActionListener() {
+			// 	public void actionPerformed(ActionEvent ev) {
+			// 		if (applicator instanceof ApplicatorFL) {
+						
+			// 		}
+			// 	}
+			// });
+			applicatorsPanel.add(applicatorLabel, "growx, wrap");
+			// applicatorsPanel.add(applicatorButton,"wrap");
 		}
 
 		// определяем статус дела
