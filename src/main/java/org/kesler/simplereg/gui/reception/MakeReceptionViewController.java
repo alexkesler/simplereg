@@ -106,6 +106,10 @@ public class MakeReceptionViewController {
 
 	}
 
+	void setReceptionByRecord(boolean byRecord) {
+		reception.setByRecord(byRecord);
+	}
+
 	////// Блок добавления, редактирования, удаления заявителей
 
 	void addApplicatorFL() {
@@ -161,6 +165,14 @@ public class MakeReceptionViewController {
 		view.getApplicatorsPanel().applicatorRemoved(index);
 
 	} 
+
+	/// блок ввода дополнительных данных по приему
+
+	void setReceptionToIssueDate(Date toIssueDate) {
+		reception.setToIssueDate(toIssueDate);
+	}
+
+
 
 	void storeService() {
 		reception.setService(service);

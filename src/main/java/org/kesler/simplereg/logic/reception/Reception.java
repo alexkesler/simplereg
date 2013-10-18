@@ -54,6 +54,16 @@ public class Reception extends AbstractEntity{
 	@JoinColumn(name="ReceptionStatusID")
 	private ReceptionStatus status;
 
+	@Column(name="ByRecord")
+	private Boolean byRecord;
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="ToIssueDate")
+	private Date toIssueDate;
+
+	// @Column(name="KadastrNum")
+	// private String kadastrNum;
+
 	public Reception() {
 		// for Hibernate
 	}
@@ -150,5 +160,21 @@ public class Reception extends AbstractEntity{
 			statusName = status.getName();
 		}
 		return statusName;
+	}
+
+	public Boolean isByRecord() {
+		return byRecord;
+	}
+
+	public void setByRecord(Boolean byRecord) {
+		this.byRecord = byRecord;
+	}
+
+	public Date getToIssueDate() {
+		return toIssueDate;
+	}
+
+	public void setToIssueDate(Date toIssueDate) {
+		this.toIssueDate = toIssueDate;
 	}
 }

@@ -1,5 +1,8 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.util.Date;
+import javax.swing.JOptionPane;
+
 class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 	DataMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
@@ -30,6 +33,18 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 	@Override
 	void next() {
+
+		Date toIssueDate = view.getDataPanel().getToIssueDate();
+		if (toIssueDate != null) {
+			controller.setReceptionToIssueDate(toIssueDate);
+		} else {
+			JOptionPane.showMessageDialog(view,
+    									"Не определена дата выдачи",
+    									"Ошибка",
+    									JOptionPane.ERROR_MESSAGE);	
+    		return ;									
+		}
+
 		// Переходим в состояние печати запроса
 		controller.setState(new PrintMakeReceptionViewState(controller, view));
 	}

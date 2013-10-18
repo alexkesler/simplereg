@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.reception;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -9,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
+import javax.swing.JCheckBox;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
@@ -25,6 +27,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
 import net.miginfocom.swing.MigLayout;
+import com.toedter.calendar.JDateChooser;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
@@ -136,6 +139,7 @@ class MakeReceptionView extends JFrame{
 	class ServicePanel extends JPanel {
 		
 		JLabel serviceNameLabel;
+		JCheckBox byRecordCheckBox;
 
 		ServicePanel() {
 			super(new MigLayout("fillx"));
@@ -150,9 +154,17 @@ class MakeReceptionView extends JFrame{
 				}
 			});
 
+			byRecordCheckBox = new JCheckBox("По записи");
+			byRecordCheckBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.setReceptionByRecord(byRecordCheckBox.isSelected());
+				}
+			});
+
 			this.add(new JLabel("Услуга: "),"ay top");
 			this.add(serviceNameLabel,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");
+			this.add(byRecordCheckBox,"span,wrap");
 
 		}
 
@@ -315,8 +327,22 @@ class MakeReceptionView extends JFrame{
 	// панель для ввода даннных по услуге
 	class DataPanel extends JPanel {
 
+		JDateChooser toIssueDateChooser;
+
 		DataPanel() {
 			super(new MigLayout("fillx"));
+
+			toIssueDateChooser = new JDateChooser();
+
+			this.add(new JLabel("Срок выдачи результата"), "split");
+			this.add(toIssueDateChooser, "wrap");
+
+
+		}
+
+		Date getToIssueDate() {
+			Date toIssueDate = toIssueDateChooser.getDate();
+			return toIssueDate;
 		}
 
 	}
@@ -356,6 +382,10 @@ class MakeReceptionView extends JFrame{
 
 	ApplicatorsPanel getApplicatorsPanel() {
 		return applicatorsPanel;
+	}
+
+	DataPanel getDataPanel() {
+		return dataPanel;
 	}
 
 
