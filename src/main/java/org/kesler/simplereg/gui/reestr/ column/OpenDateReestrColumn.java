@@ -7,7 +7,7 @@ import org.kesler.simplereg.logic.reception.Reception;
 public class OpenDateReestrColumn extends ReestrColumn {
 
 	public OpenDateReestrColumn() {
-		name = "Дата открытия";
+		name = "Создан";
 		alias = "openDate";
 		width = 50;
 	}

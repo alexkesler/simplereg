@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class ReestrColumnsDialog extends JDialog {
 
-	private final boolean DEBUG = true;
+	private final boolean DEBUG = false;
 
 	private JFrame frame;
 

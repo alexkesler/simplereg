@@ -205,6 +205,7 @@ public class ReestrView extends JFrame {
 					int selectedReceptionIndex = reestrTable.getSelectedRow();
 					Reception selectedReception = controller.getFilteredReceptions().get(selectedReceptionIndex);
 					controller.openReceptionDialog(selectedReception);
+					reestrTableModel.fireTableDataChanged();
 				}
 			}
 		});

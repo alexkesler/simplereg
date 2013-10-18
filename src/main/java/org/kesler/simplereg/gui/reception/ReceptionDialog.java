@@ -31,6 +31,8 @@ import org.kesler.simplereg.util.ResourcesUtil;
 
 public class ReceptionDialog extends JDialog {
 
+	private final boolean DEBUG = true;
+
 	private JFrame parentFrame;
 	private Reception reception;
 
@@ -38,6 +40,7 @@ public class ReceptionDialog extends JDialog {
 	private JPanel applicatorsPanel;
 	private JComboBox statusesComboBox;
 
+	private ReceptionStatus currentReceptionStatus = null;
 	private ReceptionStatus newReceptionStatus = null;
 
 	public ReceptionDialog(JFrame parentFrame, Reception reception) {
@@ -69,7 +72,13 @@ public class ReceptionDialog extends JDialog {
 		statusesComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
-				saveNewReceptionStatusButton.setEnabled(true);
+				if (DEBUG) System.out.println("Selected status: " + newReceptionStatus + " current status: " + currentReceptionStatus);
+				if (newReceptionStatus != null && newReceptionStatus != currentReceptionStatus) {
+					saveNewReceptionStatusButton.setEnabled(true);
+				} else {
+					saveNewReceptionStatusButton.setEnabled(false);
+				}
+				
 			}
 		});
 
@@ -78,6 +87,7 @@ public class ReceptionDialog extends JDialog {
 			public void actionPerformed(ActionEvent ev) {
 				reception.setStatus(newReceptionStatus);
 				ReceptionsModel.getInstance().updateReception(reception);
+				currentReceptionStatus = newReceptionStatus;
 				saveNewReceptionStatusButton.setEnabled(false);
 			}
 		});
@@ -94,6 +104,11 @@ public class ReceptionDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
+		okButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ev) {
+				setVisible(false);
+			}
+		});
 
 		buttonPanel.add(okButton);
 
@@ -130,17 +145,22 @@ public class ReceptionDialog extends JDialog {
 			// applicatorsPanel.add(applicatorButton,"wrap");
 		}
 
-		// определяем статус дела
-		// заполняем список статусов
+		// Получаем список статусов
 		List<ReceptionStatus> receptionStatuses = ReceptionStatusesModel.getInstance().getReceptionStatuses();
+
+
+		// определяем текущий статус
+		currentReceptionStatus = reception.getStatus();
+		int index = receptionStatuses.indexOf(currentReceptionStatus);
+
+
+		
+		// заполняем список статусов
 		for (ReceptionStatus receptionStatus: receptionStatuses) {
 			statusesComboBox.addItem(receptionStatus);
 		}
 
 		// выбираем текущий статус
-		ReceptionStatus currentReceptionStatus = reception.getStatus();
-		int index = receptionStatuses.indexOf(currentReceptionStatus);
-
 		statusesComboBox.setSelectedIndex(index);
 
 

@@ -193,6 +193,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	public void openReceptionDialog(Reception reception) {
 		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
 		receptionDialog.setVisible(true);
+		
 	}
 
 	// класс для чтения данных о приемах в отдельном потоке
