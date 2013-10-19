@@ -23,7 +23,7 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	public ServiceReceptionsFilterDialog(JFrame frame, ServiceReceptionsFilter filter) {
 		super(frame, "Фильтр по услугам", filter);
-		this.services = filter.getServices();
+
 	}
 
 	@Override
@@ -43,6 +43,9 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	@Override 
 	protected void loadGUIDataFromReceptionsFilter() {
+		
+		ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
+		services = serviceReceptionsFilter.getServices();
 
 	}
 

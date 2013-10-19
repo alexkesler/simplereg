@@ -22,7 +22,7 @@ public class StatusReceptionsFilterDialog extends ReceptionsFilterDialog {
 	private List<ReceptionStatus> filterStatuses;
 
 	private List<ReceptionStatus> allStatuses;
-	List<JCheckBox> checkBoxes;
+	private List<JCheckBox> checkBoxes;
 
 	public StatusReceptionsFilterDialog(JFrame frame) {
 		super(frame, "Фильтр по состоянию");
