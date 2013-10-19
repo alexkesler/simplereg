@@ -172,8 +172,9 @@ public class ReceptionStatusListDialog extends JDialog {
 		}
 
 		@Override
-		public ReceptionStatus getElementAt(int index) {
-			return controller.getReceptionStatuses().get(index);
+		public String getElementAt(int index) {
+			String value = controller.getReceptionStatuses().get(index).toString();
+			return value;
 		}
 
 		void addedStatus(int index) {

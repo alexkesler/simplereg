@@ -26,6 +26,7 @@ import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilterDialog;
 
 
 public class ReestrViewController implements ReceptionsModelStateListener{
@@ -89,6 +90,9 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			break;
 			case OPERATOR:
 				receptionsFilterDialog = new OperatorReceptionsFilterDialog(view);	
+			break;
+			case TO_ISSUE_DATE:
+				receptionsFilterDialog = new ToIssueDateReceptionsFilterDialog(view);	
 			break;
 			default:
 				return;

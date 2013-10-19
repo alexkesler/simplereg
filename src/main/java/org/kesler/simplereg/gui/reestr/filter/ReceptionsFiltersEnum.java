@@ -4,5 +4,7 @@ public enum ReceptionsFiltersEnum {
 	OPEN_DATE,
 	SERVICE,
 	STATUS,
-	OPERATOR
+	OPERATOR,
+	TO_ISSUE_DATE,
+	BY_RECORD
 }

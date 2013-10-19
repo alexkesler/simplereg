@@ -124,11 +124,21 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		// Пункт меню - добавление фильтра по дате на выдачу результата
+		JMenuItem toIssueDateFilterMenuItem = new JMenuItem("По дате на выдачу");
+		toIssueDateFilterMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addFilter(ReceptionsFiltersEnum.TO_ISSUE_DATE);
+			}
+		});
+
+
 		// собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
 		filtersPopupMenu.add(statusFilterMenuItem);
 		filtersPopupMenu.add(serviceFilterMenuItem);
 		filtersPopupMenu.add(operatorFilterMenuItem);
+		filtersPopupMenu.add(toIssueDateFilterMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();

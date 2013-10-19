@@ -30,6 +30,7 @@ public class ReestrColumns {
 		ReestrColumn statusReestrColumn = new StatusReestrColumn();
 		ReestrColumn operatorReestrColumn = new OperatorReestrColumn();
 		ReestrColumn toIssueDateReestrColumn = new ToIssueDateReestrColumn();
+		ReestrColumn byRecordReestrColumn = new ByRecordReestrColumn();
 
 		allColumns.add(openDateReestrColumn);
 		allColumns.add(applicatorsReestrColumn);
@@ -51,6 +52,7 @@ public class ReestrColumns {
 
 		// список неактивных полей
 		inactiveColumns = new ArrayList<ReestrColumn>();
+		inactiveColumns.add(byRecordReestrColumn);
 		inactiveColumns.add(operatorReestrColumn);
 		inactiveColumns.add(toIssueDateReestrColumn);
 	}

@@ -19,7 +19,7 @@ public abstract class ReestrColumn {
 		return width;
 	}
 
-	public abstract String getValue(Reception reception);
+	public abstract Object getValue(Reception reception);
 
 
 }
