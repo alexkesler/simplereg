@@ -188,12 +188,13 @@ public class ReestrView extends JFrame {
 
 		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтры: "), "wrap");
-		filterPanel.add(filterListScrollPane, "push, growx, h 80, wrap");
+		filterPanel.add(filterListScrollPane, "push, w 500, h 80");
+		filterPanel.add(applyFiltersButton,"growy,wrap");
 		filterPanel.add(addFilterButton, "split");
 		filterPanel.add(editFilterButton);
 		filterPanel.add(removeFilterButton);
-		filterPanel.add(resetFiltersButton, "wrap");
-		filterPanel.add(applyFiltersButton,"span, center");
+		filterPanel.add(resetFiltersButton);
+		
 
 
 		// Панель данных
@@ -271,6 +272,7 @@ public class ReestrView extends JFrame {
 		this.setContentPane(mainPanel);
 		this.pack();
 		this.setLocationRelativeTo(null);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 
 	class FilterListModel extends AbstractListModel {
