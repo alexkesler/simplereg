@@ -172,6 +172,10 @@ class MakeReceptionView extends JFrame{
 			serviceNameLabel.setText("<html>"+serviceName+"</html>");
 		}
 
+		void setByRecord(boolean byRecord) {
+			byRecordCheckBox.setSelected(byRecord);
+		}
+
 	}
 
 	// Панель выбора заявителей
@@ -335,7 +339,7 @@ class MakeReceptionView extends JFrame{
 			toIssueDateChooser = new JDateChooser();
 
 			this.add(new JLabel("Срок выдачи результата"), "split");
-			this.add(toIssueDateChooser, "wrap");
+			this.add(toIssueDateChooser, "w 100, wrap");
 
 
 		}
@@ -343,6 +347,10 @@ class MakeReceptionView extends JFrame{
 		Date getToIssueDate() {
 			Date toIssueDate = toIssueDateChooser.getDate();
 			return toIssueDate;
+		}
+
+		void setToIssueDate(Date toIssueDate) {
+			toIssueDateChooser.setDate(toIssueDate);
 		}
 
 	}

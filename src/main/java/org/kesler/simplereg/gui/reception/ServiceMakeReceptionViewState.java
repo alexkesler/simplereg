@@ -65,11 +65,20 @@ class ServiceMakeReceptionViewState extends MakeReceptionViewState {
 
 	@Override
 	void updatePanelData() {
+
+		// Устанавливаем поле Наименование услуги
 		String serviceName = "Не определена";
 		Service service = controller.getService();
 		if (service != null) serviceName = service.getName();
 
 		view.getServicePanel().setServiceName(serviceName);
+
+		/// Устанавливаем поле "По записи"
+		Boolean byRecord = controller.getReception().isByRecord();
+
+		if (byRecord == null) byRecord = false;
+
+		view.getServicePanel().setByRecord(byRecord);
 	}
 
 

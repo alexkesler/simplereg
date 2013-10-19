@@ -56,7 +56,11 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 	@Override
 	void updatePanelData() {
-		
+		// обновляем дату на выдачу
+
+		Date toIssueDate = controller.getReception().getToIssueDate();
+		view.getDataPanel().setToIssueDate(toIssueDate);
+
 	}
 
 

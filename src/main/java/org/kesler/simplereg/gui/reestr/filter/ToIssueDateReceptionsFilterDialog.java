@@ -52,9 +52,9 @@ public class ToIssueDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 		toDateChooser = new JDateChooser();
 
 		dataPanel.add(new JLabel("Начальная дата: "));
-		dataPanel.add(fromDateChooser, "wrap");
+		dataPanel.add(fromDateChooser, "w 100, wrap");
 		dataPanel.add(new JLabel("Конечная дата"));
-		dataPanel.add(toDateChooser, "wrap");
+		dataPanel.add(toDateChooser, "w 100, wrap");
 
 		
 
