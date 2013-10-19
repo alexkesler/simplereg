@@ -99,6 +99,14 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		// Пункт меню - добавление фильтра по предварительной записи
+		JMenuItem byRecordFilterMenuItem = new JMenuItem("По предв записи");
+		byRecordFilterMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addFilter(ReceptionsFiltersEnum.BY_RECORD);
+			}
+		});
+
 		// Пункт меню - добавление фильтра по состоянию
 		JMenuItem statusFilterMenuItem = new JMenuItem("По состоянию");
 		statusFilterMenuItem.addActionListener(new ActionListener() {
@@ -135,6 +143,7 @@ public class ReestrView extends JFrame {
 
 		// собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
+		filtersPopupMenu.add(byRecordFilterMenuItem);
 		filtersPopupMenu.add(statusFilterMenuItem);
 		filtersPopupMenu.add(serviceFilterMenuItem);
 		filtersPopupMenu.add(operatorFilterMenuItem);

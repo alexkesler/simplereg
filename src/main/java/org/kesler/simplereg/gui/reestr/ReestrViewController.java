@@ -16,13 +16,16 @@ import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilter;
+import org.kesler.simplereg.gui.reestr.filter.ByRecordReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilter;
+import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilter;
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.ByRecordReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
@@ -82,6 +85,9 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			case OPEN_DATE:
 				receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view);
 			break;
+			case BY_RECORD:
+				receptionsFilterDialog = new ByRecordReceptionsFilterDialog(view);
+			break;
 			case STATUS:
 				receptionsFilterDialog = new StatusReceptionsFilterDialog(view);	
 			break;
@@ -123,6 +129,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			OpenDateReceptionsFilter openDateReceptionsFilter = (OpenDateReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view, openDateReceptionsFilter);
 
+		} else if (receptionsFilter instanceof ByRecordReceptionsFilter) { // Фильтр по предв записи
+
+			ByRecordReceptionsFilter byRecordReceptionsFilter = (ByRecordReceptionsFilter) receptionsFilter;
+			receptionsFilterDialog = new ByRecordReceptionsFilterDialog(view, byRecordReceptionsFilter);
+
 		} else if (receptionsFilter instanceof StatusReceptionsFilter) { // Фильтр по состоянию
 
 			StatusReceptionsFilter statusReceptionsFilter = (StatusReceptionsFilter) receptionsFilter;
@@ -137,6 +148,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 			OperatorReceptionsFilter operatorReceptionsFilter = (OperatorReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new OperatorReceptionsFilterDialog(view, operatorReceptionsFilter);
+
+		} else if (receptionsFilter instanceof ToIssueDateReceptionsFilter) { // Фильтр по дате не выдачу
+
+			ToIssueDateReceptionsFilter toIssueDateReceptionsFilter = (ToIssueDateReceptionsFilter) receptionsFilter;
+			receptionsFilterDialog = new ToIssueDateReceptionsFilterDialog(view, toIssueDateReceptionsFilter);
 
 		} else return;
 
