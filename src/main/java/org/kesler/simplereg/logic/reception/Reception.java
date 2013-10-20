@@ -22,6 +22,7 @@ import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.logic.realty.RealtyObject;
 
 
 /**
@@ -49,6 +50,10 @@ public class Reception extends AbstractEntity{
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="OpenDate")
 	private Date openDate;
+
+	@ManyToOne
+	@JoinColumn(name="RealtyObjectID")
+	private RealtyObject realtyObject;
 
 	@ManyToOne
 	@JoinColumn(name="ReceptionStatusID")
@@ -144,6 +149,14 @@ public class Reception extends AbstractEntity{
 
 	public void setOpenDate(Date openDate) {
 		this.openDate = openDate;
+	}
+
+	public RealtyObject getRealtyObject () {
+		return realtyObject;
+	}
+
+	public void setRealtyObject(RealtyObject realtyObject) {
+		this.realtyObject = realtyObject;
 	}
 
 	public ReceptionStatus getStatus() {

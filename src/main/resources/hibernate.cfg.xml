@@ -23,6 +23,8 @@
 		<mapping class="org.kesler.simplereg.logic.operator.Operator" />
 		<mapping class="org.kesler.simplereg.logic.reception.Reception" />
 		<mapping class="org.kesler.simplereg.logic.reception.ReceptionStatus" />
+		<mapping class="org.kesler.simplereg.logic.realty.RealtyObject" />
+		<mapping class="org.kesler.simplereg.logic.realty.RealtyType" />
 
 
 	</session-factory>
