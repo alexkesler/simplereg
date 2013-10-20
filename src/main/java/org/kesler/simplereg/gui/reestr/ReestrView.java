@@ -263,7 +263,15 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		JButton printButton = new JButton("Выгрузить список");
+		printButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.createXLSFromReestrTable();
+			}
+		});
+
 		buttonPanel.add(okButton);
+		buttonPanel.add(printButton);
 
 		mainPanel.add(filterPanel, BorderLayout.NORTH);
 		mainPanel.add(dataPanel, BorderLayout.CENTER);

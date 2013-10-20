@@ -31,6 +31,8 @@ import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilterDialog;
 
+import org.kesler.simplereg.gui.reestr.print.ReestrExporter;
+
 
 public class ReestrViewController implements ReceptionsModelStateListener{
 
@@ -214,6 +216,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
 		receptionDialog.setVisible(true);
 		
+	}
+
+	public void createXLSFromReestrTable() {
+		ReestrExporter.exportReestr();
 	}
 
 	// класс для чтения данных о приемах в отдельном потоке
