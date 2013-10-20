@@ -186,6 +186,14 @@ public class ReestrView extends JFrame {
 		});
 
 
+		JButton exportButton = new JButton("Выгрузить список");
+		exportButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.createXLSFromReestrTable();
+			}
+		});
+
+
 		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтры: "), "wrap");
 		filterPanel.add(filterListScrollPane, "push, w 500, h 80");
@@ -193,8 +201,8 @@ public class ReestrView extends JFrame {
 		filterPanel.add(addFilterButton, "split");
 		filterPanel.add(editFilterButton);
 		filterPanel.add(removeFilterButton);
-		filterPanel.add(resetFiltersButton);
-		
+		filterPanel.add(resetFiltersButton, "wrap");
+		filterPanel.add(exportButton,"span, right, wrap");
 
 
 		// Панель данных
@@ -263,15 +271,9 @@ public class ReestrView extends JFrame {
 			}
 		});
 
-		JButton printButton = new JButton("Выгрузить список");
-		printButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.createXLSFromReestrTable();
-			}
-		});
 
 		buttonPanel.add(okButton);
-		buttonPanel.add(printButton);
+
 
 		mainPanel.add(filterPanel, BorderLayout.NORTH);
 		mainPanel.add(dataPanel, BorderLayout.CENTER);

@@ -7,7 +7,7 @@ public class OperatorReestrColumn extends ReestrColumn {
 	public OperatorReestrColumn() {
 		name = "Оператор";
 		alias = "operator";
-		width = 50;
+		width = 20;
 	}
 
 	public String getValue(Reception reception) {

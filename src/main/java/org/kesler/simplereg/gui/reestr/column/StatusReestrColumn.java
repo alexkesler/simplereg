@@ -7,7 +7,7 @@ public class StatusReestrColumn extends ReestrColumn {
 	public StatusReestrColumn() {
 		name = "Состояние";
 		alias = "status";
-		width = 50;
+		width = 20;
 	}
 
 	public String getValue(Reception reception) {

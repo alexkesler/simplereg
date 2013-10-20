@@ -7,7 +7,7 @@ public class ServiceReestrColumn extends ReestrColumn {
 	public ServiceReestrColumn() {
 		name = "Услуга";
 		alias = "service";
-		width = 200;
+		width = 70;
 	}
 
 	public String getValue(Reception reception) {

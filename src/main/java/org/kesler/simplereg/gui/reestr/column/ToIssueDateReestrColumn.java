@@ -9,7 +9,7 @@ public class ToIssueDateReestrColumn extends ReestrColumn {
 	public ToIssueDateReestrColumn() {
 		name = "Выдать";
 		alias = "toIssueDate";
-		width = 50;
+		width = 10;
 	}
 
 	public String getValue(Reception reception) {

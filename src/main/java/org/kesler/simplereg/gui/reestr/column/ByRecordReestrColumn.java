@@ -7,7 +7,7 @@ public class ByRecordReestrColumn extends ReestrColumn {
 	public ByRecordReestrColumn() {
 		name = "По записи";
 		alias = "byRecord";
-		width = 30;
+		width = 10;
 	}
 
 	public String getValue(Reception reception) {
