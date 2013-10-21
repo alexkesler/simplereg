@@ -37,10 +37,11 @@ public class ServiceReceptionsFilter implements ReceptionsFilter {
 
 	@Override
 	public String toString() {
-		String filterString  = "По услугам: ";
+		String filterString  = "По услугам: (";
 		for (Service service: filterServices) {
-			filterString += service.getName();
+			filterString += service.getName() + ";";
 		}
+		filterString += ")";
 
 		return filterString;
 	}
