@@ -20,7 +20,7 @@ public abstract class ReceptionsFilterDialog extends JDialog {
 	public static final int OK = 0;
 	public static final int CANCEL = 1;
 
-	private JFrame frame;
+	protected JFrame frame;
 	
 	protected ReceptionsFilter receptionsFilter = null;
 	private int result;
