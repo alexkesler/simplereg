@@ -29,7 +29,6 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 
-
 public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	private List<Service> services;
@@ -110,8 +109,6 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 	@Override 
 	protected void loadGUIDataFromReceptionsFilter() {
 		
-		ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
-		services = serviceReceptionsFilter.getServices();
 
 	}
 
@@ -130,6 +127,11 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 	}
 
 	class ServicesListModel extends AbstractListModel {
+
+		ServicesListModel() {
+			ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
+			services = serviceReceptionsFilter.getServices();
+		}
 
 		@Override
 		public int getSize() {
