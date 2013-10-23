@@ -53,8 +53,15 @@ public class RealtyListDialog extends JDialog {
 		JList realtyObjectList = new JList(realtyObjectListModel);
 		JScrollPane realtyObjectListScrollPane = new JScrollPane(realtyObjectList);
 
+		JButton addButton = new JButton();
+		JButton editButtton = new JButton();
+		JButton removeButton = new JButton();
 
-		dataPanel.add(realtyObjectListScrollPane, "growx, w 200, h 80");
+		// Собираем панель данных
+		dataPanel.add(realtyObjectListScrollPane, "growx, w 200, h 80, wrap");
+		dataPanel.add(addButton, "span");
+		dataPanel.add(editButtton);
+		dataPanel.add(removeButton, "span");
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
