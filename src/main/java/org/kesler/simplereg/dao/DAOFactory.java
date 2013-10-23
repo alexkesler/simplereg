@@ -3,9 +3,12 @@ package org.kesler.simplereg.dao;
 import org.kesler.simplereg.dao.impl.ServiceDAOImpl;
 import org.kesler.simplereg.dao.impl.OperatorDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
+import org.kesler.simplereg.dao.impl.GenericDAOImpl;
 import org.kesler.simplereg.dao.impl.FLDAOImpl;
 import org.kesler.simplereg.dao.impl.ULDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
+
+import org.kesler.simplereg.logic.realty.RealtyObject;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
@@ -64,6 +67,11 @@ public class DAOFactory {
 			receptionStatusDAO = new ReceptionStatusDAOImpl();
 		}
 		return receptionStatusDAO;
+	}
+
+	public GenericDAO<RealtyObject> getRealtyObjectDAO() {
+		GenericDAO<RealtyObject> genericDAO = new GenericDAOImpl<RealtyObject>(RealtyObject.class);
+		return genericDAO;
 	}
 
 }
