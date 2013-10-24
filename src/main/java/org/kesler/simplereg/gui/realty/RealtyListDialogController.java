@@ -67,6 +67,40 @@ public class RealtyListDialogController implements RealtyObjectsModelStateListen
 
 	}
 
+	public void addRealtyObject() {
+
+		RealtyDialog realtyDialog = new RealtyDialog(dialog);
+		realtyDialog.setVisible(true);
+		if (realtyDialog.getResult() == RealtyDialog.OK) {
+			RealtyObject realtyObject = realtyDialog.getRealtyObject();
+			model.addRealtyObject(realtyObject);
+			dialog.realtyObjectAdded(model.getAllRealtyObjects().size()-1);
+		}
+
+	}
+
+	public void editRealtyObject(int index) {
+
+		RealtyObject realtyObject = model.getAllRealtyObjects().get(index);
+
+		RealtyDialog realtyDialog = new RealtyDialog(dialog, realtyObject);
+
+		if (realtyDialog.getResult() == RealtyDialog.OK) {
+			model.updateRealtyObject(realtyObject);
+			dialog.realtyObjectUpdated(index);			
+		}
+
+	}
+
+	public void removeRealtyObject(int index) {
+
+		RealtyObject realtyObject = model.getAllRealtyObjects().get(index);
+
+		model.removeRealtyObject(realtyObject);
+		dialog.realtyObjectRemoved(index);
+	
+	}
+
 
 	@Override
 	public void realtyObjectsModelStateChanged(RealtyObjectsModelState state) {
@@ -90,7 +124,7 @@ public class RealtyListDialogController implements RealtyObjectsModelStateListen
 
 	class RealtyListReader implements Runnable {
 		public void run() {
-			RealtyObjectsModel.getInstance().readRealtyObjectsFromDB();
+			model.readRealtyObjectsFromDB();
 		}
 	}
 
