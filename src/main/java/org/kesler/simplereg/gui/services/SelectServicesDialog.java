@@ -93,6 +93,7 @@ public class SelectServicesDialog extends ServicesDialog{
 					
 				}
 
+				result = OK;
 				setVisible(false);
 
 			}
@@ -102,6 +103,7 @@ public class SelectServicesDialog extends ServicesDialog{
 		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
+				result = CANCEL;
 				setVisible(false);
 			}
 		});

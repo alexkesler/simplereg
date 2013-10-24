@@ -12,22 +12,25 @@ import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
+import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
+import org.kesler.simplereg.gui.realty.RealtyListDialogController;
 
 public class MakeReceptionViewController {
 
-	private MakeReceptionView view;
 	private static MakeReceptionViewController instance;
+	private MakeReceptionView view;
 	private MakeReceptionViewState viewState;
 	
 	private Operator operator;
 	private Service service;
 	private List<Applicator> applicators;
+	private RealtyObject realtyObject;
 	private Reception reception;
 
 
@@ -100,6 +103,10 @@ public class MakeReceptionViewController {
 		return service;
 	}
 
+	RealtyObject getRealtyObject() {
+		return realtyObject;
+	}
+
 	void selectService() {
 		service = ServicesDialogController.getInstance().openSelectDialog(view);		
 		viewState.updatePanelData();
@@ -168,6 +175,13 @@ public class MakeReceptionViewController {
 
 	/// блок ввода дополнительных данных по приему
 
+	void selectRealtyObject() {
+
+		realtyObject = RealtyListDialogController.getInstance().showDialog(view);
+		viewState.updatePanelData();
+	}
+
+
 	void setReceptionToIssueDate(Date toIssueDate) {
 		reception.setToIssueDate(toIssueDate);
 	}
@@ -180,6 +194,10 @@ public class MakeReceptionViewController {
 
 	void storeApplicators() {
 		reception.setApplicators(applicators);
+	}
+
+	void storeRealtyObject() {
+		reception.setRealtyObject(realtyObject);
 	}
 
 	void saveReception() {

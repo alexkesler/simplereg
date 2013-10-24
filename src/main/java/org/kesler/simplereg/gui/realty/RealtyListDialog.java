@@ -18,6 +18,9 @@ import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 
+import org.kesler.simplereg.util.ResourcesUtil;
+
+
 
 public class RealtyListDialog extends JDialog {
 
@@ -28,16 +31,31 @@ public class RealtyListDialog extends JDialog {
 	private JFrame parentFrame;
 
 	private int result = NONE;
+	private int selectedRealtyObjectIndex = -1;
 
 	RealtyObjectListModel realtyObjectListModel;
 
-	public RealtyListDialog(JFrame parentFrame) {
+	RealtyListDialogController controller;
+
+	public RealtyListDialog(RealtyListDialogController controller, JFrame parentFrame) {
 		super(parentFrame, "Объекты недвижимости", true);
 		this.parentFrame = parentFrame;
+		this.controller = controller;
+		createGUI();
 	}
 
 	public int getResult() {
 		return result;
+	}
+
+	public RealtyObject getSelectedRealtyObject() {
+		RealtyObject selectedRealtyObject = null;
+
+		if (selectedRealtyObjectIndex != -1) {
+			selectedRealtyObject = controller.getAllRealtyObjects().get(selectedRealtyObjectIndex);
+		}
+		
+		return selectedRealtyObject;
 	}
 
 	private void createGUI() {
@@ -54,11 +72,18 @@ public class RealtyListDialog extends JDialog {
 		JScrollPane realtyObjectListScrollPane = new JScrollPane(realtyObjectList);
 
 		JButton addButton = new JButton();
+		addButton.setIcon(ResourcesUtil.getIcon("add.png"));
+
+
 		JButton editButtton = new JButton();
+		editButtton.setIcon(ResourcesUtil.getIcon("pencil.png"));
+
+
 		JButton removeButton = new JButton();
+		removeButton.setIcon(ResourcesUtil.getIcon("delete.png"));
 
 		// Собираем панель данных
-		dataPanel.add(realtyObjectListScrollPane, "growx, w 200, h 80, wrap");
+		dataPanel.add(realtyObjectListScrollPane, "grow, w 200, h 80, wrap");
 		dataPanel.add(addButton, "span");
 		dataPanel.add(editButtton);
 		dataPanel.add(removeButton, "span");
@@ -100,7 +125,7 @@ public class RealtyListDialog extends JDialog {
 		List<RealtyObject> realtyObjects;
 
 		RealtyObjectListModel() {
-			realtyObjects = RealtyObjectsModel.getInstance().getAllRealtyObjects();
+			realtyObjects = controller.getAllRealtyObjects();
 		}
 
 		@Override

@@ -39,5 +39,11 @@ public class RealtyObject extends AbstractEntity {
 		this.type = type;
 	}
 
+	@Override
+	public String toString() {
+		String value = type.getName() + " - " + address;
+
+		return value;
+	}
 
 }

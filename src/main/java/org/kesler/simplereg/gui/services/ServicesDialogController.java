@@ -47,7 +47,9 @@ public class ServicesDialogController implements ServicesModelListener{
 		reloadTree();
 		dialog.setVisible(true);
 
-		selectedService = dialog.getSelectedService();
+		if (dialog.getResult() == ServicesDialog.OK) {
+			selectedService = dialog.getSelectedService();
+		}
 
 		return selectedService;
 	}

@@ -17,6 +17,7 @@ public class DAOFactory {
 	private static FLDAO flDAO = null;
 	private static ULDAO ulDAO = null;
 	private static ReceptionStatusDAO receptionStatusDAO = null;
+	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
 	private static DAOFactory instance = null;
 
 	public static synchronized DAOFactory getInstance() {
@@ -70,8 +71,11 @@ public class DAOFactory {
 	}
 
 	public GenericDAO<RealtyObject> getRealtyObjectDAO() {
-		GenericDAO<RealtyObject> genericDAO = new GenericDAOImpl<RealtyObject>(RealtyObject.class);
-		return genericDAO;
+		if (realtyObjectDAO == null) {
+			realtyObjectDAO = new GenericDAOImpl<RealtyObject>(RealtyObject.class);
+		}
+		
+		return realtyObjectDAO;
 	}
 
 }

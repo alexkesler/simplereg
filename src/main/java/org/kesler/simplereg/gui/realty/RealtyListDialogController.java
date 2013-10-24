@@ -1,21 +1,30 @@
 package org.kesler.simplereg.gui.realty;
 
 import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
+import org.kesler.simplereg.logic.realty.RealtyObjectsModelState;
+import org.kesler.simplereg.logic.realty.RealtyObjectsModelStateListener;
+
 
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
 
-public class RealtyListDialogController {
+public class RealtyListDialogController implements RealtyObjectsModelStateListener {
 
 	private RealtyListDialog dialog;
+	private RealtyObjectsModel model;
+
+	private ProcessDialog processDialog;
 
 	private static RealtyListDialogController instance = null;
 
 	private RealtyListDialogController() {
-		
+		model = RealtyObjectsModel.getInstance();
+		model.addRealtyObjectsModelStateListener(this);
 	}
 
 	public static synchronized RealtyListDialogController getInstance() {
@@ -26,18 +35,31 @@ public class RealtyListDialogController {
 	}
 
 
-	public void showDialog() {
+	public RealtyObject showDialog(JFrame parentFrame) {
+		RealtyObject realtyObject = null;
+
+		dialog = new RealtyListDialog(this, parentFrame);
 		dialog.setVisible(true);
+		if (dialog.getResult() == RealtyListDialog.OK) {
+			realtyObject = dialog.getSelectedRealtyObject();
+		}
+
+		return realtyObject;
 	}
 
 	public List<RealtyObject> getAllRealtyObjects() {
+
 		
 		Thread realtyListReaderThread = new Thread(new RealtyListReader());
 
-		ProcessDialog processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список объектов недвижимости");
+		processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список объектов недвижимости");
 		realtyListReaderThread.start();	
 
 		processDialog.setVisible(true);
+
+		if (processDialog.getResult() == ProcessDialog.ERROR) {
+			JOptionPane.showMessageDialog(dialog, "Ошибка чтения списка объектов недвижимости", "Ошибка", JOptionPane.ERROR_MESSAGE);
+		}
 
 
 		return RealtyObjectsModel.getInstance().getAllRealtyObjects();
@@ -45,6 +67,25 @@ public class RealtyListDialogController {
 
 	}
 
+
+	@Override
+	public void realtyObjectsModelStateChanged(RealtyObjectsModelState state) {
+		switch (state) {
+			case CONNECTING:
+				processDialog.setContent("Соединяюсь...");			
+			break;
+			case READING:
+				processDialog.setContent("Читаю список объектов недвижимости");
+			break;	
+			case UPDATED:
+				processDialog.setVisible(false);
+			break;
+			case ERROR:
+				processDialog.setResult(ProcessDialog.ERROR);
+				processDialog.setVisible(false);
+			break;			
+		}
+	}
 
 
 	class RealtyListReader implements Runnable {

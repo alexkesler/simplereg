@@ -3,6 +3,8 @@ package org.kesler.simplereg.gui.reception;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
+import org.kesler.simplereg.logic.realty.RealtyObject;
+
 class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 	DataMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
@@ -59,6 +61,16 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 		// обновляем дату на выдачу
 		Date toIssueDate = controller.getReception().getToIssueDate();
 		view.getDataPanel().setToIssueDate(toIssueDate);
+		
+		RealtyObject realtyObject = controller.getRealtyObject();
+		String realtyObjectName = "";
+		if (realtyObject != null) {
+			realtyObjectName = realtyObject.toString();
+		} else {
+			realtyObjectName = "Не определено";
+		}
+
+		view.getDataPanel().setRealtyObjectName(realtyObjectName);
 
 	}
 

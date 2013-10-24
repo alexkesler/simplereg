@@ -89,12 +89,15 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	public List<T> getAllItems() {
 		List<T> list = new ArrayList<T>();
-
+		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
+			notifyListeners(DAOState.READING);
 			list = session.createCriteria(type).list();
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session!=null && session.isOpen()) {
 				session.close();				

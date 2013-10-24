@@ -11,6 +11,8 @@ import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModelState;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
+import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorsViewController;
@@ -33,6 +35,7 @@ public class MainViewController implements MainViewListener,
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsModel operatorsModel;
+	private RealtyObjectsModel realtyObjectsModel;
 	private LoginDialog loginDialog;
 
 	private ProcessDialog processDialog;
@@ -40,6 +43,8 @@ public class MainViewController implements MainViewListener,
 	private MainViewController() {
 		this.receptionsModel = ReceptionsModel.getInstance();
 		this.operatorsModel = OperatorsModel.getInstance();
+		this.realtyObjectsModel = RealtyObjectsModel.getInstance();
+
 		operatorsModel.addOperatorsModelStateListener(this);
 		receptionsModel.addReceptionsModelStateListener(this);
 		

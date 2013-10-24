@@ -331,17 +331,38 @@ class MakeReceptionView extends JFrame{
 	// панель для ввода даннных по услуге
 	class DataPanel extends JPanel {
 
+		JLabel realtyObjectNameLabel;
+
 		JDateChooser toIssueDateChooser;
 
 		DataPanel() {
-			super(new MigLayout("fillx"));
+			super(new MigLayout("fillx, nogrid"));
+
+			realtyObjectNameLabel = new JLabel("Не определено");
+			realtyObjectNameLabel.setBorder(BorderFactory.createEtchedBorder());
+
+			JButton selectRealtyObjectButton = new JButton();
+			selectRealtyObjectButton.setIcon(ResourcesUtil.getIcon("book_previous.png"));
+			selectRealtyObjectButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.selectRealtyObject();
+				}
+			});
 
 			toIssueDateChooser = new JDateChooser();
+
+			this.add(new JLabel("Объект недвижимости"), "wrap");
+			this.add(realtyObjectNameLabel, "pushx, grow");
+			this.add(selectRealtyObjectButton, "ay top, wrap");
 
 			this.add(new JLabel("Срок выдачи результата"), "split");
 			this.add(toIssueDateChooser, "w 100, wrap");
 
 
+		}
+
+		public void setRealtyObjectName(String name) {
+			realtyObjectNameLabel.setText("<html>" + name + "</html>");
 		}
 
 		Date getToIssueDate() {
