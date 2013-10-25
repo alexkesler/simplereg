@@ -21,8 +21,7 @@ import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 
-
-public class RealtyListDialog extends JDialog {
+public class RealtyObjectListDialog extends JDialog {
 
 	public static final int NONE = -1;
 	public static final int OK = 0;
@@ -35,9 +34,9 @@ public class RealtyListDialog extends JDialog {
 
 	RealtyObjectListModel realtyObjectListModel;
 
-	RealtyListDialogController controller;
+	RealtyObjectListDialogController controller;
 
-	public RealtyListDialog(RealtyListDialogController controller, JFrame parentFrame) {
+	public RealtyObjectListDialog(RealtyObjectListDialogController controller, JFrame parentFrame) {
 		super(parentFrame, "Объекты недвижимости", true);
 		this.parentFrame = parentFrame;
 		this.controller = controller;
@@ -73,6 +72,11 @@ public class RealtyListDialog extends JDialog {
 
 		JButton addButton = new JButton();
 		addButton.setIcon(ResourcesUtil.getIcon("add.png"));
+		addButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addRealtyObject();
+			}
+		});
 
 
 		JButton editButtton = new JButton();
@@ -83,7 +87,7 @@ public class RealtyListDialog extends JDialog {
 		removeButton.setIcon(ResourcesUtil.getIcon("delete.png"));
 
 		// Собираем панель данных
-		dataPanel.add(realtyObjectListScrollPane, "grow, w 200, h 80, wrap");
+		dataPanel.add(realtyObjectListScrollPane, "push, grow, w 200, h 80, wrap");
 		dataPanel.add(addButton, "span");
 		dataPanel.add(editButtton);
 		dataPanel.add(removeButton, "span");
@@ -120,6 +124,19 @@ public class RealtyListDialog extends JDialog {
 
 	}
 
+	// обновляют список, вызываются из контроллера
+	public void realtyObjectAdded(int index) {
+		realtyObjectListModel.realtyObjectAdded(index);  
+	}
+
+	public void realtyObjectUpdated(int index) {
+		realtyObjectListModel.realtyObjectUpdated(index);
+	}
+
+	public void realtyObjectRemoved(int index) {
+		realtyObjectListModel.realtyObjectRemoved(index);
+	}
+
 	class RealtyObjectListModel extends AbstractListModel {
 
 		List<RealtyObject> realtyObjects;
@@ -139,6 +156,18 @@ public class RealtyListDialog extends JDialog {
 			String value = realtyObjects.get(index).toString();
 			return value;
 
+		}
+
+		public void realtyObjectAdded(int index) {
+			fireIntervalAdded(this, index, index);
+		}
+
+		public void realtyObjectUpdated(int index) {
+			fireContentsChanged(this, index, index);
+		}
+
+		public void realtyObjectRemoved(int index) {
+			fireIntervalRemoved(this, index, index);
 		}
 
 	}

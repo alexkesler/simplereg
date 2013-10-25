@@ -19,7 +19,7 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
-import org.kesler.simplereg.gui.realty.RealtyListDialogController;
+import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 
 public class MakeReceptionViewController {
 
@@ -177,7 +177,7 @@ public class MakeReceptionViewController {
 
 	void selectRealtyObject() {
 
-		realtyObject = RealtyListDialogController.getInstance().showDialog(view);
+		realtyObject = RealtyObjectListDialogController.getInstance().showDialog(view);
 		viewState.updatePanelData();
 	}
 

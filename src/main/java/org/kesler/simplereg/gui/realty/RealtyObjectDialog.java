@@ -3,6 +3,7 @@ package org.kesler.simplereg.gui.realty;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -14,9 +15,11 @@ import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.realty.RealtyType;
+
 import org.kesler.simplereg.util.ResourcesUtil;
 
-public class RealtyDialog extends JDialog {
+public class RealtyObjectDialog extends JDialog {
 
 	public static final int NONE = -1;
 	public static final int OK = 0;
@@ -31,7 +34,7 @@ public class RealtyDialog extends JDialog {
 	private JComboBox realtyTypeComboBox;
 	private JTextField addressTextField;
 
-	public RealtyDialog(JDialog parentDialog) {
+	public RealtyObjectDialog(JDialog parentDialog) {
 		super(parentDialog, "Объект недвижимости", true);
 		this.parentDialog = parentDialog;
 
@@ -40,7 +43,7 @@ public class RealtyDialog extends JDialog {
 		createGUI();
 	}
 
-	public RealtyDialog(JDialog parentDialog, RealtyObject realtyObject) {
+	public RealtyObjectDialog(JDialog parentDialog, RealtyObject realtyObject) {
 		super(parentDialog, "Изменить объект недвижимости", true);
 		this.parentDialog = parentDialog;
 
@@ -52,6 +55,10 @@ public class RealtyDialog extends JDialog {
 
 	public int getResult() {
 		return result;
+	}
+
+	public RealtyObject getRealtyObject() {
+		return realtyObject;
 	}
 
 	private void createGUI() {
@@ -110,12 +117,35 @@ public class RealtyDialog extends JDialog {
 
 	private void loadGUIDataFromRealtyObject() {
 
+		RealtyType type = realtyObject.getType();
+		if (type != null) {
+			realtyTypeComboBox.setSelectedItem(type);
+		} else {
+			realtyTypeComboBox.setSelectedIndex(-1);
+		}
+
+		addressTextField.setText(realtyObject.getAddress());
+
 	}
 
 	private boolean readRealtyObjectFromGUIData() {
-		boolean result = true;
 
-		return result;
+		if (realtyTypeComboBox.getSelectedIndex() == -1) {
+			JOptionPane.showMessageDialog(this, "Необходимо выбрать тип объекта", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;			
+		}
+
+		if (addressTextField.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Поле адрес не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		RealtyType type = (RealtyType) (realtyTypeComboBox.getSelectedItem());
+
+		realtyObject.setType(type);
+		realtyObject.setAddress(addressTextField.getText());
+
+		return true;
 	} 
 
 }

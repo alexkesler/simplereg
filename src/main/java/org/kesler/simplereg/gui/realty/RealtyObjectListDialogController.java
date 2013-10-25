@@ -13,23 +13,23 @@ import org.kesler.simplereg.logic.realty.RealtyObjectsModelStateListener;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
 
-public class RealtyListDialogController implements RealtyObjectsModelStateListener {
+public class RealtyObjectListDialogController implements RealtyObjectsModelStateListener {
 
-	private RealtyListDialog dialog;
+	private RealtyObjectListDialog dialog;
 	private RealtyObjectsModel model;
 
 	private ProcessDialog processDialog;
 
-	private static RealtyListDialogController instance = null;
+	private static RealtyObjectListDialogController instance = null;
 
-	private RealtyListDialogController() {
+	private RealtyObjectListDialogController() {
 		model = RealtyObjectsModel.getInstance();
 		model.addRealtyObjectsModelStateListener(this);
 	}
 
 	public static synchronized RealtyListDialogController getInstance() {
 		if (instance == null) {
-			instance = new RealtyListDialogController();
+			instance = new RealtyObjectListDialogController();
 		}
 		return instance;
 	}
@@ -38,9 +38,9 @@ public class RealtyListDialogController implements RealtyObjectsModelStateListen
 	public RealtyObject showDialog(JFrame parentFrame) {
 		RealtyObject realtyObject = null;
 
-		dialog = new RealtyListDialog(this, parentFrame);
+		dialog = new RealtyObjectListDialog(this, parentFrame);
 		dialog.setVisible(true);
-		if (dialog.getResult() == RealtyListDialog.OK) {
+		if (dialog.getResult() == RealtyObjectListDialog.OK) {
 			realtyObject = dialog.getSelectedRealtyObject();
 		}
 
@@ -69,12 +69,12 @@ public class RealtyListDialogController implements RealtyObjectsModelStateListen
 
 	public void addRealtyObject() {
 
-		RealtyDialog realtyDialog = new RealtyDialog(dialog);
-		realtyDialog.setVisible(true);
-		if (realtyDialog.getResult() == RealtyDialog.OK) {
-			RealtyObject realtyObject = realtyDialog.getRealtyObject();
-			model.addRealtyObject(realtyObject);
-			dialog.realtyObjectAdded(model.getAllRealtyObjects().size()-1);
+		RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog);
+		realtyObjectDialog.setVisible(true);
+		if (realtyObjectDialog.getResult() == RealtyObjectDialog.OK) {
+			RealtyObject realtyObject = realtyObjectDialog.getRealtyObject();
+			int index = model.addRealtyObject(realtyObject);
+			dialog.realtyObjectAdded(index);
 		}
 
 	}
