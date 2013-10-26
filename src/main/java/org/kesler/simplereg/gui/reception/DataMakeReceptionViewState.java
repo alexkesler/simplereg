@@ -47,6 +47,17 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
     		return ;									
 		}
 
+		if (controller.getRealtyObject() != null) {
+			controller.storeRealtyObject();
+		} else {
+			JOptionPane.showMessageDialog(view,
+    									"Не определен объект недвижимости",
+    									"Ошибка",
+    									JOptionPane.ERROR_MESSAGE);	
+    		return ;									
+			
+		}
+
 		// Переходим в состояние печати запроса
 		controller.setState(new PrintMakeReceptionViewState(controller, view));
 	}

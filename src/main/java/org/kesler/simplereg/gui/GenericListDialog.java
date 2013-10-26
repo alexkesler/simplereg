@@ -157,16 +157,16 @@ public class GenericListDialog<T> extends JDialog {
 
 	}
 
-	void addedStatus(int index) {
-		itemsListModel.addedStatus(index);
+	public void addedItem(int index) {
+		itemsListModel.addedItem(index);
 	}
 
-	void updatedStatus(int index) {
-		itemsListModel.updatedStatus(index);
+	public void updatedItem(int index) {
+		itemsListModel.updatedItem(index);
 	}
 
-	void removedStatus(int index) {
-		itemsListModel.removedStatus(index);
+	public void removedItem(int index) {
+		itemsListModel.removedItem(index);
 	}
 
 	class ItemsListModel extends AbstractListModel {
@@ -182,15 +182,15 @@ public class GenericListDialog<T> extends JDialog {
 			return value;
 		}
 
-		void addedStatus(int index) {
+		void addedItem(int index) {
 			fireIntervalAdded(this, index, index);
 		}
 
-		void updatedStatus(int index) {
+		void updatedItem(int index) {
 			fireContentsChanged(this, index, index);
 		}
 
-		void removedStatus(int index) {
+		void removedItem(int index) {
 			fireIntervalRemoved(this, index, index);
 		}
 	}

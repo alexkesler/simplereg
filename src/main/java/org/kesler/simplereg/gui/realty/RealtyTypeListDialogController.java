@@ -27,9 +27,16 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 		model = RealtyTypesModel.getInstance();
 	}
 
-	public RealtyType openDialog(JFrame parentFrame) {
+	public RealtyType showDialog(JFrame parentFrame) {
+		RealtyType realtyType = null;
 		dialog = new GenericListDialog<RealtyType>(parentFrame, this);
 		dialog.setVisible(true);
+
+		if (dialog.getResult() == GenericListDialog.OK) {
+			realtyType = model.getAllRealtyTypes().get(dialog.getSelectedIndex());
+		}
+
+		return realtyType;
 	}
 
 	public List<RealtyType> getAllItems() {
@@ -38,12 +45,13 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 
 	public void openAddItemDialog() {
 
-		RealtyTypeDialog realtyTypeDialog = new RealtyTypeDialog();
+		RealtyTypeDialog realtyTypeDialog = new RealtyTypeDialog(dialog);
 		realtyTypeDialog.setVisible(true);
 
 		if (realtyTypeDialog.getResult() == RealtyTypeDialog.OK) {
 			RealtyType realtyType = realtyTypeDialog.getRealtyType();
-			model.addRealtyType(realtyType);			
+			int index = model.addRealtyType(realtyType);
+			dialog.addedItem(index);			
 		}
 
 		
@@ -51,9 +59,23 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 
 	public void openEditItemDialog(int index) {
 
+		RealtyType realtyType = model.getAllRealtyTypes().get(index);
+
+		RealtyTypeDialog realtyTypeDialog = new RealtyTypeDialog(dialog, realtyType);
+		realtyTypeDialog.setVisible(true);
+
+		if (realtyTypeDialog.getResult() == RealtyTypeDialog.OK) {
+			model.updateRealtyType(realtyType);	
+			dialog.updatedItem(index);		
+		}
 	}
 
 	public void removeItem(int index) {
+
+		RealtyType realtyType = model.getAllRealtyTypes().get(index);
+
+		model.removeRealtyType(realtyType);	
+		dialog.removedItem(index);		
 
 	}
 

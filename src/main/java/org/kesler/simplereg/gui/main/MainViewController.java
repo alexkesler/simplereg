@@ -20,6 +20,8 @@ import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.ReceptionStatusListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
+import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
+import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 
 
@@ -105,6 +107,12 @@ public class MainViewController implements MainViewListener,
 			case ReceptionStatuses: 
 				openReceptionStatuses();
 				break;
+			case RealtyObjects: 
+				openRealtyObjects();
+				break;
+			case RealtyObjectTypes: 
+				openRealtyObjectTypes();
+				break;
 			case Operators: 
 				openOperators();
 				break;
@@ -141,6 +149,8 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.RealtyObjects).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 			}
 
 			if (operator.getIsAdmin()) { // для администратора
@@ -148,6 +158,8 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.RealtyObjects).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
 				
@@ -301,6 +313,14 @@ public class MainViewController implements MainViewListener,
 	private void openOptions() {
 		OptionsDialog optionsDialog = new OptionsDialog(mainView);
 		optionsDialog.showDialog();
+	}
+
+	private void openRealtyObjects() {
+		RealtyObjectListDialogController.getInstance().showDialog(mainView);
+	}
+
+	private void openRealtyObjectTypes() {
+		RealtyTypeListDialogController.getInstance().showDialog(mainView);
 	}
 
 

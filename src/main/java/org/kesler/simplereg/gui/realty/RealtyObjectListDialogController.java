@@ -27,7 +27,7 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		model.addRealtyObjectsModelStateListener(this);
 	}
 
-	public static synchronized RealtyListDialogController getInstance() {
+	public static synchronized RealtyObjectListDialogController getInstance() {
 		if (instance == null) {
 			instance = new RealtyObjectListDialogController();
 		}
@@ -71,6 +71,7 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 		RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog);
 		realtyObjectDialog.setVisible(true);
+		
 		if (realtyObjectDialog.getResult() == RealtyObjectDialog.OK) {
 			RealtyObject realtyObject = realtyObjectDialog.getRealtyObject();
 			int index = model.addRealtyObject(realtyObject);
@@ -83,9 +84,10 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 		RealtyObject realtyObject = model.getAllRealtyObjects().get(index);
 
-		RealtyDialog realtyDialog = new RealtyDialog(dialog, realtyObject);
+		RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog, realtyObject);
+		realtyObjectDialog.setVisible(true);
 
-		if (realtyDialog.getResult() == RealtyDialog.OK) {
+		if (realtyObjectDialog.getResult() == RealtyObjectDialog.OK) {
 			model.updateRealtyObject(realtyObject);
 			dialog.realtyObjectUpdated(index);			
 		}

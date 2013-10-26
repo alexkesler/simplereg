@@ -280,8 +280,8 @@ public class ReestrView extends JFrame {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
-		this.pack();
-		this.setLocationRelativeTo(null);
+		//this.pack();
+		//this.setLocationRelativeTo(null);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 

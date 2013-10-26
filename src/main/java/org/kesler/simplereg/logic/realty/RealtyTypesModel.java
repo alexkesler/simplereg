@@ -18,13 +18,34 @@ public class RealtyTypesModel {
 	}
 
 	public List<RealtyType> getAllRealtyTypes() {
-		DAOFactory.getInstance().getRealtyTypeDAO().getAllItems();
+		if (realtyTypes == null) {
+			readRealtyTypesFromDB();
+		}
+		
+		return realtyTypes;
 	}
 
+	public void readRealtyTypesFromDB() {
+		realtyTypes = DAOFactory.getInstance().getRealtyTypeDAO().getAllItems();
+	} 
+
 	public int addRealtyType(RealtyType realtyType) {
-		int index;
+		int index = -1;
+
+		DAOFactory.getInstance().getRealtyTypeDAO().addItem(realtyType);
+		realtyTypes.add(realtyType);
+		index = realtyTypes.size()-1;
 
 		return index;
+	}
+
+	public void updateRealtyType(RealtyType realtyType) {
+		DAOFactory.getInstance().getRealtyTypeDAO().updateItem(realtyType);
+	}
+
+	public void removeRealtyType(RealtyType realtyType) {
+		DAOFactory.getInstance().getRealtyTypeDAO().removeItem(realtyType);
+		realtyTypes.remove(realtyType);
 	}
 
 }

@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
@@ -67,7 +70,20 @@ public class RealtyObjectListDialog extends JDialog {
 
 		realtyObjectListModel = new RealtyObjectListModel();
 
-		JList realtyObjectList = new JList(realtyObjectListModel);
+		final JList realtyObjectList = new JList(realtyObjectListModel);
+		realtyObjectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		realtyObjectList.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent lse) {
+				if(lse.getValueIsAdjusting() == false) {
+					selectedRealtyObjectIndex = realtyObjectList.getSelectedIndex();
+				}				
+			}
+		});
+
+
+
 		JScrollPane realtyObjectListScrollPane = new JScrollPane(realtyObjectList);
 
 		JButton addButton = new JButton();
@@ -81,10 +97,20 @@ public class RealtyObjectListDialog extends JDialog {
 
 		JButton editButtton = new JButton();
 		editButtton.setIcon(ResourcesUtil.getIcon("pencil.png"));
+		editButtton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.editRealtyObject(selectedRealtyObjectIndex);
+			}
+		});
 
 
 		JButton removeButton = new JButton();
 		removeButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+		removeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.removeRealtyObject(selectedRealtyObjectIndex);
+			}
+		});
 
 		// Собираем панель данных
 		dataPanel.add(realtyObjectListScrollPane, "push, grow, w 200, h 80, wrap");
@@ -119,7 +145,7 @@ public class RealtyObjectListDialog extends JDialog {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
-		this.pack();
+		this.setSize(400, 300);
 		this.setLocationRelativeTo(parentFrame);
 
 	}

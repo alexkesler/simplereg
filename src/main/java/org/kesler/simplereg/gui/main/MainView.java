@@ -50,7 +50,7 @@ public class MainView extends JFrame {
 		super("Регистрация заявителей в Росреестре");
 
 		this.controller = controller;
-		this.setSize(800,600);
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		List<Image> imageList = new ArrayList<Image>();
 		imageList.add(ResourcesUtil.getIcon("cabinet.png").getImage());
@@ -119,10 +119,14 @@ public class MainView extends JFrame {
 		JMenuItem applicatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenApplicators));
 		applicatorsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenApplicators.getIconName()));
 
+		JMenuItem realtyObjectsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.RealtyObjects));
+		realtyObjectsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.RealtyObjects.getIconName()));
+
 		// Собираем меню задач
 		tasksMenu.add(reestrMenuItem);
 		tasksMenu.add(statisticMenuItem);
 		tasksMenu.add(applicatorsMenuItem);
+		tasksMenu.add(realtyObjectsMenuItem);
 
 		// Меню справочников
 		JMenu dictMenu = new JMenu("Справочники");
@@ -134,9 +138,14 @@ public class MainView extends JFrame {
 		JMenuItem statusesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.ReceptionStatuses));
 		statusesMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.ReceptionStatuses.getIconName()));
 
+		JMenuItem realtyObjectTypesMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.RealtyObjectTypes));
+		realtyObjectTypesMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.RealtyObjectTypes.getIconName()));
+
+
 		
 		dictMenu.add(servicesMenuItem);
 		dictMenu.add(statusesMenuItem);
+		dictMenu.add(realtyObjectTypesMenuItem);
 
 		// Меню настроек
 		JMenu optionsMenu = new JMenu("Настройки");
@@ -200,10 +209,11 @@ public class MainView extends JFrame {
 		mainPanel.add(BorderLayout.NORTH,buttonPanel);
 
 		this.add(mainPanel, BorderLayout.CENTER);	
-
-		//this.pack();	
+	
+		this.setSize(800,600);
 
 		this.setLocationRelativeTo(null);
+		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 
 	public MainViewReceptionsTableModel getTableModel () {

@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.realty;
 
+import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -16,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
+import org.kesler.simplereg.logic.realty.RealtyTypesModel;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
@@ -41,6 +43,7 @@ public class RealtyObjectDialog extends JDialog {
 		realtyObject = new RealtyObject();
 
 		createGUI();
+		loadGUIDataFromRealtyObject();
 	}
 
 	public RealtyObjectDialog(JDialog parentDialog, RealtyObject realtyObject) {
@@ -50,6 +53,7 @@ public class RealtyObjectDialog extends JDialog {
 		this.realtyObject = realtyObject;
 
 		createGUI();
+		loadGUIDataFromRealtyObject();
 
 	}
 
@@ -70,6 +74,12 @@ public class RealtyObjectDialog extends JDialog {
 
 
 		realtyTypeComboBox = new JComboBox();
+
+		List<RealtyType> realtyTypes = RealtyTypesModel.getInstance().getAllRealtyTypes();
+		for (RealtyType realtyType: realtyTypes) {
+			realtyTypeComboBox.addItem(realtyType);
+		}
+
 
 		addressTextField = new JTextField(45);
 
