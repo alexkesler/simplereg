@@ -19,6 +19,8 @@ import org.kesler.simplereg.gui.operators.OperatorsViewController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.ReceptionStatusListDialogController;
+import org.kesler.simplereg.gui.applicator.FLListDialogController;
+import org.kesler.simplereg.gui.applicator.ULListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
@@ -98,8 +100,11 @@ public class MainViewController implements MainViewListener,
 			case OpenStatistic: 
 				openStatistic();
 				break;
-			case OpenApplicators: 
-				openApplicators();
+			case FLs: 
+				openFLs();
+				break;
+			case ULs: 
+				openULs();
 				break;
 			case Services: 
 				openServicesView();
@@ -148,7 +153,8 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.FLs).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.ULs).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.RealtyObjects).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 			}
@@ -157,7 +163,8 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.OpenApplicators).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.FLs).setEnabled(true);
+				mainView.getActionByCommand(MainViewCommand.ULs).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.RealtyObjects).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
@@ -193,6 +200,8 @@ public class MainViewController implements MainViewListener,
 		processDialog.setVisible(true);
 		List<Reception> receptions = receptionsModel.getAllReceptions();
 		mainView.getTableModel().setReceptions(receptions);
+		// Освобождаем ресурсы
+		processDialog.dispose();
 		processDialog = null;
 	}
 
@@ -204,9 +213,7 @@ public class MainViewController implements MainViewListener,
 
 	@Override 
 	public void receptionsModelStateChanged(ReceptionsModelState state) {
-		if (processDialog == null) {
-			return;
-		}
+		if (processDialog == null) return; // работаем только при существующем диалоге
 		switch (state) {
 			case UPDATED:
 				processDialog.setVisible(false);
@@ -254,6 +261,9 @@ public class MainViewController implements MainViewListener,
 			} else {
 				CurrentOperator.getInstance().resetOperator();
 			}
+			// Освобождаем ресурсы
+			loginDialog.dispose();
+			loginDialog = null;
 			
 		} else  if (processDialog.getResult() == ProcessDialog.ERROR) {
 			JOptionPane.showMessageDialog(mainView, "Ошибка при подключении к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -261,17 +271,19 @@ public class MainViewController implements MainViewListener,
 			/// действия при отмене чтения  - пока ничего не делаем
 		}
 
+		processDialog.dispose();
 		processDialog = null;
 
 	}
 
 	public void operatorsModelStateChanged(OperatorsModelState state) {
+		if (processDialog == null) return; // Если диалог процесса пуст, нам нечего здесь делать
 		switch (state) {
 			case CONNECTING:
-				if (processDialog != null) processDialog.setContent("Соединяюсь...");
+				processDialog.setContent("Соединяюсь...");
 				break;
 			case READING:
-				if (processDialog != null) processDialog.setContent("Читаю список операторов из базы...");
+				processDialog.setContent("Читаю список операторов из базы...");
 				break;
 			case UPDATED:
 				processDialog.setVisible(false);
@@ -308,8 +320,12 @@ public class MainViewController implements MainViewListener,
 		ReceptionStatusListDialogController.getInstance().openDialog(mainView);
 	}
 
-	private void openApplicators() {
-		
+	private void openFLs() {
+		FLListDialogController.getInstance().openDialog(mainView);
+	}
+
+	private void openULs() {
+		ULListDialogController.getInstance().openDialog(mainView);
 	}
 
 	private void openReceptionsReestr() {

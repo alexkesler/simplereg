@@ -33,7 +33,9 @@ public class ULListDialogController {
 		if (dialog.getResult() == ULListDialog.OK) {
 			ul = dialog.getSelectedUL();
 		}
-
+		// освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
 		return ul;
 
 	}
@@ -61,6 +63,9 @@ public class ULListDialogController {
 			}
 			
 		}
+		// Освобождаем ресурсы
+		ulDialog.dispose();
+		ulDialog = null;
 
 	}
 

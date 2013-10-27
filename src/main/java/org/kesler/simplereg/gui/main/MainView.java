@@ -113,19 +113,23 @@ public class MainView extends JFrame {
 		JMenuItem reestrMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenReceptionsReestr));
 		reestrMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenReceptionsReestr.getIconName()));
 
-		JMenuItem statisticMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenStatistic));
-		statisticMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenStatistic.getIconName()));
+		// JMenuItem statisticMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenStatistic));
+		// statisticMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenStatistic.getIconName()));
 		
-		JMenuItem applicatorsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenApplicators));
-		applicatorsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenApplicators.getIconName()));
+		JMenuItem flsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.FLs));
+		flsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.FLs.getIconName()));
+
+		JMenuItem ulsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.ULs));
+		ulsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.ULs.getIconName()));
 
 		JMenuItem realtyObjectsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.RealtyObjects));
 		realtyObjectsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.RealtyObjects.getIconName()));
 
 		// Собираем меню задач
 		tasksMenu.add(reestrMenuItem);
-		tasksMenu.add(statisticMenuItem);
-		tasksMenu.add(applicatorsMenuItem);
+		// tasksMenu.add(statisticMenuItem);
+		tasksMenu.add(flsMenuItem);
+		tasksMenu.add(ulsMenuItem);
 		tasksMenu.add(realtyObjectsMenuItem);
 
 		// Меню справочников

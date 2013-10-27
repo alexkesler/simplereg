@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import org.kesler.simplereg.logic.applicator.FL;
 import org.kesler.simplereg.logic.applicator.FLModel;
 
-class FLListDialogController {
+public class FLListDialogController {
 	private FLModel model;
 	private FLListDialog dialog;
 	private static FLListDialogController instance = null;
@@ -35,7 +35,14 @@ class FLListDialogController {
 		filterFLList("");
 		dialog = new FLListDialog(frame, this);
 		dialog.setVisible(true);
-		return dialog.getSelectedFL();
+		// получаем выбронное физ лицо
+		FL selectedFL = dialog.getSelectedFL();
+		
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+
+		return selectedFL;
 	} 
 
 	/**
@@ -60,9 +67,10 @@ class FLListDialogController {
 			int index = model.addFL(fl);
 			if (index != -1) {
 				dialog.addedFL(index);
-			}
-			
+			}	
 		}
+		flDialog.dispose();
+		flDialog = null;
 	}
 
 	/**
@@ -81,9 +89,11 @@ class FLListDialogController {
 			int index = model.addFL(fl);
 			if (index != -1) {
 				dialog.addedFL(index);
-			}
-			
+			}			
 		}
+		// Освобождаем ресурсы
+		flDialog.dispose();
+		flDialog = null;
 	}
 
 
@@ -96,6 +106,10 @@ class FLListDialogController {
 			model.updateFL(fl);
 			dialog.updatedFL(index);
 		}
+
+		// Освобождаем ресурсы
+		flDialog.dispose();
+		flDialog = null;
 
 	}
 
