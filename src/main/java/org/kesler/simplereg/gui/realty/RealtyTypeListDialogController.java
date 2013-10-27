@@ -36,6 +36,10 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 			realtyType = model.getAllRealtyTypes().get(dialog.getSelectedIndex());
 		}
 
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+
 		return realtyType;
 	}
 
@@ -54,6 +58,9 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 			dialog.addedItem(index);			
 		}
 
+		// Освобождаем ресурсы
+		realtyTypeDialog.dispose();
+		realtyTypeDialog = null;		
 		
 	}
 
@@ -68,6 +75,11 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 			model.updateRealtyType(realtyType);	
 			dialog.updatedItem(index);		
 		}
+
+		// Освобождаем ресурсы
+		realtyTypeDialog.dispose();
+		realtyTypeDialog = null;		
+
 	}
 
 	public void removeItem(int index) {

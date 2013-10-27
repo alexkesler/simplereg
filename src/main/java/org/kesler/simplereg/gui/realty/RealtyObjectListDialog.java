@@ -33,7 +33,7 @@ public class RealtyObjectListDialog extends JDialog {
 	public static final int OK = 0;
 	public static final int CANCEL = 1; 
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 
 	private JFrame parentFrame;
 
