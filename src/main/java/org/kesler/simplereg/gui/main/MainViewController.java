@@ -193,6 +193,7 @@ public class MainViewController implements MainViewListener,
 		processDialog.setVisible(true);
 		List<Reception> receptions = receptionsModel.getAllReceptions();
 		mainView.getTableModel().setReceptions(receptions);
+		processDialog = null;
 	}
 
 	class ReceptionsReader implements Runnable {
@@ -203,25 +204,28 @@ public class MainViewController implements MainViewListener,
 
 	@Override 
 	public void receptionsModelStateChanged(ReceptionsModelState state) {
+		if (processDialog == null) {
+			return;
+		}
 		switch (state) {
 			case UPDATED:
-				if(processDialog != null) processDialog.setVisible(false);
+				processDialog.setVisible(false);
 			break;
 			
 			case CONNECTING:
-				if(processDialog != null) processDialog.setContent("Соединяюсь...");
+				processDialog.setContent("Соединяюсь...");
 			break;
 
 			case READING:
-				if(processDialog != null) processDialog.setContent("Получаю список приемов");
+				processDialog.setContent("Получаю список приемов");
 			break;	
 			
 			case ERROR:
-				if(processDialog != null) {
-					processDialog.setContent("Ошибка");
-					processDialog.setResult(ProcessDialog.ERROR);
-					processDialog.setVisible(false);
-				}
+				
+				processDialog.setContent("Ошибка");
+				processDialog.setResult(ProcessDialog.ERROR);
+				processDialog.setVisible(false);
+				
 			break;		
 
 		}
@@ -256,6 +260,8 @@ public class MainViewController implements MainViewListener,
 		} else if (processDialog.getResult() == ProcessDialog.CANCEL) {
 			/// действия при отмене чтения  - пока ничего не делаем
 		}
+
+		processDialog = null;
 
 	}
 

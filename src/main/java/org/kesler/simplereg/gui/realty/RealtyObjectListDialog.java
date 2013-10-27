@@ -5,6 +5,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
@@ -13,6 +14,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 
 import java.awt.BorderLayout;
 
@@ -30,14 +33,20 @@ public class RealtyObjectListDialog extends JDialog {
 	public static final int OK = 0;
 	public static final int CANCEL = 1; 
 
+	private static final boolean DEBUG = true;
+
 	private JFrame parentFrame;
 
 	private int result = NONE;
 	private int selectedRealtyObjectIndex = -1;
 
-	RealtyObjectListModel realtyObjectListModel;
-
 	RealtyObjectListDialogController controller;
+
+	JList realtyObjectList;
+	RealtyObjectListModel realtyObjectListModel;
+	JTextField filterTextField;	
+
+
 
 	public RealtyObjectListDialog(RealtyObjectListDialogController controller, JFrame parentFrame) {
 		super(parentFrame, "Объекты недвижимости", true);
@@ -54,7 +63,7 @@ public class RealtyObjectListDialog extends JDialog {
 		RealtyObject selectedRealtyObject = null;
 
 		if (selectedRealtyObjectIndex != -1) {
-			selectedRealtyObject = controller.getAllRealtyObjects().get(selectedRealtyObjectIndex);
+			selectedRealtyObject = controller.getRealtyObjects().get(selectedRealtyObjectIndex);
 		}
 		
 		return selectedRealtyObject;
@@ -68,9 +77,41 @@ public class RealtyObjectListDialog extends JDialog {
 		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
 
+		filterTextField = new JTextField(15);
+
+		filterTextField.getDocument().addDocumentListener(new DocumentListener() {
+			public void insertUpdate(DocumentEvent event) {
+				filterChanged();
+			}
+
+			public void removeUpdate(DocumentEvent event) {
+				filterChanged();
+			}
+
+			public void changedUpdate(DocumentEvent event) {
+				filterChanged();
+			}
+
+			private void filterChanged() {
+				// фильтруем список
+				String filterString = filterTextField.getText();
+				controller.filterRealtyObjects(filterString);
+				realtyObjectListModel.updateRealtyObjects();
+
+				if (DEBUG) System.out.println("list size: " + controller.getRealtyObjects().size());
+				// Выбираем первый элемент
+				if(controller.getRealtyObjects().size() > 0) {
+					selectedRealtyObjectIndex = 0;
+					realtyObjectList.setSelectedIndex(selectedRealtyObjectIndex);
+					if (DEBUG) System.out.println("selected item: " + selectedRealtyObjectIndex);
+				}				
+			}
+		});
+
+
 		realtyObjectListModel = new RealtyObjectListModel();
 
-		final JList realtyObjectList = new JList(realtyObjectListModel);
+		realtyObjectList = new JList(realtyObjectListModel);
 		realtyObjectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		realtyObjectList.addListSelectionListener(new ListSelectionListener() {
@@ -112,11 +153,23 @@ public class RealtyObjectListDialog extends JDialog {
 			}
 		});
 
+		JButton updateButton = new JButton();
+		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.readRealtyObjects();
+				controller.filterRealtyObjects(filterTextField.getText());
+				realtyObjectListModel.updateRealtyObjects();
+			}
+		});
+
 		// Собираем панель данных
+		dataPanel.add(filterTextField, "wrap");
 		dataPanel.add(realtyObjectListScrollPane, "push, grow, w 200, h 80, wrap");
 		dataPanel.add(addButton, "span");
 		dataPanel.add(editButtton);
-		dataPanel.add(removeButton, "span");
+		dataPanel.add(removeButton);
+		dataPanel.add(updateButton, "wrap");
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -168,7 +221,7 @@ public class RealtyObjectListDialog extends JDialog {
 		List<RealtyObject> realtyObjects;
 
 		RealtyObjectListModel() {
-			realtyObjects = controller.getAllRealtyObjects();
+			realtyObjects = controller.getRealtyObjects();
 		}
 
 		@Override
@@ -194,6 +247,11 @@ public class RealtyObjectListDialog extends JDialog {
 
 		public void realtyObjectRemoved(int index) {
 			fireIntervalRemoved(this, index, index);
+		}
+
+		public void updateRealtyObjects() {
+			realtyObjects = controller.getRealtyObjects();
+			fireContentsChanged(this, 0, realtyObjects.size()-1);
 		}
 
 	}

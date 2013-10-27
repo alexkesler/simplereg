@@ -196,11 +196,19 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			return ;
 		}
 
+		// В конце процедуры удаляем диалог
+		processDialog.dispose();
+		processDialog = null;
+
 		// Зтем фильтруем записи в отдельном потоке
 		processDialog = new ProcessDialog(view, "Работаю", "Фильтрую записи");
 		Thread receptionsFiltererThread = new Thread(new ReceptionsFilterer());
 		receptionsFiltererThread.start();
 		processDialog.setVisible(true);
+
+		// В конце процедуры удаляем диалог
+		processDialog.dispose();
+		processDialog = null;
 
 	}
 
@@ -243,17 +251,23 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		if(processDialog == null) return; // Управление происходит через processDialog поэтому если не задан - выходим
 		switch (state) {
 			case CONNECTING:
-				processDialog.setContent("Соединяюсь");
+				if(processDialog.isVisible()) {
+					processDialog.setContent("Соединяюсь");
+				}	
 			break;
 			case READING:
-				processDialog.setContent("Читаю список приемов");
+				if(processDialog.isVisible()) {
+					processDialog.setContent("Читаю список приемов");
+				}	
 			break;
 			case UPDATED:
 				processDialog.setContent("Готово");
 				processDialog.setVisible(false);
 			break;
 			case FILTERING:
-				processDialog.setContent("Фильтрую список приемов");
+				if(processDialog.isVisible()) {
+					processDialog.setContent("Фильтрую список приемов");
+				}	
 			break;
 			case FILTERED:
 				processDialog.setContent("Готово");
@@ -261,6 +275,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			break;		
 			case ERROR:
 				processDialog.setResult(ProcessDialog.ERROR);
+				processDialog.setContent("Ошибка");
 				processDialog.setVisible(false);
 			break;
 		}					

@@ -281,8 +281,9 @@ public class ReestrView extends JFrame {
 
 		this.setContentPane(mainPanel);
 		//this.pack();
-		//this.setLocationRelativeTo(null);
+		
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setLocationRelativeTo(null);
 	}
 
 	class FilterListModel extends AbstractListModel {

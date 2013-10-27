@@ -47,9 +47,7 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		return realtyObject;
 	}
 
-	public List<RealtyObject> getAllRealtyObjects() {
-
-		
+	public void readRealtyObjects() {
 		Thread realtyListReaderThread = new Thread(new RealtyListReader());
 
 		processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список объектов недвижимости");
@@ -60,18 +58,26 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		if (processDialog.getResult() == ProcessDialog.ERROR) {
 			JOptionPane.showMessageDialog(dialog, "Ошибка чтения списка объектов недвижимости", "Ошибка", JOptionPane.ERROR_MESSAGE);
 		}
+		processDialog.dispose();
+		processDialog = null;
 
+	}
 
-		return RealtyObjectsModel.getInstance().getAllRealtyObjects();
+	public List<RealtyObject> getRealtyObjects() {
 
+		return model.getFilteredRealtyObjects();
 
+	}
+
+	public void filterRealtyObjects(String filterString) {
+		model.filterRealtyObjects(filterString);
 	}
 
 	public void addRealtyObject() {
 
 		RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog);
 		realtyObjectDialog.setVisible(true);
-		
+
 		if (realtyObjectDialog.getResult() == RealtyObjectDialog.OK) {
 			RealtyObject realtyObject = realtyObjectDialog.getRealtyObject();
 			int index = model.addRealtyObject(realtyObject);
@@ -106,6 +112,9 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 	@Override
 	public void realtyObjectsModelStateChanged(RealtyObjectsModelState state) {
+		if (processDialog == null) {
+			return;
+		}
 		switch (state) {
 			case CONNECTING:
 				processDialog.setContent("Соединяюсь...");			

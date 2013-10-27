@@ -14,6 +14,8 @@ public class RealtyObjectsModel implements DAOListener {
 	private List<RealtyObjectsModelStateListener> listeners;
 
 	private List<RealtyObject> realtyObjects;
+	private List<RealtyObject> filteredRealtyObjects;
+	private String filterString;
 
 	private RealtyObjectsModel() {
 		listeners = new ArrayList<RealtyObjectsModelStateListener>();
@@ -45,6 +47,29 @@ public class RealtyObjectsModel implements DAOListener {
 		
 		realtyObjects = DAOFactory.getInstance().getRealtyObjectDAO().getAllItems();
 		notifyListeners(RealtyObjectsModelState.UPDATED);
+
+	}
+
+	public void filterRealtyObjects(String filterString) {
+		this.filterString = filterString;
+		filteredRealtyObjects = getAllRealtyObjects();
+
+		if (!filterString.isEmpty()) {
+			filteredRealtyObjects = new ArrayList<RealtyObject>();
+			for (RealtyObject realtyObject: realtyObjects) {
+				if (realtyObject.toString().toLowerCase().indexOf(filterString.toLowerCase()) != -1) {
+					filteredRealtyObjects.add(realtyObject);
+				}
+			}
+		}
+
+	}
+
+	public List<RealtyObject> getFilteredRealtyObjects() {
+		if (filteredRealtyObjects == null) {
+			filterRealtyObjects("");
+		}
+		return filteredRealtyObjects;
 
 	}
 
