@@ -38,8 +38,8 @@ public class GenericListDialog<T> extends JDialog {
 	private ItemsListModel itemsListModel;
 	private int selectedIndex;
 
-	public GenericListDialog(JFrame frame, GenericListDialogController controller) {
-		super(frame, "Статусы дел", true);
+	public GenericListDialog(JFrame frame, String name, GenericListDialogController controller) {
+		super(frame, name, true);
 		this.frame = frame;
 		this.controller = controller;
 

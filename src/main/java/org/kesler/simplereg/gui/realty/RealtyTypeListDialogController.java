@@ -29,7 +29,7 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 
 	public RealtyType showDialog(JFrame parentFrame) {
 		RealtyType realtyType = null;
-		dialog = new GenericListDialog<RealtyType>(parentFrame, this);
+		dialog = new GenericListDialog<RealtyType>(parentFrame, "Типы недвижимости", this);
 		dialog.setVisible(true);
 
 		if (dialog.getResult() == GenericListDialog.OK) {
