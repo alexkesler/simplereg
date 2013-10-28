@@ -23,8 +23,8 @@ public class HibernateUtil {
 
 		if (database == "h2") { 					///// для базы данных H2
 			driverClass = "org.h2.Driver";
-			connectionUrl = "jdbc:h2:" 
-			dialect = "org.hibernate.dialect.H2Dialect"
+			connectionUrl = "jdbc:h2:";
+			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database == "mysql") { 			///// для базы данных  MySQL
 			driverClass = "com.mysql.jdbc.Driver";
 			connectionUrl = "jdbc:mysql://" + server + ":3306/simplereg";

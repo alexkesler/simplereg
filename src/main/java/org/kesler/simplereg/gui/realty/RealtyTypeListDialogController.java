@@ -47,6 +47,10 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 		return model.getAllRealtyTypes();
 	}
 
+	public void readItems() {
+		model.readRealtyTypesFromDB();
+	}
+
 	public void openAddItemDialog() {
 
 		RealtyTypeDialog realtyTypeDialog = new RealtyTypeDialog(dialog);

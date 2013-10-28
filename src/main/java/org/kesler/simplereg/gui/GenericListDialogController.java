@@ -8,5 +8,6 @@ public interface GenericListDialogController<T> {
 	public void openAddItemDialog();
 	public void openEditItemDialog(int index);
 	public void removeItem(int index);
+	public void readItems();
 }	
 

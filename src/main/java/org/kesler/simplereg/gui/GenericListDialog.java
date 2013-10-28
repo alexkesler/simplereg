@@ -115,6 +115,16 @@ public class GenericListDialog<T> extends JDialog {
 			}
 		});
 
+		JButton updateButton = new JButton();
+		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.readItems();
+				itemsListModel.updateItems();
+			}
+		});
+
+
 		// собираем панель данных
 		dataPanel.add(itemsListScrollPane, "push, grow, wrap, w 200");
 		dataPanel.add(addItemButton);
@@ -192,6 +202,10 @@ public class GenericListDialog<T> extends JDialog {
 
 		void removedItem(int index) {
 			fireIntervalRemoved(this, index, index);
+		}
+
+		void updateItems() {
+			fireContentsChanged(this, 0, controller.getAllItems().size()-1);
 		}
 	}
 
