@@ -284,20 +284,21 @@ class MakeReceptionView extends JFrame{
 				return applicators.size();
 			}
 
-			public void fireIntervalAdded(Object source, int index0, int index1) {
-				super.fireIntervalAdded(source,index0,index1);
+			public void applicatorAdded(int index) {
+				fireIntervalAdded(this,index,index);
 			}
 
-			public void fireContentsChanged(Object source, int index0, int index1) {
-				super.fireContentsChanged(source,index0,index1);
+			public void applicatorUpdated(int index) {
+				fireContentsChanged(this,index,index);
 			}
 
-			public void fireIntervalRemoved(Object source, int index0, int index1) {
-				super.fireIntervalRemoved(source,index0,index1);
+			public void applicatorRemoved(int index) {
+				fireIntervalRemoved(this,index,index);
 			}
 
 			void setApplicators(List<Applicator> applicators) {
 				this.applicators = applicators;
+				fireContentsChanged(this, 0, applicators.size()-1);
 			}
 		}
 
@@ -305,15 +306,15 @@ class MakeReceptionView extends JFrame{
 
 		// Вызывается контроллером при добавлении заявителя
 		void applicatorAdded(int index) {
-			applicatorsListModel.fireIntervalAdded(this,index,index);
+			applicatorsListModel.applicatorAdded(index);
 		}
 
 		void applicatorUpdated(int index) {
-			applicatorsListModel.fireContentsChanged(this, index, index);
+			applicatorsListModel.applicatorUpdated(index);
 		}
 
 		void applicatorRemoved(int index) {
-			applicatorsListModel.fireIntervalRemoved(this,index,index);
+			applicatorsListModel.applicatorRemoved(index);
 		}
 
 		// Вызывается ApplicatorsReceptionViewState
