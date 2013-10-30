@@ -23,9 +23,15 @@ public class HibernateUtil {
 		String connectionUrl = "";
 		String dialect = "";
 
-		if (database.equals("h2")) { 					///// для базы данных H2
+
+
+		if (database.equals("h2 local")) { 					///// для локальной базы данных H2
 			driverClass = "org.h2.Driver";
-			connectionUrl = "jdbc:h2:simplereg";
+			connectionUrl = "jdbc:h2:" + OptionsUtil.getCurrentDir() + "simplereg";
+			dialect = "org.hibernate.dialect.H2Dialect";
+		} else if (database.equals("h2 net")) { 					///// для сетевой базы данных H2
+			driverClass = "org.h2.Driver";
+			connectionUrl = "jdbc:h2:tcp://" + server + "/simplereg";
 			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database.equals("mysql")) { 			///// для базы данных  MySQL
 			driverClass = "com.mysql.jdbc.Driver";

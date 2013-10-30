@@ -12,9 +12,21 @@ public class OptionsUtil {
 
 	private static final String fileName = "init.properties";
 
-	private static String dirSeparator = System.getProperty("file.separator");
+	private static String currentDir;
 
 	private static Properties options = new Properties();
+
+	static {
+
+		String jarPath = OptionsUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String dirSeparator = System.getProperty("file.separator");
+		
+		currentDir = new File(jarPath).getParent() + dirSeparator;
+	}
+
+	public static String getCurrentDir() {
+		return currentDir;
+	}
 
 
 	/**
@@ -22,10 +34,12 @@ public class OptionsUtil {
 	*/
 	public static void readOptions() {
 
-		File currentDir = new File(".");
+		// String jarPath = OptionsUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+
+		// File currentDir = new File(jarPath).getParentFile();
 		FileInputStream fis = null;
 		try {			
-			String filePath = currentDir.getCanonicalPath() + dirSeparator + fileName;
+			String filePath = currentDir + fileName;
 
 			fis = new FileInputStream(filePath);
 
@@ -60,10 +74,10 @@ public class OptionsUtil {
 
 	private static void setDefaultOptions() {
 		options = new Properties();
-		options.setProperty("db.server","localhost");
-		options.setProperty("db.driver", "h2");
-		options.setProperty("db.user","oper");
-		options.setProperty("db.password", "qwerty123");
+		options.setProperty("db.server","");
+		options.setProperty("db.driver", "h2 local");
+		options.setProperty("db.user","rroper");
+		options.setProperty("db.password", "q1w2e3R$");
 		options.setProperty("logic.initRecStatusCode", "1");
 	}
 
@@ -105,11 +119,10 @@ public class OptionsUtil {
 	*/
 	public static void saveOptions() {
 
-		File currentDir = new File(".");
 
 		FileOutputStream fos = null;
 		try {			
-			String filePath = currentDir.getCanonicalPath() + dirSeparator + fileName;
+			String filePath = currentDir + fileName;
 
 			fos = new FileOutputStream(filePath);
 

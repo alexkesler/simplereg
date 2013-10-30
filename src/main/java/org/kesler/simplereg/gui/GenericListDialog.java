@@ -30,6 +30,7 @@ public class GenericListDialog<T> extends JDialog {
 	public static int CANCEL = 1;
 
 	private int result = NONE;
+	private boolean isSelect = false;
 
 	private JFrame frame;
 	private GenericListDialogController<T> controller;
@@ -42,6 +43,17 @@ public class GenericListDialog<T> extends JDialog {
 		super(frame, name, true);
 		this.frame = frame;
 		this.controller = controller;
+
+		selectedIndex = -1;
+
+		createGUI();
+	}
+
+	public GenericListDialog(JFrame frame, String name, boolean isSelect, GenericListDialogController controller) {
+		super(frame, name, true);
+		this.frame = frame;
+		this.controller = controller;
+		this.isSelect = isSelect;
 
 		selectedIndex = -1;
 
@@ -134,12 +146,18 @@ public class GenericListDialog<T> extends JDialog {
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
-        JButton okButton = new JButton("Ok");         
+		String okString = "Ok";
+		if(isSelect) okString = "Выбрать";
+        JButton okButton = new JButton(okString);         
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				result = OK;
-				setVisible(false);
+				if (isSelect && selectedIndex == -1) {
+					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+				} else {
+					result = OK;
+					setVisible(false);										
+				}
 			}
 		});
 

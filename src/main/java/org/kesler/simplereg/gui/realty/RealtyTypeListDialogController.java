@@ -27,12 +27,12 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 		model = RealtyTypesModel.getInstance();
 	}
 
-	public RealtyType showDialog(JFrame parentFrame) {
+	public RealtyType showSelectDialog(JFrame parentFrame) {
 		RealtyType realtyType = null;
-		dialog = new GenericListDialog<RealtyType>(parentFrame, "Типы недвижимости", this);
+		dialog = new GenericListDialog<RealtyType>(parentFrame, "Типы недвижимости", true, this);
 		dialog.setVisible(true);
 
-		if (dialog.getResult() == GenericListDialog.OK) {
+		if (dialog.getResult() == GenericListDialog.OK && dialog.getSelectedIndex() != -1) {
 			realtyType = model.getAllRealtyTypes().get(dialog.getSelectedIndex());
 		}
 
@@ -43,14 +43,28 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 		return realtyType;
 	}
 
+	public void showDialog(JFrame parentFrame) {
+
+		dialog = new GenericListDialog<RealtyType>(parentFrame, "Типы недвижимости", this);
+		dialog.setVisible(true);
+
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+
+	}
+
+	@Override
 	public List<RealtyType> getAllItems() {
 		return model.getAllRealtyTypes();
 	}
 
+	@Override
 	public void readItems() {
 		model.readRealtyTypesFromDB();
 	}
 
+	@Override
 	public void openAddItemDialog() {
 
 		RealtyTypeDialog realtyTypeDialog = new RealtyTypeDialog(dialog);
@@ -68,6 +82,7 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 		
 	}
 
+	@Override
 	public void openEditItemDialog(int index) {
 
 		RealtyType realtyType = model.getAllRealtyTypes().get(index);
@@ -86,6 +101,7 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 
 	}
 
+	@Override
 	public void removeItem(int index) {
 
 		RealtyType realtyType = model.getAllRealtyTypes().get(index);

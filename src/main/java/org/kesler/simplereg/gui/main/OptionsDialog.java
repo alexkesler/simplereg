@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -30,6 +31,8 @@ public class OptionsDialog extends JDialog {
 	private JTextField serverTextField;
 	private JTextField userTextField;
 	private JTextField passwordTextField;
+
+	private JTextField initRecStatusCodeTextField;
 
 	private boolean changed = false;
 
@@ -64,8 +67,22 @@ public class OptionsDialog extends JDialog {
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
 		dbComboBox = new JComboBox();
-		dbComboBox.addItem("h2");
+		dbComboBox.addItem("h2 local");
+		dbComboBox.addItem("h2 net");
 		dbComboBox.addItem("mysql");
+		dbComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				// Проверяем БД и для локальной удаляем и делаем неактивным сервер 
+				String item = (String) dbComboBox.getSelectedItem();
+				if (item.equals("h2 local")) {
+					serverTextField.setText("");
+					serverTextField.setEnabled(false);
+				} else  {
+					serverTextField.setEnabled(true);
+				}
+
+			}
+		});
 
 		serverTextField = new JTextField(15);
 		userTextField = new JTextField(10);
@@ -74,7 +91,8 @@ public class OptionsDialog extends JDialog {
 		JPanel dbPanel = new JPanel(new MigLayout("wrap 2",
 													"[right][left]",
 													""));
-		dbPanel.setBorder(BorderFactory.createEtchedBorder());
+		dbPanel.setBorder(BorderFactory.createTitledBorder("Подключение"));
+
 		dbPanel.add(new JLabel("База данных"));
 		dbPanel.add(dbComboBox);
 		dbPanel.add(new JLabel("Сервер"));
@@ -84,10 +102,26 @@ public class OptionsDialog extends JDialog {
 		dbPanel.add(new JLabel("Пароль"));
 		dbPanel.add(passwordTextField);
 
-		dataPanel.add(dbPanel);
+
+		JPanel logicPanel = new JPanel(new MigLayout("wrap 2",
+													"[right][left]",
+													""));
+		logicPanel.setBorder(BorderFactory.createTitledBorder("Служебные"));
+		
+
+		initRecStatusCodeTextField = new JTextField(5);
+
+		logicPanel.add(new JLabel("Номер начального состояния для дела"));
+		logicPanel.add(initRecStatusCodeTextField);
+
+
+
+
+		dataPanel.add(dbPanel, "growx, wrap");
+		dataPanel.add(logicPanel, "growx, wrap");
 
 		JPanel buttonPanel = new JPanel();
-		JButton okButton = new JButton("Ok");
+		JButton okButton = new JButton("Сохранить");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (saveOptionsFromGUI()) {
@@ -123,10 +157,14 @@ public class OptionsDialog extends JDialog {
 		String user = options.getProperty("db.user");
 		String password = options.getProperty("db.password");
 
+		String initRecStatusCode = options.getProperty("logic.initRecStatusCode");
+
 		dbComboBox.setSelectedItem(db);
 		serverTextField.setText(server);
 		userTextField.setText(user);
 		passwordTextField.setText(password);
+
+		initRecStatusCodeTextField.setText(initRecStatusCode);
 
 	}
 
@@ -137,10 +175,27 @@ public class OptionsDialog extends JDialog {
 		String user = userTextField.getText();
 		String password = passwordTextField.getText();
 
+		String initRecStatusCode = initRecStatusCodeTextField.getText();
+
+		if (user.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Поле Логин не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+		try {
+			Integer.parseInt(initRecStatusCode);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(this, "Код статуса должен быть числом", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+
+
 		OptionsUtil.setOption("db.driver", db);
 		OptionsUtil.setOption("db.server", server);
 		OptionsUtil.setOption("db.user", user);
 		OptionsUtil.setOption("db.password", password);
+
+		OptionsUtil.setOption("logic.initRecStatusCode", initRecStatusCode);
 
 		OptionsUtil.saveOptions();
 
