@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 public class OptionsUtil {
 
 	private static final String fileName = "init.properties";
+
 	private static String dirSeparator = System.getProperty("file.separator");
 
 	private static Properties options = new Properties();
@@ -82,10 +83,22 @@ public class OptionsUtil {
 	* @param propName Наименоание опции
 	*/
 	public static String getOption(String propName) {
-		readOptions();
+		if (options == null) {
+			readOptions();
+		}
 		return options.getProperty(propName);
 	}
 
+	/**
+	* Задает опцию в настройках приложения, по имени
+	* @param propName Наименоание опции
+	*/
+	public static void setOption(String propName, String value) {
+		if (options == null) {
+			readOptions();
+		}
+		options.setProperty(propName, value);
+	}
 
 	/**
 	* Сохраняет настройки приложения в файл
@@ -93,6 +106,7 @@ public class OptionsUtil {
 	public static void saveOptions() {
 
 		File currentDir = new File(".");
+
 		FileOutputStream fos = null;
 		try {			
 			String filePath = currentDir.getCanonicalPath() + dirSeparator + fileName;

@@ -34,6 +34,7 @@ public class OperatorsModel implements DAOListener{
 
 	public void readOperators() {
 		operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
+		checkAdmin();
 		notifyListeners(OperatorsModelState.UPDATED);
 
 	}
@@ -84,6 +85,34 @@ public class OperatorsModel implements DAOListener{
 
 	public void saveOperators() {
 		DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
+	}
+
+
+	/**
+	* Функция проверяет наличие оператора с административными правами, если не находит его - добавляет
+	*/
+	private void checkAdmin() {
+		if (operators == null) {
+			return;
+		}
+
+		boolean adminExist = false;
+		for (Operator operator: operators) {
+			if (operator.getIsAdmin()) adminExist = true;
+		}
+
+		if (!adminExist) {
+			Operator admin = new Operator();
+			admin.setFirstName("Администратор по умолчанию");
+			admin.setIsControler(true);
+			admin.setIsAdmin(true);
+			admin.setEnabled(true);
+			admin.setPassword("");
+			operators.add(admin);
+
+			// добавить запись оператора в БД
+		}
+
 	}
 
 }

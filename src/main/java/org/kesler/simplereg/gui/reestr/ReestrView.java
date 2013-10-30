@@ -168,6 +168,7 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		// кнопка очистки фильтра
 		JButton resetFiltersButton = new JButton("Очистить");
 		resetFiltersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -175,6 +176,7 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		/// Применить фильтры
 		JButton applyFiltersButton = new JButton("Применить");
 		applyFiltersButton.setIcon(ResourcesUtil.getIcon("tick.png"));
 		applyFiltersButton.addActionListener(new ActionListener() {

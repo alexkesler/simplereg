@@ -2,16 +2,17 @@ package org.kesler.simplereg.gui.main;
 
 import javax.swing.JFrame;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
-
-import java.beans.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import java.util.Properties;
-import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -24,13 +25,13 @@ import org.kesler.simplereg.util.OptionsUtil;
 * Диалог настроек приложения
 */
 public class OptionsDialog extends JDialog {
-	private Properties options;
 
-	private String[] propNamesArray;
-	private List<JTextField> textFieds;
+	private JComboBox dbComboBox;
+	private JTextField serverTextField;
+	private JTextField userTextField;
+	private JTextField passwordTextField;
 
-	private String btn1String = "Сохранить";
-	private String btn2String = "Отмена";
+	private boolean changed = false;
 
 	/**
 	* Создает модальный диалог настроек программы
@@ -38,12 +39,13 @@ public class OptionsDialog extends JDialog {
 	*/
 	public OptionsDialog(JFrame frame) {
 		super(frame, "Параметры приложения", true);
-		options = OptionsUtil.getOptions();
 
-		this.setContentPane(createOptionPane());
+		createGUI();
 
 		this.pack();
 		this.setLocationRelativeTo(frame);
+
+		loadGUIFromOptions();
 
 
 	}
@@ -55,78 +57,94 @@ public class OptionsDialog extends JDialog {
 		setVisible(true);
 	}
 
-	private JOptionPane createOptionPane() {
-		
-		MigLayout layout = new MigLayout(
-										"wrap 2",
-										"[right][left]",
-										"");
 
-		JPanel dataPanel = new JPanel(layout);
-		
-        Set<String> propNamesSet = options.stringPropertyNames();
-        
-        propNamesArray = new String[propNamesSet.size()];
-        propNamesArray = propNamesSet.toArray(propNamesArray);
+	private void createGUI() {
+		JPanel mainPanel = new JPanel(new BorderLayout());
 
-        textFieds = new ArrayList<JTextField>();
+		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-        for (int i = 0; i < propNamesArray.length; i++) {
-        	dataPanel.add(new JLabel(propNamesArray[i]));
-        	JTextField textField = new JTextField(20);
-        	textField.setText(options.getProperty(propNamesArray[i]));
-        	textFieds.add(textField);
-        	dataPanel.add(textField);
-        }
+		dbComboBox = new JComboBox();
+		dbComboBox.addItem("h2");
+		dbComboBox.addItem("mysql");
 
-        JOptionPane optionPane = new JOptionPane(dataPanel,
-        										JOptionPane.PLAIN_MESSAGE,
-        										JOptionPane.OK_CANCEL_OPTION,
-        										null,
-        										new String[] {btn1String, btn2String},
-        										btn1String);
+		serverTextField = new JTextField(15);
+		userTextField = new JTextField(10);
+		passwordTextField = new JTextField(15);
 
-        optionPane.addPropertyChangeListener(new OptionsPropertyChangeListener());
+		JPanel dbPanel = new JPanel(new MigLayout("wrap 2",
+													"[right][left]",
+													""));
+		dbPanel.setBorder(BorderFactory.createEtchedBorder());
+		dbPanel.add(new JLabel("База данных"));
+		dbPanel.add(dbComboBox);
+		dbPanel.add(new JLabel("Сервер"));
+		dbPanel.add(serverTextField);
+		dbPanel.add(new JLabel("Логин"));
+		dbPanel.add(userTextField);
+		dbPanel.add(new JLabel("Пароль"));
+		dbPanel.add(passwordTextField);
 
-        return optionPane;
+		dataPanel.add(dbPanel);
 
-	}
-
-	private class OptionsPropertyChangeListener implements PropertyChangeListener {
-		
-		public void propertyChange(PropertyChangeEvent ev) {
-			String prop = ev.getPropertyName();
-			JOptionPane optionPane = (JOptionPane)(ev.getSource());
-
-			if (JOptionPane.VALUE_PROPERTY.equals(prop) ||
-				JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)) {
-
-				Object value = optionPane.getValue();
-
-				if (value == JOptionPane.UNINITIALIZED_VALUE) {
-					return;
-				}
-
-				optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
-
-				if (value == btn1String) {
-					for (int i = 0; i < propNamesArray.length; i++) {
-						options.setProperty(propNamesArray[i], textFieds.get(i).getText());
-					}
-					OptionsUtil.saveOptions();
-
+		JPanel buttonPanel = new JPanel();
+		JButton okButton = new JButton("Ok");
+		okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				if (saveOptionsFromGUI()) {
 					setVisible(false);
 				}
-
-				if (value == btn2String) {
-					setVisible(false);
-				}
-
-
-				
 			}
-		}
+		});
+
+		JButton cancelButton = new JButton("Отмена");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				setVisible(false);
+			}
+		});
+
+		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+
+		mainPanel.add(dataPanel, BorderLayout.CENTER);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+		this.setContentPane(mainPanel);
+
 	}
 
+	private void loadGUIFromOptions() {
+
+		Properties options = OptionsUtil.getOptions();
+
+
+		String db = options.getProperty("db.driver");
+		String server = options.getProperty("db.server");
+		String user = options.getProperty("db.user");
+		String password = options.getProperty("db.password");
+
+		dbComboBox.setSelectedItem(db);
+		serverTextField.setText(server);
+		userTextField.setText(user);
+		passwordTextField.setText(password);
+
+	}
+
+	private boolean saveOptionsFromGUI() {
+
+		String db = (String) dbComboBox.getSelectedItem();
+		String server = serverTextField.getText();
+		String user = userTextField.getText();
+		String password = passwordTextField.getText();
+
+		OptionsUtil.setOption("db.driver", db);
+		OptionsUtil.setOption("db.server", server);
+		OptionsUtil.setOption("db.user", user);
+		OptionsUtil.setOption("db.password", password);
+
+		OptionsUtil.saveOptions();
+
+		return true;
+	}
 
 }

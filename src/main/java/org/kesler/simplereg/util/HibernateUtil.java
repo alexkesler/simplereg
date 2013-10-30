@@ -24,23 +24,14 @@ public class HibernateUtil {
 		String dialect = "";
 
 		if (database.equals("h2")) { 					///// для базы данных H2
-			System.out.println("------Select H2 DB-------");
 			driverClass = "org.h2.Driver";
 			connectionUrl = "jdbc:h2:simplereg";
 			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database.equals("mysql")) { 			///// для базы данных  MySQL
-			System.out.println("------Select MySQL DB-------");
 			driverClass = "com.mysql.jdbc.Driver";
 			connectionUrl = "jdbc:mysql://" + server + ":3306/simplereg";
 			dialect = "org.hibernate.dialect.MySQLDialect";
 		}
-
-		System.out.println("----- Database: " + database);
-		System.out.println("----- DB Driver: " + driverClass);
-		System.out.println("----- Connection URL: " + connectionUrl);
-		System.out.println("----- User Name: " + userName);
-		System.out.println("----- Password: " + password);
-
 
 		Properties hibernateProperties = new Properties();
 		// hibernateProperties.setProperty("hibernate.connection.driver_class","org.h2.Driver");
