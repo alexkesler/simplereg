@@ -1,5 +1,7 @@
 package org.kesler.simplereg.gui.main;
 
+import java.util.List;
+import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -9,42 +11,34 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPasswordField;
 
-import java.beans.*;
-
-import java.awt.GridBagLayout;
 import java.awt.BorderLayout;
-import java.awt.Insets;
-import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
-import java.util.List;
-import java.util.Arrays;
 
+import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.gui.util.InfoDialog;
 
 
 /**
 * Диалог входа в систему
 * 
 */
-class LoginDialog extends JDialog{
+class LoginDialog extends AbstractDialog{
 
+	private JDialog currentDialog;
+
+	private List<Operator> operators;	
 	private Operator operator;
 
-	private JFrame frame;
 
 	private JComboBox loginComboBox;
 	private JPasswordField passwordTextField;
-	private boolean loginOk = false;
 
-	private JOptionPane optionPane;
-
-	private final String bth1String = "Ок";
-	private final String btn2String = "Отмена";
 
 	/**
 	* Создает модальный диалог входа в систему
@@ -53,19 +47,21 @@ class LoginDialog extends JDialog{
 	*/
 	public LoginDialog(JFrame frame, List<Operator> operators) {
 		super(frame,"Вход в систему", true);
-		this.frame = frame;
-		optionPane = createOptionPane();
+		currentDialog = this;
 
-		setOperators(operators);
+		this.operators = operators;
 
-		this.setContentPane(optionPane);
+		createGUI();
+		loadGUIFromOperators();
 
 		this.pack();
 		this.setLocationRelativeTo(frame);
 
 	}
 
-	private JOptionPane createOptionPane() {
+	private void createGUI() {
+
+		JPanel mainPanel = new JPanel(new BorderLayout());
 
 		JPanel dataPanel = new JPanel(new MigLayout());
 		dataPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -76,7 +72,13 @@ class LoginDialog extends JDialog{
 		// при выборе оператора - запоминаем его свойтство
 		loginComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				operator = (Operator) (loginComboBox.getSelectedItem());
+				int selectedIndex = loginComboBox.getSelectedIndex();
+				operator = operators.get(selectedIndex);
+
+				// передаем фокус строке ввода пароля
+				passwordTextField.selectAll();
+				passwordTextField.requestFocusInWindow();
+
 			}
 
 		});
@@ -85,38 +87,45 @@ class LoginDialog extends JDialog{
 
 		passwordTextField = new JPasswordField(20);
 		// при нажатии Enter - нажимаем кнопку ОК
-		passwordTextField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				optionPane.setValue(bth1String);
-			}
-		});
+		passwordTextField.addActionListener(new OkActionListener());
 
 		dataPanel.add(loginLabel);
 
-		dataPanel.add(loginComboBox, "wrap");
+		dataPanel.add(loginComboBox, "growx, wrap");
 
 		dataPanel.add(passwordLabel);
 
-		dataPanel.add(passwordTextField, "wrap");
+		dataPanel.add(passwordTextField, "growx, wrap");
 
-	
-		optionPane = new JOptionPane(dataPanel,
-									JOptionPane.PLAIN_MESSAGE,
-									JOptionPane.OK_CANCEL_OPTION,
-									null,
-									new String[] {bth1String, btn2String},
-									bth1String);
-		
-		optionPane.addPropertyChangeListener(new LoginPropertyChangeListener());
 
-		return optionPane;
+		JPanel buttonPanel = new JPanel();
+
+		JButton okButton = new JButton("Ok");
+		okButton.addActionListener(new OkActionListener());
+
+		JButton cancelButton = new JButton("Отмена");
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				result = CANCEL;
+				setVisible(false);
+			}
+		});
+
+		buttonPanel.add(okButton);
+		buttonPanel.add(cancelButton);
+
+		mainPanel.add(dataPanel, BorderLayout.CENTER);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+		setContentPane(mainPanel);	
+
 
 	}
 
-	private void setOperators(List<Operator> operators) {
+	private void loadGUIFromOperators() {
 		loginComboBox.removeAllItems();
 		for (Operator operator : operators) {
-			loginComboBox.addItem(operator);
+			loginComboBox.addItem(operator.getShortFIO());
 		}
 	}
 
@@ -129,68 +138,39 @@ class LoginDialog extends JDialog{
 
 
 	/**
-	* Возвращает флаг удачного входа
-	*/
-	public boolean isLoginOk() {
-		return loginOk;
-	}
-
-	/**
 	* Возвращает выбранного оператора
 	*/
 	public Operator getOperator() {
 		return operator;
 	}
 
-	// public char[] getPassword() {
-	// 	return passwordTextField.getPassword();
-	// }
-
-
-	private class LoginPropertyChangeListener implements PropertyChangeListener {
-		public void propertyChange(PropertyChangeEvent ev) {
-			String prop = ev.getPropertyName();
-			//JOptionPane optionPane = (JOptionPane)(ev.getSource());
-
-			if (JOptionPane.VALUE_PROPERTY.equals(prop) ||
-				JOptionPane.INPUT_VALUE_PROPERTY.equals(prop)) {
+	/**
+	* Отрабатывает действие по нажатию кнпки Щл или по нажатию клавиши Enter в поле ввода password.
+	*/
+	class OkActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent ev) {
+			char[] password = operator.getPassword().toCharArray();
+			char[] input = passwordTextField.getPassword();
+			if (input.length != password.length || !Arrays.equals(input, password)) {
+				// JOptionPane.showMessageDialog(currentDialog,
+    //     										"Неправильный пароль. Попробуйте еще раз.",
+    //     										"Ошибка",
+    //     										JOptionPane.ERROR_MESSAGE);
+				new InfoDialog(currentDialog, "Неправильный пароль", 1000).showInfo();
 				
-				Object value = optionPane.getValue();
+				passwordTextField.selectAll();
+				passwordTextField.requestFocusInWindow();
 
-				if (value == JOptionPane.UNINITIALIZED_VALUE) {
-					return ;
-				}
-
-				optionPane.setValue(JOptionPane.UNINITIALIZED_VALUE);
-
-				if (bth1String.equals(value)) {
-					char[] password = operator.getPassword().toCharArray();
-					char[] input = passwordTextField.getPassword();
-					if (input.length != password.length || !Arrays.equals(input, password)) {
-						JOptionPane.showMessageDialog(frame,
-                										"Неправильный пароль. Попробуйте еще раз.",
-                										"Ошибка",
-                										JOptionPane.ERROR_MESSAGE);
-						passwordTextField.selectAll();
-						passwordTextField.requestFocusInWindow();
-
-					} else {
-						passwordTextField.setText(null);
-						Arrays.fill(input,'0');
-						Arrays.fill(password, '0');
-						loginOk = true;
-						setVisible(false);
-						JOptionPane.showMessageDialog(frame,
-                										"Добро пожаловать, " + operator.getFIO() + "!",
-                										"Добро пожаловать!",
-                										JOptionPane.INFORMATION_MESSAGE);
-					}
-				} else {
-					setVisible(false);
-				}
+			} else {
+				passwordTextField.setText(null);
+				Arrays.fill(input,'0');
+				Arrays.fill(password, '0');
 				
+				result = OK;
+				setVisible(false);
+
 			}
-		}
-	}
+		}	
+	} 
 
 }

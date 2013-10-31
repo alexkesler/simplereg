@@ -8,12 +8,13 @@ import org.kesler.simplereg.dao.impl.FLDAOImpl;
 import org.kesler.simplereg.dao.impl.ULDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
 
+import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
-	private static OperatorDAO operatorDAO = null;
+	private static GenericDAO<Operator> operatorDAO = null;
 	private static ReceptionDAO receptionDAO = null;
 	private static FLDAO flDAO = null;
 	private static ULDAO ulDAO = null;
@@ -37,9 +38,9 @@ public class DAOFactory {
 	}
 
 
-	public OperatorDAO getOperatorDAO() {
+	public GenericDAO<Operator> getOperatorDAO() {
 		if (operatorDAO == null) {
-			operatorDAO = new OperatorDAOImpl();
+			operatorDAO = new GenericDAOImpl<Operator>(Operator.class);
 		}
 		return operatorDAO;
 	}

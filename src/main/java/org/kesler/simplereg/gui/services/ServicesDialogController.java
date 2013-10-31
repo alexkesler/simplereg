@@ -51,6 +51,9 @@ public class ServicesDialogController implements ServicesModelListener{
 			selectedService = dialog.getSelectedService();
 		}
 
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
 		return selectedService;
 	}
 
@@ -58,6 +61,10 @@ public class ServicesDialogController implements ServicesModelListener{
 		dialog = new EditServicesDialog(frame, this);
 		reloadTree();
 		dialog.setVisible(true);
+
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
 	}
 
 
@@ -73,20 +80,32 @@ public class ServicesDialogController implements ServicesModelListener{
 			model.addService(newService);               // сохраняем услугу в базу	
 		} 
 
+		// Освобождаем ресурсы
+		serviceDialog.dispose();
+		serviceDialog = null;
+
+
 		return newService;
 
 	}
 
 
 	public boolean editService(Service service) {
+		boolean result = true;
 		ServiceDialog serviceDialog = new ServiceDialog(dialog, service);
 		serviceDialog.setVisible(true);
 		if (serviceDialog.getResult() == ServiceDialog.OK) {
 			model.updateService(service);
-			return true;
+			result = true;
 		} else {
-			return false;	
+			result = false;	
 		}
+
+		// Освобождаем ресурсы
+		serviceDialog.dispose();
+		serviceDialog = null;
+
+		return true;
 	}
 
 	public void removeService(Service service) {
@@ -116,6 +135,10 @@ public class ServicesDialogController implements ServicesModelListener{
 			JOptionPane.showMessageDialog(null, "Ошибка подключения к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return ;
 		}
+
+		// Освобождаем ресурсы
+		processDialog.dispose();
+		processDialog = null;
 
 		// получаем загруженый список
 		List<Service> services = model.getAllServices();

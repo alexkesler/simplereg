@@ -26,10 +26,10 @@ public class Operator extends AbstractEntity{
 	private String password;
 
 	@Column(name="IsControler")
-	private Boolean isControler;
+	private Boolean controler;
 
 	@Column(name="IsAdmin")
-	private Boolean isAdmin;
+	private Boolean admin;
 
 	@Column(name="Enabled")
 	private Boolean enabled;
@@ -91,23 +91,23 @@ public class Operator extends AbstractEntity{
 		this.password = password;
 	}
 
-	public Boolean getIsControler() {
-		return isControler;
+	public Boolean isControler() {
+		return controler;
 	}
 
-	public void setIsControler(Boolean isControler) {
-		this.isControler = isControler;
+	public void setControler(Boolean controler) {
+		this.controler = controler;
 	}
 
-	public Boolean getIsAdmin() {
-		return isAdmin;
+	public Boolean isAdmin() {
+		return admin;
 	}
 
-	public void setIsAdmin(Boolean isAdmin) {
-		this.isAdmin = isAdmin;
+	public void setAdmin(Boolean admin) {
+		this.admin = admin;
 	}
 
-	public Boolean getEnabled() {
+	public Boolean isEnabled() {
 		return enabled;
 	}
 
@@ -117,6 +117,21 @@ public class Operator extends AbstractEntity{
 
 	@Override 
 	public String toString() {
-		return getFIO();
+		String controlerString = "";
+		if (controler) {
+			controlerString = "Контр;";
+		}
+
+		String adminString = "";
+		if (admin) {
+			adminString = "Админ;";
+		}
+
+		String enabledString = "";
+		if (enabled) {
+			enabledString = "Действ;";
+		} 
+
+		return getFIO() + " (" + controlerString + adminString + enabledString + ")";
 	}
 }

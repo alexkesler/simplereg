@@ -14,8 +14,10 @@ import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
+import org.kesler.simplereg.gui.util.InfoDialog;
+
 import org.kesler.simplereg.gui.services.ServicesDialogController;
-import org.kesler.simplereg.gui.operators.OperatorsViewController;
+import org.kesler.simplereg.gui.operators.OperatorListDialogController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.ReceptionStatusListDialogController;
@@ -149,7 +151,7 @@ public class MainViewController implements MainViewListener,
 			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
 			
-			if (operator.getIsControler()) { // для контролера
+			if (operator.isControler()) { // для контролера
 				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
@@ -159,7 +161,7 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 			}
 
-			if (operator.getIsAdmin()) { // для администратора
+			if (operator.isAdmin()) { // для администратора
 				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
@@ -256,14 +258,19 @@ public class MainViewController implements MainViewListener,
 			loginDialog.showDialog();
 
 			// делаем проверку на итог - назначаем оператора
-			if (loginDialog.isLoginOk()) {
-				CurrentOperator.getInstance().setOperator(loginDialog.getOperator());
+			if (loginDialog.getResult() == LoginDialog.OK) {
+				Operator operator = loginDialog.getOperator();
+				CurrentOperator.getInstance().setOperator(operator);
+				new InfoDialog(mainView, "<html>Добро пожаловать, </br>" + 
+													operator.getFirstName() + 
+													" " + operator.getParentName() + "!</html>", 1000).showInfo();
 			} else {
 				CurrentOperator.getInstance().resetOperator();
 			}
 			// Освобождаем ресурсы
 			loginDialog.dispose();
 			loginDialog = null;
+
 			
 		} else  if (processDialog.getResult() == ProcessDialog.ERROR) {
 			JOptionPane.showMessageDialog(mainView, "Ошибка при подключении к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -313,7 +320,7 @@ public class MainViewController implements MainViewListener,
 	}
 
 	private void openOperators() {
-		OperatorsViewController.getInstance().openView();		
+		OperatorListDialogController.getInstance().showDialog(mainView);		
 	}
 
 	private void openReceptionStatuses() {

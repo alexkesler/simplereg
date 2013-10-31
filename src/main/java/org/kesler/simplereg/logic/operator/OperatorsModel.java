@@ -33,7 +33,7 @@ public class OperatorsModel implements DAOListener{
 	}
 
 	public void readOperators() {
-		operators = DAOFactory.getInstance().getOperatorDAO().getAllOperators();
+		operators = DAOFactory.getInstance().getOperatorDAO().getAllItems();
 		checkAdmin();
 		notifyListeners(OperatorsModelState.UPDATED);
 
@@ -69,6 +69,25 @@ public class OperatorsModel implements DAOListener{
 		return operators;
 	}
 
+	public int addOperator(Operator operator) {
+		if (operators == null) {
+			readOperators();
+		}
+		DAOFactory.getInstance().getOperatorDAO().addItem(operator);
+		operators.add(operator);
+		int index = operators.size()-1;
+		return index;
+	}
+
+	public void updateOperator(Operator operator) {
+		DAOFactory.getInstance().getOperatorDAO().updateItem(operator);
+	}
+
+	public void removeOperator(Operator operator) {
+		DAOFactory.getInstance().getOperatorDAO().removeItem(operator);
+		operators.remove(operator);
+	}
+
 	public List<Operator> getActiveOperators() {
 		if (operators == null) {
 			readOperators();
@@ -76,17 +95,12 @@ public class OperatorsModel implements DAOListener{
 
 		ArrayList<Operator> activeOperators = new ArrayList<Operator>();
 		for (Operator operator : operators) {
-		 	if (operator.getEnabled()) {
+		 	if (operator.isEnabled()) {
 		 		activeOperators.add(operator);
 		 	}
 		 } 
 		 return activeOperators;
 	}	
-
-	public void saveOperators() {
-		DAOFactory.getInstance().getOperatorDAO().saveOperators(operators);
-	}
-
 
 	/**
 	* Функция проверяет наличие оператора с административными правами, если не находит его - добавляет
@@ -98,19 +112,19 @@ public class OperatorsModel implements DAOListener{
 
 		boolean adminExist = false;
 		for (Operator operator: operators) {
-			if (operator.getIsAdmin()) adminExist = true;
+			if (operator.isAdmin()) adminExist = true;
 		}
 
 		if (!adminExist) {
 			Operator admin = new Operator();
 			admin.setFirstName("Администратор по умолчанию");
-			admin.setIsControler(true);
-			admin.setIsAdmin(true);
+			admin.setControler(true);
+			admin.setAdmin(true);
 			admin.setEnabled(true);
 			admin.setPassword("");
-			operators.add(admin);
 
 			// добавить запись оператора в БД
+			addOperator(admin);
 		}
 
 	}

@@ -3,6 +3,8 @@ package org.kesler.simplereg.dao;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import org.kesler.simplereg.logic.operator.Operator;
+
 public class TestDAOFactory{
 
 	@Test
@@ -24,7 +26,7 @@ public class TestDAOFactory{
 	@Test
 	public void testGetOperatorDAO() {
 
-		OperatorDAO operatorDAO = DAOFactory.getInstance().getOperatorDAO();
+		GenericDAO<Operator> operatorDAO = DAOFactory.getInstance().getOperatorDAO();
 		assertNotNull("OperatorDAO not returned", operatorDAO);
 
 	}

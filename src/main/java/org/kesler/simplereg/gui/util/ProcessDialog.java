@@ -4,6 +4,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -33,6 +34,7 @@ public class ProcessDialog extends JDialog {
 
 		createGUI();
 		setContent(content);
+		setLocationRelativeTo(parentFrame);
 	}
 
 	public ProcessDialog(JDialog parentDialog, String name, String content) {
@@ -42,6 +44,7 @@ public class ProcessDialog extends JDialog {
 
 		createGUI();
 		setContent(content);
+		setLocationRelativeTo(parentDialog);
 	}
 
 	public int getResult() {
@@ -59,6 +62,7 @@ public class ProcessDialog extends JDialog {
 	private void createGUI() {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBorder(BorderFactory.createEtchedBorder());
 
 
 		JPanel infoPanel = new JPanel(new MigLayout("fill"));
@@ -92,14 +96,7 @@ public class ProcessDialog extends JDialog {
 
 		this.setContentPane(mainPanel);
 		this.setSize(300,140);
-		if (parentFrame != null) {
-			this.setLocationRelativeTo(parentFrame);
-		} else if (parentDialog != null) {
-			this.setLocationRelativeTo(parentDialog);			
-		} else {
-			this.setLocationRelativeTo(null);			
-		}
-		
+		// this.setUndecorated(true);		
 
 
 	}
