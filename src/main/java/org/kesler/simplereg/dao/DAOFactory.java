@@ -1,7 +1,6 @@
 package org.kesler.simplereg.dao;
 
-import org.kesler.simplereg.dao.impl.ServiceDAOImpl;
-import org.kesler.simplereg.dao.impl.OperatorDAOImpl;
+import org.kesler.simplereg.dao.impl.ServiceDAOImpl;	
 import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
 import org.kesler.simplereg.dao.impl.GenericDAOImpl;
 import org.kesler.simplereg.dao.impl.FLDAOImpl;
