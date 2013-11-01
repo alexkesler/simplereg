@@ -149,6 +149,7 @@ public class ServicesDialogController implements ServicesModelListener{
 	}
 
 	public void modelStateChanged(ServicesModelState state) {
+		if (processDialog == null) return ;
 		switch (state) {
 			case CONNECTING:
 				processDialog.setContent("Соединяюсь...");			

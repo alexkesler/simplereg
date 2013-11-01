@@ -156,7 +156,7 @@ class LoginDialog extends AbstractDialog{
     //     										"Неправильный пароль. Попробуйте еще раз.",
     //     										"Ошибка",
     //     										JOptionPane.ERROR_MESSAGE);
-				new InfoDialog(currentDialog, "Неправильный пароль", 1000).showInfo();
+				new InfoDialog(currentDialog, "Неправильный пароль", 1000, InfoDialog.RED).showInfo();
 				
 				passwordTextField.selectAll();
 				passwordTextField.requestFocusInWindow();

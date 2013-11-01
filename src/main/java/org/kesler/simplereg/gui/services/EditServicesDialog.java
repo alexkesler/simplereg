@@ -17,20 +17,31 @@ import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 import org.kesler.simplereg.logic.Service;
 
 public class EditServicesDialog extends ServicesDialog{
 
+	private JDialog currentDialog;
+
+	private Action addSubNodeAction;
+	private Action addNodeAction;
+	private Action editNodeAction;
+	private Action removeNodeAction;
 
 	public EditServicesDialog(JFrame frame, ServicesDialogController controller) {
 		super(frame, controller);
+		currentDialog = this;
+
 	}
 
 	@Override
@@ -91,13 +102,31 @@ public class EditServicesDialog extends ServicesDialog{
 
 		servicesTree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent ev) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) servicesTree.getLastSelectedPathComponent();
-				if (node == null) return;
-				if (node.isRoot()) return ;
+				selectedNode = (DefaultMutableTreeNode) servicesTree.getLastSelectedPathComponent();
 
-				selectedNode = node;
-				selectedService = (Service)node.getUserObject();
-				// System.out.println("Selected service: " + selectedService);
+				if (selectedNode == null) {
+					addSubNodeAction.setEnabled(false);
+					editNodeAction.setEnabled(false);
+					removeNodeAction.setEnabled(false);
+				} else {
+					addSubNodeAction.setEnabled(true);
+					if (selectedNode.isRoot()) {
+						addNodeAction.setEnabled(false);
+						editNodeAction.setEnabled(false);
+						removeNodeAction.setEnabled(false);
+					} else {
+						addNodeAction.setEnabled(true);
+						editNodeAction.setEnabled(true);
+						removeNodeAction.setEnabled(true);
+
+					}
+
+					if (!selectedNode.isLeaf()) {
+						removeNodeAction.setEnabled(false);						
+					}					
+				}
+
+
 			}
 		});
 
@@ -110,24 +139,21 @@ public class EditServicesDialog extends ServicesDialog{
 		addButton.setIcon(ResourcesUtil.getIcon("add.png"));
 
 		final JPopupMenu addServicePopupMenu = new JPopupMenu();
-		// пункт меню добавления услуги на том же уровне
-		JMenuItem addServiceMenuItem = new JMenuItem("Добавить услугу на том же уровне");
-		addServiceMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				if (selectedNode.isRoot()) return; /// Добавить вывод сообщения о том, что нельзя добавить
-				addSubNode((DefaultMutableTreeNode)selectedNode.getParent());
-			}
-		});
-		// пункт меню добавления подуслуги
-		JMenuItem addSubServiceMenuItem = new JMenuItem("Добавить подуслугу");
-		addSubServiceMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				addSubNode(selectedNode);
-			}
-		});
 
+		// пункт меню добавления услуги на том же уровне
+		addNodeAction = new AddNodeAction();
+		JMenuItem addServiceMenuItem = new JMenuItem(addNodeAction);
+
+
+		// пункт меню добавления подуслуги
+		addSubNodeAction = new AddSubNodeAction();
+		JMenuItem addSubServiceMenuItem = new JMenuItem(addSubNodeAction);
+
+
+		// Собираем всплывающее меню
 		addServicePopupMenu.add(addServiceMenuItem);
 		addServicePopupMenu.add(addSubServiceMenuItem);
+
 		// кнопка для вызова вариантов добавления услуги
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -137,32 +163,14 @@ public class EditServicesDialog extends ServicesDialog{
 
 
 		// Кнопка редактирования услуги
-		JButton editButton = new JButton();
-		editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
-		editButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				if (selectedService != null) {
-					controller.editService(selectedService);
-				} else {
-					JOptionPane.showMessageDialog(null, "Услуга не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
-				}
-				
-			}
-		});
+		editNodeAction = new EditNodeAction();
+		JButton editButton = new JButton(editNodeAction);
+
 
 		// Кнопка удаления услуги
-		JButton removeButton = new JButton();
-		removeButton.setIcon(ResourcesUtil.getIcon("delete.png"));
-		removeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				if (selectedService != null) {
-					controller.removeService(selectedService);
-				} else {
-					JOptionPane.showMessageDialog(null, "Услуга не выбрана", "Ошибка", JOptionPane.ERROR_MESSAGE);
-				}
-				
-			}
-		});
+		removeNodeAction = new RemoveNodeAction();
+		JButton removeButton = new JButton(removeNodeAction);
+
 
 		buttonPanel.add(addButton);
 		buttonPanel.add(editButton);
@@ -180,6 +188,7 @@ public class EditServicesDialog extends ServicesDialog{
 	*/
 	private void addSubNode(DefaultMutableTreeNode parentNode) {
 
+		if (parentNode == null) return ;
 		Service parentService;
 		if (!parentNode.isRoot()) {
 			parentService = (Service) parentNode.getUserObject();
@@ -197,24 +206,69 @@ public class EditServicesDialog extends ServicesDialog{
 		
 	}
 
-	private void editNode(DefaultMutableTreeNode node) {
-		Service service = (Service)node.getUserObject();
-		if (controller.editService(service)) {
-			servicesTreeModel.nodeChanged(node);
+	class AddSubNodeAction extends AbstractAction {
+
+		AddSubNodeAction () {
+			super("Добавить подуслугу");
+		}
+
+ 		public void actionPerformed(ActionEvent ev) {
+			if (selectedNode == null) return;
+
+			addSubNode(selectedNode);
 		}
 	}
 
-	private void removeNode(DefaultMutableTreeNode node) {
-		Service service = (Service)node.getUserObject();
-		int result = JOptionPane.showConfirmDialog(this, "Удалить услугу: " + service + "?", "Удалить?", JOptionPane.YES_NO_OPTION);
-		if (result == JOptionPane.OK_OPTION) {
-			servicesTreeModel.removeNodeFromParent(node);			
-			controller.removeService(service);
+	class AddNodeAction extends AbstractAction {
+
+		AddNodeAction () {
+			super("Добавить услугу на том же уровне");
 		}
 
-		
+		public void actionPerformed(ActionEvent ev) {
+			if (selectedNode == null) return;
+			if (selectedNode.isRoot()) return;
+
+			DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedNode.getParent();
+			addSubNode(parentNode);
+		}
 	}
 
+	class EditNodeAction extends AbstractAction {
+
+		EditNodeAction() {
+			super("", ResourcesUtil.getIcon("pencil.png"));
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			if (selectedNode == null) return;
+			if (selectedNode.isRoot()) return;
+
+			Service selectedService = (Service) selectedNode.getUserObject();
+			if (controller.editService(selectedService)) 
+				servicesTreeModel.nodeChanged(selectedNode);	
+		}
+	}
+
+	class RemoveNodeAction extends AbstractAction {
+
+		RemoveNodeAction() {
+			super("", ResourcesUtil.getIcon("delete.png"));
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			if (selectedNode == null) return;
+			if (selectedNode.isRoot()) return;
+
+			Service selectedService = (Service) selectedNode.getUserObject();
+			int result = JOptionPane.showConfirmDialog(currentDialog, "Удалить услугу: " + selectedService + "?", "Удалить?", JOptionPane.YES_NO_OPTION);
+			if (result == JOptionPane.OK_OPTION) {
+				servicesTreeModel.removeNodeFromParent(selectedNode);			
+				controller.removeService(selectedService);
+			}
+
+		}
+	}
 
 
 }

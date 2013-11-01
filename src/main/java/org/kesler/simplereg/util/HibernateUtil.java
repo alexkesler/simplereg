@@ -12,7 +12,7 @@ public class HibernateUtil {
 	private static SessionFactory sessionFactory = null;
 
 
-	static {
+	private static void createSessionFactory() {
 
 		String database = OptionsUtil.getOption("db.driver");
 		String userName = OptionsUtil.getOption("db.user");
@@ -95,6 +95,14 @@ public class HibernateUtil {
 	}
 
 	public static SessionFactory getSessionFactory() {
+		if (sessionFactory == null) {
+			createSessionFactory();
+		}
 		return sessionFactory;
+	}
+
+	public static void closeConnection() {
+		sessionFactory.close();
+		sessionFactory = null;
 	}
 }

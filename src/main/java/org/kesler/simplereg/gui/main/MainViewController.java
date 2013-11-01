@@ -9,12 +9,14 @@ import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.operator.OperatorsModel;
 import org.kesler.simplereg.logic.operator.OperatorsModelState;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.operators.OperatorListDialogController;
@@ -26,7 +28,7 @@ import org.kesler.simplereg.gui.applicator.ULListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
-import org.kesler.simplereg.logic.operator.OperatorsModel;
+
 
 
 /**
@@ -181,13 +183,6 @@ public class MainViewController implements MainViewListener,
 	}
 
 
-	private void openMakeReceptionView() {
-		MakeReceptionViewController.getInstance().openView();
-	}
-
-	private void openServicesView() {
-		ServicesDialogController.getInstance().openEditDialog(mainView);
-	}
 
 	private void addReception(Reception reception) {
 		receptionsModel.addReception(reception);
@@ -261,11 +256,12 @@ public class MainViewController implements MainViewListener,
 			if (loginDialog.getResult() == LoginDialog.OK) {
 				Operator operator = loginDialog.getOperator();
 				CurrentOperator.getInstance().setOperator(operator);
-				new InfoDialog(mainView, "<html>Добро пожаловать, </br>" + 
-													operator.getFirstName() + 
-													" " + operator.getParentName() + "!</html>", 1000).showInfo();
+				new InfoDialog(mainView, "<html>Добро пожаловать, <p><i>" + 
+											operator.getFirstName() + 
+											" " + operator.getParentName() + "</i>!</p></html>", 1000, InfoDialog.STAR).showInfo();
 			} else {
 				CurrentOperator.getInstance().resetOperator();
+				HibernateUtil.closeConnection();
 			}
 			// Освобождаем ресурсы
 			loginDialog.dispose();
@@ -313,6 +309,15 @@ public class MainViewController implements MainViewListener,
 
 	private void logout() {
 		CurrentOperator.getInstance().resetOperator();
+		HibernateUtil.closeConnection();
+	}
+
+	private void openMakeReceptionView() {
+		MakeReceptionViewController.getInstance().openView();
+	}
+
+	private void openServicesView() {
+		ServicesDialogController.getInstance().openEditDialog(mainView);
 	}
 
 	private void openStatistic() {
