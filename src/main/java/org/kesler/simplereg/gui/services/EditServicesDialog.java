@@ -58,12 +58,13 @@ public class EditServicesDialog extends ServicesDialog{
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				TreePath selectionPath = servicesTree.getSelectionModel().getSelectionPath();
+				// TreePath selectionPath = servicesTree.getSelectionModel().getSelectionPath();
 				controller.reloadTree();
-				if (selectionPath != null) {
-					servicesTree.getSelectionModel().setSelectionPath(selectionPath);
-					servicesTree.makeVisible(selectionPath);
-				}
+				selectedNode = null;
+				// if (selectionPath != null) {
+				// 	servicesTree.getSelectionModel().setSelectionPath(selectionPath);
+				// 	servicesTree.makeVisible(selectionPath);
+				// }
 			}
 		});
 
