@@ -20,6 +20,8 @@ import java.awt.BorderLayout;
 
 import net.miginfocom.swing.MigLayout;
 
+
+import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
@@ -32,16 +34,18 @@ public class GenericListDialog<T> extends JDialog {
 	private int result = NONE;
 	private boolean isSelect = false;
 
-	private JFrame frame;
+	private JFrame parentFrame;
+	private JDialog currentDialog;
 	private GenericListDialogController<T> controller;
 
 	private JList itemsList;
 	private ItemsListModel itemsListModel;
 	private int selectedIndex;
 
-	public GenericListDialog(JFrame frame, String name, GenericListDialogController controller) {
-		super(frame, name, true);
-		this.frame = frame;
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller) {
+		super(parentFrame, name, true);
+		this.parentFrame = parentFrame;
+		currentDialog = this;
 		this.controller = controller;
 
 		selectedIndex = -1;
@@ -49,9 +53,9 @@ public class GenericListDialog<T> extends JDialog {
 		createGUI();
 	}
 
-	public GenericListDialog(JFrame frame, String name, boolean isSelect, GenericListDialogController controller) {
-		super(frame, name, true);
-		this.frame = frame;
+	public GenericListDialog(JFrame parentFrame, String name, boolean isSelect, GenericListDialogController controller) {
+		super(parentFrame, name, true);
+		this.parentFrame = parentFrame;
 		this.controller = controller;
 		this.isSelect = isSelect;
 
@@ -97,7 +101,9 @@ public class GenericListDialog<T> extends JDialog {
 		addItemButton.setIcon(ResourcesUtil.getIcon("add.png"));
 		addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openAddItemDialog();
+				if (controller.openAddItemDialog()) {
+					new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+				}									
 			}
 		});
 
@@ -106,9 +112,11 @@ public class GenericListDialog<T> extends JDialog {
 		editItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					controller.openEditItemDialog(selectedIndex);
+					if (controller.openEditItemDialog(selectedIndex)) {
+						new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+					}					
 				} else {
-					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
 				
 			}
@@ -119,9 +127,11 @@ public class GenericListDialog<T> extends JDialog {
 		removeItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					controller.removeItem(selectedIndex);
+					if (controller.removeItem(selectedIndex)) {
+						new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();	
+					}
 				} else {
-					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
 
 			}
@@ -133,6 +143,7 @@ public class GenericListDialog<T> extends JDialog {
 			public void actionPerformed(ActionEvent ev) {
 				controller.readItems();
 				itemsListModel.updateItems();
+				new InfoDialog(currentDialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();
 			}
 		});
 
@@ -150,10 +161,11 @@ public class GenericListDialog<T> extends JDialog {
 		if(isSelect) okString = "Выбрать";
         JButton okButton = new JButton(okString);         
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+		this.getRootPane().setDefaultButton(okButton);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (isSelect && selectedIndex == -1) {
-					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				} else {
 					result = OK;
 					setVisible(false);										
@@ -180,8 +192,8 @@ public class GenericListDialog<T> extends JDialog {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
-		this.setSize(300,300);
-		this.setLocationRelativeTo(frame);
+		this.setSize(400,500);
+		this.setLocationRelativeTo(parentFrame);
 
 	}
 

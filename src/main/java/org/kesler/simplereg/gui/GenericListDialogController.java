@@ -5,9 +5,9 @@ import java.util.List;
 public interface GenericListDialogController<T> {
 	
 	public List<T> getAllItems();	
-	public void openAddItemDialog();
-	public void openEditItemDialog(int index);
-	public void removeItem(int index);
+	public boolean openAddItemDialog();
+	public boolean openEditItemDialog(int index);
+	public boolean removeItem(int index);
 	public void readItems();
 }	
 

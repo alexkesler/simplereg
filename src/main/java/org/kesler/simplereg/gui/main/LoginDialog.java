@@ -87,7 +87,7 @@ class LoginDialog extends AbstractDialog{
 
 		passwordTextField = new JPasswordField(20);
 		// при нажатии Enter - нажимаем кнопку ОК
-		passwordTextField.addActionListener(new OkActionListener());
+		// passwordTextField.addActionListener(new OkActionListener());
 
 		dataPanel.add(loginLabel);
 
@@ -102,6 +102,7 @@ class LoginDialog extends AbstractDialog{
 
 		JButton okButton = new JButton("Ok");
 		okButton.addActionListener(new OkActionListener());
+		this.getRootPane().setDefaultButton(okButton);
 
 		JButton cancelButton = new JButton("Отмена");
 		cancelButton.addActionListener(new ActionListener() {

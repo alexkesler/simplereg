@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.operators;
 
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.gui.GenericListDialogController;
 import org.kesler.simplereg.gui.GenericListDialog;
@@ -43,7 +44,8 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	@Override
-	public void openAddItemDialog() {
+	public boolean openAddItemDialog() {
+		boolean result = false;
 		OperatorDialog operatorDialog = new OperatorDialog(dialog);
 		operatorDialog.setVisible(true);
 
@@ -51,16 +53,19 @@ public class OperatorListDialogController implements GenericListDialogController
 			Operator operator = operatorDialog.getOperator();
 			int index = model.addOperator(operator);
 			dialog.addedItem(index);
+			result = true;
 		}
 
 		// Освобождаем ресурсы
 		operatorDialog.dispose();
 		operatorDialog = null;
 
+		return result;
 	}
 
 	@Override
-	public void openEditItemDialog(int index) {
+	public boolean openEditItemDialog(int index) {
+		boolean result = false;
 		Operator operator = model.getAllOperators().get(index);
 		OperatorDialog operatorDialog = new OperatorDialog(dialog, operator);
 		operatorDialog.setVisible(true);
@@ -68,19 +73,32 @@ public class OperatorListDialogController implements GenericListDialogController
 		if (operatorDialog.getResult() == OperatorDialog.OK) {
 			model.updateOperator(operator);
 			dialog.updatedItem(index);
+			result = true;
 		}
 
 		// Освобождаем ресурсы
 		operatorDialog.dispose();
 		operatorDialog = null;
 
+		return result;
 	}
 
 	@Override
-	public void removeItem(int index) {
+	public boolean removeItem(int index) {
+		boolean result = false;
+
 		Operator operator = model.getAllOperators().get(index);
-		model.removeOperator(operator);
-		dialog.removedItem(index);
+		
+		int confirmResult = JOptionPane.showConfirmDialog(dialog, "Удалить оператора: " + operator + "?", "Удалить?", JOptionPane.YES_NO_OPTION);
+		if (confirmResult == JOptionPane.OK_OPTION) { 			
+			model.removeOperator(operator);
+			dialog.removedItem(index);
+			result = true;
+		}
+
+		return result;
+
+
 	}
 
 	@Override

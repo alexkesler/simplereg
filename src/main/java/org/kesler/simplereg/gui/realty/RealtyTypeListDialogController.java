@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.realty;
 
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.realty.RealtyType;
 import org.kesler.simplereg.logic.realty.RealtyTypesModel;
@@ -65,7 +66,8 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 	}
 
 	@Override
-	public void openAddItemDialog() {
+	public boolean openAddItemDialog() {
+		boolean result = false;
 
 		RealtyTypeDialog realtyTypeDialog = new RealtyTypeDialog(dialog);
 		realtyTypeDialog.setVisible(true);
@@ -73,17 +75,21 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 		if (realtyTypeDialog.getResult() == RealtyTypeDialog.OK) {
 			RealtyType realtyType = realtyTypeDialog.getRealtyType();
 			int index = model.addRealtyType(realtyType);
-			dialog.addedItem(index);			
+			dialog.addedItem(index);
+			result = true;			
 		}
 
 		// Освобождаем ресурсы
 		realtyTypeDialog.dispose();
-		realtyTypeDialog = null;		
+		realtyTypeDialog = null;	
+
+		return result;	
 		
 	}
 
 	@Override
-	public void openEditItemDialog(int index) {
+	public boolean openEditItemDialog(int index) {
+		boolean result = false;
 
 		RealtyType realtyType = model.getAllRealtyTypes().get(index);
 
@@ -92,23 +98,31 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 
 		if (realtyTypeDialog.getResult() == RealtyTypeDialog.OK) {
 			model.updateRealtyType(realtyType);	
-			dialog.updatedItem(index);		
+			dialog.updatedItem(index);	
+			result = true;	
 		}
 
 		// Освобождаем ресурсы
 		realtyTypeDialog.dispose();
 		realtyTypeDialog = null;		
 
+		return result;
 	}
 
 	@Override
-	public void removeItem(int index) {
+	public boolean removeItem(int index) {
+		boolean result = false;
 
 		RealtyType realtyType = model.getAllRealtyTypes().get(index);
 
-		model.removeRealtyType(realtyType);	
-		dialog.removedItem(index);		
+		int confirmResult = JOptionPane.showConfirmDialog(dialog, "Удалить тип: " + realtyType + "?", "Удалить?", JOptionPane.YES_NO_OPTION);
+		if (confirmResult == JOptionPane.OK_OPTION) {
+			model.removeRealtyType(realtyType);	
+			dialog.removedItem(index);
+			result = true;
+		}			
 
+		return result;
 	}
 
 }

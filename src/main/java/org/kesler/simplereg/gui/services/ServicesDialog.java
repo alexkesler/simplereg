@@ -127,6 +127,7 @@ public abstract class ServicesDialog extends JDialog{
 
 		servicesTreeModel.reload();
 
+
 	}
 
 }

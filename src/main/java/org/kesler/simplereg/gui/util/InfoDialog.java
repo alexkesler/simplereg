@@ -91,7 +91,7 @@ public class InfoDialog extends JDialog {
 
 
 		setContentPane(infoPanel);
-		setSize(300,100);
+		setSize(220,100);
 		setUndecorated(true);
 
 	}
