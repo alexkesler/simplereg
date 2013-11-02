@@ -31,6 +31,8 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	public void showDialog(JFrame parentFrame) {
 		dialog = new GenericListDialog<Operator>(parentFrame, "Операторы", this);
+		List<Operator> operators = model.getAllOperators();
+		dialog.setItems(operators);
 		dialog.setVisible(true);
 
 		// Освобождаем ресурсы

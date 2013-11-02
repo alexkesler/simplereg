@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.util;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import java.awt.Window;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.BorderFactory;
@@ -20,6 +21,8 @@ public class ProcessDialog extends JDialog {
 	public static final int NONE = 0;
 	public static final int CANCEL = 1;
 	public static final int ERROR = -1;
+
+	private static ProcessDialog instance = null;
 
 	private JFrame parentFrame;
 	private JDialog parentDialog;
@@ -46,6 +49,17 @@ public class ProcessDialog extends JDialog {
 		setContent(content);
 		setLocationRelativeTo(parentDialog);
 	}
+
+	private ProcessDialog(JDialog parentDialog, String content) {
+		super(parentDialog, false);
+		result = NONE;
+
+		createGUI();
+		setContent(content);
+		setUndecorated(true);		
+		setLocationRelativeTo(parentDialog);
+	}
+
 
 	public int getResult() {
 		return result;
@@ -100,6 +114,28 @@ public class ProcessDialog extends JDialog {
 
 
 	}
+
+	public static synchronized void showProcess(JDialog parentDialog, String content) {
+		//hideProcess();
+		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
+			instance.setContent(content);
+		} else {
+			instance = new ProcessDialog(parentDialog, content);
+			instance.setVisible(true);			
+		}
+
+
+	}
+
+	public static synchronized void hideProcess() {
+		if (instance != null) {
+			instance.setVisible(false);
+			instance.dispose();
+			instance = null;
+		}
+
+	}
+
 
 
 

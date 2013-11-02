@@ -42,7 +42,7 @@ public class ServicesModel implements DAOListener{
     */
 	public void readServices() {
 		services = DAOFactory.getInstance().getServiceDAO().getAllServices();
-		notifyListeners(ServicesModelState.READY);		
+		notifyListeners(ServicesModelState.UPDATED);		
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package org.kesler.simplereg.logic.service;
 
 public enum ServicesModelState {
-	READY,
+	UPDATED,
 	CONNECTING,
 	READING,
 	ERROR

@@ -31,6 +31,7 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 	public RealtyType showSelectDialog(JFrame parentFrame) {
 		RealtyType realtyType = null;
 		dialog = new GenericListDialog<RealtyType>(parentFrame, "Типы недвижимости", true, this);
+		dialog.setItems(model.getAllRealtyTypes());
 		dialog.setVisible(true);
 
 		if (dialog.getResult() == GenericListDialog.OK && dialog.getSelectedIndex() != -1) {

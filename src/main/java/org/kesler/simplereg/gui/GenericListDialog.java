@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui;
 
 
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -72,6 +73,10 @@ public class GenericListDialog<T> extends JDialog {
 		return selectedIndex;
 	}
 
+	public void setItems(List<T> items) {
+		itemsListModel.setItems(items);
+	}
+
 	private void createGUI() {
 
 		// Основная панель
@@ -101,9 +106,7 @@ public class GenericListDialog<T> extends JDialog {
 		addItemButton.setIcon(ResourcesUtil.getIcon("add.png"));
 		addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				if (controller.openAddItemDialog()) {
-					new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
-				}									
+				controller.openAddItemDialog();
 			}
 		});
 
@@ -112,9 +115,7 @@ public class GenericListDialog<T> extends JDialog {
 		editItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					if (controller.openEditItemDialog(selectedIndex)) {
-						new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
-					}					
+					controller.openEditItemDialog(selectedIndex);
 				} else {
 					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
@@ -127,9 +128,7 @@ public class GenericListDialog<T> extends JDialog {
 		removeItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					if (controller.removeItem(selectedIndex)) {
-						new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();	
-					}
+					controller.removeItem(selectedIndex);
 				} else {
 					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
@@ -211,14 +210,25 @@ public class GenericListDialog<T> extends JDialog {
 
 	class ItemsListModel extends AbstractListModel {
 
+		private List<T> items;
+
+		ItemsListModel() {
+			items = new ArrayList<T>();
+		}
+
+		void setItems(List<T> items) {
+			this.items = items;
+			updateItems();
+		}
+
 		@Override
 		public int getSize() {
-			return controller.getAllItems().size();
+			return items.size();
 		}
 
 		@Override
 		public String getElementAt(int index) {
-			String value = controller.getAllItems().get(index).toString();
+			String value = items.get(index).toString();
 			return value;
 		}
 
@@ -235,7 +245,7 @@ public class GenericListDialog<T> extends JDialog {
 		}
 
 		void updateItems() {
-			fireContentsChanged(this, 0, controller.getAllItems().size()-1);
+			fireContentsChanged(this, 0, items.size()-1);
 		}
 	}
 

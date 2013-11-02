@@ -12,6 +12,8 @@ import org.kesler.simplereg.logic.service.ServicesModelListener;
 import org.kesler.simplereg.logic.service.ServicesModelState;
 import org.kesler.simplereg.dao.EntityState;
 
+
+import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
 /**
@@ -122,48 +124,57 @@ public class ServicesDialogController implements ServicesModelListener{
 		// запускается в отдельном потоке
 		
 		Thread servicesReaderThread = new Thread(new ServicesReader());
-		processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список услуг...");
+		//processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список услуг...");
 		servicesReaderThread.start(); 	// Запускаем чтение услуг в отдельном потоке
 		
-		processDialog.setVisible(true); // Выводим модальный диалог с кнопкой "Отмена" - ожидаем завершения потока (модальный диалог закроется)
+		// processDialog.setVisible(true); // Выводим модальный диалог с кнопкой "Отмена" - ожидаем завершения потока (модальный диалог закроется)
 
-		if (processDialog.getResult() == ProcessDialog.CANCEL) {
-			
-			return;
-		}
+		// if (processDialog.getResult() == ProcessDialog.CANCEL) {
+		// 	processDialog.dispose();
+		// 	processDialog = null;
+		// 	return;
+		// }
 
-		if (processDialog.getResult() == ProcessDialog.ERROR) {
-			JOptionPane.showMessageDialog(null, "Ошибка подключения к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
-			return ;
-		}
+		// if (processDialog.getResult() == ProcessDialog.ERROR) {
+		// 	JOptionPane.showMessageDialog(null, "Ошибка подключения к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
+		// 	processDialog.dispose();
+		// 	processDialog = null;
+		// 	return ;
+		// }
 
-		// Освобождаем ресурсы
-		processDialog.dispose();
-		processDialog = null;
-
-		// получаем загруженый список
-		List<Service> services = model.getAllServices();
-
-		dialog.reloadTree(services);
+		// // Освобождаем ресурсы
+		// processDialog.dispose();
+		// processDialog = null;
+		// // получаем загруженый список
 
 
 	}
 
+	private void completeReloadingTree() {
+
+		List<Service> services = model.getAllServices();
+
+		dialog.reloadTree(services);
+
+	}
+
 	public void modelStateChanged(ServicesModelState state) {
-		if (processDialog == null) return ;
+		//if (processDialog == null) return ;
 		switch (state) {
 			case CONNECTING:
-				processDialog.setContent("Соединяюсь...");			
+				ProcessDialog.showProcess(dialog, "Соединяюсь...");			
 			break;
 			case READING:
-				processDialog.setContent("Читаю список услуг");
+				ProcessDialog.showProcess(dialog, "Читаю список услуг");
 			break;	
-			case READY:
-				processDialog.setVisible(false);
+			case UPDATED:
+				completeReloadingTree();
+				ProcessDialog.hideProcess();
+
 			break;
-			case ERROR:
-				processDialog.setResult(ProcessDialog.ERROR);
-				processDialog.setVisible(false);
+			case ERROR:				
+				ProcessDialog.hideProcess();
+				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 			break;			
 		}
 	}

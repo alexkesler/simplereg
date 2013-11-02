@@ -59,42 +59,10 @@ public class EditServicesDialog extends ServicesDialog{
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				// Запоминаем выбранную услугу
-				selectedService = null;
-				if (selectedNode != null && !selectedNode.isRoot()) {
-					selectedService = (Service) selectedNode.getUserObject();
-				}
 					
 				/////// Перезагружаем дерево
 				controller.reloadTree();
 
-				selectedNode = null;
-
-				// если ничего не было выбрано, дальше ничего не делаем
-				if (selectedService == null) return;
-				//// Выбираем ранее выбранный узел, если это возможно 
-				DefaultMutableTreeNode root = (DefaultMutableTreeNode) servicesTreeModel.getRoot();
-				// Получаем список всех узлов дерева
-				Enumeration<DefaultMutableTreeNode> nodes = root.breadthFirstEnumeration();
-				while (nodes.hasMoreElements()) {
-					DefaultMutableTreeNode node = nodes.nextElement();
-					if(node.isRoot()) continue;
-					Service nodeService = (Service) node.getUserObject();
-					if (nodeService.equals(selectedService)) {						
-						selectedNode = node;
-						servicesTree.setSelectionPath(new TreePath(selectedNode.getPath()));
-						break;			
-					}			
-				}		
-			
-
-				// Если ничего не удалось выбрать - делаем все кнопки неактивными
-				if(selectedNode == null) {
-					addNodeAction.setEnabled(false);
-					addSubNodeAction.setEnabled(false);
-					editNodeAction.setEnabled(false);
-					removeNodeAction.setEnabled(false);
-				}
 			}
 		});
 

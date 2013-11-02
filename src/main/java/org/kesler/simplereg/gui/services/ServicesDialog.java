@@ -79,12 +79,15 @@ public abstract class ServicesDialog extends JDialog{
 
 	protected void reloadTree(List<Service> services) {
 
+		// Запоминаем выбранную услугу
+		selectedService = null;
+		if (selectedNode != null && !selectedNode.isRoot()) {
+			selectedService = (Service) selectedNode.getUserObject();
+		}
 
-		// Получаем модель дерева
-		// DefaultTreeModel treeModel = (DefaultTreeModel) servicesTree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode) servicesTreeModel.getRoot();
 
 		// Очищаем дерево
+		DefaultMutableTreeNode root = (DefaultMutableTreeNode) servicesTreeModel.getRoot();
 		root.removeAllChildren();
 
 		// Добавляем все услуги в первый уровень дерева
@@ -127,6 +130,24 @@ public abstract class ServicesDialog extends JDialog{
 
 		servicesTreeModel.reload();
 
+		// Восстанавливаем выделение, если это возможно 
+		if (selectedService != null) {
+			// Получаем обновленный список всех узлов дерева
+			nodes = root.breadthFirstEnumeration();
+			while (nodes.hasMoreElements()) {
+				DefaultMutableTreeNode node = nodes.nextElement();
+				if(node.isRoot()) continue;
+				// Ищем нашу услугу
+				Service nodeService = (Service) node.getUserObject();
+				if (nodeService.equals(selectedService)) {						
+					selectedNode = node;
+					servicesTree.setSelectionPath(new TreePath(selectedNode.getPath()));
+					break;			
+				}			
+			}		
+
+		}
+	
 
 	}
 
