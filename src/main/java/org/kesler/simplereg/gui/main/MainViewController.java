@@ -272,6 +272,7 @@ public class MainViewController implements MainViewListener,
 			JOptionPane.showMessageDialog(mainView, "Ошибка при подключении к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
 		} else if (processDialog.getResult() == ProcessDialog.CANCEL) {
 			/// действия при отмене чтения  - пока ничего не делаем
+			HibernateUtil.closeConnection();
 		}
 
 		processDialog.dispose();

@@ -7,6 +7,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+
+import org.hibernate.envers.Audited;
+
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.reception.Reception;
 
@@ -14,6 +17,7 @@ import org.kesler.simplereg.logic.reception.Reception;
 * Представляет общий интерфейс для разных заявителей, которые могут быть связаны с приемом документов 
 */
 @Entity
+
 @Table (name = "Applicators")
 @Inheritance (strategy = InheritanceType.JOINED)
 public abstract class Applicator extends AbstractEntity {

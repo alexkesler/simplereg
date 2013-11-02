@@ -128,6 +128,7 @@ public class ServicesDialogController implements ServicesModelListener{
 		processDialog.setVisible(true); // Выводим модальный диалог с кнопкой "Отмена" - ожидаем завершения потока (модальный диалог закроется)
 
 		if (processDialog.getResult() == ProcessDialog.CANCEL) {
+			
 			return;
 		}
 

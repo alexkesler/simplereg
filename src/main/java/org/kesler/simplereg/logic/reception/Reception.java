@@ -18,6 +18,8 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import org.hibernate.envers.Audited;
+
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.applicator.Applicator;
@@ -30,10 +32,14 @@ import org.kesler.simplereg.logic.realty.RealtyObject;
 */
 
 @Entity
+// @Audited
 @Proxy(lazy=false)
 @Table(name="Receptions")
 public class Reception extends AbstractEntity{
 	
+	@Column(name="receptionCode", length=25)
+	private String receptionCode;
+
 	@ManyToOne
 	@JoinColumn(name="ServiceID")
 	private Service service;

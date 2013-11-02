@@ -61,6 +61,7 @@ public class EditServicesDialog extends ServicesDialog{
 				// TreePath selectionPath = servicesTree.getSelectionModel().getSelectionPath();
 				controller.reloadTree();
 				selectedNode = null;
+				// servicesTree.getSelectionModel().clearSelection();
 				// if (selectionPath != null) {
 				// 	servicesTree.getSelectionModel().setSelectionPath(selectionPath);
 				// 	servicesTree.makeVisible(selectionPath);

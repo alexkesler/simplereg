@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Proxy;
 
+import org.hibernate.envers.Audited;
+
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.dao.EntityState;
 

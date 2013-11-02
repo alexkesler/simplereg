@@ -27,11 +27,11 @@ public class HibernateUtil {
 
 		if (database.equals("h2 local")) { 					///// для локальной базы данных H2
 			driverClass = "org.h2.Driver";
-			connectionUrl = "jdbc:h2:" + OptionsUtil.getCurrentDir() + "simplereg";
+			connectionUrl = "jdbc:h2:" + OptionsUtil.getCurrentDir() + "db/simplereg";
 			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database.equals("h2 net")) { 					///// для сетевой базы данных H2
 			driverClass = "org.h2.Driver";
-			connectionUrl = "jdbc:h2:tcp://" + server + "/simplereg";
+			connectionUrl = "jdbc:h2:tcp://" + server + "/db/simplereg";
 			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database.equals("mysql")) { 			///// для базы данных  MySQL
 			driverClass = "com.mysql.jdbc.Driver";
@@ -102,7 +102,9 @@ public class HibernateUtil {
 	}
 
 	public static void closeConnection() {
-		sessionFactory.close();
-		sessionFactory = null;
+		if (sessionFactory != null) {
+			sessionFactory.close();
+			sessionFactory = null;
+		}	
 	}
 }
