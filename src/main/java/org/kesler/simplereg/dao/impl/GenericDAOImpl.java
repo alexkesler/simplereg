@@ -31,15 +31,19 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 	public Long addItem(T item) {
 		Long id = null;
 
+		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
+			notifyListeners(DAOState.WRITING);
 			tx = session.beginTransaction();
 			session.save(item);
 			tx.commit();
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			if (tx != null) tx.rollback();
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();		
@@ -53,15 +57,19 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	public void updateItem(T item) {
 
+		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
+			notifyListeners(DAOState.WRITING);
 			tx = session.beginTransaction();
 			session.update(item);
 			tx.commit();
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			if (tx != null) tx.rollback();
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();		
@@ -73,11 +81,15 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 	public T getItemById(int id) {
 		T item = null;
 
+		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
+			notifyListeners(DAOState.READING);
 			item = (T) session.load(type, id);
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();				
@@ -109,15 +121,19 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	public void removeItem(T item) {
 
+		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
+			notifyListeners(DAOState.WRITING);
 			tx = session.beginTransaction();
 			session.delete(item);
 			tx.commit();
+			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			if (tx != null) tx.rollback();
 			he.printStackTrace();
+			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session!=null && session.isOpen()) {
 				session.close();				

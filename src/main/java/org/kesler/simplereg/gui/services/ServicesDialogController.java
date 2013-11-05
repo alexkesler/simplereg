@@ -15,11 +15,13 @@ import org.kesler.simplereg.dao.EntityState;
 
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
+import org.kesler.simplereg.gui.util.processdialog.ProcessDialogListener;
+
 
 /**
 * Управляет видом услуг
 */
-public class ServicesDialogController implements ServicesModelListener{
+public class ServicesDialogController implements ServicesModelListener, ProcessDialogListener{
 
 	private static ServicesDialogController instance;
 	private ServicesModel model;
@@ -122,10 +124,12 @@ public class ServicesDialogController implements ServicesModelListener{
 	public void reloadTree() {
 		
 		// запускается в отдельном потоке
+
+		long threadId = model.readServicesInProcess();
 		
-		Thread servicesReaderThread = new Thread(new ServicesReader());
-		//processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список услуг...");
-		servicesReaderThread.start(); 	// Запускаем чтение услуг в отдельном потоке
+		// Thread servicesReaderThread = new Thread(new ServicesReader());
+		// //processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список услуг...");
+		// servicesReaderThread.start(); 	// Запускаем чтение услуг в отдельном потоке
 		
 		// processDialog.setVisible(true); // Выводим модальный диалог с кнопкой "Отмена" - ожидаем завершения потока (модальный диалог закроется)
 
@@ -150,13 +154,6 @@ public class ServicesDialogController implements ServicesModelListener{
 
 	}
 
-	private void completeReloadingTree() {
-
-		List<Service> services = model.getAllServices();
-
-		dialog.reloadTree(services);
-
-	}
 
 	public void modelStateChanged(ServicesModelState state) {
 		//if (processDialog == null) return ;
@@ -168,15 +165,20 @@ public class ServicesDialogController implements ServicesModelListener{
 				ProcessDialog.showProcess(dialog, "Читаю список услуг");
 			break;	
 			case UPDATED:
-				completeReloadingTree();
+				dialog.reloadTree(model.getAllServices());
 				ProcessDialog.hideProcess();
-
+				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
 			break;
 			case ERROR:				
 				ProcessDialog.hideProcess();
 				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 			break;			
 		}
+	}
+
+	@Override
+	public void cancelProcess(long threadId) {
+		model.cancelProcess(threadId);
 	}
 
 	class ServicesReader implements Runnable {

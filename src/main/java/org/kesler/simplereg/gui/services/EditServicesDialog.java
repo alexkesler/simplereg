@@ -55,16 +55,6 @@ public class EditServicesDialog extends ServicesDialog{
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
-		JButton updateButton = new JButton("Обновить");
-		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
-		updateButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-					
-				/////// Перезагружаем дерево
-				controller.reloadTree();
-
-			}
-		});
 
 
 		JButton okButton = new JButton("Ok");
@@ -78,7 +68,6 @@ public class EditServicesDialog extends ServicesDialog{
 
 
 		// Собираем панель кнопок
-		buttonPanel.add(updateButton);
 		buttonPanel.add(okButton);
 
 		// Собираем основную панель
@@ -172,10 +161,23 @@ public class EditServicesDialog extends ServicesDialog{
 		removeNodeAction = new RemoveNodeAction();
 		JButton removeButton = new JButton(removeNodeAction);
 
+		// Кнопка обновления
+		JButton updateButton = new JButton();
+		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
+		updateButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+					
+				/////// Перезагружаем дерево
+				controller.reloadTree();
+
+			}
+		});
+
 
 		buttonPanel.add(addButton);
 		buttonPanel.add(editButton);
 		buttonPanel.add(removeButton);
+		buttonPanel.add(updateButton);
 
 
 		treePanel.add(servicesScrollPane, BorderLayout.CENTER);

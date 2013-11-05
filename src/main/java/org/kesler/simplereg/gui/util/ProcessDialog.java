@@ -1,5 +1,7 @@
 package org.kesler.simplereg.gui.util;
 
+import java.util.List;
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import java.awt.Window;
@@ -16,6 +18,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
+import org.kesler.simplereg.gui.util.processdialog.ProcessDialogListener;
+
 public class ProcessDialog extends JDialog {
 
 	public static final int NONE = 0;
@@ -23,6 +27,11 @@ public class ProcessDialog extends JDialog {
 	public static final int ERROR = -1;
 
 	private static ProcessDialog instance = null;
+
+
+	private long threadId;
+	private Thread processThread;
+	private List<ProcessDialogListener> listeners;
 
 	private JFrame parentFrame;
 	private JDialog parentDialog;
@@ -53,12 +62,38 @@ public class ProcessDialog extends JDialog {
 	private ProcessDialog(JDialog parentDialog, String content) {
 		super(parentDialog, false);
 		result = NONE;
+		listeners = new ArrayList<ProcessDialogListener>();
 
 		createGUI();
 		setContent(content);
 		setUndecorated(true);		
 		setLocationRelativeTo(parentDialog);
 	}
+
+	private ProcessDialog(JDialog parentDialog, String content, ProcessDialogListener listener) {
+		super(parentDialog, false);
+		result = NONE;
+		listeners = new ArrayList<ProcessDialogListener>();
+		listeners.add(listener);
+
+		createGUI();
+		setContent(content);
+		setUndecorated(true);		
+		setLocationRelativeTo(parentDialog);
+	}
+
+	private ProcessDialog(JDialog parentDialog, String content, ProcessDialogListener listener, long threadId) {
+		super(parentDialog, false);
+		result = NONE;
+		listeners = new ArrayList<ProcessDialogListener>();
+		listeners.add(listener);
+		this.threadId = threadId;
+
+		createGUI();
+		setContent(content);
+		setUndecorated(true);		
+		setLocationRelativeTo(parentDialog);
+	}	
 
 
 	public int getResult() {
@@ -98,7 +133,10 @@ public class ProcessDialog extends JDialog {
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				result = CANCEL;
-				setVisible(false);
+				notifyListenersCancel();
+				if (processThread != null) processThread.interrupt();
+				hideProcess();
+				// setVisible(false);
 			}
 		});
 
@@ -115,22 +153,54 @@ public class ProcessDialog extends JDialog {
 
 	}
 
+	private void notifyListenersCancel() {
+		for (ProcessDialogListener listener: listeners) {
+			listener.cancelProcess(threadId);
+		}
+	}
+
 	public static synchronized void showProcess(JDialog parentDialog, String content) {
 		//hideProcess();
 		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
 			instance.setContent(content);
 		} else {
 			instance = new ProcessDialog(parentDialog, content);
+			instance.processThread = Thread.currentThread();
 			instance.setVisible(true);			
 		}
 
+	}
+
+	public static synchronized void showProcess(JDialog parentDialog, String content, ProcessDialogListener listener) {
+		//hideProcess();
+		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
+			instance.setContent(content);
+			if(!instance.listeners.contains(listener)) instance.listeners.add(listener);
+		} else {
+			instance = new ProcessDialog(parentDialog, content, listener);
+			instance.threadId = -1;
+			instance.setVisible(true);			
+		}
+
+	}
+
+	public static synchronized void showProcess(JDialog parentDialog, String content, ProcessDialogListener listener, long threadId) {
+		//hideProcess();
+		if (instance != null && instance.getOwner().equals((Window)parentDialog) && instance.threadId == threadId) {
+			instance.setContent(content);
+			if(!instance.listeners.contains(listener)) instance.listeners.add(listener);
+		} else {
+			instance = new ProcessDialog(parentDialog, content, listener, threadId);
+			instance.setVisible(true);			
+		}
 
 	}
 
 	public static synchronized void hideProcess() {
 		if (instance != null) {
-			instance.setVisible(false);
-			instance.dispose();
+			instance.setVisible(false); // Скрываем диалог
+			instance.listeners.clear(); 			// Очищаем слушателей
+			instance.dispose();			// Освобождаем ресурсы
 			instance = null;
 		}
 
