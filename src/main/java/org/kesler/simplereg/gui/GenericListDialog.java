@@ -1,6 +1,5 @@
 package org.kesler.simplereg.gui;
 
-
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JDialog;
@@ -20,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 
 import net.miginfocom.swing.MigLayout;
-
 
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.util.ResourcesUtil;

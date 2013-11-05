@@ -17,8 +17,6 @@ public class ServicesModel implements DAOListener{
 	private static ServicesModel instance = null;
 	private List<Service> services = null;
 
-	private List<Thread> threads; // список потоков для управления потоками
-
 	private List<ServicesModelListener> listeners; // список слушателей для оповещения о событиях с моделью
 
 	private ServicesModel() {
@@ -46,22 +44,21 @@ public class ServicesModel implements DAOListener{
 	public void readServices() {
 		services = DAOFactory.getInstance().getServiceDAO().getAllServices();
 		notifyListeners(ServicesModelState.UPDATED);	
-		threads.remove(Thread.currentThread());	
 	}
 
     /**
     * Читает услуги из базы данных во внутренний список в отдельном потоке
     * @return ID потока
     */
-	public long readServicesInProcess() {
+	public void readServicesInProcess() {
 		Thread readServicesThread = new Thread(new Runnable() {
 			public void run() {
 				readServices();
 			}
 		});
-		threads.add(readServicesThread);
+
 		readServicesThread.start();
-		return readServicesThread.getId();
+
 	}
 
 	/**
@@ -69,12 +66,8 @@ public class ServicesModel implements DAOListener{
 	* @param threadId ID процесса, который необходимо прервать
 	*/
 
-	public void cancelProcess(long threadId) {
-		for (Thread thread: threads) {
-			if (thread.getId() == threadId) {
-				thread.interrupt();
-			}
-		}
+	public void cancelProcess(Thread thread) {
+		thread.interrupt();
 	}
 
 	/**

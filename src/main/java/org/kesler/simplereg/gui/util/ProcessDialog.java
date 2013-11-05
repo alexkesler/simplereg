@@ -28,8 +28,6 @@ public class ProcessDialog extends JDialog {
 
 	private static ProcessDialog instance = null;
 
-
-	private long threadId;
 	private Thread processThread;
 	private List<ProcessDialogListener> listeners;
 
@@ -82,18 +80,6 @@ public class ProcessDialog extends JDialog {
 		setLocationRelativeTo(parentDialog);
 	}
 
-	private ProcessDialog(JDialog parentDialog, String content, ProcessDialogListener listener, long threadId) {
-		super(parentDialog, false);
-		result = NONE;
-		listeners = new ArrayList<ProcessDialogListener>();
-		listeners.add(listener);
-		this.threadId = threadId;
-
-		createGUI();
-		setContent(content);
-		setUndecorated(true);		
-		setLocationRelativeTo(parentDialog);
-	}	
 
 
 	public int getResult() {
@@ -136,7 +122,7 @@ public class ProcessDialog extends JDialog {
 				notifyListenersCancel();
 				if (processThread != null) processThread.interrupt();
 				hideProcess();
-				// setVisible(false);
+
 			}
 		});
 
@@ -155,11 +141,12 @@ public class ProcessDialog extends JDialog {
 
 	private void notifyListenersCancel() {
 		for (ProcessDialogListener listener: listeners) {
-			listener.cancelProcess(threadId);
+			listener.cancelProcess(processThread);
 		}
 	}
 
 	public static synchronized void showProcess(JDialog parentDialog, String content) {
+		
 		//hideProcess();
 		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
 			instance.setContent(content);
@@ -172,31 +159,21 @@ public class ProcessDialog extends JDialog {
 	}
 
 	public static synchronized void showProcess(JDialog parentDialog, String content, ProcessDialogListener listener) {
+		
 		//hideProcess();
 		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
 			instance.setContent(content);
 			if(!instance.listeners.contains(listener)) instance.listeners.add(listener);
 		} else {
 			instance = new ProcessDialog(parentDialog, content, listener);
-			instance.threadId = -1;
-			instance.setVisible(true);			
-		}
-
-	}
-
-	public static synchronized void showProcess(JDialog parentDialog, String content, ProcessDialogListener listener, long threadId) {
-		//hideProcess();
-		if (instance != null && instance.getOwner().equals((Window)parentDialog) && instance.threadId == threadId) {
-			instance.setContent(content);
-			if(!instance.listeners.contains(listener)) instance.listeners.add(listener);
-		} else {
-			instance = new ProcessDialog(parentDialog, content, listener, threadId);
+			instance.processThread = Thread.currentThread();
 			instance.setVisible(true);			
 		}
 
 	}
 
 	public static synchronized void hideProcess() {
+		
 		if (instance != null) {
 			instance.setVisible(false); // Скрываем диалог
 			instance.listeners.clear(); 			// Очищаем слушателей

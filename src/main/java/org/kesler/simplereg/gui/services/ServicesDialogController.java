@@ -26,9 +26,6 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	private static ServicesDialogController instance;
 	private ServicesModel model;
 	private ServicesDialog dialog;
-
-	private ProcessDialog processDialog;
-
 	
 	public static synchronized ServicesDialogController getInstance() {
 		if (instance == null) {
@@ -125,33 +122,8 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 		
 		// запускается в отдельном потоке
 
-		long threadId = model.readServicesInProcess();
+		model.readServicesInProcess();
 		
-		// Thread servicesReaderThread = new Thread(new ServicesReader());
-		// //processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список услуг...");
-		// servicesReaderThread.start(); 	// Запускаем чтение услуг в отдельном потоке
-		
-		// processDialog.setVisible(true); // Выводим модальный диалог с кнопкой "Отмена" - ожидаем завершения потока (модальный диалог закроется)
-
-		// if (processDialog.getResult() == ProcessDialog.CANCEL) {
-		// 	processDialog.dispose();
-		// 	processDialog = null;
-		// 	return;
-		// }
-
-		// if (processDialog.getResult() == ProcessDialog.ERROR) {
-		// 	JOptionPane.showMessageDialog(null, "Ошибка подключения к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
-		// 	processDialog.dispose();
-		// 	processDialog = null;
-		// 	return ;
-		// }
-
-		// // Освобождаем ресурсы
-		// processDialog.dispose();
-		// processDialog = null;
-		// // получаем загруженый список
-
-
 	}
 
 
@@ -177,8 +149,8 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	}
 
 	@Override
-	public void cancelProcess(long threadId) {
-		model.cancelProcess(threadId);
+	public void cancelProcess(Thread thread) {
+		model.cancelProcess(thread);
 	}
 
 	class ServicesReader implements Runnable {

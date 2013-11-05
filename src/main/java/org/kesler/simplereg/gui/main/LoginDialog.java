@@ -146,7 +146,7 @@ class LoginDialog extends AbstractDialog{
 	}
 
 	/**
-	* Отрабатывает действие по нажатию кнпки Щл или по нажатию клавиши Enter в поле ввода password.
+	* Отрабатывает действие по нажатию кнпки Ок или по нажатию клавиши Enter в поле ввода password.
 	*/
 	class OkActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent ev) {
