@@ -48,6 +48,7 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 	public void showDialog(JFrame parentFrame) {
 
 		dialog = new GenericListDialog<RealtyType>(parentFrame, "Типы недвижимости", this);
+		dialog.setItems(model.getAllRealtyTypes());
 		dialog.setVisible(true);
 
 		// Освобождаем ресурсы

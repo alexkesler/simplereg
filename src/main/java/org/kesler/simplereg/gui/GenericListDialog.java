@@ -71,6 +71,10 @@ public class GenericListDialog<T> extends JDialog {
 		return selectedIndex;
 	}
 
+
+	/**
+	* Устанавливает перечень элементов для отображения/ редактирования
+	*/
 	public void setItems(List<T> items) {
 		itemsListModel.setItems(items);
 	}

@@ -14,16 +14,10 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 	@Override
 	void init() {
-		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
-		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,false);
-		view.getTabbedPane().setEnabledAt(view.DATA_STATE,true);
-		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,false);
-
-		view.getTabbedPane().setSelectedIndex(view.DATA_STATE);
-
-		view.getBackButton().setEnabled(true);
-		view.getNextButton().setEnabled(true);
-		view.getReadyButton().setEnabled(false);
+		
+		updateTabbedPaneState();
+		updateCommonButtons();
+		updatePanelData();
 
 	}
 
@@ -36,17 +30,17 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 	@Override
 	void next() {
 
-		Date toIssueDate = view.getDataPanel().getToIssueDate();
-		if (toIssueDate != null) {
-			controller.setReceptionToIssueDate(toIssueDate);
-		} else {
+		// Проверяем и сохраняем дату выдачи
+		Date toIssueDate = controller.getReception().getToIssueDate();
+		if (toIssueDate == null) {
 			JOptionPane.showMessageDialog(view,
     									"Не определена дата выдачи",
     									"Ошибка",
     									JOptionPane.ERROR_MESSAGE);	
     		return ;									
-		}
+		} 
 
+		// Проверяем и сохраняем объект недвижимости
 		if (controller.getRealtyObject() != null) {
 			controller.storeRealtyObject();
 		} else {
@@ -58,6 +52,18 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 			
 		}
 
+		// Проверяем и сохраняем код Росреестра
+		String rosreestrCode = controller.getReception().getRosreestrCode();
+		if (rosreestrCode.isEmpty()) {
+			JOptionPane.showMessageDialog(view,
+    									"Не определен код дела Росреестра",
+    									"Ошибка",
+    									JOptionPane.ERROR_MESSAGE);	
+			return ;
+			
+		} 
+
+
 		// Переходим в состояние печати запроса
 		controller.setState(new PrintMakeReceptionViewState(controller, view));
 	}
@@ -67,12 +73,33 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 		// Ничего не делаем - кнопка невидима
 	}
 
+	private void updateTabbedPaneState() {
+
+		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,false);
+		view.getTabbedPane().setEnabledAt(view.DATA_STATE,true);
+		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,false);
+
+		view.getTabbedPane().setSelectedIndex(view.DATA_STATE);
+
+	}
+
+	private void updateCommonButtons() {
+
+		view.getBackButton().setEnabled(true);
+		view.getNextButton().setEnabled(true);
+		view.getReadyButton().setEnabled(false);
+
+	}
+
+
 	@Override
 	void updatePanelData() {
 		// обновляем дату на выдачу
 		Date toIssueDate = controller.getReception().getToIssueDate();
 		view.getDataPanel().setToIssueDate(toIssueDate);
 		
+		// обновляем наименование объекта недвижимости
 		RealtyObject realtyObject = controller.getRealtyObject();
 		String realtyObjectName = "";
 		if (realtyObject != null) {
@@ -82,6 +109,10 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 		}
 
 		view.getDataPanel().setRealtyObjectName(realtyObjectName);
+
+		// Обновляем код дела Росреестра
+		String rosreestrCode = controller.getReception().getRosreestrCode();
+		view.getDataPanel().setRosreestrCode(rosreestrCode);
 
 	}
 

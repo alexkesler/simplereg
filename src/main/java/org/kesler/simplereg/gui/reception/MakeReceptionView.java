@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JTabbedPane;
 import javax.swing.JList;
@@ -25,6 +26,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 import com.toedter.calendar.JDateChooser;
@@ -336,6 +339,8 @@ class MakeReceptionView extends JFrame{
 
 		JDateChooser toIssueDateChooser;
 
+		JTextField rosreestrCodeTextField;
+
 		DataPanel() {
 			super(new MigLayout("fillx, nogrid"));
 
@@ -351,13 +356,37 @@ class MakeReceptionView extends JFrame{
 			});
 
 			toIssueDateChooser = new JDateChooser();
+			toIssueDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent ev) {
+					System.out.println("-------Prop name: " + ev.getPropertyName() + "-----------");
+					if (ev.getPropertyName().equals("date")) {
+						controller.setToIssueDate(toIssueDateChooser.getDate());
+					}
+					
+				}
+			});
+
+
+			rosreestrCodeTextField = new JTextField(15);
+			rosreestrCodeTextField.addFocusListener(new java.awt.event.FocusListener() {
+				public void focusGained(java.awt.event.FocusEvent ev) {}
+				public void focusLost(java.awt.event.FocusEvent ev) {
+					System.out.println("-----------focus lost------------");
+					controller.setRosreestrCode(rosreestrCodeTextField.getText());
+				}
+
+			});
+
 
 			this.add(new JLabel("Объект недвижимости"), "wrap");
 			this.add(realtyObjectNameLabel, "pushx, grow");
 			this.add(selectRealtyObjectButton, "ay top, wrap");
 
-			this.add(new JLabel("Срок выдачи результата"), "split");
+			this.add(new JLabel("Срок выдачи результата"));
 			this.add(toIssueDateChooser, "w 100, wrap");
+
+			this.add(new JLabel("Код дела Росреестра: "));
+			this.add(rosreestrCodeTextField, "wrap");
 
 
 		}
@@ -373,6 +402,14 @@ class MakeReceptionView extends JFrame{
 
 		void setToIssueDate(Date toIssueDate) {
 			toIssueDateChooser.setDate(toIssueDate);
+		}
+
+		String getRosreestrCode() {
+			return rosreestrCodeTextField.getText();
+		}
+
+		void setRosreestrCode(String rosreestrCode) {
+			rosreestrCodeTextField.setText(rosreestrCode);
 		}
 
 	}

@@ -66,6 +66,9 @@ public class MakeReceptionViewController {
 		// Создаем пустой список заявителей
 		applicators = new ArrayList<Applicator>();
 
+		// Сбрасываем объект недвижимости
+		realtyObject = null;
+
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
 	}
@@ -181,11 +184,13 @@ public class MakeReceptionViewController {
 		viewState.updatePanelData();
 	}
 
-
-	void setReceptionToIssueDate(Date toIssueDate) {
+	void setToIssueDate(Date toIssueDate) {
 		reception.setToIssueDate(toIssueDate);
 	}
 
+	void setRosreestrCode(String rosreestrCode) {
+		reception.setRosreestrCode(rosreestrCode);
+	}
 
 
 	void storeService() {

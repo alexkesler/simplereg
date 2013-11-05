@@ -72,8 +72,9 @@ public class Reception extends AbstractEntity{
 	@Column(name="ToIssueDate")
 	private Date toIssueDate;
 
-	// @Column(name="KadastrNum")
-	// private String kadastrNum;
+	@Column(name="RosreestrCode", length=25)
+	private String rosreestrCode;
+
 
 	public Reception() {
 		// for Hibernate
@@ -196,4 +197,21 @@ public class Reception extends AbstractEntity{
 	public void setToIssueDate(Date toIssueDate) {
 		this.toIssueDate = toIssueDate;
 	}
+
+	public String getRosreestrCode() {
+		return rosreestrCode;
+	}
+
+	public void setRosreestrCode(String rosreestrCode) {
+		this.rosreestrCode = rosreestrCode;
+	}
+
+	public String getReceptionCode() {
+		return receptionCode;
+	}
+
+	public void setReceptionCode(String receptionCode) {
+		this.receptionCode = receptionCode;
+	}
+
 }
