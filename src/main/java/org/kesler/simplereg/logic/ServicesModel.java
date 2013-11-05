@@ -22,7 +22,6 @@ public class ServicesModel implements DAOListener{
 	private ServicesModel() {
 		services = new ArrayList<Service>();
 		DAOFactory.getInstance().getServiceDAO().addDAOListener(this);
-		threads = new ArrayList<Thread>();
 		listeners = new ArrayList<ServicesModelListener>();
 	}
 

@@ -170,6 +170,7 @@ public class FLListDialog extends JDialog{
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
+		this.getRootPane().setDefaultButton(okButton);
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {

@@ -140,6 +140,7 @@ public class ReestrColumnsDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
+		this.getRootPane().setDefaultButton(okButton);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				setVisible(false);

@@ -39,6 +39,17 @@ public class OperatorsModel implements DAOListener{
 
 	}
 
+	/**
+	* Читает операторов в отдельном потоке
+	*/
+	public void readOperatorsInSeparateProcess() {
+		Thread readOperatorsThread = new Thread(new Runnable() {
+			public void run() {
+				readOperators();
+			}
+		});
+	}
+
 	@Override
 	public void daoStateChanged(DAOState state) {
 		switch (state) {

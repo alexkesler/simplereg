@@ -109,6 +109,7 @@ public class ApplicatorULDialog extends JDialog {
 
 		JButton okButton = new JButton("Ok");
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+		this.getRootPane().setDefaultButton(okButton);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				boolean checkResult = checkUL();

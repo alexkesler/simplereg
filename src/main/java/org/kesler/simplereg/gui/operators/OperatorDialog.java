@@ -102,6 +102,7 @@ class OperatorDialog extends AbstractDialog {
 
 		JButton okButton = new JButton("Ok");
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+		this.getRootPane().setDefaultButton(okButton);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if(readOperatorFromGUI()) {

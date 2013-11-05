@@ -73,6 +73,7 @@ public class SelectServicesDialog extends ServicesDialog{
 		JPanel buttonPanel = new JPanel();
 
 		JButton selectButton = new JButton("Выбрать");
+		this.getRootPane().setDefaultButton(selectButton);		
 		selectButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		selectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
