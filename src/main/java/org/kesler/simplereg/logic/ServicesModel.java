@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
-import org.kesler.simplereg.logic.service.ServicesModelState;
+import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.service.ServicesModelListener;
 
 /**
@@ -42,7 +42,7 @@ public class ServicesModel implements DAOListener{
     */
 	public void readServices() {
 		services = DAOFactory.getInstance().getServiceDAO().getAllServices();
-		notifyListeners(ServicesModelState.UPDATED);	
+		notifyListeners(ModelState.UPDATED);	
 	}
 
     /**
@@ -113,21 +113,24 @@ public class ServicesModel implements DAOListener{
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(ServicesModelState.CONNECTING);
+				notifyListeners(ModelState.CONNECTING);
 			break;
 			case READING:
-				notifyListeners(ServicesModelState.READING);
+				notifyListeners(ModelState.READING);
+			break;
+			case WRITING:
+				notifyListeners(ModelState.WRITING);
 			break;
 			case READY:
-			// ничего не делаем, статус объявится при получении списка 
+				notifyListeners(ModelState.READY);
 			break;
 			case ERROR:
-				notifyListeners(ServicesModelState.ERROR);
+				notifyListeners(ModelState.ERROR);
 			break;
 		}
 	}
 
-	private void notifyListeners(ServicesModelState state) {
+	private void notifyListeners(ModelState state) {
 		for (ServicesModelListener listener: listeners) {
 			listener.modelStateChanged(state);
 		}

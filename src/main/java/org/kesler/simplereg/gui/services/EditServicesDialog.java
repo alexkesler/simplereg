@@ -208,7 +208,7 @@ public class EditServicesDialog extends ServicesDialog{
 
 			servicesTree.setSelectionPath(new TreePath(newNode.getPath()));
 
-			new InfoDialog(currentDialog, "Сохранено", 1000, InfoDialog.GREEN).showInfo();	
+			// new InfoDialog(currentDialog, "Сохранено", 1000, InfoDialog.GREEN).showInfo();	
 		}
 		
 	}
@@ -272,7 +272,7 @@ public class EditServicesDialog extends ServicesDialog{
 			Service selectedService = (Service) selectedNode.getUserObject();
 			if (controller.editService(selectedService)) 
 				servicesTreeModel.nodeChanged(selectedNode);
-				new InfoDialog(currentDialog, "Сохранено", 1000, InfoDialog.GREEN).showInfo();	
+				// new InfoDialog(currentDialog, "Сохранено", 1000, InfoDialog.GREEN).showInfo();	
 		}
 	}
 

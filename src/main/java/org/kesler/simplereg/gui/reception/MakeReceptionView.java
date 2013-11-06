@@ -342,7 +342,7 @@ class MakeReceptionView extends JFrame{
 		JTextField rosreestrCodeTextField;
 
 		DataPanel() {
-			super(new MigLayout("fillx, nogrid"));
+			super(new MigLayout("fillx"));
 
 			realtyObjectNameLabel = new JLabel("Не определено");
 			realtyObjectNameLabel.setBorder(BorderFactory.createEtchedBorder());
@@ -358,7 +358,6 @@ class MakeReceptionView extends JFrame{
 			toIssueDateChooser = new JDateChooser();
 			toIssueDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent ev) {
-					System.out.println("-------Prop name: " + ev.getPropertyName() + "-----------");
 					if (ev.getPropertyName().equals("date")) {
 						controller.setToIssueDate(toIssueDateChooser.getDate());
 					}
@@ -371,7 +370,6 @@ class MakeReceptionView extends JFrame{
 			rosreestrCodeTextField.addFocusListener(new java.awt.event.FocusListener() {
 				public void focusGained(java.awt.event.FocusEvent ev) {}
 				public void focusLost(java.awt.event.FocusEvent ev) {
-					System.out.println("-----------focus lost------------");
 					controller.setRosreestrCode(rosreestrCodeTextField.getText());
 				}
 
@@ -379,7 +377,7 @@ class MakeReceptionView extends JFrame{
 
 
 			this.add(new JLabel("Объект недвижимости"), "wrap");
-			this.add(realtyObjectNameLabel, "pushx, grow");
+			this.add(realtyObjectNameLabel, "span, split 2, growx");
 			this.add(selectRealtyObjectButton, "ay top, wrap");
 
 			this.add(new JLabel("Срок выдачи результата"));

@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.ServicesModel;
 import org.kesler.simplereg.logic.service.ServicesModelListener;
-import org.kesler.simplereg.logic.service.ServicesModelState;
+import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.dao.EntityState;
 
 
@@ -127,7 +127,7 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	}
 
 
-	public void modelStateChanged(ServicesModelState state) {
+	public void modelStateChanged(ModelState state) {
 		//if (processDialog == null) return ;
 		switch (state) {
 			case CONNECTING:
@@ -136,10 +136,16 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 			case READING:
 				ProcessDialog.showProcess(dialog, "Читаю список услуг");
 			break;	
+			case WRITING:
+				ProcessDialog.showProcess(dialog, "Записываю изменения");
+			break;	
 			case UPDATED:
 				dialog.reloadTree(model.getAllServices());
 				ProcessDialog.hideProcess();
 				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
+			break;
+			case READY:
+				ProcessDialog.hideProcess();	
 			break;
 			case ERROR:				
 				ProcessDialog.hideProcess();

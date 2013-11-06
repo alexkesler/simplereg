@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.ModelState;
 
 public class OperatorsModel implements DAOListener{
 
@@ -35,7 +36,7 @@ public class OperatorsModel implements DAOListener{
 	public void readOperators() {
 		operators = DAOFactory.getInstance().getOperatorDAO().getAllItems();
 		checkAdmin();
-		notifyListeners(OperatorsModelState.UPDATED);
+		notifyListeners(ModelState.UPDATED);
 
 	}
 
@@ -54,20 +55,28 @@ public class OperatorsModel implements DAOListener{
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-			notifyListeners(OperatorsModelState.CONNECTING);
+				notifyListeners(ModelState.CONNECTING);
 			break;
+
 			case READING:
-			notifyListeners(OperatorsModelState.READING);
+				notifyListeners(ModelState.READING);
 			break;
+
+			case WRITING:
+				notifyListeners(ModelState.WRITING);
+			break;
+
 			case READY:
-			// ничего не делаем			
+				notifyListeners(ModelState.READY);		
 			break;
+
 			case ERROR:
-			notifyListeners(OperatorsModelState.ERROR);
+				notifyListeners(ModelState.ERROR);
+			break;
 		}
 	}
 
-	private void notifyListeners(OperatorsModelState state) {
+	private void notifyListeners(ModelState state) {
 		for (OperatorsModelStateListener listener : listeners) {
 			listener.operatorsModelStateChanged(state);			
 		}

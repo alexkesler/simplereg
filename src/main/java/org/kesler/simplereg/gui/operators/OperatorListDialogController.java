@@ -7,10 +7,11 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.gui.GenericListDialogController;
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
+import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.operator.Operator;
 
 
-public class OperatorListDialogController implements GenericListDialogController {
+public class OperatorListDialogController implements GenericListDialogController, OperatorsModelStateListener {
 
 	private static OperatorListDialogController instance;
 
@@ -26,6 +27,7 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	private OperatorListDialogController() {
 		model = OperatorsModel.getInstance();
+		model.addOperatorsModelStateListener(this);
 
 	}
 
@@ -106,6 +108,11 @@ public class OperatorListDialogController implements GenericListDialogController
 	@Override
 	public void readItems() {
 		model.readOperators();
+	}
+
+	@Override
+	public void operatorsModelStateChanged(ModelState state) {
+		
 	}
 
 }
