@@ -154,6 +154,7 @@ public class GenericListDialog<T> extends JDialog {
 		dataPanel.add(addItemButton);
 		dataPanel.add(editItemButton);
 		dataPanel.add(removeItemButton);
+		dataPanel.add(updateButton);
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();

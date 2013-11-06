@@ -9,7 +9,10 @@ import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.ModelState;
 
+import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 
 public class OperatorListDialogController implements GenericListDialogController, OperatorsModelStateListener {
 
@@ -42,10 +45,10 @@ public class OperatorListDialogController implements GenericListDialogController
 		dialog = null;
 	}
 
-	@Override
-	public List<Operator> getAllItems() {
-		return model.getAllOperators();
-	}
+	// @Override
+	// public List<Operator> getAllItems() {
+	// 	return model.getAllOperators();
+	// }
 
 	@Override
 	public boolean openAddItemDialog() {
@@ -107,11 +110,34 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	@Override
 	public void readItems() {
-		model.readOperators();
+		model.readOperatorsInSeparateProcess();
 	}
 
 	@Override
 	public void operatorsModelStateChanged(ModelState state) {
+		switch (state) {
+			case CONNECTING:
+				ProcessDialog.showProcess(dialog, "Соединяюсь...");			
+			break;
+			case READING:
+				ProcessDialog.showProcess(dialog, "Читаю список операторов");
+			break;	
+			case WRITING:
+				ProcessDialog.showProcess(dialog, "Сохраняю изменения");
+			break;	
+			case UPDATED:
+				dialog.setItems(model.getAllOperators());
+				ProcessDialog.hideProcess();
+				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
+			break;
+			case READY:
+				ProcessDialog.hideProcess();	
+			break;
+			case ERROR:				
+				ProcessDialog.hideProcess();
+				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
+			break;			
+		}
 		
 	}
 

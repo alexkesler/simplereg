@@ -10,7 +10,7 @@ import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
-import org.kesler.simplereg.logic.operator.OperatorsModelState;
+import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
@@ -280,7 +280,7 @@ public class MainViewController implements MainViewListener,
 
 	}
 
-	public void operatorsModelStateChanged(OperatorsModelState state) {
+	public void operatorsModelStateChanged(ModelState state) {
 		if (processDialog == null) return; // Если диалог процесса пуст, нам нечего здесь делать
 		switch (state) {
 			case CONNECTING:
