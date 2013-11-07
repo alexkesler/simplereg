@@ -72,6 +72,7 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.simplereg.logic.reception.ReceptionStatus.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.realty.RealtyObject.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.realty.RealtyType.class)
+						.addAnnotatedClass(org.kesler.simplereg.logic.util.Counter.class)
 						.setProperties(hibernateProperties);
 
 		/// Пытаемся сконфигурировать Hibernate

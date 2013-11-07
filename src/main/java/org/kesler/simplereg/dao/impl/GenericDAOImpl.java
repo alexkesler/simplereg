@@ -78,7 +78,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	}
 
-	public T getItemById(int id) {
+	public T getItemById(long id) {
 		T item = null;
 
 		notifyListeners(DAOState.CONNECTING);

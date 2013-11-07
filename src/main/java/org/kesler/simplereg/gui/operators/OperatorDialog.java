@@ -23,6 +23,8 @@ class OperatorDialog extends AbstractDialog {
 
 	private Operator operator;
 
+	private JTextField codeTextField;
+
 	private JTextField firstNameTextField;
 	private JTextField parentNameTextField;
 	private JTextField surNameTextField;
@@ -63,6 +65,8 @@ class OperatorDialog extends AbstractDialog {
 		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
+		codeTextField = new JTextField(10);
+
 		JLabel surNameLabel = new JLabel("Фамилия");
 		surNameTextField = new JTextField(20);
 
@@ -84,6 +88,8 @@ class OperatorDialog extends AbstractDialog {
 
 
 		// Собираем панель данных
+		dataPanel.add(new JLabel("Код"));
+		dataPanel.add(codeTextField, "wrap");
 		dataPanel.add(surNameLabel);
 		dataPanel.add(surNameTextField, "wrap");
 		dataPanel.add(firstNameLabel);
@@ -137,6 +143,8 @@ class OperatorDialog extends AbstractDialog {
 
 	private void loadGUIFromOperator() {
 
+		String code = operator.getCode();
+
 		String firstName = operator.getFirstName();
 		String surName = operator.getSurName();
 		String parentName = operator.getParentName();
@@ -146,6 +154,14 @@ class OperatorDialog extends AbstractDialog {
 		Boolean controler = operator.isControler();
 		Boolean admin = operator.isAdmin();
 		Boolean enabled = operator.isEnabled(); 
+
+		// текстовые поля
+		if (code != null) {
+			codeTextField.setText(code);
+		} else {
+			codeTextField.setText("");
+		}
+
 
 		// текстовые поля
 		if (firstName != null) {
@@ -194,6 +210,8 @@ class OperatorDialog extends AbstractDialog {
 
 	private boolean readOperatorFromGUI() {
 
+		String code = codeTextField.getText();
+
 		String firstName = firstNameTextField.getText();
 		String surName = surNameTextField.getText();
 		String parentName = parentNameTextField.getText();
@@ -209,6 +227,8 @@ class OperatorDialog extends AbstractDialog {
 			JOptionPane.showMessageDialog(this, "Поле Фамилия не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;		
 		}
+
+		operator.setCode(code);
 
 		operator.setFirstName(firstName);
 		operator.setSurName(surName);

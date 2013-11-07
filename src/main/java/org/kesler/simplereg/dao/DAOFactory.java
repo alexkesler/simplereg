@@ -10,6 +10,7 @@ import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
+import org.kesler.simplereg.logic.util.Counter;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
@@ -20,6 +21,8 @@ public class DAOFactory {
 	private static ReceptionStatusDAO receptionStatusDAO = null;
 	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
 	private static GenericDAO<RealtyType> realtyTypeDAO = null;
+	private static GenericDAO<Counter> counterDAO = null;
+	
 	private static DAOFactory instance = null;
 
 	public static synchronized DAOFactory getInstance() {
@@ -87,5 +90,14 @@ public class DAOFactory {
 		
 		return realtyTypeDAO;
 	}
+
+	public GenericDAO<Counter> getCounterDAO() {
+		if (counterDAO == null) {
+			counterDAO = new GenericDAOImpl<Counter>(Counter.class);
+		}
+		
+		return counterDAO;
+	}
+
 
 }

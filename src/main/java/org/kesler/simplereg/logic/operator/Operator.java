@@ -13,13 +13,16 @@ import org.kesler.simplereg.dao.AbstractEntity;
 @Table(name="Operators")
 public class Operator extends AbstractEntity{
 
-	@Column(name="FirstName")
+	@Column(name="Code", length=25)
+	private String code;
+
+	@Column(name="FirstName", length=25)
 	private String firstName;
 
-	@Column(name="ParentName")
+	@Column(name="ParentName", length=25)
 	private String parentName;
 
-	@Column(name="SurName")
+	@Column(name="SurName", length=25)
 	private String surName;
 
 	@Column(name="Password", length=50)
@@ -51,6 +54,16 @@ public class Operator extends AbstractEntity{
 							(firstNameShort.isEmpty()?"":firstNameShort + ".") + 
 							(parentNameShort.isEmpty()?"":parentNameShort + ".");
 		return fioShort; 
+	}
+
+	public String getCode() {
+		String notNullCode = "";
+		if (code != null) notNullCode = code;
+		return notNullCode;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getFirstName() {
@@ -117,6 +130,8 @@ public class Operator extends AbstractEntity{
 
 	@Override 
 	public String toString() {
+		
+
 		String controlerString = "";
 		if (controler) {
 			controlerString = "Контр;";
@@ -132,6 +147,6 @@ public class Operator extends AbstractEntity{
 			enabledString = "Действ;";
 		} 
 
-		return getFIO() + " (" + controlerString + adminString + enabledString + ")";
+		return getFIO() + " [" + getCode() + "]"+ " (" + controlerString + adminString + enabledString + ")";
 	}
 }

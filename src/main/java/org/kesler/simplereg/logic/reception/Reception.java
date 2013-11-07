@@ -25,7 +25,7 @@ import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.realty.RealtyObject;
-
+import org.kesler.simplereg.logic.util.CounterUtil;
 
 /**
 * Класс предсталяет сущность приема заявителей
@@ -87,6 +87,13 @@ public class Reception extends AbstractEntity{
 		this.openDate = openDate;
 	}
 
+	public void generateReceptionCode() {
+		String operatorCode = "-----";
+		if (operator!=null) operatorCode = operator.getCode();
+		int count = CounterUtil.getNextCount();
+		String generatedCode = "07-11/1/" + operatorCode + "/" + count;
+		receptionCode = generatedCode;
+	}
 
 	public Service getService() {
 		return service;
@@ -213,5 +220,6 @@ public class Reception extends AbstractEntity{
 	public void setReceptionCode(String receptionCode) {
 		this.receptionCode = receptionCode;
 	}
+
 
 }

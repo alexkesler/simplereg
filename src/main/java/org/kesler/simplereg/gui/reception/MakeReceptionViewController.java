@@ -60,6 +60,9 @@ public class MakeReceptionViewController {
 		operator = CurrentOperator.getInstance().getOperator();
 		reception.setOperator(operator);
 
+		// Генерируем код дела
+		reception.generateReceptionCode();
+
 		// Сбрасываем услугу
 		service = null;
 

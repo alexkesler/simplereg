@@ -141,11 +141,14 @@ class MakeReceptionView extends JFrame{
 	// Панель выбора услуги
 	class ServicePanel extends JPanel {
 		
+		JTextField receptionCodeTextField;
 		JLabel serviceNameLabel;
 		JCheckBox byRecordCheckBox;
 
 		ServicePanel() {
 			super(new MigLayout("fillx"));
+
+			receptionCodeTextField = new JTextField(15);
 
 			serviceNameLabel = new JLabel();
 			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
@@ -164,11 +167,17 @@ class MakeReceptionView extends JFrame{
 				}
 			});
 
+			this.add(new JLabel("Код дела: "));
+			this.add(receptionCodeTextField, "wrap");
 			this.add(new JLabel("Услуга: "),"ay top");
 			this.add(serviceNameLabel,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");
 			this.add(byRecordCheckBox,"span,wrap");
 
+		}
+
+		void setReceptionCode(String receptionCode) {
+			receptionCodeTextField.setText(receptionCode);
 		}
 
 		void setServiceName(String serviceName) {

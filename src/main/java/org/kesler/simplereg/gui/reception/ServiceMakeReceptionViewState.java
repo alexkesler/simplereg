@@ -66,6 +66,10 @@ class ServiceMakeReceptionViewState extends MakeReceptionViewState {
 	@Override
 	void updatePanelData() {
 
+		// Устанавливаем поле "Код дела"
+		String receptionCode = controller.getReception().getReceptionCode();
+		view.getServicePanel().setReceptionCode(receptionCode);
+
 		// Устанавливаем поле Наименование услуги
 		String serviceName = "Не определена";
 		Service service = controller.getService();

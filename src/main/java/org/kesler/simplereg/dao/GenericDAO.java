@@ -8,7 +8,7 @@ public interface GenericDAO <T extends AbstractEntity> extends DAOObservable{
 
 	public void updateItem(T item);
 
-	public T getItemById(int id);
+	public T getItemById(long id);
 
 	public List<T> getAllItems();
 
