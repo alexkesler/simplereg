@@ -31,19 +31,26 @@ public class ReestrColumns {
 		ReestrColumn operatorReestrColumn = new OperatorReestrColumn();
 		ReestrColumn toIssueDateReestrColumn = new ToIssueDateReestrColumn();
 		ReestrColumn byRecordReestrColumn = new ByRecordReestrColumn();
+		ReestrColumn receptionCodeReestrColumn = new ReceptionCodeReestrColumn();
+		ReestrColumn rosreestrCodeReestrColumn = new RosreestrCodeReestrColumn();
 
+
+		allColumns.add(receptionCodeReestrColumn);
 		allColumns.add(openDateReestrColumn);
 		allColumns.add(applicatorsReestrColumn);
 		allColumns.add(serviceReestrColumn);
 		allColumns.add(statusReestrColumn);
 		allColumns.add(operatorReestrColumn);
 		allColumns.add(toIssueDateReestrColumn);
+		allColumns.add(rosreestrCodeReestrColumn);
+
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
 
 		// добавляем в активные поля 
 		activeColumns = new ArrayList<ReestrColumn>();
 
+		activeColumns.add(receptionCodeReestrColumn);		
 		activeColumns.add(openDateReestrColumn);
 		activeColumns.add(applicatorsReestrColumn);
 		activeColumns.add(serviceReestrColumn);
@@ -55,6 +62,7 @@ public class ReestrColumns {
 		inactiveColumns.add(byRecordReestrColumn);
 		inactiveColumns.add(operatorReestrColumn);
 		inactiveColumns.add(toIssueDateReestrColumn);
+		inactiveColumns.add(rosreestrCodeReestrColumn);
 	}
 
 	public List<ReestrColumn> getAllColumns() {
