@@ -149,6 +149,14 @@ class MakeReceptionView extends JFrame{
 			super(new MigLayout("fillx"));
 
 			receptionCodeTextField = new JTextField(15);
+			/// При потере фокуса запоминаем код дела
+			receptionCodeTextField.addFocusListener(new java.awt.event.FocusListener() {
+				public void focusGained(java.awt.event.FocusEvent ev) {}
+				public void focusLost(java.awt.event.FocusEvent ev) {
+					controller.setReceptionCode(receptionCodeTextField.getText());
+				}
+			});
+
 
 			serviceNameLabel = new JLabel();
 			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());

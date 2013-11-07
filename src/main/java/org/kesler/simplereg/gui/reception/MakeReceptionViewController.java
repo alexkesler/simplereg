@@ -113,6 +113,12 @@ public class MakeReceptionViewController {
 		return realtyObject;
 	}
 
+
+	// Методы для установки свойств Reception из ServicesPanel
+	void setReceptionCode(String receptionCode) {
+		reception.setReceptionCode(receptionCode);
+	}
+
 	void selectService() {
 		service = ServicesDialogController.getInstance().openSelectDialog(view);		
 		viewState.updatePanelData();
