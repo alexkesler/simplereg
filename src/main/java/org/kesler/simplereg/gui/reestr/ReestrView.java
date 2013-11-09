@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JList;
@@ -26,6 +27,8 @@ import java.awt.Dimension;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.reception.ReceptionStatus;
+import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
@@ -228,7 +231,7 @@ public class ReestrView extends JFrame {
 		reestrTable.getTableHeader().setLayout(new BorderLayout());
 		reestrTable.getTableHeader().add(columnsButton, BorderLayout.EAST);
 
-		/// добавление реакции на двойной клик
+		/// добавление реакции на двойной клик - открытие приема на просмотр
 		reestrTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ev) {
 				if (ev.getClickCount() == 2) {
@@ -254,10 +257,24 @@ public class ReestrView extends JFrame {
 			}
 		});
 
-		JMenuItem setReceptionStatusMenuItem = new JMenuItem("Изменить состояние");
+		JMenu setReceptionStatusMenu = new JMenu("Изменить состояние");
+		List<ReceptionStatus> statuses = ReceptionStatusesModel.getInstance().getReceptionStatuses();
+		for (ReceptionStatus status: statuses) {
+			JMenuItem statusMenuItem = new JMenuItem(status.getName());
+			statusMenuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+
+					// controller.changeReceptionsStatus((JMenuItem)(ev.getSource()).getText());
+				}
+			});
+			setReceptionStatusMenu.add(statusMenuItem);
+		}
+
+		JMenuItem removeReceptionMenuItem = new JMenuItem("Удалить прием");
 
 		reestrPopupMenu.add(openReceptionMenuItem);
-		reestrPopupMenu.add(setReceptionStatusMenuItem);
+		reestrPopupMenu.add(setReceptionStatusMenu);
+		reestrPopupMenu.add(removeReceptionMenuItem);
 
 		reestrTable.setComponentPopupMenu(reestrPopupMenu);
 
