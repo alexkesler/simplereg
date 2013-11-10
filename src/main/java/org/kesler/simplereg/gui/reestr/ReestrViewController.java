@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
 import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -224,6 +225,43 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
 		receptionDialog.setVisible(true);
 		
+	}
+
+	public void openReceptionDialog(int index) {
+		List<Reception> receptions = model.getFilteredReceptions();
+		Reception reception = receptions.get(index);
+		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
+		receptionDialog.setVisible(true);		
+	}
+
+	public void changeReceptionsStatus(int[] indexes, ReceptionStatus status) {
+		List<Reception> receptions = model.getFilteredReceptions();
+		List<Reception> selectedReceptions = new ArrayList<Reception>();
+		for (int i=0; i<indexes.length; i++) {
+			selectedReceptions.add(receptions.get(indexes[i]));			
+		}
+
+		/// сюда надо поместить уточняющий вопрос
+
+		for (Reception reception: selectedReceptions) {
+			reception.setStatus(status);
+			model.updateReception(reception);
+		}
+	}
+
+	public void removeReceptions(int[] indexes) {
+		List<Reception> receptions = model.getFilteredReceptions();
+		List<Reception> selectedReceptions = new ArrayList<Reception>();
+		for (int i=0; i<indexes.length; i++) {
+			selectedReceptions.add(receptions.get(indexes[i]));			
+		}
+
+		/// сюда надо поместить уточняющий вопрос
+
+		for (Reception reception: selectedReceptions) {
+			model.removeReception(reception);
+		}
+
 	}
 
 	public void createXLSFromReestrTable() {

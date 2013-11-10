@@ -108,7 +108,7 @@ public class ReceptionDAOImpl implements ReceptionDAO {
 		return  receptions;
 	}
 
-	public void deleteReception(Reception reception) {
+	public void removeReception(Reception reception) {
 		Session session = null;
 		try {
 			notifyListeners(DAOState.CONNECTING);

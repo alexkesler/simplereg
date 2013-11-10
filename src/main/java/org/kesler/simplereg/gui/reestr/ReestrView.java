@@ -11,6 +11,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JTable;
@@ -44,6 +46,10 @@ public class ReestrView extends JFrame {
 
 	private JTable reestrTable;
 	private ReestrTableModel reestrTableModel;
+
+	private Action openReceptionAction;
+	private Action changeReceptionsStatusAction;
+	private Action removeReceptionsAction;
 
 	private FilterListModel filterListModel;
 	private int selectedFilterIndex = -1;
@@ -231,6 +237,26 @@ public class ReestrView extends JFrame {
 		reestrTable.getTableHeader().setLayout(new BorderLayout());
 		reestrTable.getTableHeader().add(columnsButton, BorderLayout.EAST);
 
+		reestrTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent lse) {
+				if (reestrTable.getSelectedRows().length==0) {
+					openReceptionAction.setEnabled(false);
+					changeReceptionsStatusAction.setEnabled(false);
+					removeReceptionsAction.setEnabled(false);
+				} else if (reestrTable.getSelectedRows().length==1) {
+					openReceptionAction.setEnabled(true);
+					changeReceptionsStatusAction.setEnabled(true);
+					removeReceptionsAction.setEnabled(true);
+					removeReceptionsAction.putValue(Action.NAME, "Удалить запрос");
+				} else {
+					openReceptionAction.setEnabled(false);
+					changeReceptionsStatusAction.setEnabled(true);
+					removeReceptionsAction.setEnabled(true);
+					removeReceptionsAction.putValue(Action.NAME, "Удалить запросы");
+				}
+			}
+		});
+
 		/// добавление реакции на двойной клик - открытие приема на просмотр
 		reestrTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ev) {
@@ -243,38 +269,37 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+
+
 		JScrollPane reestrTableScrollPane = new JScrollPane(reestrTable);
 
-		// всплывающее меню для таблицы
+		///////////// всплывающее меню для таблицы
 		JPopupMenu reestrPopupMenu = new JPopupMenu();
 
 
-		JMenuItem openReceptionMenuItem = new JMenuItem("Открыть прием");
-		openReceptionMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				
-				//controller.openReceptionDialog();
-			}
-		});
+		openReceptionAction = new OpenReceptionAction();
+		openReceptionAction.setEnabled(false);
+		JMenuItem openReceptionMenuItem = new JMenuItem(openReceptionAction);
 
-		JMenu setReceptionStatusMenu = new JMenu("Изменить состояние");
+
+		changeReceptionsStatusAction = new ChangeReceptionsStatusAction();
+		changeReceptionsStatusAction.setEnabled(false);
+		JMenu setReceptionStatusMenu = new JMenu(changeReceptionsStatusAction);
 		List<ReceptionStatus> statuses = ReceptionStatusesModel.getInstance().getReceptionStatuses();
 		for (ReceptionStatus status: statuses) {
-			JMenuItem statusMenuItem = new JMenuItem(status.getName());
-			statusMenuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent ev) {
+			ChangeReceptionsStatusAction action = new ChangeReceptionsStatusAction(status);
+			JMenuItem statusMenuItem = new JMenuItem(action);
 
-					// controller.changeReceptionsStatus((JMenuItem)(ev.getSource()).getText());
-				}
-			});
 			setReceptionStatusMenu.add(statusMenuItem);
 		}
 
-		JMenuItem removeReceptionMenuItem = new JMenuItem("Удалить прием");
+		removeReceptionsAction = new RemoveReceptionsAction();
+		removeReceptionsAction.setEnabled(false);
+		JMenuItem removeReceptionsMenuItem = new JMenuItem(removeReceptionsAction);
 
 		reestrPopupMenu.add(openReceptionMenuItem);
 		reestrPopupMenu.add(setReceptionStatusMenu);
-		reestrPopupMenu.add(removeReceptionMenuItem);
+		reestrPopupMenu.add(removeReceptionsMenuItem);
 
 		reestrTable.setComponentPopupMenu(reestrPopupMenu);
 
@@ -401,6 +426,49 @@ public class ReestrView extends JFrame {
 			return tip;
 		}
 
+
+	}
+
+	class OpenReceptionAction extends AbstractAction {
+		OpenReceptionAction() {
+			super("Открыть запрос");
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			int selectedReceptionIndex = reestrTable.getSelectedRow();
+			controller.openReceptionDialog(selectedReceptionIndex);
+		}
+	}
+
+	class ChangeReceptionsStatusAction extends AbstractAction {
+		
+		private ReceptionStatus status = null;
+
+		ChangeReceptionsStatusAction() {
+			super("Изменить состояние");
+		}
+
+		ChangeReceptionsStatusAction(ReceptionStatus status) {
+			super(status.getName());
+			this.status = status;
+		}
+
+		public void actionPerformed(ActionEvent ev) {
+			if (status == null) return;
+			int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
+			controller.changeReceptionsStatus(selectedReceptionsIndexes, status);
+		}
+	}
+
+	class RemoveReceptionsAction extends AbstractAction {
+		RemoveReceptionsAction() {
+			super("Удалить запросы");
+		}
+
+		public void actionPerformed (ActionEvent ev) {
+			int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
+			controller.removeReceptions(selectedReceptionsIndexes);			
+		}
 	}
 
 }	

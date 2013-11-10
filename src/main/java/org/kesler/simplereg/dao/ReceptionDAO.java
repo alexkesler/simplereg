@@ -11,5 +11,5 @@ public interface ReceptionDAO extends DAOObservable{
 	public Reception getReceptionById(Long id);
 	public List getAllReceptions();
 	// public List getReceptionsByOpenDate(Date from, Date to);
-	public void deleteReception(Reception r);
+	public void removeReception(Reception r);
 }
