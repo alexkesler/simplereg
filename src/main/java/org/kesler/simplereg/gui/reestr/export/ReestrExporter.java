@@ -17,6 +17,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 // import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
+import com.alee.laf.filechooser.WebFileChooser;
+
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
@@ -73,20 +75,26 @@ public class ReestrExporter {
 				}
 		}
 
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setMultiSelectionEnabled(false);
+		WebFileChooser fileChooser = new WebFileChooser();
+		//fileChooser.setMultiSelectionEnabled(false);
 		FileFilter fileFilter = new FileNameExtensionFilter("Excel file", "xlsx");
 		fileChooser.setFileFilter(fileFilter);
 
 		File file = null;
 
-		int retValue = fileChooser.showSaveDialog(null);
+		// int retValue = fileChooser.showSaveDialog(null);
 
-		if (retValue == JFileChooser.APPROVE_OPTION) {
-			file = fileChooser.getSelectedFile();
-		} else {
-			return ;
+		file = fileChooser.showSaveDialog();
+
+		if (file == null) {
+			return;
 		}
+
+		// if (retValue == JFileChooser.APPROVE_OPTION) {
+		// 	file = fileChooser.getSelectedFile();
+		// } else {
+		// 	return ;
+		// }
 
 		String filePath = file.getPath();
 		if(filePath.indexOf(".xlsx") == -1) {

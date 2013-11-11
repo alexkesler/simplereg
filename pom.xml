@@ -122,6 +122,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.alee.laf</groupId>
+      <artifactId>WebLookAndFeel</artifactId>
+      <version>1.25</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
       <version>3.9</version>

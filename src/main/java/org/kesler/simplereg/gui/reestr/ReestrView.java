@@ -55,10 +55,12 @@ public class ReestrView extends JFrame {
 	private int selectedFilterIndex = -1;
 	private ReceptionsFilter selectedFilter = null;
 
-	public ReestrView(ReestrViewController controller) {
+	public ReestrView(ReestrViewController controller, JFrame parentFrame) {
 		super("Реестр запросов");
 		this.controller = controller;
 		createGUI();
+
+		this.setLocationRelativeTo(parentFrame);
 	}
 	
 
@@ -325,10 +327,9 @@ public class ReestrView extends JFrame {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
-		//this.pack();
+		this.pack();
 		
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setLocationRelativeTo(null);
 	}
 
 	class FilterListModel extends AbstractListModel {

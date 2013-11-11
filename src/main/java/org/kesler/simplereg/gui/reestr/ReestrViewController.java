@@ -3,6 +3,7 @@ package org.kesler.simplereg.gui.reestr;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
 
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
@@ -58,12 +59,12 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		model.addReceptionsModelStateListener(this);
 		filters = new ArrayList<ReceptionsFilter>();
 		// создаем вид с привязкой к этому контроллеру
-		view = new ReestrView(this);
 		
 	}
 
 	// Открывает основной вид
-	public void openView() {
+	public void openView(JFrame parentFrame) {
+		view = new ReestrView(this, parentFrame);
 		view.setVisible(true);
 	}
 

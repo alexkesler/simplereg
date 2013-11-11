@@ -342,7 +342,7 @@ public class MainViewController implements MainViewListener,
 	}
 
 	private void openReceptionsReestr() {
-		ReestrViewController.getInstance().openView();
+		ReestrViewController.getInstance().openView(mainView);
 	}
 
 	private void openOptions() {
