@@ -82,19 +82,11 @@ public class ReestrExporter {
 
 		File file = null;
 
-		// int retValue = fileChooser.showSaveDialog(null);
-
 		file = fileChooser.showSaveDialog();
 
 		if (file == null) {
 			return;
 		}
-
-		// if (retValue == JFileChooser.APPROVE_OPTION) {
-		// 	file = fileChooser.getSelectedFile();
-		// } else {
-		// 	return ;
-		// }
 
 		String filePath = file.getPath();
 		if(filePath.indexOf(".xlsx") == -1) {

@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
 import org.kesler.simplereg.gui.util.ProcessDialog;
+import org.kesler.simplereg.gui.util.InfoDialog;
 
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
@@ -229,6 +230,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	public void openReceptionDialog(int index) {
+		if (index == -1) {
+			new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+			return;
+		}
 		List<Reception> receptions = model.getFilteredReceptions();
 		Reception reception = receptions.get(index);
 		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
@@ -236,21 +241,40 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	public void changeReceptionsStatus(int[] indexes, ReceptionStatus status) {
+		if (indexes.length == 0) {
+			new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+			return;
+		}
+
 		List<Reception> receptions = model.getFilteredReceptions();
+		String selectedReceptionsString = "";
 		List<Reception> selectedReceptions = new ArrayList<Reception>();
 		for (int i=0; i<indexes.length; i++) {
-			selectedReceptions.add(receptions.get(indexes[i]));			
+			Reception reception = receptions.get(indexes[i]);
+			selectedReceptions.add(reception);	
+			selectedReceptionsString += reception.getReceptionCode() + ";";		
 		}
 
-		/// сюда надо поместить уточняющий вопрос
+		int confirmResult = JOptionPane.showConfirmDialog(view, "Установить для запросов: " + 
+														selectedReceptionsString + 
+														" статус: " + status.getName() + " ?", 
+														"Сменить статус?", JOptionPane.YES_NO_OPTION);
 
-		for (Reception reception: selectedReceptions) {
-			reception.setStatus(status);
-			model.updateReception(reception);
+		if (confirmResult == JOptionPane.OK_OPTION) {
+			for (Reception reception: selectedReceptions) {
+				reception.setStatus(status);
+				model.updateReception(reception);
+			}			
 		}
+
 	}
 
 	public void removeReceptions(int[] indexes) {
+		if (indexes.length == 0) {
+			new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+			return;
+		}
+		
 		List<Reception> receptions = model.getFilteredReceptions();
 		List<Reception> selectedReceptions = new ArrayList<Reception>();
 		for (int i=0; i<indexes.length; i++) {

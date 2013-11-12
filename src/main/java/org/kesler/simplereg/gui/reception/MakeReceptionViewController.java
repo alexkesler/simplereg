@@ -21,6 +21,8 @@ import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 
+import org.kesler.simplereg.gui.util.InfoDialog;
+
 public class MakeReceptionViewController {
 
 	private static MakeReceptionViewController instance;
@@ -217,6 +219,7 @@ public class MakeReceptionViewController {
 	void saveReception() {
 
 		ReceptionsModel.getInstance().addReception(reception);
+		new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
 	}
 
 }
