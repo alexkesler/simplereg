@@ -237,7 +237,8 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		List<Reception> receptions = model.getFilteredReceptions();
 		Reception reception = receptions.get(index);
 		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
-		receptionDialog.setVisible(true);		
+		receptionDialog.setVisible(true);	
+		view.tableDataChanged();	
 	}
 
 	public void changeReceptionsStatus(int[] indexes, ReceptionStatus status) {
@@ -252,19 +253,20 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		for (int i=0; i<indexes.length; i++) {
 			Reception reception = receptions.get(indexes[i]);
 			selectedReceptions.add(reception);	
-			selectedReceptionsString += reception.getReceptionCode() + ";";		
+			selectedReceptionsString += "<p>" + reception.getReceptionCode() + ";</p>";		
 		}
 
-		int confirmResult = JOptionPane.showConfirmDialog(view, "Установить для запросов: " + 
+		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " + 
 														selectedReceptionsString + 
-														" статус: " + status.getName() + " ?", 
+														" статус: " + status.getName() + " ?</html>", 
 														"Сменить статус?", JOptionPane.YES_NO_OPTION);
 
 		if (confirmResult == JOptionPane.OK_OPTION) {
 			for (Reception reception: selectedReceptions) {
 				reception.setStatus(status);
 				model.updateReception(reception);
-			}			
+			}
+			view.tableDataChanged();						
 		}
 
 	}
@@ -276,15 +278,24 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 		
 		List<Reception> receptions = model.getFilteredReceptions();
+		String selectedReceptionsString = "";
 		List<Reception> selectedReceptions = new ArrayList<Reception>();
 		for (int i=0; i<indexes.length; i++) {
-			selectedReceptions.add(receptions.get(indexes[i]));			
+			Reception reception = receptions.get(indexes[i]);
+			selectedReceptions.add(reception);
+			selectedReceptionsString += "<p>" + reception.getReceptionCode() + ";</p>";				
 		}
 
 		/// сюда надо поместить уточняющий вопрос
+		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Удалить запросы: " + 
+														selectedReceptionsString + " ?</html>", 
+														"Удалить запросы?", JOptionPane.YES_NO_OPTION);
 
-		for (Reception reception: selectedReceptions) {
-			model.removeReception(reception);
+		if (confirmResult == JOptionPane.OK_OPTION) {
+			for (Reception reception: selectedReceptions) {
+				model.removeReception(reception);
+			}
+			view.tableStructureChanged();
 		}
 
 	}

@@ -264,8 +264,7 @@ public class ReestrView extends JFrame {
 			public void mouseClicked(MouseEvent ev) {
 				if (ev.getClickCount() == 2) {
 					int selectedReceptionIndex = reestrTable.getSelectedRow();
-					Reception selectedReception = controller.getFilteredReceptions().get(selectedReceptionIndex);
-					controller.openReceptionDialog(selectedReception);
+					controller.openReceptionDialog(selectedReceptionIndex);
 					reestrTableModel.fireTableDataChanged();
 				}
 			}
@@ -374,6 +373,15 @@ public class ReestrView extends JFrame {
 			reestrTable.getColumnModel().getColumn(i).setPreferredWidth(reestrColumns.get(i).getWidth());
 		}
 	}
+
+	public void tableDataChanged() {
+		reestrTableModel.fireTableDataChanged();
+	}
+
+	public void tableStructureChanged() {
+		reestrTableModel.fireTableStructureChanged();
+	}
+
 
 	class ReestrTableModel extends AbstractTableModel {
 

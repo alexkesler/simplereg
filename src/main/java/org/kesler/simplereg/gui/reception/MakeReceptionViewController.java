@@ -219,7 +219,7 @@ public class MakeReceptionViewController {
 	void saveReception() {
 
 		ReceptionsModel.getInstance().addReception(reception);
-		new InfoDialog(currentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+		new InfoDialog(view, "Сохранено", 500, InfoDialog.GREEN).showInfo();
 	}
 
 }
