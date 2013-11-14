@@ -75,6 +75,9 @@ public class Reception extends AbstractEntity{
 	@Column(name="RosreestrCode", length=25)
 	private String rosreestrCode;
 
+	@Column(name="ResultInMFC")
+	private Boolean resultInMFC;
+
 
 	public Reception() {
 		// for Hibernate
@@ -219,6 +222,14 @@ public class Reception extends AbstractEntity{
 
 	public void setReceptionCode(String receptionCode) {
 		this.receptionCode = receptionCode;
+	}
+
+	public Boolean isResultInMFC() {
+		return resultInMFC;
+	}
+
+	public void setResultInMFC(Boolean resultInMFC) {
+		this.resultInMFC = resultInMFC;
 	}
 
 

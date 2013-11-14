@@ -358,6 +358,8 @@ class MakeReceptionView extends JFrame{
 
 		JTextField rosreestrCodeTextField;
 
+		JCheckBox resultInMFCCheckBox;
+
 		DataPanel() {
 			super(new MigLayout("fillx"));
 
@@ -393,6 +395,13 @@ class MakeReceptionView extends JFrame{
 			});
 
 
+			resultInMFCCheckBox = new JCheckBox("Результат получать в МФЦ");
+			resultInMFCCheckBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.setResultInMFC(resultInMFCCheckBox.isSelected());
+				}
+			});
+
 			this.add(new JLabel("Объект недвижимости"), "wrap");
 			this.add(realtyObjectNameLabel, "span, split 2, growx");
 			this.add(selectRealtyObjectButton, "ay top, wrap");
@@ -403,6 +412,7 @@ class MakeReceptionView extends JFrame{
 			this.add(new JLabel("Код дела Росреестра: "));
 			this.add(rosreestrCodeTextField, "wrap");
 
+			this.add(resultInMFCCheckBox,"wrap");
 
 		}
 
@@ -425,6 +435,10 @@ class MakeReceptionView extends JFrame{
 
 		void setRosreestrCode(String rosreestrCode) {
 			rosreestrCodeTextField.setText(rosreestrCode);
+		}
+
+		void setResultInMFC(boolean resultInMFC) {
+			resultInMFCCheckBox.setSelected(resultInMFC);
 		}
 
 	}

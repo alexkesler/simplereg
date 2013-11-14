@@ -86,6 +86,8 @@ public class ReceptionsModel implements DAOListener{
 
 	public void removeReception(Reception reception) {
 		DAOFactory.getInstance().getReceptionDAO().removeReception(reception);
+		allReceptions.remove(reception);
+		filteredReceptions.remove(reception);
 	}
 
 

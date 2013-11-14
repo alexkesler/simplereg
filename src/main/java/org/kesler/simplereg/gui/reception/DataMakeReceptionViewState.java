@@ -114,6 +114,11 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 		String rosreestrCode = controller.getReception().getRosreestrCode();
 		view.getDataPanel().setRosreestrCode(rosreestrCode);
 
+		// Обновляем признак получения результата в МФЦ
+		Boolean resultInMFC = controller.getReception().isResultInMFC();
+		if (resultInMFC == null) resultInMFC = false;
+		view.getDataPanel().setResultInMFC(resultInMFC);
+
 	}
 
 

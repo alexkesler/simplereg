@@ -203,6 +203,9 @@ public class MakeReceptionViewController {
 		reception.setRosreestrCode(rosreestrCode);
 	}
 
+	void setResultInMFC(boolean resultInMFC) {
+		reception.setResultInMFC(resultInMFC);
+	}
 
 	void storeService() {
 		reception.setService(service);
