@@ -229,6 +229,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		
 	}
 
+
 	public void openReceptionDialog(int index) {
 		if (index == -1) {
 			new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
@@ -240,6 +241,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		receptionDialog.setVisible(true);	
 		view.tableDataChanged();	
 	}
+
 
 	public void changeReceptionsStatus(int[] indexes, ReceptionStatus status) {
 		if (indexes.length == 0) {
@@ -270,6 +272,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 
 	}
+
 
 	public void removeReceptions(int[] indexes) {
 		if (indexes.length == 0) {
