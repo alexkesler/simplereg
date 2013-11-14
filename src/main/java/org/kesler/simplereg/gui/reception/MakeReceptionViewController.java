@@ -65,6 +65,10 @@ public class MakeReceptionViewController {
 		// Генерируем код дела
 		reception.generateReceptionCode();
 
+		// Устанавливаем начальные значения
+		reception.setByRecord(false);
+		reception.setResultInMFC(false);
+
 		// Сбрасываем услугу
 		service = null;
 

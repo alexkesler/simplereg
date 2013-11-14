@@ -33,6 +33,8 @@ public class ReestrColumns {
 		ReestrColumn byRecordReestrColumn = new ByRecordReestrColumn();
 		ReestrColumn receptionCodeReestrColumn = new ReceptionCodeReestrColumn();
 		ReestrColumn rosreestrCodeReestrColumn = new RosreestrCodeReestrColumn();
+		ReestrColumn resultInMFCReestrColumn = new ResultInMFCReestrColumn();
+
 
 
 		allColumns.add(receptionCodeReestrColumn);
@@ -43,7 +45,7 @@ public class ReestrColumns {
 		allColumns.add(operatorReestrColumn);
 		allColumns.add(toIssueDateReestrColumn);
 		allColumns.add(rosreestrCodeReestrColumn);
-
+		allColumns.add(resultInMFCReestrColumn);
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
 
@@ -55,7 +57,8 @@ public class ReestrColumns {
 		activeColumns.add(applicatorsReestrColumn);
 		activeColumns.add(serviceReestrColumn);
 		activeColumns.add(statusReestrColumn);
-
+		activeColumns.add(resultInMFCReestrColumn);
+		
 
 		// список неактивных полей
 		inactiveColumns = new ArrayList<ReestrColumn>();
