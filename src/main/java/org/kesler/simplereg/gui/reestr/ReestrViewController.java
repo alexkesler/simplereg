@@ -24,6 +24,7 @@ import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilter;
+import org.kesler.simplereg.gui.reestr.filter.ResultInMFCReceptionsFilter;
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
@@ -33,6 +34,7 @@ import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.ResultInMFCReceptionsFilterDialog;
 
 import org.kesler.simplereg.gui.reestr.print.ReestrExporter;
 
@@ -105,6 +107,9 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			case TO_ISSUE_DATE:
 				receptionsFilterDialog = new ToIssueDateReceptionsFilterDialog(view);	
 			break;
+			case RESULT_IN_MFC:
+				receptionsFilterDialog = new ResultInMFCReceptionsFilterDialog(view);	
+			break;
 			default:
 				return;
 		}
@@ -158,6 +163,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 			ToIssueDateReceptionsFilter toIssueDateReceptionsFilter = (ToIssueDateReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new ToIssueDateReceptionsFilterDialog(view, toIssueDateReceptionsFilter);
+
+		} else if (receptionsFilter instanceof ResultInMFCReceptionsFilter) { // Фильтр по дате не выдачу
+
+			ResultInMFCReceptionsFilter resultInMFCReceptionsFilter = (ResultInMFCReceptionsFilter) receptionsFilter;
+			receptionsFilterDialog = new ResultInMFCReceptionsFilterDialog(view, resultInMFCReceptionsFilter);
 
 		} else return;
 

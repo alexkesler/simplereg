@@ -151,6 +151,14 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		// Пункт меню - добавление фильтра по месту получения результата
+		JMenuItem resultInMFCFilterMenuItem = new JMenuItem("По месту получения результата");
+		resultInMFCFilterMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addFilter(ReceptionsFiltersEnum.RESULT_IN_MFC);
+			}
+		});
+
 
 		// собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
@@ -159,6 +167,7 @@ public class ReestrView extends JFrame {
 		filtersPopupMenu.add(serviceFilterMenuItem);
 		filtersPopupMenu.add(operatorFilterMenuItem);
 		filtersPopupMenu.add(toIssueDateFilterMenuItem);
+		filtersPopupMenu.add(resultInMFCFilterMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();

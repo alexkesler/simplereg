@@ -6,5 +6,6 @@ public enum ReceptionsFiltersEnum {
 	STATUS,
 	OPERATOR,
 	TO_ISSUE_DATE,
-	BY_RECORD
+	BY_RECORD,
+	RESULT_IN_MFC
 }
