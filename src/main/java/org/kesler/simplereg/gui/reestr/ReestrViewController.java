@@ -195,32 +195,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	// применяет созданный набор фильтров - вызывается из вида
 	public void applyFilters() {
 
-		// // сначала читаем последние сведения из базы данных в отдельном потоке
-		// processDialog = new ProcessDialog(view, "Работаю", "Читаю список приемов");
-		// Thread receptionsReaderThread = new Thread(new ReceptionsReader());
-		// receptionsReaderThread.start();
-		// processDialog.setVisible(true); // открываем модальный диалог, ожидаем его закрытия
-
-		// if(processDialog.getResult() == ProcessDialog.ERROR) {
-		// 	JOptionPane.showMessageDialog(view, "Ошибка чтения из базы данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
-		// 	return ;
-		// }
-
-		// // В конце процедуры удаляем диалог
-		// processDialog.dispose();
-		// processDialog = null;
-
 		model.applyFiltersInSeparateThread(filters);
-
-		// // Зтем фильтруем записи в отдельном потоке
-		// processDialog = new ProcessDialog(view, "Работаю", "Фильтрую записи");
-		// Thread receptionsFiltererThread = new Thread(new ReceptionsFilterer());
-		// receptionsFiltererThread.start();
-		// processDialog.setVisible(true);
-
-		// // В конце процедуры удаляем диалог
-		// processDialog.dispose();
-		// processDialog = null;
 
 	}
 
