@@ -43,12 +43,13 @@ public class OperatorsModel implements DAOListener{
 	/**
 	* Читает операторов в отдельном потоке
 	*/
-	public void readOperatorsInSeparateProcess() {
+	public void readOperatorsInSeparateThread() {
 		Thread readOperatorsThread = new Thread(new Runnable() {
 			public void run() {
 				readOperators();
 			}
 		});
+		readOperatorsThread.start();
 	}
 
 	@Override

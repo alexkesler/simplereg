@@ -49,7 +49,7 @@ public class ServicesModel implements DAOListener{
     * Читает услуги из базы данных во внутренний список в отдельном потоке
     * @return ID потока
     */
-	public void readServicesInProcess() {
+	public void readServicesInSeparateProcess() {
 		Thread readServicesThread = new Thread(new Runnable() {
 			public void run() {
 				readServices();

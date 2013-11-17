@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.main;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
@@ -57,6 +58,26 @@ class LoginDialog extends AbstractDialog{
 		this.pack();
 		this.setLocationRelativeTo(frame);
 
+	}
+
+	public LoginDialog(JFrame frame) {
+		super(frame,"Вход в систему", true);
+		currentDialog = this;
+
+		this.operators = new ArrayList<Operator>();
+
+		createGUI();
+		loadGUIFromOperators();
+
+		this.pack();
+		this.setLocationRelativeTo(frame);
+
+	}
+
+
+	public void setOperators(List<Operator> operators) {
+		this.operators = operators;
+		loadGUIFromOperators();
 	}
 
 	private void createGUI() {

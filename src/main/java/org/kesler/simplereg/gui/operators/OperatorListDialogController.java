@@ -29,20 +29,27 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	private OperatorListDialogController() {
+
 		model = OperatorsModel.getInstance();
 		model.addOperatorsModelStateListener(this);
 
 	}
 
 	public void showDialog(JFrame parentFrame) {
+
 		dialog = new GenericListDialog<Operator>(parentFrame, "Операторы", this);
-		List<Operator> operators = model.getAllOperators();
-		dialog.setItems(operators);
+		// List<Operator> operators = model.getAllOperators();
+		// dialog.setItems(operators);
+
+		model.readOperatorsInSeparateThread();
+
 		dialog.setVisible(true);
+
 
 		// Освобождаем ресурсы
 		dialog.dispose();
 		dialog = null;
+
 	}
 
 	// @Override
@@ -72,6 +79,7 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	@Override
 	public boolean openEditItemDialog(int index) {
+
 		boolean result = false;
 		Operator operator = model.getAllOperators().get(index);
 		OperatorDialog operatorDialog = new OperatorDialog(dialog, operator);
@@ -88,10 +96,12 @@ public class OperatorListDialogController implements GenericListDialogController
 		operatorDialog = null;
 
 		return result;
+
 	}
 
 	@Override
 	public boolean removeItem(int index) {
+
 		boolean result = false;
 
 		Operator operator = model.getAllOperators().get(index);
@@ -105,12 +115,11 @@ public class OperatorListDialogController implements GenericListDialogController
 
 		return result;
 
-
 	}
 
 	@Override
 	public void readItems() {
-		model.readOperatorsInSeparateProcess();
+		model.readOperatorsInSeparateThread();
 	}
 
 	@Override
@@ -126,7 +135,7 @@ public class OperatorListDialogController implements GenericListDialogController
 				ProcessDialog.showProcess(dialog, "Сохраняю изменения");
 			break;	
 			case UPDATED:
-				dialog.setItems(model.getAllOperators());
+				if (dialog != null) dialog.setItems(model.getAllOperators());
 				ProcessDialog.hideProcess();
 				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
 			break;

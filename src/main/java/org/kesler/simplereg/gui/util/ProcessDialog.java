@@ -68,6 +68,18 @@ public class ProcessDialog extends JDialog {
 		setLocationRelativeTo(parentDialog);
 	}
 
+	private ProcessDialog(JFrame parentFrame, String content) {
+		super(parentFrame, false);
+		result = NONE;
+		listeners = new ArrayList<ProcessDialogListener>();
+
+		createGUI();
+		setContent(content);
+		setUndecorated(true);		
+		setLocationRelativeTo(parentFrame);
+	}
+
+
 	private ProcessDialog(JDialog parentDialog, String content, ProcessDialogListener listener) {
 		super(parentDialog, false);
 		result = NONE;
@@ -157,6 +169,20 @@ public class ProcessDialog extends JDialog {
 		}
 
 	}
+
+	public static synchronized void showProcess(JFrame parentFrame, String content) {
+		
+		//hideProcess();
+		if (instance != null && instance.getOwner().equals((Window)parentFrame)) {
+			instance.setContent(content);
+		} else {
+			instance = new ProcessDialog(parentFrame, content);
+			instance.processThread = Thread.currentThread();
+			instance.setVisible(true);			
+		}
+
+	}
+
 
 	public static synchronized void showProcess(JDialog parentDialog, String content, ProcessDialogListener listener) {
 		

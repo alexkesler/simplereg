@@ -11,7 +11,7 @@ import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.reception.ReceptionsModelState;
+import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.gui.reception.ReceptionDialog;
 
@@ -46,9 +46,6 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	private ReceptionsModel model;
 	private List<ReceptionsFilter> filters;
-
-	private ProcessDialog processDialog;
-
 
 	public static synchronized ReestrViewController getInstance() {
 		if (instance == null) {
@@ -198,30 +195,32 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	// применяет созданный набор фильтров - вызывается из вида
 	public void applyFilters() {
 
-		// сначала читаем последние сведения из базы данных в отдельном потоке
-		processDialog = new ProcessDialog(view, "Работаю", "Читаю список приемов");
-		Thread receptionsReaderThread = new Thread(new ReceptionsReader());
-		receptionsReaderThread.start();
-		processDialog.setVisible(true); // открываем модальный диалог, ожидаем его закрытия
+		// // сначала читаем последние сведения из базы данных в отдельном потоке
+		// processDialog = new ProcessDialog(view, "Работаю", "Читаю список приемов");
+		// Thread receptionsReaderThread = new Thread(new ReceptionsReader());
+		// receptionsReaderThread.start();
+		// processDialog.setVisible(true); // открываем модальный диалог, ожидаем его закрытия
 
-		if(processDialog.getResult() == ProcessDialog.ERROR) {
-			JOptionPane.showMessageDialog(view, "Ошибка чтения из базы данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
-			return ;
-		}
+		// if(processDialog.getResult() == ProcessDialog.ERROR) {
+		// 	JOptionPane.showMessageDialog(view, "Ошибка чтения из базы данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
+		// 	return ;
+		// }
 
-		// В конце процедуры удаляем диалог
-		processDialog.dispose();
-		processDialog = null;
+		// // В конце процедуры удаляем диалог
+		// processDialog.dispose();
+		// processDialog = null;
 
-		// Зтем фильтруем записи в отдельном потоке
-		processDialog = new ProcessDialog(view, "Работаю", "Фильтрую записи");
-		Thread receptionsFiltererThread = new Thread(new ReceptionsFilterer());
-		receptionsFiltererThread.start();
-		processDialog.setVisible(true);
+		model.applyFiltersInSeparateThread(filters);
 
-		// В конце процедуры удаляем диалог
-		processDialog.dispose();
-		processDialog = null;
+		// // Зтем фильтруем записи в отдельном потоке
+		// processDialog = new ProcessDialog(view, "Работаю", "Фильтрую записи");
+		// Thread receptionsFiltererThread = new Thread(new ReceptionsFilterer());
+		// receptionsFiltererThread.start();
+		// processDialog.setVisible(true);
+
+		// // В конце процедуры удаляем диалог
+		// processDialog.dispose();
+		// processDialog = null;
 
 	}
 
@@ -317,53 +316,47 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		ReestrExporter.exportReestr();
 	}
 
-	// класс для чтения данных о приемах в отдельном потоке
-	private class ReceptionsReader implements Runnable {
-		public void run() {
-			model.readReceptionsFromDB();
-		}
-	}
-
-	// класс для фильтрации в отдельном потоке
-	private class ReceptionsFilterer implements Runnable {
-		public void run() {
-			model.applyFilters(filters);
-		}
-	}
-
 
 	// реализует интерфейс для слушателя модели приемов 
 	@Override
-	public void receptionsModelStateChanged(ReceptionsModelState state) {
-		if(processDialog == null) return; // Управление происходит через processDialog поэтому если не задан - выходим
+	public void receptionsModelStateChanged(ModelState state) {
+		// if(processDialog == null) return; // Управление происходит через processDialog поэтому если не задан - выходим
 		switch (state) {
 			case CONNECTING:
-				if(processDialog.isVisible()) {
-					processDialog.setContent("Соединяюсь");
-				}	
+				ProcessDialog.showProcess(view, "Соединяюсь");
+				// if(processDialog.isVisible()) {
+				// 	processDialog.setContent("Соединяюсь");
+				// }	
 			break;
 			case READING:
-				if(processDialog.isVisible()) {
-					processDialog.setContent("Читаю список приемов");
-				}	
+				ProcessDialog.showProcess(view, "Читаю список приемов");
+				// if(processDialog.isVisible()) {
+				// 	processDialog.setContent("Читаю список приемов");
+				// }	
 			break;
 			case UPDATED:
-				processDialog.setContent("Готово");
-				processDialog.setVisible(false);
+				ProcessDialog.hideProcess();
+				view.setReceptions(getFilteredReceptions());
+				// processDialog.setContent("Готово");
+				// processDialog.setVisible(false);
 			break;
 			case FILTERING:
-				if(processDialog.isVisible()) {
-					processDialog.setContent("Фильтрую список приемов");
-				}	
+				ProcessDialog.showProcess(view, "Фильтрую список приемов");
+
+				// if(processDialog.isVisible()) {
+				// 	processDialog.setContent("Фильтрую список приемов");
+				// }	
 			break;
-			case FILTERED:
-				processDialog.setContent("Готово");
-				processDialog.setVisible(false);
+			case READY:
+				ProcessDialog.hideProcess();
+				// processDialog.setContent("Готово");
+				// processDialog.setVisible(false);
 			break;		
 			case ERROR:
-				processDialog.setResult(ProcessDialog.ERROR);
-				processDialog.setContent("Ошибка");
-				processDialog.setVisible(false);
+
+				// processDialog.setResult(ProcessDialog.ERROR);
+				// processDialog.setContent("Ошибка");
+				// processDialog.setVisible(false);
 			break;
 		}					
 	} 

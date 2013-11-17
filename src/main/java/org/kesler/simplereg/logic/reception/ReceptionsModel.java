@@ -11,7 +11,7 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
-
+import org.kesler.simplereg.logic.ModelState;
 
 public class ReceptionsModel implements DAOListener{
 	private static ReceptionsModel instance = null;
@@ -50,15 +50,24 @@ public class ReceptionsModel implements DAOListener{
 
 
 	// читаем данные из БД
-	public void readReceptionsFromDB() {
+	public void readReceptions() {
 		allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
-		notifyListeners(ReceptionsModelState.UPDATED);
+		notifyListeners(ModelState.UPDATED);
+	}
+
+	public void readReceptionsInSeparateThread() {
+		Thread readerThread = new Thread(new Runnable() {
+			public void run() {
+				readReceptions();
+			}
+		});
+		readerThread.start();
 	}
 
 	// применяем фильтры
 	public void applyFilters(List<ReceptionsFilter> filters) {
 		filteredReceptions = new ArrayList<Reception>();
-		notifyListeners(ReceptionsModelState.FILTERING);
+		notifyListeners(ModelState.FILTERING);
 		for (Reception reception: allReceptions) {
 			boolean fit = true;		
 			for (ReceptionsFilter filter: filters) {
@@ -66,8 +75,18 @@ public class ReceptionsModel implements DAOListener{
 			}
 			if (fit) filteredReceptions.add(reception);
 		}
-		notifyListeners(ReceptionsModelState.FILTERED);
+		notifyListeners(ModelState.UPDATED);
 
+	}
+
+	public void applyFiltersInSeparateThread(final List<ReceptionsFilter> filters) {
+		Thread filterThread = new Thread(new Runnable() {
+			public void run() {
+				readReceptions();
+				applyFilters(filters);
+			}
+		});
+		filterThread.start();
 	}
 
 
@@ -98,15 +117,15 @@ public class ReceptionsModel implements DAOListener{
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(ReceptionsModelState.CONNECTING);
+				notifyListeners(ModelState.CONNECTING);
 			break;
 			
 			case READING:
-				notifyListeners(ReceptionsModelState.READING);
+				notifyListeners(ModelState.READING);
 			break;
 			
 			case WRITING:
-				notifyListeners(ReceptionsModelState.WRITING);
+				notifyListeners(ModelState.WRITING);
 			break;
 			
 			case READY:
@@ -114,12 +133,12 @@ public class ReceptionsModel implements DAOListener{
 			break;
 			
 			case ERROR:
-				notifyListeners(ReceptionsModelState.ERROR);
+				notifyListeners(ModelState.ERROR);
 			break;				
 		}
 	}
 
-	private void notifyListeners(ReceptionsModelState state) {
+	private void notifyListeners(ModelState state) {
 		for (ReceptionsModelStateListener listener: listeners) {
 			listener.receptionsModelStateChanged(state);
 		}

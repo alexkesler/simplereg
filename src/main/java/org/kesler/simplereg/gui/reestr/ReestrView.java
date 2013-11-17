@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.reestr;
 
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -63,6 +64,9 @@ public class ReestrView extends JFrame {
 		this.setLocationRelativeTo(parentFrame);
 	}
 	
+	public void setReceptions(List<Reception> receptions) {
+		reestrTableModel.setReceptions(receptions);
+	}
 
 	private void createGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
@@ -394,8 +398,19 @@ public class ReestrView extends JFrame {
 
 	class ReestrTableModel extends AbstractTableModel {
 
+		private List<Reception> receptions;
+
+		ReestrTableModel() {
+			receptions = new ArrayList<Reception>();
+		}
+
+		void setReceptions(List<Reception> receptions) {
+			this.receptions = receptions;
+			fireTableDataChanged();
+		}
+
 		public int getRowCount() {
-			return controller.getFilteredReceptions().size();
+			return receptions.size();
 		}
 
 		public int getColumnCount() {
@@ -417,7 +432,7 @@ public class ReestrView extends JFrame {
 		}
 
 		public Object getValueAt(int row, int column) {
-			Reception reception = controller.getFilteredReceptions().get(row);
+			Reception reception = receptions.get(row);
 			
 			List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();			
 

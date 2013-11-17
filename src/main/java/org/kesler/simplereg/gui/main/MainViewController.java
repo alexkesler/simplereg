@@ -7,7 +7,6 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.logic.reception.ReceptionsModelState;
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 import org.kesler.simplereg.logic.ModelState;
@@ -189,121 +188,91 @@ public class MainViewController implements MainViewListener,
 	}
 
 	private void readReceptions() {
-		processDialog = new ProcessDialog(mainView,"Работаю", "Обновляю список приемов");
-		// Читаем список опреаторов в отдельном потоке
-		Thread receptionsReaderThread = new Thread(new ReceptionsReader());
-		receptionsReaderThread.start();
-		// открываем модальное окно  - ожидаем его закрытия (закрывается при оповещении от модели о завершении)
-		processDialog.setVisible(true);
-		List<Reception> receptions = receptionsModel.getAllReceptions();
-		mainView.getTableModel().setReceptions(receptions);
-		// Освобождаем ресурсы
-		processDialog.dispose();
-		processDialog = null;
-	}
 
-	class ReceptionsReader implements Runnable {
-		public void run() {
-			receptionsModel.readReceptionsFromDB();
-		}
+		receptionsModel.readReceptionsInSeparateThread();
+
 	}
 
 	@Override 
-	public void receptionsModelStateChanged(ReceptionsModelState state) {
-		if (processDialog == null) return; // работаем только при существующем диалоге
+	public void receptionsModelStateChanged(ModelState state) {
 		switch (state) {
 			case UPDATED:
-				processDialog.setVisible(false);
+				ProcessDialog.hideProcess();
+				mainView.setReceptions(receptionsModel.getAllReceptions());
 			break;
 			
 			case CONNECTING:
-				processDialog.setContent("Соединяюсь...");
+				ProcessDialog.showProcess(mainView, "Соединяюсь...");
 			break;
 
 			case READING:
-				processDialog.setContent("Получаю список приемов");
+				ProcessDialog.showProcess(mainView, "Получаю список приемов");
+			break;	
+
+			case READY:
+				ProcessDialog.hideProcess();
 			break;	
 			
 			case ERROR:
-				
-				processDialog.setContent("Ошибка");
-				processDialog.setResult(ProcessDialog.ERROR);
-				processDialog.setVisible(false);
+				ProcessDialog.hideProcess();
+				new InfoDialog(mainView, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 				
 			break;		
 
 		}
 	}
 
-	private void login() {
-		// создаем диалог отображения процесса получения списка операторов
-		processDialog = new ProcessDialog(mainView, "Работаю", "Читаю список операторов");
-		// читаем операторов в отдельном потоке
-		Thread operatorsReaderThread = new Thread(new OperatorsReader());
-		operatorsReaderThread.start();
-		// открываем окно с процессом выполнения - окно модальное, ожидаем закрытия
-		processDialog.setVisible(true);	
-
-		if (processDialog.getResult() == ProcessDialog.NONE) {
-			//получаем список действующих операторов
-			List<Operator> operators = operatorsModel.getActiveOperators();
-			// создаем диалог ввода пароля
+	private void login() {			
 			
-			loginDialog = new LoginDialog(mainView, operators);
-			loginDialog.showDialog();
+		loginDialog = new LoginDialog(mainView);
+		operatorsModel.readOperatorsInSeparateThread();
 
-			// делаем проверку на итог - назначаем оператора
-			if (loginDialog.getResult() == LoginDialog.OK) {
-				Operator operator = loginDialog.getOperator();
-				CurrentOperator.getInstance().setOperator(operator);
-				new InfoDialog(mainView, "<html>Добро пожаловать, <p><i>" + 
-											operator.getFirstName() + 
-											" " + operator.getParentName() + "</i>!</p></html>", 1000, InfoDialog.STAR).showInfo();
-			} else {
-				CurrentOperator.getInstance().resetOperator();
-				HibernateUtil.closeConnection();
-			}
-			// Освобождаем ресурсы
-			loginDialog.dispose();
-			loginDialog = null;
+		loginDialog.showDialog();
 
-			
-		} else  if (processDialog.getResult() == ProcessDialog.ERROR) {
-			JOptionPane.showMessageDialog(mainView, "Ошибка при подключении к базе данных", "Ошибка", JOptionPane.ERROR_MESSAGE);
-		} else if (processDialog.getResult() == ProcessDialog.CANCEL) {
-			/// действия при отмене чтения  - пока ничего не делаем
+		// делаем проверку на итог - назначаем оператора
+		if (loginDialog.getResult() == LoginDialog.OK) {
+			Operator operator = loginDialog.getOperator();
+			CurrentOperator.getInstance().setOperator(operator);
+			new InfoDialog(mainView, "<html>Добро пожаловать, <p><i>" + 
+										operator.getFirstName() + 
+										" " + operator.getParentName() + "</i>!</p></html>", 1000, InfoDialog.STAR).showInfo();
+		} else {
+			CurrentOperator.getInstance().resetOperator();
 			HibernateUtil.closeConnection();
 		}
+		// Освобождаем ресурсы
+		loginDialog.dispose();
+		loginDialog = null;
 
-		processDialog.dispose();
-		processDialog = null;
+			
 
 	}
 
 	public void operatorsModelStateChanged(ModelState state) {
-		if (processDialog == null) return; // Если диалог процесса пуст, нам нечего здесь делать
 		switch (state) {
 			case CONNECTING:
-				processDialog.setContent("Соединяюсь...");
-				break;
-			case READING:
-				processDialog.setContent("Читаю список операторов из базы...");
-				break;
-			case UPDATED:
-				processDialog.setVisible(false);
-				break;
-			case ERROR:
-				processDialog.setResult(ProcessDialog.ERROR);
-				// JOptionPane.showMessageDialog(mainView, "Ошибка", "Ошибка при подключении к базе данных", JOptionPane.ERROR_MESSAGE);
-				break;	
+					ProcessDialog.showProcess(loginDialog, "Соединяюсь...");
+					break;
 			
-		}
-	}
+			case READING:
+					ProcessDialog.showProcess(loginDialog, "Читаю список операторов из базы...");
+					break;
+
+			case UPDATED:
+					ProcessDialog.hideProcess();
+					List<Operator> operators = operatorsModel.getActiveOperators();
+					if (loginDialog != null) loginDialog.setOperators(operators);
+					break;
+
+			case READY:
+					break;
 
 
-	class OperatorsReader implements Runnable {
-		public void run() {
-			operatorsModel.readOperators();
+			case ERROR:
+					ProcessDialog.hideProcess();
+					new InfoDialog(loginDialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
+					break;	
+			
 		}
 	}
 

@@ -122,7 +122,7 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 		
 		// запускается в отдельном потоке
 
-		model.readServicesInProcess();
+		model.readServicesInSeparateProcess();
 		
 	}
 

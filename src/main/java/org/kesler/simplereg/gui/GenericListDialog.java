@@ -24,13 +24,8 @@ import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
-public class GenericListDialog<T> extends JDialog {
+public class GenericListDialog<T> extends AbstractDialog {
 
-	public static int NONE = -1;
-	public static int OK = 0;
-	public static int CANCEL = 1;
-
-	private int result = NONE;
 	private boolean isSelect = false;
 
 	private JFrame parentFrame;
@@ -50,6 +45,7 @@ public class GenericListDialog<T> extends JDialog {
 		selectedIndex = -1;
 
 		createGUI();
+
 	}
 
 	public GenericListDialog(JFrame parentFrame, String name, boolean isSelect, GenericListDialogController controller) {
@@ -61,6 +57,7 @@ public class GenericListDialog<T> extends JDialog {
 		selectedIndex = -1;
 
 		createGUI();
+
 	}
 
 	public int getResult() {
@@ -143,8 +140,8 @@ public class GenericListDialog<T> extends JDialog {
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.readItems();
-				itemsListModel.updateItems();
-				new InfoDialog(currentDialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();
+				// itemsListModel.updateItems();
+				// new InfoDialog(currentDialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();
 			}
 		});
 
@@ -160,7 +157,7 @@ public class GenericListDialog<T> extends JDialog {
 		JPanel buttonPanel = new JPanel();
 
 		String okString = "Ok";
-		if(isSelect) okString = "Выбрать";
+		if (isSelect) okString = "Выбрать";
         JButton okButton = new JButton(okString);         
 		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		this.getRootPane().setDefaultButton(okButton);

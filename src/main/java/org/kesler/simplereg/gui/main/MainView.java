@@ -228,6 +228,10 @@ public class MainView extends JFrame {
 		currentOperatorLabel.setText(text);
 	}
 
+	public void setReceptions(List<Reception> receptions) {
+		tableModel.setReceptions(receptions);
+	}
+
 	class MainViewReceptionsTableModel extends AbstractTableModel {
 		private List<Reception> receptions;
 

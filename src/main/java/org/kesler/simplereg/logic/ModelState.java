@@ -5,6 +5,7 @@ public enum ModelState {
 	CONNECTING,
 	READING,
 	WRITING,
+	FILTERING,
 	READY,
 	ERROR
 }
