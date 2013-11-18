@@ -295,44 +295,33 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	// реализует интерфейс для слушателя модели приемов 
 	@Override
 	public void receptionsModelStateChanged(ModelState state) {
-		// if(processDialog == null) return; // Управление происходит через processDialog поэтому если не задан - выходим
 		switch (state) {
 			case CONNECTING:
 				ProcessDialog.showProcess(view, "Соединяюсь");
-				// if(processDialog.isVisible()) {
-				// 	processDialog.setContent("Соединяюсь");
-				// }	
-			break;
+				break;
+
 			case READING:
 				ProcessDialog.showProcess(view, "Читаю список приемов");
-				// if(processDialog.isVisible()) {
-				// 	processDialog.setContent("Читаю список приемов");
-				// }	
-			break;
+				break;
+
 			case UPDATED:
 				ProcessDialog.hideProcess();
 				view.setReceptions(getFilteredReceptions());
-				// processDialog.setContent("Готово");
-				// processDialog.setVisible(false);
-			break;
+				break;
+
 			case FILTERING:
 				ProcessDialog.showProcess(view, "Фильтрую список приемов");
+				break;
 
-				// if(processDialog.isVisible()) {
-				// 	processDialog.setContent("Фильтрую список приемов");
-				// }	
-			break;
 			case READY:
 				ProcessDialog.hideProcess();
-				// processDialog.setContent("Готово");
-				// processDialog.setVisible(false);
-			break;		
-			case ERROR:
+				break;	
 
-				// processDialog.setResult(ProcessDialog.ERROR);
-				// processDialog.setContent("Ошибка");
-				// processDialog.setVisible(false);
-			break;
+			case ERROR:
+				ProcessDialog.hideProcess();
+				new InfoDialog(view, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
+				break;	
+			
 		}					
 	} 
 }
