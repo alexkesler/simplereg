@@ -75,7 +75,7 @@ public class ReceptionsModel implements DAOListener{
 			}
 			if (fit) filteredReceptions.add(reception);
 		}
-		notifyListeners(ModelState.UPDATED);
+		notifyListeners(ModelState.FILTERED);
 
 	}
 
@@ -129,7 +129,7 @@ public class ReceptionsModel implements DAOListener{
 			break;
 			
 			case READY:
-				// Ничего не делаем	
+				notifyListeners(ModelState.READY);
 			break;
 			
 			case ERROR:

@@ -47,6 +47,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	private ReceptionsModel model;
 	private List<ReceptionsFilter> filters;
 
+	private ProcessDialog processDialog = null;
+
+	private boolean listenReceptionsModel = true;
+
 	public static synchronized ReestrViewController getInstance() {
 		if (instance == null) {
 			instance = new ReestrViewController();
@@ -68,17 +72,8 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		view.setVisible(true);
 	}
 
-
-	List<Reception> getReceptions() {
-		return model.getAllReceptions();
-	}
-
 	public List<ReceptionsFilter> getFilters() {
 		return filters;
-	}
-
-	List<Reception> getFilteredReceptions() {
-		return model.getFilteredReceptions();
 	}
 
 	// добавление фильра - вызывается из вида
@@ -195,6 +190,8 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	// применяет созданный набор фильтров - вызывается из вида
 	public void applyFilters() {
 
+		listenReceptionsModel = true;
+		processDialog = new ProcessDialog(view);
 		model.applyFiltersInSeparateThread(filters);
 
 	}
@@ -297,28 +294,33 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	public void receptionsModelStateChanged(ModelState state) {
 		switch (state) {
 			case CONNECTING:
-				ProcessDialog.showProcess(view, "Соединяюсь");
+				if (processDialog != null) processDialog.showProcess("Соединяюсь");
 				break;
 
 			case READING:
-				ProcessDialog.showProcess(view, "Читаю список приемов");
+				if (processDialog != null) processDialog.showProcess("Читаю список приемов");
 				break;
 
 			case UPDATED:
-				ProcessDialog.hideProcess();
-				view.setReceptions(getFilteredReceptions());
+				// Ничего не делаем - ждем выполнения фильтрации
 				break;
 
 			case FILTERING:
-				ProcessDialog.showProcess(view, "Фильтрую список приемов");
+				if (processDialog != null) processDialog.showProcess("Фильтрую список приемов");
+				break;
+
+			case FILTERED:
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				List<Reception> filteredReceptions = model.getFilteredReceptions();
+				view.setReceptions(filteredReceptions);
 				break;
 
 			case READY:
-				ProcessDialog.hideProcess();
+				// ProcessDialog.hideProcess();
 				break;	
 
 			case ERROR:
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 				new InfoDialog(view, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 				break;	
 			

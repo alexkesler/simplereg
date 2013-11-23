@@ -6,10 +6,10 @@ import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.realty.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
-import org.kesler.simplereg.logic.realty.RealtyObjectsModelState;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModelStateListener;
+import org.kesler.simplereg.logic.ModelState;
 
-
+import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
 
@@ -39,6 +39,7 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		RealtyObject realtyObject = null;
 
 		dialog = new RealtyObjectListDialog(this, parentFrame);
+		updateRealtyObjects();
 		dialog.setVisible(true);
 		if (dialog.getResult() == RealtyObjectListDialog.OK) {
 			realtyObject = dialog.getSelectedRealtyObject();
@@ -47,19 +48,10 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		return realtyObject;
 	}
 
-	public void readRealtyObjects() {
-		Thread realtyListReaderThread = new Thread(new RealtyListReader());
+	public void updateRealtyObjects() {
 
-		processDialog = new ProcessDialog(dialog, "Работаю", "Читаю список объектов недвижимости");
-		realtyListReaderThread.start();	
-
-		processDialog.setVisible(true);
-
-		if (processDialog.getResult() == ProcessDialog.ERROR) {
-			JOptionPane.showMessageDialog(dialog, "Ошибка чтения списка объектов недвижимости", "Ошибка", JOptionPane.ERROR_MESSAGE);
-		}
-		processDialog.dispose();
-		processDialog = null;
+		processDialog = new ProcessDialog(dialog);
+		model.readRealtyObjectsInSeparateThread();	
 
 	}
 
@@ -71,6 +63,13 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 	public void filterRealtyObjects(String filterString) {
 		model.filterRealtyObjects(filterString);
+		List<RealtyObject> realtyObjects = model.getFilteredRealtyObjects();
+		dialog.setRealtyObjects(realtyObjects);
+	}
+
+	public void updateAndFilterRealtyObjects(String filterString) {
+		processDialog = new ProcessDialog(dialog);
+		model.readAndFilterRealtyObjectsInSeparateThread(filterString);
 	}
 
 	public void addRealtyObject() {
@@ -111,32 +110,26 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 
 	@Override
-	public void realtyObjectsModelStateChanged(RealtyObjectsModelState state) {
-		if (processDialog == null) {
-			return;
-		}
+	public void realtyObjectsModelStateChanged(ModelState state) {
+
 		switch (state) {
 			case CONNECTING:
-				processDialog.setContent("Соединяюсь...");			
+				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
 			break;
 			case READING:
-				processDialog.setContent("Читаю список объектов недвижимости");
+				if (processDialog != null) processDialog.showProcess("Читаю список объектов недвижимости");
 			break;	
 			case UPDATED:
-				processDialog.setVisible(false);
+				List<RealtyObject> realtyObjects = model.getAllRealtyObjects();
+				dialog.setRealtyObjects(realtyObjects);
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 			break;
 			case ERROR:
-				processDialog.setResult(ProcessDialog.ERROR);
-				processDialog.setVisible(false);
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 			break;			
 		}
 	}
 
-
-	class RealtyListReader implements Runnable {
-		public void run() {
-			model.readRealtyObjectsFromDB();
-		}
-	}
 
 }

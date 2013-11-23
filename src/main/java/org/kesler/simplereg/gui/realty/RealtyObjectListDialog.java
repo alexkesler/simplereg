@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.realty;
 
 import java.util.List;
+import java.util.ArrayList;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -63,7 +64,7 @@ public class RealtyObjectListDialog extends JDialog {
 		RealtyObject selectedRealtyObject = null;
 
 		if (selectedRealtyObjectIndex != -1) {
-			selectedRealtyObject = controller.getRealtyObjects().get(selectedRealtyObjectIndex);
+			selectedRealtyObject = realtyObjectListModel.getRealtyObjects().get(selectedRealtyObjectIndex);
 		}
 		
 		return selectedRealtyObject;
@@ -96,7 +97,6 @@ public class RealtyObjectListDialog extends JDialog {
 				// фильтруем список
 				String filterString = filterTextField.getText();
 				controller.filterRealtyObjects(filterString);
-				realtyObjectListModel.updateRealtyObjects();
 
 				if (DEBUG) System.out.println("list size: " + controller.getRealtyObjects().size());
 				// Выбираем первый элемент
@@ -157,9 +157,7 @@ public class RealtyObjectListDialog extends JDialog {
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.readRealtyObjects();
-				controller.filterRealtyObjects(filterTextField.getText());
-				realtyObjectListModel.updateRealtyObjects();
+				controller.updateAndFilterRealtyObjects(filterTextField.getText());
 			}
 		});
 
@@ -219,12 +217,26 @@ public class RealtyObjectListDialog extends JDialog {
 		realtyObjectListModel.realtyObjectRemoved(index);
 	}
 
+
+	public void setRealtyObjects(List<RealtyObject> realtyObjects) {
+		realtyObjectListModel.setRealtyObjects(realtyObjects);
+	}
+
 	class RealtyObjectListModel extends AbstractListModel {
 
 		List<RealtyObject> realtyObjects;
 
 		RealtyObjectListModel() {
-			realtyObjects = controller.getRealtyObjects();
+			realtyObjects = new ArrayList<RealtyObject>();
+		}
+
+		void setRealtyObjects(List<RealtyObject> realtyObjects) {
+			this.realtyObjects = realtyObjects;
+			realtyObjectsUpdated();
+		}
+
+		List<RealtyObject> getRealtyObjects() {
+			return realtyObjects;
 		}
 
 		@Override
@@ -252,8 +264,7 @@ public class RealtyObjectListDialog extends JDialog {
 			fireIntervalRemoved(this, index, index);
 		}
 
-		public void updateRealtyObjects() {
-			realtyObjects = controller.getRealtyObjects();
+		public void realtyObjectsUpdated() {
 			fireContentsChanged(this, 0, realtyObjects.size()-1);
 		}
 

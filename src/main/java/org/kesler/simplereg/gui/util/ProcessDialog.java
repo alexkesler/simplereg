@@ -22,85 +22,38 @@ import org.kesler.simplereg.gui.util.processdialog.ProcessDialogListener;
 
 public class ProcessDialog extends JDialog {
 
-	public static final int NONE = 0;
-	public static final int CANCEL = 1;
-	public static final int ERROR = -1;
 
-	private static ProcessDialog instance = null;
-
-	private Thread processThread;
 	private List<ProcessDialogListener> listeners;
 
 	private JFrame parentFrame;
 	private JDialog parentDialog;
 	private JLabel contentLabel;
 
-	private int result;
 
-	public ProcessDialog(JFrame parentFrame, String name, String content) {
-		super(parentFrame, name, true);
-		this.parentFrame = parentFrame;
-		result = NONE;
-
-		createGUI();
-		setContent(content);
-		setLocationRelativeTo(parentFrame);
-	}
-
-	public ProcessDialog(JDialog parentDialog, String name, String content) {
-		super(parentDialog, name, true);
-		this.parentDialog = parentDialog;
-		result = NONE;
-
-		createGUI();
-		setContent(content);
-		setLocationRelativeTo(parentDialog);
-	}
-
-	private ProcessDialog(JDialog parentDialog, String content) {
-		super(parentDialog, false);
-		result = NONE;
-		listeners = new ArrayList<ProcessDialogListener>();
-
-		createGUI();
-		setContent(content);
-		setUndecorated(true);		
-		setLocationRelativeTo(parentDialog);
-	}
-
-	private ProcessDialog(JFrame parentFrame, String content) {
+	public ProcessDialog(JFrame parentFrame) {
 		super(parentFrame, false);
-		result = NONE;
+		this.parentFrame = parentFrame;
 		listeners = new ArrayList<ProcessDialogListener>();
 
 		createGUI();
-		setContent(content);
-		setUndecorated(true);		
+		// setContent(content);
 		setLocationRelativeTo(parentFrame);
 	}
 
-
-	private ProcessDialog(JDialog parentDialog, String content, ProcessDialogListener listener) {
+	public ProcessDialog(JDialog parentDialog) {
 		super(parentDialog, false);
-		result = NONE;
+		this.parentDialog = parentDialog;
 		listeners = new ArrayList<ProcessDialogListener>();
-		listeners.add(listener);
 
 		createGUI();
-		setContent(content);
-		setUndecorated(true);		
+		// setContent(content);
 		setLocationRelativeTo(parentDialog);
 	}
 
-
-
-	public int getResult() {
-		return result;
+	public void addProcessDialogListener(ProcessDialogListener listener) {
+		listeners.add(listener);
 	}
 
-	public void setResult(int result) {
-		this.result = result;
-	}
 
 	public void setContent(String content) {
 		contentLabel.setText(content);
@@ -130,9 +83,8 @@ public class ProcessDialog extends JDialog {
 		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				result = CANCEL;
 				notifyListenersCancel();
-				if (processThread != null) processThread.interrupt();
+				// if (processThread != null) processThread.interrupt();
 				hideProcess();
 
 			}
@@ -153,59 +105,21 @@ public class ProcessDialog extends JDialog {
 
 	private void notifyListenersCancel() {
 		for (ProcessDialogListener listener: listeners) {
-			listener.cancelProcess(processThread);
+			listener.cancelProcess();
 		}
 	}
 
-	public static synchronized void showProcess(JDialog parentDialog, String content) {
-		
-		//hideProcess();
-		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
-			instance.setContent(content);
-		} else {
-			instance = new ProcessDialog(parentDialog, content);
-			instance.processThread = Thread.currentThread();
-			instance.setVisible(true);			
-		}
-
-	}
-
-	public static synchronized void showProcess(JFrame parentFrame, String content) {
-		
-		//hideProcess();
-		if (instance != null && instance.getOwner().equals((Window)parentFrame)) {
-			instance.setContent(content);
-		} else {
-			instance = new ProcessDialog(parentFrame, content);
-			instance.processThread = Thread.currentThread();
-			instance.setVisible(true);			
-		}
-
+	public void showProcess(String content) {
+		setContent(content);
+		setVisible(true);
 	}
 
 
-	public static synchronized void showProcess(JDialog parentDialog, String content, ProcessDialogListener listener) {
+	public void hideProcess() {
 		
-		//hideProcess();
-		if (instance != null && instance.getOwner().equals((Window)parentDialog)) {
-			instance.setContent(content);
-			if(!instance.listeners.contains(listener)) instance.listeners.add(listener);
-		} else {
-			instance = new ProcessDialog(parentDialog, content, listener);
-			instance.processThread = Thread.currentThread();
-			instance.setVisible(true);			
-		}
-
-	}
-
-	public static synchronized void hideProcess() {
-		
-		if (instance != null) {
-			instance.setVisible(false); // Скрываем диалог
-			instance.listeners.clear(); 			// Очищаем слушателей
-			instance.dispose();			// Освобождаем ресурсы
-			instance = null;
-		}
+		setVisible(false); // Скрываем диалог
+		listeners.clear(); 			// Очищаем слушателей
+		dispose();			// Освобождаем ресурсы
 
 	}
 

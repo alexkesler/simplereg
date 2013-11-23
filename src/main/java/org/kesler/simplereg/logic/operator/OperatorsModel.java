@@ -138,7 +138,8 @@ public class OperatorsModel implements DAOListener{
 
 		if (!adminExist) {
 			Operator admin = new Operator();
-			admin.setSurName("Администратор по умолчанию");
+			admin.setSurName("По умолчанию");
+			admin.setFirstName("Админ");
 			admin.setControler(true);
 			admin.setAdmin(true);
 			admin.setEnabled(true);

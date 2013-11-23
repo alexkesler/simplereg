@@ -21,6 +21,8 @@ public class OperatorListDialogController implements GenericListDialogController
 	private OperatorsModel model;
 	private GenericListDialog<Operator> dialog;
 
+	private ProcessDialog processDialog = null;
+
 	public static synchronized OperatorListDialogController getInstance() {
 		if (instance == null) {
 			instance = new OperatorListDialogController();
@@ -119,33 +121,41 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	@Override
 	public void readItems() {
+		processDialog = new ProcessDialog(dialog);
 		model.readOperatorsInSeparateThread();
 	}
 
 	@Override
 	public void operatorsModelStateChanged(ModelState state) {
 		switch (state) {
+			
 			case CONNECTING:
-				ProcessDialog.showProcess(dialog, "Соединяюсь...");			
-			break;
+				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
+				break;
+
 			case READING:
-				ProcessDialog.showProcess(dialog, "Читаю список операторов");
-			break;	
+				if (processDialog != null) processDialog.showProcess("Читаю список операторов");
+				break;	
+			
 			case WRITING:
-				ProcessDialog.showProcess(dialog, "Сохраняю изменения");
-			break;	
+				if (processDialog != null) processDialog.showProcess("Сохраняю изменения");
+				break;	
+			
 			case UPDATED:
 				if (dialog != null) dialog.setItems(model.getAllOperators());
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
-			break;
+				break;
+			
 			case READY:
-				ProcessDialog.hideProcess();	
-			break;
+				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}	
+				break;
+			
 			case ERROR:				
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}
 				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
-			break;			
+				break;
+
 		}
 		
 	}

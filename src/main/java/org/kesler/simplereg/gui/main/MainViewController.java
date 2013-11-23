@@ -182,13 +182,8 @@ public class MainViewController implements MainViewListener,
 	}
 
 
-
-	private void addReception(Reception reception) {
-		receptionsModel.addReception(reception);
-	}
-
 	private void readReceptions() {
-
+		processDialog = new ProcessDialog(mainView);
 		receptionsModel.readReceptionsInSeparateThread();
 
 	}
@@ -196,25 +191,30 @@ public class MainViewController implements MainViewListener,
 	@Override 
 	public void receptionsModelStateChanged(ModelState state) {
 		switch (state) {
-			case UPDATED:
-				ProcessDialog.hideProcess();
-				mainView.setReceptions(receptionsModel.getAllReceptions());
-			break;
-			
 			case CONNECTING:
-				ProcessDialog.showProcess(mainView, "Соединяюсь...");
+				if (processDialog != null) processDialog.showProcess("Соединяюсь...");
 			break;
 
 			case READING:
-				ProcessDialog.showProcess(mainView, "Получаю список приемов");
+				if (processDialog != null) processDialog.showProcess("Получаю список приемов");
+			break;	
+
+			case WRITING:
+				if (processDialog != null) processDialog.showProcess("Сохраняю");
 			break;	
 
 			case READY:
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 			break;	
 			
+			case UPDATED:
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				List<Reception> receptions = receptionsModel.getAllReceptions();
+				mainView.setReceptions(receptions);
+			break;
+			
 			case ERROR:
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 				new InfoDialog(mainView, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 				
 			break;		
@@ -225,6 +225,8 @@ public class MainViewController implements MainViewListener,
 	private void login() {			
 			
 		loginDialog = new LoginDialog(mainView);
+
+		processDialog = new ProcessDialog(loginDialog);
 		operatorsModel.readOperatorsInSeparateThread();
 
 		loginDialog.showDialog();
@@ -251,15 +253,16 @@ public class MainViewController implements MainViewListener,
 	public void operatorsModelStateChanged(ModelState state) {
 		switch (state) {
 			case CONNECTING:
-					ProcessDialog.showProcess(loginDialog, "Соединяюсь...");
+					
+					if (processDialog != null) processDialog.showProcess("Соединяюсь...");
 					break;
 			
 			case READING:
-					ProcessDialog.showProcess(loginDialog, "Читаю список операторов из базы...");
+					if (processDialog != null) processDialog.showProcess("Читаю список операторов из базы...");
 					break;
 
 			case UPDATED:
-					ProcessDialog.hideProcess();
+					if (processDialog != null) processDialog.hideProcess();
 					List<Operator> operators = operatorsModel.getActiveOperators();
 					if (loginDialog != null) loginDialog.setOperators(operators);
 					break;
@@ -269,7 +272,7 @@ public class MainViewController implements MainViewListener,
 
 
 			case ERROR:
-					ProcessDialog.hideProcess();
+					if (processDialog != null) processDialog.hideProcess();
 					new InfoDialog(loginDialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 					break;	
 			

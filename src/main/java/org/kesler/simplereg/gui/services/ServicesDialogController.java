@@ -26,6 +26,8 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	private static ServicesDialogController instance;
 	private ServicesModel model;
 	private ServicesDialog dialog;
+
+	private ProcessDialog processDialog = null;
 	
 	public static synchronized ServicesDialogController getInstance() {
 		if (instance == null) {
@@ -121,7 +123,7 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	public void reloadTree() {
 		
 		// запускается в отдельном потоке
-
+		processDialog = new ProcessDialog(dialog);
 		model.readServicesInSeparateProcess();
 		
 	}
@@ -131,32 +133,32 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 		//if (processDialog == null) return ;
 		switch (state) {
 			case CONNECTING:
-				ProcessDialog.showProcess(dialog, "Соединяюсь...");			
+				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
 			break;
 			case READING:
-				ProcessDialog.showProcess(dialog, "Читаю список услуг");
+				if (processDialog != null) processDialog.showProcess("Читаю список услуг");
 			break;	
 			case WRITING:
-				ProcessDialog.showProcess(dialog, "Записываю изменения");
+				if (processDialog != null) processDialog.showProcess("Записываю изменения");
 			break;	
 			case UPDATED:
 				dialog.reloadTree(model.getAllServices());
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
 			break;
 			case READY:
-				ProcessDialog.hideProcess();	
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}	
 			break;
 			case ERROR:				
-				ProcessDialog.hideProcess();
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 			break;			
 		}
 	}
 
 	@Override
-	public void cancelProcess(Thread thread) {
-		model.cancelProcess(thread);
+	public void cancelProcess() {
+		// model.cancelProcess(thread);
 	}
 
 	class ServicesReader implements Runnable {

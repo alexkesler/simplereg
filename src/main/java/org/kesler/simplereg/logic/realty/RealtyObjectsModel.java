@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.ModelState;
 
 public class RealtyObjectsModel implements DAOListener {
 
@@ -36,18 +37,46 @@ public class RealtyObjectsModel implements DAOListener {
 
 	public List<RealtyObject> getAllRealtyObjects() {
 		if (realtyObjects == null) {
-			readRealtyObjectsFromDB();
+			readRealtyObjects();
 		}
 
 		return realtyObjects;
 
 	}
 
-	public void readRealtyObjectsFromDB() {
+	public List<RealtyObject> getFilteredRealtyObjects() {
+		if (filteredRealtyObjects == null) {
+			filterRealtyObjects("");
+		}
+		return filteredRealtyObjects;
+
+	}
+
+	public void readRealtyObjects() {
 		
 		realtyObjects = DAOFactory.getInstance().getRealtyObjectDAO().getAllItems();
-		notifyListeners(RealtyObjectsModelState.UPDATED);
+		notifyListeners(ModelState.UPDATED);
 
+	}
+
+	public void readRealtyObjectsInSeparateThread() {
+		Thread readerThread = new Thread(new Runnable() {
+			public void run() {
+				readRealtyObjects();
+			}
+		});
+		readerThread.start();
+	}
+
+
+	public void readAndFilterRealtyObjectsInSeparateThread(final String filterString) {
+		Thread readerThread = new Thread(new Runnable() {
+			public void run() {
+				readRealtyObjects();
+				filterRealtyObjects(filterString);
+			}
+		});
+		readerThread.start();
 	}
 
 	public void filterRealtyObjects(String filterString) {
@@ -62,14 +91,6 @@ public class RealtyObjectsModel implements DAOListener {
 				}
 			}
 		}
-
-	}
-
-	public List<RealtyObject> getFilteredRealtyObjects() {
-		if (filteredRealtyObjects == null) {
-			filterRealtyObjects("");
-		}
-		return filteredRealtyObjects;
 
 	}
 
@@ -104,15 +125,15 @@ public class RealtyObjectsModel implements DAOListener {
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(RealtyObjectsModelState.CONNECTING);
+				notifyListeners(ModelState.CONNECTING);
 			break;
 			
 			case READING:
-				notifyListeners(RealtyObjectsModelState.READING);
+				notifyListeners(ModelState.READING);
 			break;
 			
 			case WRITING:
-				notifyListeners(RealtyObjectsModelState.WRITING);
+				notifyListeners(ModelState.WRITING);
 			break;
 			
 			case READY:
@@ -120,12 +141,12 @@ public class RealtyObjectsModel implements DAOListener {
 			break;
 			
 			case ERROR:
-				notifyListeners(RealtyObjectsModelState.ERROR);
+				notifyListeners(ModelState.ERROR);
 			break;				
 		}
 	}
 
-	private void notifyListeners(RealtyObjectsModelState state) {
+	private void notifyListeners(ModelState state) {
 		for (RealtyObjectsModelStateListener listener: listeners) {
 			listener.realtyObjectsModelStateChanged(state);
 		}
