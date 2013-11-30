@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 import java.awt.GridLayout;
 
 import net.miginfocom.swing.MigLayout;
-import com.toedter.calendar.JDateChooser;
 
 import org.kesler.simplereg.logic.operator.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;

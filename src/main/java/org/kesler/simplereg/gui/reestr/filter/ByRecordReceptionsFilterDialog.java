@@ -4,10 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
 
-
-
 import net.miginfocom.swing.MigLayout;
-import com.toedter.calendar.JDateChooser;
 
 import org.kesler.simplereg.logic.Service;
 

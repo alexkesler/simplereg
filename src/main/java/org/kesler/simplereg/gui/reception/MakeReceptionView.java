@@ -30,7 +30,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import net.miginfocom.swing.MigLayout;
-import com.toedter.calendar.JDateChooser;
+import com.alee.extended.date.WebDateField;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
@@ -354,7 +354,7 @@ class MakeReceptionView extends JFrame{
 
 		JLabel realtyObjectNameLabel;
 
-		JDateChooser toIssueDateChooser;
+		WebDateField toIssueWebDateField;
 
 		JTextField rosreestrCodeTextField;
 
@@ -374,13 +374,10 @@ class MakeReceptionView extends JFrame{
 				}
 			});
 
-			toIssueDateChooser = new JDateChooser();
-			toIssueDateChooser.addPropertyChangeListener(new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent ev) {
-					if (ev.getPropertyName().equals("date")) {
-						controller.setToIssueDate(toIssueDateChooser.getDate());
-					}
-					
+			toIssueWebDateField = new WebDateField();
+			toIssueWebDateField.addDateSelectionListener(new com.alee.extended.date.DateSelectionListener() {
+				public void dateSelected(Date date) {
+					controller.setToIssueDate(date);
 				}
 			});
 
@@ -407,7 +404,7 @@ class MakeReceptionView extends JFrame{
 			this.add(selectRealtyObjectButton, "ay top, wrap");
 
 			this.add(new JLabel("Срок выдачи результата"));
-			this.add(toIssueDateChooser, "w 100, wrap");
+			this.add(toIssueWebDateField, "w 150, wrap");
 
 			this.add(new JLabel("Код дела Росреестра: "));
 			this.add(rosreestrCodeTextField, "wrap");
@@ -421,12 +418,12 @@ class MakeReceptionView extends JFrame{
 		}
 
 		Date getToIssueDate() {
-			Date toIssueDate = toIssueDateChooser.getDate();
+			Date toIssueDate = toIssueWebDateField.getDate();
 			return toIssueDate;
 		}
 
-		void setToIssueDate(Date toIssueDate) {
-			toIssueDateChooser.setDate(toIssueDate);
+		void setToIssueDate(Date toIssueDate) { 
+			toIssueWebDateField.setDate(toIssueDate);
 		}
 
 		String getRosreestrCode() {

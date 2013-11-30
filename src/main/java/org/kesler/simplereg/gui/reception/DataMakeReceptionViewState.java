@@ -54,7 +54,7 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 		// Проверяем и сохраняем код Росреестра
 		String rosreestrCode = controller.getReception().getRosreestrCode();
-		if (rosreestrCode.isEmpty()) {
+		if (rosreestrCode==null || rosreestrCode.isEmpty()) {
 			JOptionPane.showMessageDialog(view,
     									"Не определен код дела Росреестра",
     									"Ошибка",

@@ -9,13 +9,13 @@ import java.util.Date;
 import java.util.Calendar;
 
 import net.miginfocom.swing.MigLayout;
-import com.toedter.calendar.JDateChooser;
+import com.alee.extended.date.WebDateField;
 
 
 public class OpenDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 
-	private JDateChooser fromDateChooser;
-	private JDateChooser toDateChooser;
+	private WebDateField fromWebDateField;
+	private WebDateField toWebDateField;
 
 	public OpenDateReceptionsFilterDialog(JFrame frame) {
 		super(frame, "Фильтр по дате открытия");
@@ -47,14 +47,14 @@ public class OpenDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 	protected JPanel createDataPanel() {
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-		fromDateChooser = new JDateChooser();
+		fromWebDateField = new WebDateField();
 
-		toDateChooser = new JDateChooser();
+		toWebDateField = new WebDateField();
 
 		dataPanel.add(new JLabel("Начальная дата: "));
-		dataPanel.add(fromDateChooser, "w 100, wrap");
+		dataPanel.add(fromWebDateField, "w 100, wrap");
 		dataPanel.add(new JLabel("Конечная дата"));
-		dataPanel.add(toDateChooser, "w 100, wrap");
+		dataPanel.add(toWebDateField, "w 100, wrap");
 
 		
 
@@ -68,16 +68,16 @@ public class OpenDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 		Date fromDate = openDateReceptionsFilter.getFromDate();
 		Date toDate = openDateReceptionsFilter.getToDate();
 
-		fromDateChooser.setDate(fromDate);
-		toDateChooser.setDate(toDate);
+		fromWebDateField.setDate(fromDate);
+		toWebDateField.setDate(toDate);
 	}
 
 
 	@Override
 	protected boolean readReceptionsFilterFromGUIData() {
 
-		Date fromDate = fromDateChooser.getDate();
-		Date toDate = toDateChooser.getDate();
+		Date fromDate = fromWebDateField.getDate();
+		Date toDate = toWebDateField.getDate();
 
 		if(fromDate == null && toDate == null) {
 			JOptionPane.showMessageDialog(this, "Необходимо задать хотя бы одну дату", "Ошибка", JOptionPane.ERROR_MESSAGE);
