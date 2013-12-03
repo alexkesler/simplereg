@@ -4,7 +4,7 @@
 
   <groupId>org.kesler</groupId>
   <artifactId>simplereg</artifactId>
-  <version>0.1</version>
+  <version>0.1.0</version>
   <packaging>jar</packaging>
 
   <name>simplereg</name>
@@ -12,6 +12,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <product.title>Регистрация заявителей</product.title>
+    <product.company>ГБУ СО "Многофункциональный центр"</product.company>
+    <product.year>2013</product.year>
+    <jdkVersion>1.7</jdkVersion>
   </properties>
 
   <build>
@@ -55,6 +59,73 @@
             </archive>
         </configuration>
     </plugin>
+
+
+	<plugin>
+	    <groupId>com.akathist.maven.plugins.launch4j</groupId>
+	    <artifactId>launch4j-maven-plugin</artifactId>
+	    <executions>
+	        <execution>
+	            <id>l4j-clui</id>
+	            <phase>package</phase>
+	            <goals>
+	                <goal>launch4j</goal>
+	            </goals>
+	            <configuration>
+	                <headerType>gui</headerType>
+	                <outfile>target/${project.artifactId}.exe</outfile>
+	                <jar>target/${project.artifactId}-${project.version}.jar</jar>
+	                <errTitle>${product.title}</errTitle>
+	               	<icon>src/main/resources/images/safe.ico</icon>
+	               	<splash>
+	               		<file>src/main/resources/images/mfc.bmp</file> 
+	               		<waitForWindow>true</waitForWindow>
+	               		<timeout>10</timeout>
+	               	</splash>
+	                <classPath>
+	                    <mainClass>org.kesler.simplereg.SimpleReg</mainClass>
+	                    <addDependencies>true</addDependencies>
+	                    <preCp>anything</preCp>
+	                </classPath>
+	                <jre>
+	                    <minVersion>1.7.0</minVersion>
+	                </jre>
+	                <versionInfo>
+	                    <fileVersion>${project.version}.0</fileVersion>
+	                    <txtFileVersion>${project.version}</txtFileVersion>
+	                    <fileDescription>Программа для регистрации заявителей</fileDescription>
+	                    <copyright>Copyright © 2013 ${product.company}</copyright>
+	                    <productVersion>${project.version}.0</productVersion>
+	                    <txtProductVersion>${project.version}</txtProductVersion>
+	                    <companyName>${product.company}</companyName>
+	                    <productName>${product.title}</productName>
+	                    <internalName>${project.artifactId}</internalName>
+	                    <originalFilename>${project.artifactId}.exe</originalFilename>
+	                </versionInfo>
+	            </configuration>
+	        </execution>
+	    </executions>
+	</plugin>
+
+	<plugin>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<executions>
+			<execution>
+				<id>assembly</id>
+				<phase>package</phase>
+				<goals>
+					<goal>single</goal>
+				</goals>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</execution>
+		</executions>
+	</plugin>
+
+
  
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
@@ -77,7 +148,6 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-
 
     <dependency>
       <groupId>com.h2database</groupId>
@@ -132,6 +202,12 @@
         <artifactId>poi-ooxml</artifactId>
         <version>3.9</version>
     </dependency>
+
+	<dependency>
+		<groupId>com.akathist.maven.plugins.launch4j</groupId>
+		<artifactId>launch4j-maven-plugin</artifactId>
+		<version>1.5.2</version>
+	</dependency>
                        
   </dependencies>
 </project>
