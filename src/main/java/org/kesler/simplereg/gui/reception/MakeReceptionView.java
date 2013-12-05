@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -63,6 +64,16 @@ class MakeReceptionView extends JFrame{
 		super("Прием заявителя");
 		this.controller = controller;
 		createGUI();
+	}
+
+	public void showView(JFrame parentFrame) {
+		setLocationRelativeTo(parentFrame);
+		setVisible(true);
+	}
+
+	public void showView(JDialog parentDialog) {
+		setLocationRelativeTo(parentDialog);
+		setVisible(true);
 	}
 
 	private void createGUI() {

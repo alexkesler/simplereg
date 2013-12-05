@@ -33,6 +33,7 @@ public class OptionsDialog extends JDialog {
 	private JTextField passwordTextField;
 
 	private JTextField initRecStatusCodeTextField;
+	private JTextField requestFileNameTextField;
 
 	private boolean changed = false;
 
@@ -110,11 +111,12 @@ public class OptionsDialog extends JDialog {
 		
 
 		initRecStatusCodeTextField = new JTextField(5);
+		requestFileNameTextField = new JTextField(15);
 
-		logicPanel.add(new JLabel("Номер начального состояния для дела"));
+		logicPanel.add(new JLabel("Код состояния нового дела"));
 		logicPanel.add(initRecStatusCodeTextField);
-
-
+		logicPanel.add(new JLabel("Шаблон запроса"));
+		logicPanel.add(requestFileNameTextField);
 
 
 		dataPanel.add(dbPanel, "growx, wrap");
@@ -158,6 +160,7 @@ public class OptionsDialog extends JDialog {
 		String password = options.getProperty("db.password");
 
 		String initRecStatusCode = options.getProperty("logic.initRecStatusCode");
+		String requestFileName = options.getProperty("print.request");
 
 		dbComboBox.setSelectedItem(db);
 		serverTextField.setText(server);
@@ -165,6 +168,8 @@ public class OptionsDialog extends JDialog {
 		passwordTextField.setText(password);
 
 		initRecStatusCodeTextField.setText(initRecStatusCode);
+		requestFileNameTextField.setText(requestFileName);
+
 
 	}
 
@@ -176,6 +181,7 @@ public class OptionsDialog extends JDialog {
 		String password = passwordTextField.getText();
 
 		String initRecStatusCode = initRecStatusCodeTextField.getText();
+		String requestFileName = requestFileNameTextField.getText();
 
 		if (user.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Поле Логин не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -196,6 +202,7 @@ public class OptionsDialog extends JDialog {
 		OptionsUtil.setOption("db.password", password);
 
 		OptionsUtil.setOption("logic.initRecStatusCode", initRecStatusCode);
+		OptionsUtil.setOption("print.request", requestFileName);
 
 		OptionsUtil.saveOptions();
 

@@ -27,7 +27,6 @@ class ApplicatorsMakeReceptionViewState extends MakeReceptionViewState {
 	void next() {
 		// переходим к печати, если есть заявители
 		if (controller.getApplicators().size() > 0) {
-			controller.storeApplicators();
 			controller.setState(new DataMakeReceptionViewState(controller, view));
 		} else {
 			JOptionPane.showMessageDialog(view,

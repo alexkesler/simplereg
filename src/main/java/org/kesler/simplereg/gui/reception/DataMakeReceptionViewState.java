@@ -42,7 +42,7 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
 
 		// Проверяем и сохраняем объект недвижимости
 		if (controller.getRealtyObject() != null) {
-			controller.storeRealtyObject();
+			// controller.storeRealtyObject();
 		} else {
 			JOptionPane.showMessageDialog(view,
     									"Не определен объект недвижимости",

@@ -3,7 +3,8 @@ package org.kesler.simplereg.gui.reception;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-
+import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
 
@@ -28,16 +29,16 @@ public class MakeReceptionViewController {
 	private static MakeReceptionViewController instance;
 	private MakeReceptionView view;
 	private MakeReceptionViewState viewState;
+
+	JFrame parentFrame;
+	JDialog parentDialog;
+	boolean isNew = true;
 	
-	private Operator operator;
-	private Service service;
-	private List<Applicator> applicators;
-	private RealtyObject realtyObject;
 	private Reception reception;
 
 
 	private MakeReceptionViewController() {
-		applicators = new ArrayList<Applicator>();
+		initReception();
 		view = new MakeReceptionView(this);
 		viewState = new NoneMakeReceptionViewState(this, view);
 	}
@@ -49,9 +50,47 @@ public class MakeReceptionViewController {
 		return instance;
 	}
 
-	public void openView() {
-		view.setVisible(true);
+	public void openView(JFrame parentFrame) {
+		this.parentFrame = parentFrame;
+		view.showView(parentFrame);
 
+		initReception();
+
+		// Переключаем в начальное состояние
+		viewState = new ServiceMakeReceptionViewState(this, view);
+	}
+
+	public void openView(JDialog parentDialog) {
+		this.parentDialog = parentDialog;
+		view.showView(parentDialog);
+
+		initReception();
+
+		// Переключаем в начальное состояние
+		viewState = new ServiceMakeReceptionViewState(this, view);
+	}
+
+	public void openView(JFrame parentFrame, Reception reception) {
+		this.parentFrame = parentFrame;
+		this.reception = reception;
+		isNew = false;
+		view.showView(parentFrame);
+
+		// Переключаем в начальное состояние
+		viewState = new ServiceMakeReceptionViewState(this, view);		
+	}
+
+	public void openView(JDialog parentDialog, Reception reception) {
+		this.parentDialog = parentDialog;
+		this.reception = reception;
+		isNew = false;
+		view.showView(parentDialog);
+
+		// Переключаем в начальное состояние
+		viewState = new ServiceMakeReceptionViewState(this, view);		
+	}
+
+	private void initReception() {
 		// Создаем экземпляр приема заявтеля
 		reception = new Reception();
 
@@ -59,7 +98,7 @@ public class MakeReceptionViewController {
 		reception.setOpenDate(new Date());
 
 		//Получаем текущего оператора
-		operator = CurrentOperator.getInstance().getOperator();
+		Operator operator = CurrentOperator.getInstance().getOperator();
 		reception.setOperator(operator);
 
 		// Генерируем код дела
@@ -69,17 +108,12 @@ public class MakeReceptionViewController {
 		reception.setByRecord(false);
 		reception.setResultInMFC(false);
 
-		// Сбрасываем услугу
-		service = null;
-
 		// Создаем пустой список заявителей
-		applicators = new ArrayList<Applicator>();
+		reception.setApplicators(new ArrayList<Applicator>());
 
-		// Сбрасываем объект недвижимости
-		realtyObject = null;
+		isNew = true;
 
-		// Переключаем в начальное состояние
-		viewState = new ServiceMakeReceptionViewState(this, view);
+
 	}
 
 	void back() {
@@ -108,15 +142,15 @@ public class MakeReceptionViewController {
 	}
 
 	List<Applicator> getApplicators() {
-		return applicators;
+		return reception.getApplicators();
 	}
 
 	Service getService() {
-		return service;
+		return reception.getService();
 	}
 
 	RealtyObject getRealtyObject() {
-		return realtyObject;
+		return reception.getRealtyObject();
 	}
 
 
@@ -126,7 +160,8 @@ public class MakeReceptionViewController {
 	}
 
 	void selectService() {
-		service = ServicesDialogController.getInstance().openSelectDialog(view);		
+		Service service = ServicesDialogController.getInstance().openSelectDialog(view);	
+		reception.setService(service);	
 		viewState.updatePanelData();
 
 	}
@@ -143,6 +178,7 @@ public class MakeReceptionViewController {
 		flDialog.setVisible(true);
 		 
 		if (flDialog.getResult() == ApplicatorFLDialog.OK) {
+			List<Applicator> applicators = reception.getApplicators();
 			applicators.add(flDialog.getApplicatorFL());
 			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
 		}
@@ -153,6 +189,7 @@ public class MakeReceptionViewController {
 
 		ulDialog.setVisible(true);
 		if (ulDialog.getResult() == ApplicatorULDialog.OK) {
+			List<Applicator> applicators = reception.getApplicators();
 			applicators.add(ulDialog.getApplicatorUL());
 			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
 		}
@@ -164,6 +201,7 @@ public class MakeReceptionViewController {
 			JOptionPane.showMessageDialog(view, "Заявитель не выбран.", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return;		
 		} 
+		List<Applicator> applicators = reception.getApplicators();
 		Applicator currentApplicator = applicators.get(index);
 		// Проверяем тип заявителя и вызываем соответствующий диалогс
 		if (currentApplicator instanceof ApplicatorFL) {
@@ -185,6 +223,8 @@ public class MakeReceptionViewController {
 			JOptionPane.showMessageDialog(view, "Заявитель не выбран.", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return;		
 		}  
+	
+		List<Applicator> applicators = reception.getApplicators();
 
 		applicators.remove(index);
 		view.getApplicatorsPanel().applicatorRemoved(index);
@@ -195,7 +235,8 @@ public class MakeReceptionViewController {
 
 	void selectRealtyObject() {
 
-		realtyObject = RealtyObjectListDialogController.getInstance().showDialog(view);
+		RealtyObject realtyObject = RealtyObjectListDialogController.getInstance().showDialog(view);
+		reception.setRealtyObject(realtyObject);
 		viewState.updatePanelData();
 	}
 
@@ -211,22 +252,21 @@ public class MakeReceptionViewController {
 		reception.setResultInMFC(resultInMFC);
 	}
 
-	void storeService() {
-		reception.setService(service);
-	}
-
-	void storeApplicators() {
-		reception.setApplicators(applicators);
-	}
-
-	void storeRealtyObject() {
-		reception.setRealtyObject(realtyObject);
-	}
-
 	void saveReception() {
 
-		ReceptionsModel.getInstance().addReception(reception);
-		new InfoDialog(view, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+		if (isNew) {
+			ReceptionsModel.getInstance().addReception(reception);
+		} else {
+			ReceptionsModel.getInstance().updateReception(reception);
+		}
+		
+
+		if (parentFrame!=null) {
+			new InfoDialog(parentFrame, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+		} else if (parentDialog!=null) {
+			new InfoDialog(parentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+		}
+		
 		
 	}
 

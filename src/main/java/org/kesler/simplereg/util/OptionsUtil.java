@@ -51,7 +51,8 @@ public class OptionsUtil {
 									"\nПроведите корректную настройку приложения.",
 									"Файл не найден",
 									JOptionPane.ERROR_MESSAGE);
-			setDefaultOptions();
+			setDefaultOptions(); 	// Загружаем настройки по умолчанию
+			saveOptions();   		// Сохраняем настройки по умолчанию
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(null,
 									ioe.toString(),
@@ -79,6 +80,7 @@ public class OptionsUtil {
 		options.setProperty("db.user","rroper");
 		options.setProperty("db.password", "q1w2e3R$");
 		options.setProperty("logic.initRecStatusCode", "1");
+		options.setProperty("print.request","request.dotx");
 	}
 
 

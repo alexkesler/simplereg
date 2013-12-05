@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JOptionPane;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -25,6 +26,7 @@ import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
+import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 
 
 
@@ -36,17 +38,22 @@ public class ReceptionDialog extends JDialog {
 	private final boolean DEBUG = false;
 
 	private JFrame parentFrame;
+	private JDialog currentDialog;
+	
 	private Reception reception;
 
 	private JLabel serviceNameLabel;
 	private JPanel applicatorsPanel;
 	private JComboBox statusesComboBox;
+	private JButton saveNewReceptionStatusButton;
 
 	private ReceptionStatus currentReceptionStatus = null;
 	private ReceptionStatus newReceptionStatus = null;
+	private boolean statusChanged = false;
 
 	public ReceptionDialog(JFrame parentFrame, Reception reception) {
 		super(parentFrame, true);
+		currentDialog = this;
 		this.parentFrame = parentFrame;
 		this.reception = reception;
 
@@ -65,9 +72,12 @@ public class ReceptionDialog extends JDialog {
 
 		applicatorsPanel = new JPanel(new MigLayout("fillx"));
 		JScrollPane applicatorsPanelScrollPane = new JScrollPane(applicatorsPanel);
-		final JButton saveNewReceptionStatusButton = new JButton();
-		saveNewReceptionStatusButton.setIcon(ResourcesUtil.getIcon("disk.png"));
-		saveNewReceptionStatusButton.setEnabled(false);
+
+		// Панель сведений об услуге
+		JPanel serviceDataPanel = new JPanel();
+
+
+
 
 		// получаем новый статус дела
 		statusesComboBox = new JComboBox();
@@ -80,23 +90,35 @@ public class ReceptionDialog extends JDialog {
 
 					if (!newReceptionStatus.equals(currentReceptionStatus)) {
 						if (DEBUG) System.out.println("enabled");
-						saveNewReceptionStatusButton.setEnabled(true);
+						statusChanged = true;
 					} else {
 						if (DEBUG) System.out.println("disabled");
-						saveNewReceptionStatusButton.setEnabled(false);
+						statusChanged = false;						
 					}
-					
+
+					saveNewReceptionStatusButton.setEnabled(statusChanged);
 				}
 			}
 		});
 
-		// Сохраняем новый статус дела
+		
+		saveNewReceptionStatusButton = new JButton();
+		saveNewReceptionStatusButton.setIcon(ResourcesUtil.getIcon("disk.png"));
+		saveNewReceptionStatusButton.setEnabled(false);
 		saveNewReceptionStatusButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				reception.setStatus(newReceptionStatus);
-				ReceptionsModel.getInstance().updateReception(reception);
-				currentReceptionStatus = newReceptionStatus;
-				saveNewReceptionStatusButton.setEnabled(false);
+				saveStatus();
+			}
+		});
+
+
+
+
+
+		JButton editButton = new JButton("Изменить");
+		editButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				MakeReceptionViewController.getInstance().openView(currentDialog, reception);
 			}
 		});
 
@@ -106,15 +128,33 @@ public class ReceptionDialog extends JDialog {
 		dataPanel.add(new JLabel("Заявители:"), "wrap");
 		dataPanel.add(applicatorsPanelScrollPane,"push, grow, wrap");
 		dataPanel.add(new JLabel("Состояние дела"), "right");
+		dataPanel.add(serviceDataPanel,"growx, wrap");
 		dataPanel.add(statusesComboBox, "w 50");
 		dataPanel.add(saveNewReceptionStatusButton, "wrap");
+		dataPanel.add(editButton, "wrap, center");
 
+		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
 		JButton okButton = new JButton("Ok");
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
-				setVisible(false);
+				if (statusChanged) {
+					int confirmResult = JOptionPane.showConfirmDialog(currentDialog, "<html>Установить статус: " + 
+															newReceptionStatus.getName() + " ?</html>", 
+															"Сменить статус?", JOptionPane.YES_NO_CANCEL_OPTION);
+
+					if (confirmResult == JOptionPane.YES_OPTION) {
+						saveStatus();
+						setVisible(false);
+					} else if (confirmResult == JOptionPane.NO_OPTION) {
+						setVisible(false);
+					} else {
+						/// При отмене не делаем ничего
+					}
+				} else {
+					setVisible(false);
+				}
 			}
 		});
 
@@ -131,6 +171,13 @@ public class ReceptionDialog extends JDialog {
 
 	}
 
+	private void saveStatus() {
+		reception.setStatus(newReceptionStatus);
+		ReceptionsModel.getInstance().updateReception(reception);
+		currentReceptionStatus = newReceptionStatus;
+		saveNewReceptionStatusButton.setEnabled(false);		
+	}
+
 	private void loadGUIDataFromReception() {
 		// определяем наименование услуги
 		serviceNameLabel.setText("<html>" + reception.getServiceName() + "</html>");
@@ -140,15 +187,6 @@ public class ReceptionDialog extends JDialog {
 		for (Applicator applicator: applicators) {
 			JLabel applicatorLabel = new JLabel("<html>" + applicator.toString() + "</html>");
 			applicatorLabel.setBorder(BorderFactory.createEtchedBorder());
-			// JButton applicatorButton = new JButton();
-			// applicatorButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
-			// applicatorButton.addActionListener(new ActionListener() {
-			// 	public void actionPerformed(ActionEvent ev) {
-			// 		if (applicator instanceof ApplicatorFL) {
-						
-			// 		}
-			// 	}
-			// });
 			applicatorsPanel.add(applicatorLabel, "growx, wrap");
 			// applicatorsPanel.add(applicatorButton,"wrap");
 		}

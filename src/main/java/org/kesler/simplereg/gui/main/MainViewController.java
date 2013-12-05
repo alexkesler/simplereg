@@ -286,7 +286,7 @@ public class MainViewController implements MainViewListener,
 	}
 
 	private void openMakeReceptionView() {
-		MakeReceptionViewController.getInstance().openView();
+		MakeReceptionViewController.getInstance().openView(mainView);
 	}
 
 	private void openServicesView() {
