@@ -25,15 +25,10 @@ import org.kesler.simplereg.util.ResourcesUtil;
 
 import org.kesler.simplereg.logic.applicator.UL;
 
-public class ULListDialog extends JDialog {
+import org.kesler.simplereg.gui.AbstractDialog;
 
-	public static int NONE = -1;
-	public static int OK = 0;
-	public static int CANCEL = 1;
+public class ULListDialog extends AbstractDialog {
 
-	private int result;
-
-	private JDialog dialog;
 	private ULListDialogController controller;
 
 	private int selectedULIndex;
@@ -45,9 +40,8 @@ public class ULListDialog extends JDialog {
 	private ULListModel ulListModel;
 
 
-	public ULListDialog(JFrame frame, ULListDialogController controller) {
-		super(frame, true);
-		this.dialog = dialog;
+	public ULListDialog(JFrame parentFrame, ULListDialogController controller) {
+		super(parentFrame, true);
 		this.controller = controller;
 
 		selectedULIndex = -1;
@@ -55,6 +49,19 @@ public class ULListDialog extends JDialog {
 		filterString = "";
 
 		createGUI();
+		this.setLocationRelativeTo(parentFrame);
+	}
+
+	public ULListDialog(JDialog parentDialog, ULListDialogController controller) {
+		super(parentDialog, true);
+		this.controller = controller;
+
+		selectedULIndex = -1;
+		selectedUL = null;
+		filterString = "";
+
+		createGUI();
+		this.setLocationRelativeTo(parentDialog);
 	}
 
 	private void createGUI() {
@@ -194,12 +201,7 @@ public class ULListDialog extends JDialog {
 
 		this.setContentPane(mainPanel);
 		this.pack();
-		this.setLocationRelativeTo(dialog);
 	
-	}
-
-	public int getResult() {
-		return result;
 	}
 
 	public UL getSelectedUL() {

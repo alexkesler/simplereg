@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.services;
 
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,10 +44,10 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	}
 
 
-	public Service openSelectDialog(JFrame frame) {
+	public Service openSelectDialog(JFrame parentFrame) {
 		Service selectedService = null;
 
-		dialog = new SelectServicesDialog(frame, this);
+		dialog = new SelectServicesDialog(parentFrame, this);
 		reloadTree();
 		dialog.setVisible(true);
 
@@ -60,8 +61,36 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 		return selectedService;
 	}
 
-	public void openEditDialog(JFrame frame) {
-		dialog = new EditServicesDialog(frame, this);
+	public Service openSelectDialog(JDialog parentDialog) {
+		Service selectedService = null;
+
+		dialog = new SelectServicesDialog(parentDialog, this);
+		reloadTree();
+		dialog.setVisible(true);
+
+		if (dialog.getResult() == ServicesDialog.OK) {
+			selectedService = dialog.getSelectedService();
+		}
+
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+		return selectedService;
+	}
+
+
+	public void openEditDialog(JFrame parentFrame) {
+		dialog = new EditServicesDialog(parentFrame, this);
+		reloadTree();
+		dialog.setVisible(true);
+
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+	}
+
+	public void openEditDialog(JDialog parentDialog) {
+		dialog = new EditServicesDialog(parentDialog, this);
 		reloadTree();
 		dialog.setVisible(true);
 

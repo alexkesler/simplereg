@@ -126,6 +126,11 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	@Override
+	public void filterItems(String filter) {
+		
+	}
+
+	@Override
 	public void operatorsModelStateChanged(ModelState state) {
 		switch (state) {
 			

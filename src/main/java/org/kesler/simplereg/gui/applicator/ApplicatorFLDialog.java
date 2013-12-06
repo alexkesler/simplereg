@@ -18,31 +18,43 @@ import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.FL;
 
-public class ApplicatorFLDialog extends JDialog {
+import org.kesler.simplereg.gui.AbstractDialog;
 
-	public static final int OK = 0;
-	public static final int CANCEL = 1;
-	public static final int NONE = -1;
+public class ApplicatorFLDialog extends AbstractDialog {
 
-	private JFrame frame;
 	private ApplicatorFL applicatorFL;
 	private JLabel applicatorFIOLabel;
  	private JLabel represFIOLabel;
 
- 	private int result = NONE;
-
-	public ApplicatorFLDialog(JFrame frame){
-		super(frame, true);
+	public ApplicatorFLDialog(JFrame parentFrame){
+		super(parentFrame, true);
 		applicatorFL = new ApplicatorFL();
 		createGUI();
+		setLocationRelativeTo(parentFrame);
 
 	}
 
-	public ApplicatorFLDialog(JFrame frame, ApplicatorFL applicatorFL) {
-		super(frame,"Заявитель - физическое лицо", true);
-		this.setIconImage(ResourcesUtil.getIcon("user.png").getImage());
+	public ApplicatorFLDialog(JDialog parentDialog){
+		super(parentDialog, true);
+		applicatorFL = new ApplicatorFL();
+		createGUI();
+		setLocationRelativeTo(parentDialog);
+	}
+
+	public ApplicatorFLDialog(JFrame parentFrame, ApplicatorFL applicatorFL) {
+		super(parentFrame,"Заявитель - физическое лицо", true);
+		setIconImage(ResourcesUtil.getIcon("user.png").getImage());
 		this.applicatorFL = applicatorFL;
 		createGUI();
+		setLocationRelativeTo(parentFrame);
+	}
+
+	public ApplicatorFLDialog(JDialog parentDialog, ApplicatorFL applicatorFL) {
+		super(parentDialog,"Заявитель - физическое лицо", true);
+		setIconImage(ResourcesUtil.getIcon("user.png").getImage());
+		this.applicatorFL = applicatorFL;
+		createGUI();
+		setLocationRelativeTo(parentDialog);
 	}
 
 	private void createGUI() {
@@ -131,7 +143,6 @@ public class ApplicatorFLDialog extends JDialog {
 		updateLabels();
 
 		this.pack();
-		this.setLocationRelativeTo(frame);
 
 	}
 
@@ -144,18 +155,14 @@ public class ApplicatorFLDialog extends JDialog {
 		return applicatorFL;
 	}
 
-	public int getResult() {
-		return result;
-	}
-
 	private void selectApplicatorFL() {
-		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
+		FL fl = FLListDialogController.getInstance().openDialog(currentDialog);//Модальный вызов
 		applicatorFL.setFL(fl);
 		updateLabels();		
 	}
 
 	private void selectRepresFL() {
-		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
+		FL fl = FLListDialogController.getInstance().openDialog(currentDialog);//Модальный вызов
 		applicatorFL.setRepres(fl);
 		updateLabels();
 	}

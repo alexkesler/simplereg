@@ -38,6 +38,7 @@ public abstract class ServicesDialog extends JDialog{
 	protected int result = NONE;
 
 	protected JFrame parentFrame;
+	protected JDialog parentDialog;
 
 	protected ServicesDialogController controller;
 	protected JTree servicesTree;
@@ -56,6 +57,17 @@ public abstract class ServicesDialog extends JDialog{
 		servicesTreeModel = (DefaultTreeModel) servicesTree.getModel();
 
 	}
+
+	public ServicesDialog(JDialog parentDialog, ServicesDialogController controller) {
+		super(parentDialog, true);
+		this.parentDialog = parentDialog;
+		this.controller = controller;	
+
+		createGUI();
+		servicesTreeModel = (DefaultTreeModel) servicesTree.getModel();
+
+	}
+
 
 	protected abstract void createGUI();
 

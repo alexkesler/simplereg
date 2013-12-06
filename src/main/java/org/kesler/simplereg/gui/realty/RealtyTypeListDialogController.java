@@ -68,6 +68,11 @@ public class RealtyTypeListDialogController implements GenericListDialogControll
 	}
 
 	@Override
+	public void filterItems(String filter) {
+		
+	}
+
+	@Override
 	public boolean openAddItemDialog() {
 		boolean result = false;
 

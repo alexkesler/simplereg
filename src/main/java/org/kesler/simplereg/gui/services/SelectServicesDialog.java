@@ -34,11 +34,18 @@ public class SelectServicesDialog extends ServicesDialog{
 
 	// private String filterString;
 
-	public SelectServicesDialog(JFrame frame, ServicesDialogController controller) {
-		super(frame, controller);
+	public SelectServicesDialog(JFrame parentFrame, ServicesDialogController controller) {
+		super(parentFrame, controller);
 		originalRootNode = (DefaultMutableTreeNode) servicesTreeModel.getRoot();
 		filteredRootNode = new DefaultMutableTreeNode("Услуги");
 	}
+
+	public SelectServicesDialog(JDialog parentDialog, ServicesDialogController controller) {
+		super(parentDialog, controller);
+		originalRootNode = (DefaultMutableTreeNode) servicesTreeModel.getRoot();
+		filteredRootNode = new DefaultMutableTreeNode("Услуги");
+	}
+
 
 	@Override
 	protected void createGUI() {

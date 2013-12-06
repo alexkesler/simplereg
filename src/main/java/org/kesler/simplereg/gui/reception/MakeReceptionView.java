@@ -38,7 +38,7 @@ import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.applicator.Applicator;
 
-class MakeReceptionView extends JFrame{
+class MakeReceptionView extends JDialog{
 
 	public static final int SERVICE_STATE = 0;
 	public static final int APPLICATORS_STATE = 1;
@@ -60,20 +60,23 @@ class MakeReceptionView extends JFrame{
 
 
 
-	public MakeReceptionView(MakeReceptionViewController controller) {
-		super("Прием заявителя");
+	public MakeReceptionView(MakeReceptionViewController controller, JFrame parentFrame) {
+		super(parentFrame, "Прием заявителя", true);
 		this.controller = controller;
 		createGUI();
-	}
-
-	public void showView(JFrame parentFrame) {
 		setLocationRelativeTo(parentFrame);
-		setVisible(true);
 	}
 
-	public void showView(JDialog parentDialog) {
+	public MakeReceptionView(MakeReceptionViewController controller, JDialog parentDialog) {
+		super(parentDialog, "Прием заявителя", true);
+		this.controller = controller;
+		createGUI();
 		setLocationRelativeTo(parentDialog);
+	}
+
+	public void showView() {
 		setVisible(true);
+		dispose();
 	}
 
 	private void createGUI() {

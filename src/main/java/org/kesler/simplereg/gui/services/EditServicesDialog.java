@@ -39,8 +39,14 @@ public class EditServicesDialog extends ServicesDialog{
 	private Action editNodeAction;
 	private Action removeNodeAction;
 
-	public EditServicesDialog(JFrame frame, ServicesDialogController controller) {
-		super(frame, controller);
+	public EditServicesDialog(JFrame parentFrame, ServicesDialogController controller) {
+		super(parentFrame, controller);
+		currentDialog = this;
+
+	}
+
+	public EditServicesDialog(JDialog parentDialog, ServicesDialogController controller) {
+		super(parentDialog, controller);
 		currentDialog = this;
 
 	}

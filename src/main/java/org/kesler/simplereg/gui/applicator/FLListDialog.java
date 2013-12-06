@@ -28,16 +28,10 @@ import org.kesler.simplereg.util.ResourcesUtil;
 
 import org.kesler.simplereg.logic.applicator.FL;
 
-public class FLListDialog extends JDialog{
+import org.kesler.simplereg.gui.AbstractDialog;
+
+public class FLListDialog extends AbstractDialog{
 	
-	public static final int NONE = -1;
-	public static final int OK = 0;
-	public static final int CANCEL = 1;
-
-	private int result;
-
-	private JFrame frame;
-
 	private FL selectedFL;
 	private int selectedFLIndex;
 
@@ -48,15 +42,15 @@ public class FLListDialog extends JDialog{
 	private FLListDialogController controller;
 	private JTextField filterTextField;
 
-	public FLListDialog(JFrame frame, FLListDialogController controller) {
-		super(frame,"Список физических лиц", true);
-		this.frame = frame;
+	public FLListDialog(JDialog parentDialog, FLListDialogController controller) {
+		super(parentDialog,"Список физических лиц", true);
 		this.controller = controller;
 		createGUI();
 
 		selectedFLIndex = -1;
 		selectedFL = null;
 		filterString = "";
+		setLocationRelativeTo(parentDialog);
 	}
 
 	private void createGUI() {
@@ -178,7 +172,7 @@ public class FLListDialog extends JDialog{
 					result = OK;
 					setVisible(false);
 				} else {
-					JOptionPane.showMessageDialog(frame,
+					JOptionPane.showMessageDialog(currentDialog,
     									"Ничего не выбрано.",
     									"Ошибка",
     									JOptionPane.ERROR_MESSAGE);
@@ -209,7 +203,6 @@ public class FLListDialog extends JDialog{
 
 		setSize(500,500);
 		pack();
-		setLocationRelativeTo(frame);
 
 	}
 

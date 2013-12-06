@@ -2,13 +2,19 @@ package org.kesler.simplereg.gui.applicator;
 
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JDialog;
 
 import org.kesler.simplereg.logic.applicator.FL;
 import org.kesler.simplereg.logic.applicator.FLModel;
 
-public class FLListDialogController {
+import org.kesler.simplereg.gui.GenericListDialog;
+import org.kesler.simplereg.gui.GenericListDialogController;
+
+
+public class FLListDialogController implements GenericListDialogController{
+	
 	private FLModel model;
-	private FLListDialog dialog;
+	private GenericListDialog dialog;
 	private static FLListDialogController instance = null;
 
 	public static synchronized FLListDialogController getInstance() {
@@ -31,9 +37,9 @@ public class FLListDialogController {
 	/**
 	* Открывает диалог заявителя - физического лица
 	*/
-	public FL openDialog(JFrame frame) {
+	public FL openDialog(JDialog parentDialog) {
 		filterFLList("");
-		dialog = new FLListDialog(frame, this);
+		dialog = new GenericListDialog<FL>(parentDialog, this);
 		dialog.setVisible(true);
 		// получаем выбронное физ лицо
 		FL selectedFL = dialog.getSelectedFL();
@@ -49,14 +55,16 @@ public class FLListDialogController {
 	* Создает в модели фильтрованный список
 	* @param filter определяет фильтр для записей. Если строка пустая - модель будет возвращать полный список.
 	*/
-	public void filterFLList(String filter) {
+	@Override
+	public void filterItems(String filter) {
 		model.filterFLList(filter.trim());
 	}
 
 	/**
 	* Открывает диалог добавления нового физического лица
 	*/
-	public void openAddFLDialog() {
+	@Override
+	public void openAddItemDialog() {
 		FLDialog flDialog = new FLDialog(dialog);
 		flDialog.setVisible(true);
 		if (flDialog.getResult() == FLDialog.OK) {
@@ -77,7 +85,7 @@ public class FLListDialogController {
 	* Открывает диалог добавления физического лица с введенной фамилией
 	* @param initSurName строка, на основнии которой создается фамилия 
 	*/
-	public void openAddFLDialog(String initSurName) {
+	public void openAddItemDialog(String initSurName) {
 		initSurName = initSurName.toLowerCase();
 		String firstLetter = initSurName.substring(0,1);
 		firstLetter = firstLetter.toUpperCase();
@@ -97,7 +105,7 @@ public class FLListDialogController {
 	}
 
 
-	public void openEditFLDialog(int index) {
+	public void openEditItemDialog(int index) {
 		FL fl = model.getAllFLs().get(index);
 		FLDialog flDialog = new FLDialog(dialog, fl);
 		flDialog.setVisible(true);
@@ -113,7 +121,7 @@ public class FLListDialogController {
 
 	}
 
-	public void deleteFL(int index) {
+	public void removeItem(int index) {
 		FL fl = model.getAllFLs().get(index);
 		model.deleteFL(fl);
 		dialog.removedFL(index);

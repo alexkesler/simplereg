@@ -4,11 +4,12 @@ import java.util.List;
 
 public interface GenericListDialogController<T> {
 	
-	// public List<T> getAllItems();	
-	public boolean openAddItemDialog();
-	public boolean openEditItemDialog(int index);
-	public boolean removeItem(int index);
+	boolean openAddItemDialog();
+	boolean openEditItemDialog(int index);
+	boolean removeItem(int index);
+
+	void filterItems(String filter);
 	
-	public void readItems();
+	void readItems();
 }	
 

@@ -8,11 +8,14 @@ import javax.swing.JFrame;
 import org.kesler.simplereg.logic.applicator.UL;
 import org.kesler.simplereg.logic.applicator.ULModel;
 
+import org.kesler.simplereg.gui.GenericListDialog;
+import org.kesler.simplereg.gui.GenericListDialogController;
+
 public class ULListDialogController {
 
 	private static ULListDialogController instance = null;
 
-	private ULListDialog dialog;
+	private GenericListDialog dialog;
 	private ULModel model;
 
 	public static synchronized ULListDialogController getInstance() {
@@ -26,11 +29,11 @@ public class ULListDialogController {
 		model = ULModel.getInstance();
 	}
 
-	public UL openDialog(JFrame parentFrame) {
-		dialog = new ULListDialog(parentFrame, this);
+	public UL openDialog(JDialog parentDialog) {
+		dialog = new GenericListDialog<UL>(parentDialog, this);
 		dialog.setVisible(true);
 		UL ul = null;
-		if (dialog.getResult() == ULListDialog.OK) {
+		if (dialog.getResult() == GenericListDialog.OK) {
 			ul = dialog.getSelectedUL();
 		}
 		// освобождаем ресурсы
@@ -46,12 +49,13 @@ public class ULListDialogController {
 		
 	}
 
-
-	public void filterULList(String filterString) {
+	@Override
+	public void filterItems(String filterString) {
 		model.filterULList(filterString);
 	}
 
-	public void openAddULDialog() {
+	@Override
+	public void openAddItemDialog() {
 		ULDialog ulDialog = new ULDialog(dialog);
 		ulDialog.setVisible(true);
 		if (ulDialog.getResult() == ULDialog.OK) {
@@ -69,7 +73,7 @@ public class ULListDialogController {
 
 	}
 
-	public void openEditULDialog(int index ) {
+	public void openEditItemDialog(int index ) {
 		UL ul = model.getAllULs().get(index);
 		ULDialog ulDialog = new ULDialog(dialog, ul);
 		ulDialog.setVisible(true);
@@ -81,7 +85,7 @@ public class ULListDialogController {
 
 	}
 
-	public void deleteUL(int index) {
+	public void removeItem(int index) {
 		UL ul = model.getAllULs().get(index);
 		model.deleteUL(ul);
 		dialog.removedUL(index);

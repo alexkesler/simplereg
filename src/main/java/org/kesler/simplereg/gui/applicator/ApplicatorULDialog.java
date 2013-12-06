@@ -21,38 +21,42 @@ import org.kesler.simplereg.logic.applicator.FL;
 import org.kesler.simplereg.logic.applicator.UL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 
-public class ApplicatorULDialog extends JDialog {
+import org.kesler.simplereg.gui.AbstractDialog;
 
-	public static final int NONE = -1;
-	public static final int OK = 0;
-	public static final int CANCEL = 1;
+public class ApplicatorULDialog extends AbstractDialog {
 
-	private int result;
-
-	private JFrame frame;
 	private ApplicatorUL applicatorUL;
 
 	private JLabel nameLabel;
 	private JLabel represLabel;
 
-	public ApplicatorULDialog (JFrame frame) {
-		super(frame,"Заявитель - юридическое лицо", true);
-		this.frame = frame;
-
-		result = NONE;
+	public ApplicatorULDialog (JFrame parentFrame) {
+		super(parentFrame,"Заявитель - юридическое лицо", true);
 		this.applicatorUL = new ApplicatorUL();
-
 		createGUI();
+		setLocationRelativeTo(parentFrame);
 	}
 
-	public ApplicatorULDialog(JFrame frame, ApplicatorUL applicatorUL) {
-		super(frame, "Заявитель - юридическое лицо", true);
-		this.frame = frame;
+	public ApplicatorULDialog (JDialog parentDialog) {
+		super(parentDialog,"Заявитель - юридическое лицо", true);
+		this.applicatorUL = new ApplicatorUL();
+		createGUI();
+		setLocationRelativeTo(parentDialog);
+	}
 
+
+	public ApplicatorULDialog(JFrame parentFrame, ApplicatorUL applicatorUL) {
+		super(parentFrame, "Заявитель - юридическое лицо", true);
 		this.applicatorUL = applicatorUL;
-		result = NONE;
-
 		createGUI(); 
+		setLocationRelativeTo(parentFrame);
+	}
+
+	public ApplicatorULDialog(JDialog parentDialog, ApplicatorUL applicatorUL) {
+		super(parentDialog, "Заявитель - юридическое лицо", true);
+		this.applicatorUL = applicatorUL;
+		createGUI(); 
+		setLocationRelativeTo(parentDialog);
 	}
 
 	private void createGUI() {
@@ -139,13 +143,8 @@ public class ApplicatorULDialog extends JDialog {
 
 		this.setContentPane(mainPanel);
 		this.pack();
-		this.setLocationRelativeTo(frame);
 
 		updateLabels();
-	}
-
-	public int getResult() {
-		return result;
 	}
 
 	public ApplicatorUL getApplicatorUL() {
@@ -158,13 +157,13 @@ public class ApplicatorULDialog extends JDialog {
 	}	
 
 	private void selectApplicatorUL() {
-		UL ul = ULListDialogController.getInstance().openDialog(frame);
+		UL ul = ULListDialogController.getInstance().openDialog(currentDialog);
 		applicatorUL.setUL(ul);
 		updateLabels();
 	}
 
 	private void selectRepresFL() {
-		FL fl = FLListDialogController.getInstance().openDialog(frame);//Модальный вызов
+		FL fl = FLListDialogController.getInstance().openDialog(currentDialog);//Модальный вызов
 		applicatorUL.setRepres(fl);
 		updateLabels();
 	}

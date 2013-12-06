@@ -39,7 +39,7 @@ public class MakeReceptionViewController {
 
 	private MakeReceptionViewController() {
 		initReception();
-		view = new MakeReceptionView(this);
+		// view = new MakeReceptionView(this);
 		viewState = new NoneMakeReceptionViewState(this, view);
 	}
 
@@ -51,43 +51,53 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JFrame parentFrame) {
+		view = new MakeReceptionView(this, parentFrame);
 		this.parentFrame = parentFrame;
-		view.showView(parentFrame);
-
 		initReception();
 
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
+		view.showView();
+		view = null;
+
 	}
 
 	public void openView(JDialog parentDialog) {
+		view = new MakeReceptionView(this, parentDialog);
 		this.parentDialog = parentDialog;
-		view.showView(parentDialog);
-
 		initReception();
 
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
+		view.showView();
+		view = null;
+
 	}
 
 	public void openView(JFrame parentFrame, Reception reception) {
+		view = new MakeReceptionView(this, parentFrame);
 		this.parentFrame = parentFrame;
 		this.reception = reception;
 		isNew = false;
-		view.showView(parentFrame);
 
 		// Переключаем в начальное состояние
-		viewState = new ServiceMakeReceptionViewState(this, view);		
+		viewState = new ServiceMakeReceptionViewState(this, view);
+
+		view.showView();
+		view = null;
 	}
 
 	public void openView(JDialog parentDialog, Reception reception) {
+		view = new MakeReceptionView(this, parentFrame);
 		this.parentDialog = parentDialog;
 		this.reception = reception;
 		isNew = false;
-		view.showView(parentDialog);
 
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);		
+
+		view.showView();
+		view = null;
 	}
 
 	private void initReception() {
