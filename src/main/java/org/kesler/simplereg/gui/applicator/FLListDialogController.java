@@ -6,16 +6,24 @@ import javax.swing.JDialog;
 
 import org.kesler.simplereg.logic.applicator.FL;
 import org.kesler.simplereg.logic.applicator.FLModel;
+import org.kesler.simplereg.logic.applicator.FLModelStateListener;
+import org.kesler.simplereg.logic.ModelState;
 
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.gui.GenericListDialogController;
 
+import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 
-public class FLListDialogController implements GenericListDialogController{
+
+
+public class FLListDialogController implements GenericListDialogController, FLModelStateListener{
 	
 	private FLModel model;
 	private GenericListDialog dialog;
 	private static FLListDialogController instance = null;
+
+	private ProcessDialog processDialog = null;
 
 	public static synchronized FLListDialogController getInstance() {
 		if (instance == null) {
@@ -26,13 +34,8 @@ public class FLListDialogController implements GenericListDialogController{
 
 	private FLListDialogController() {
 		model = FLModel.getInstance();
+		model.addFLModelStateListener(this);
 	}
-
-	// public List<FL> getFLList() {
-	// 	// Возвращаем фильтрованный список
-	// 	return model.getFilteredFLs();
-		
-	// }
 
 	/**
 	* Открывает диалог просмотра-редактирования заявителя - физического лица
@@ -40,10 +43,9 @@ public class FLListDialogController implements GenericListDialogController{
 	public void openDialog(JFrame parentFrame) {
 		dialog = new GenericListDialog<FL>(parentFrame, "Заявители", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		model.readFromDB();
+		processDialog = new ProcessDialog(dialog);
 		model.setFilterString("");
-		model.filterFLs();
-		dialog.setItems(model.getFilteredFLs());
+		model.readFLsInSeparateThread();
 
 		dialog.setVisible(true);
 
@@ -59,10 +61,9 @@ public class FLListDialogController implements GenericListDialogController{
 	public void openDialog(JDialog parentDialog) {
 		dialog = new GenericListDialog<FL>(parentDialog, "Заявители", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		model.readFromDB();
+		processDialog = new ProcessDialog(dialog);
 		model.setFilterString("");
-		model.filterFLs();
-		dialog.setItems(model.getFilteredFLs());
+		model.readFLsInSeparateThread();
 
 		dialog.setVisible(true);
 		
@@ -80,10 +81,9 @@ public class FLListDialogController implements GenericListDialogController{
 		// filterItems("");
 		dialog = new GenericListDialog<FL>(parentFrame, "Выбор заявителя", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		model.readFromDB();
+		processDialog = new ProcessDialog(dialog);
 		model.setFilterString("");
-		model.filterFLs();
-		dialog.setItems(model.getFilteredFLs());
+		model.readFLsInSeparateThread();
 
 		dialog.setVisible(true);
 
@@ -109,10 +109,9 @@ public class FLListDialogController implements GenericListDialogController{
 		// filterItems("");
 		dialog = new GenericListDialog<FL>(parentDialog, "Выбор заявителя", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		model.readFromDB();
+		processDialog = new ProcessDialog(dialog);
 		model.setFilterString("");
-		model.filterFLs();
-		dialog.setItems(model.getFilteredFLs());
+		model.readFLsInSeparateThread();
 
 		dialog.setVisible(true);
 
@@ -133,10 +132,8 @@ public class FLListDialogController implements GenericListDialogController{
 
 	@Override
 	public void readItems() {
-		model.readFromDB();
-		model.filterFLs();
-		List<FL> fls = model.getFilteredFLs();
-		dialog.setItems(fls);
+		processDialog = new ProcessDialog(dialog);
+		model.readFLsInSeparateThread();
 	}
 
 	/**
@@ -145,10 +142,9 @@ public class FLListDialogController implements GenericListDialogController{
 	*/
 	@Override
 	public void filterItems(String filter) {
-		model.setFilterString(filter.trim());
-		model.filterFLs();
-		List<FL> fls = model.getFilteredFLs();
-		dialog.setItems(fls);
+		processDialog = new ProcessDialog(dialog);
+		model.setFilterString(filter);
+		model.filterFLsInSeparateThread();
 	}
 
 
@@ -231,6 +227,47 @@ public class FLListDialogController implements GenericListDialogController{
 		dialog.removedItem(index);
 
 		return true;
+	}
+
+	@Override 
+	public void flModelStateChanged(ModelState state) {
+		switch (state) {
+			
+			case CONNECTING:
+				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
+				break;
+
+			case READING:
+				if (processDialog != null) processDialog.showProcess("Читаю список заявителей");
+				break;	
+			
+			case WRITING:
+				if (processDialog != null) processDialog.showProcess("Сохраняю изменения");
+				break;	
+			
+			case UPDATED:
+				// if (dialog != null) dialog.setItems(model.getAllOperators());
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
+				break;
+
+			case FILTERED:
+				if (dialog != null) dialog.setItems(model.getFilteredFLs());
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				// new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
+				break;
+
+			
+			case READY:
+				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}	
+				break;
+			
+			case ERROR:				
+				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}
+				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
+				break;
+
+		}
 	}
 
 }

@@ -280,10 +280,12 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 	public void addedItem(int index) {
 		itemsListModel.addedItem(index);
+		itemsList.setSelectedIndex(index);
 	}
 
 	public void updatedItem(int index) {
 		itemsListModel.updatedItem(index);
+		itemsList.setSelectedIndex(index);
 	}
 
 	public void removedItem(int index) {

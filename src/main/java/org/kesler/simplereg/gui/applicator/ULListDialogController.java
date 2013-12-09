@@ -7,16 +7,23 @@ import javax.swing.JFrame;
 
 import org.kesler.simplereg.logic.applicator.UL;
 import org.kesler.simplereg.logic.applicator.ULModel;
+import org.kesler.simplereg.logic.applicator.ULModelStateListener;
+import org.kesler.simplereg.logic.ModelState;
 
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.gui.GenericListDialogController;
 
-public class ULListDialogController implements GenericListDialogController {
+import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProcessDialog;
+
+public class ULListDialogController implements GenericListDialogController, ULModelStateListener {
 
 	private static ULListDialogController instance = null;
 
 	private GenericListDialog dialog;
 	private ULModel model;
+
+	private ProcessDialog processDialog = null;
 
 	public static synchronized ULListDialogController getInstance() {
 		if (instance == null) {
@@ -27,15 +34,15 @@ public class ULListDialogController implements GenericListDialogController {
 
 	private ULListDialogController() {
 		model = ULModel.getInstance();
+		model.addULModelStateListener(this);
 	}
 
 	public void openDialog(JDialog parentDialog) {
 		dialog = new GenericListDialog<UL>(parentDialog, "Юр лица", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		model.readFromDB();
-		model.filterULs();
-		List<UL> uls = model.getFilteredULs();
-		dialog.setItems(uls);
+		processDialog = new ProcessDialog(dialog);
+		model.setFilterString("");
+		model.readULsInSeparateThread();
 
 		dialog.setVisible(true);
 		// освобождаем ресурсы
@@ -46,10 +53,9 @@ public class ULListDialogController implements GenericListDialogController {
 	public void openDialog(JFrame parentFrame) {
 		dialog = new GenericListDialog<UL>(parentFrame, "Юр лица", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		model.readFromDB();
-		model.filterULs();
-		List<UL> uls = model.getFilteredULs();
-		dialog.setItems(uls);
+		processDialog = new ProcessDialog(dialog);
+		model.setFilterString("");
+		model.readULsInSeparateThread();
 
 		dialog.setVisible(true);
 
@@ -61,10 +67,9 @@ public class ULListDialogController implements GenericListDialogController {
 	public UL openSelectDialog(JDialog parentDialog) {
 		dialog = new GenericListDialog<UL>(parentDialog, "Юр лица", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		model.readFromDB();
-		model.filterULs();
-		List<UL> uls = model.getFilteredULs();
-		dialog.setItems(uls);
+		processDialog = new ProcessDialog(dialog);
+		model.setFilterString("");
+		model.readULsInSeparateThread();
 
 		dialog.setVisible(true);
 
@@ -83,10 +88,9 @@ public class ULListDialogController implements GenericListDialogController {
 	public UL openSelectDialog(JFrame parentFrame) {
 		dialog = new GenericListDialog<UL>(parentFrame, "Юр лица", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		model.readFromDB();
-		model.filterULs();
-		List<UL> uls = model.getFilteredULs();
-		dialog.setItems(uls);
+		processDialog = new ProcessDialog(dialog);
+		model.setFilterString("");
+		model.readULsInSeparateThread();
 
 		dialog.setVisible(true);
 
@@ -103,15 +107,10 @@ public class ULListDialogController implements GenericListDialogController {
 
 	}
 
-	// public List<UL> getULList() {
-	// 	// Возвращаем фильтрованный список
-	// 	return model.getFilteredULs();
-		
-	// }
 
 	@Override
 	public void readItems() {
-		model.readFromDB();
+		model.readULs();
 		model.filterULs();
 		List<UL> uls = model.getFilteredULs();
 		dialog.setItems(uls);
@@ -174,5 +173,45 @@ public class ULListDialogController implements GenericListDialogController {
 		return true;
 	}
 
+	@Override 
+	public void ulModelStateChanged(ModelState state) {
+		switch (state) {
+			
+			case CONNECTING:
+				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
+				break;
+
+			case READING:
+				if (processDialog != null) processDialog.showProcess("Читаю список юр лиц");
+				break;	
+			
+			case WRITING:
+				if (processDialog != null) processDialog.showProcess("Сохраняю изменения");
+				break;	
+			
+			case UPDATED:
+				// if (dialog != null) dialog.setItems(model.getAllOperators());
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
+				break;
+
+			case FILTERED:
+				if (dialog != null) dialog.setItems(model.getFilteredULs());
+				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+				// new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
+				break;
+
+			
+			case READY:
+				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}	
+				break;
+			
+			case ERROR:				
+				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}
+				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
+				break;
+
+		}
+	}
 
 }

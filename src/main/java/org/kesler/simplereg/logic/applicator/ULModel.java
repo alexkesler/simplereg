@@ -4,13 +4,18 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.kesler.simplereg.dao.DAOFactory;
+import org.kesler.simplereg.dao.DAOListener;
+import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.ModelState;
 
-public class ULModel {
+public class ULModel implements DAOListener {
 	private List<UL> ulList;
 	private List<UL> filteredULList;
 	private String filterString;
 
 	private static ULModel instance = null;
+
+	private List<ULModelStateListener> listeners;
 
 	public static synchronized ULModel getInstance() {
 		if (instance == null) {
@@ -23,15 +28,30 @@ public class ULModel {
 		ulList = new ArrayList<UL>();
 		filteredULList = new ArrayList<UL>();
 		filterString = "";
+		listeners = new ArrayList<ULModelStateListener>();
 	}
 
+	public void addULModelStateListener(ULModelStateListener listener) {
+		listeners.add(listener);
+	}
 
 	public List<UL> getAllULs() {
 		return ulList;
 	}
 
-	public void readFromDB() {
+	public void readULs() {
 		ulList = DAOFactory.getInstance().getULDAO().getAllULs();
+		notifyListeners(ModelState.UPDATED);
+	}
+
+	public void readULsInSeparateThread() {
+		Thread reader = new Thread(new Runnable() {
+			public void run() {
+				readULs();
+				filterULs();
+			}
+		});
+		reader.start();
 	}
 
 	public void setFilterString(String filterString) {
@@ -39,6 +59,7 @@ public class ULModel {
 	}
 
 	public void filterULs() {
+
 		if (!filterString.isEmpty()) {
 			filteredULList = new ArrayList<UL>();
 			for (UL ul: ulList) {
@@ -49,6 +70,17 @@ public class ULModel {
 		} else {
 			filteredULList = ulList;
 		}
+
+		notifyListeners(ModelState.FILTERED);
+	}
+
+	public void filterULsInSeparateThread() {
+		Thread filterer = new Thread(new Runnable() {
+			public void run() {
+				filterULs();
+			}
+		});
+		filterer.start();
 	}
 
 	public List<UL> getFilteredULs() {
@@ -74,6 +106,37 @@ public class ULModel {
 	public void deleteUL(UL ul) {
 		DAOFactory.getInstance().getULDAO().deleteUL(ul);
 		ulList.remove(ul);
+	}
+
+	@Override
+	public void daoStateChanged(DAOState state) {
+		switch (state) {
+			case CONNECTING:
+				notifyListeners(ModelState.CONNECTING);
+			break;
+
+			case READING:
+				notifyListeners(ModelState.READING);
+			break;
+
+			case WRITING:
+				notifyListeners(ModelState.WRITING);
+			break;
+
+			case READY:
+				notifyListeners(ModelState.READY);		
+			break;
+
+			case ERROR:
+				notifyListeners(ModelState.ERROR);
+			break;
+		}
+	}
+
+	private void notifyListeners(ModelState state) {
+		for (ULModelStateListener listener : listeners) {
+			listener.ulModelStateChanged(state);			
+		}
 	}
 
 
