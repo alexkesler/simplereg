@@ -31,59 +31,25 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 public class GenericListDialog<T> extends AbstractDialog {
 
 	public static final int VIEW_MODE=0;
-	public static final int SELECT_MODE = 1;
-	public static final int SELECT_FILTER_MODE = 2;
+	public static final int VIEW_FILTER_MODE = 1;
+	public static final int SELECT_MODE = 2;
+	public static final int SELECT_FILTER_MODE = 3;
 
 	private boolean isSelect = false;
 	private boolean isFilter = false;
 
 	private GenericListDialogController<T> controller;
 
+	private JTextField filterTextField;
 	private JList itemsList;
 	private ItemsListModel itemsListModel;
 	private int selectedIndex;
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller) {
-		super(parentFrame, name, true);
-		this.controller = controller;
-
-		selectedIndex = -1;
-
-		createGUI();
-		this.setSize(400,500);
-		setLocationRelativeTo(parentFrame);
-
-	}
-
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller) {
-		super(parentDialog, name, true);
-		this.controller = controller;
-
-		selectedIndex = -1;
-
-		createGUI();
-		this.setSize(400,500);
-		setLocationRelativeTo(parentDialog);
-
-	}
-
 	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, Dimension size, int mode) {
 		super(parentFrame, name, true);
+		this.controller = controller;
 
-		switch (mode) {
-			case VIEW_MODE:
-				isSelect = false;
-				isFilter = false;
-				break;
-			case SELECT_MODE:
-				isSelect = true;
-				isFilter = false;
-				break;
-			case SELECT_FILTER_MODE:
-				isSelect = true;
-				isFilter = true;
-				break;		
-		}
+		setMode(mode);
 
 		selectedIndex = -1;
 
@@ -95,11 +61,51 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller, Dimension size, int mode) {
 		super(parentDialog, name, true);
+		this.controller = controller;
 
+		setMode(mode);
+
+		selectedIndex = -1;
+
+		createGUI();
+		setSize(size);
+		setLocationRelativeTo(parentDialog);
+	}
+
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, int mode) {
+		this(parentFrame, name, controller, new Dimension(400,500), mode);
+	}
+
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller, int mode) {
+		this(parentDialog, name, controller, new Dimension(400,500), mode);
+	}
+
+
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller) {
+		this(parentFrame, name, controller, VIEW_MODE);
+	}
+
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller) {
+		this(parentDialog, name, controller, VIEW_MODE);		
+	}
+
+	public GenericListDialog(JFrame parentFrame, GenericListDialogController controller) {
+		this(parentFrame, "", controller);
+	}
+
+	public GenericListDialog(JDialog parentDialog, GenericListDialogController controller) {
+		this(parentDialog, "", controller);		
+	}
+
+	private void setMode(int mode) {
 		switch (mode) {
 			case VIEW_MODE:
 				isSelect = false;
 				isFilter = false;
+				break;
+			case VIEW_FILTER_MODE:
+				isSelect = false;
+				isFilter = true;
 				break;
 			case SELECT_MODE:
 				isSelect = true;
@@ -109,15 +115,8 @@ public class GenericListDialog<T> extends AbstractDialog {
 				isSelect = true;
 				isFilter = true;
 				break;		
-		}
-
-		selectedIndex = -1;
-
-		createGUI();
-		setSize(size);
-		setLocationRelativeTo(parentDialog);
+		}		
 	}
-
 
 	public int getSelectedIndex() {
 		return selectedIndex;
@@ -135,6 +134,10 @@ public class GenericListDialog<T> extends AbstractDialog {
 		}
 	}
 
+	public void cleanFilter() {
+		filterTextField.setText("");
+	}
+
 	private void createGUI() {
 
 		// Основная панель
@@ -144,7 +147,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		JPanel dataPanel = new JPanel(new MigLayout("fill,nogrid"));
 
 
-		final JTextField filterTextField = new JTextField(20);
+		filterTextField = new JTextField(20);
 
 		filterTextField.getDocument().addDocumentListener(new DocumentListener() {
 			public void insertUpdate(DocumentEvent event) {
@@ -227,7 +230,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 
 		// собираем панель данных
-		dataPanel.add(filterTextField);
+		if (isFilter) dataPanel.add(filterTextField, "wrap");
 		dataPanel.add(itemsListScrollPane, "push, grow, wrap, w 200");
 		dataPanel.add(addItemButton);
 		dataPanel.add(editItemButton);
@@ -265,7 +268,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 		// Собираем панель кнопок
 		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
+		if (isSelect) buttonPanel.add(cancelButton);
 
 		// Собираем основную панель
 		mainPanel.add(dataPanel, BorderLayout.CENTER);

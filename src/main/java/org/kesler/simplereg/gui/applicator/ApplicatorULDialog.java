@@ -157,13 +157,13 @@ public class ApplicatorULDialog extends AbstractDialog {
 	}	
 
 	private void selectApplicatorUL() {
-		UL ul = ULListDialogController.getInstance().openDialog(currentDialog);
+		UL ul = ULListDialogController.getInstance().openSelectDialog(currentDialog);
 		applicatorUL.setUL(ul);
 		updateLabels();
 	}
 
 	private void selectRepresFL() {
-		FL fl = FLListDialogController.getInstance().openDialog(currentDialog);//Модальный вызов
+		FL fl = FLListDialogController.getInstance().openSelectDialog(currentDialog);//Модальный вызов
 		applicatorUL.setRepres(fl);
 		updateLabels();
 	}

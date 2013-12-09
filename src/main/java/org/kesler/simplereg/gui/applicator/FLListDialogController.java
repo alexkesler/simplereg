@@ -28,22 +28,72 @@ public class FLListDialogController implements GenericListDialogController{
 		model = FLModel.getInstance();
 	}
 
-	public List<FL> getFLList() {
-		// Возвращаем фильтрованный список
-		return model.getFilteredFLs();
+	// public List<FL> getFLList() {
+	// 	// Возвращаем фильтрованный список
+	// 	return model.getFilteredFLs();
 		
-	}
+	// }
+
+	/**
+	* Открывает диалог просмотра-редактирования заявителя - физического лица
+	*/
+	public void openDialog(JFrame parentFrame) {
+		dialog = new GenericListDialog<FL>(parentFrame, "Заявители", this, GenericListDialog.VIEW_FILTER_MODE);
+
+		model.readFromDB();
+		model.setFilterString("");
+		model.filterFLs();
+		dialog.setItems(model.getFilteredFLs());
+
+		dialog.setVisible(true);
+
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+
+	} 
 
 	/**
 	* Открывает диалог заявителя - физического лица
 	*/
-	public FL openDialog(JDialog parentDialog) {
-		filterFLList("");
-		dialog = new GenericListDialog<FL>(parentDialog, this);
+	public void openDialog(JDialog parentDialog) {
+		dialog = new GenericListDialog<FL>(parentDialog, "Заявители", this, GenericListDialog.VIEW_FILTER_MODE);
+
+		model.readFromDB();
+		model.setFilterString("");
+		model.filterFLs();
+		dialog.setItems(model.getFilteredFLs());
+
 		dialog.setVisible(true);
-		// получаем выбронное физ лицо
-		FL selectedFL = dialog.getSelectedFL();
 		
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+
+	} 
+
+	/**
+	* Открывает диалог выбора заявителя - физического лица
+	*/
+	public FL openSelectDialog(JFrame parentFrame) {
+		FL selectedFL = null;
+		// filterItems("");
+		dialog = new GenericListDialog<FL>(parentFrame, "Выбор заявителя", this, GenericListDialog.SELECT_FILTER_MODE);
+
+		model.readFromDB();
+		model.setFilterString("");
+		model.filterFLs();
+		dialog.setItems(model.getFilteredFLs());
+
+		dialog.setVisible(true);
+
+		if (dialog.getResult() == GenericListDialog.OK) {
+			// получаем выбранное физ лицо
+			int selectedIndex = dialog.getSelectedIndex();
+			selectedFL = model.getFilteredFLs().get(selectedIndex);
+			
+		}
+
 		// Освобождаем ресурсы
 		dialog.dispose();
 		dialog = null;
@@ -52,40 +102,87 @@ public class FLListDialogController implements GenericListDialogController{
 	} 
 
 	/**
+	* Открывает диалог выбора заявителя - физического лица
+	*/
+	public FL openSelectDialog(JDialog parentDialog) {
+		FL selectedFL = null;
+		// filterItems("");
+		dialog = new GenericListDialog<FL>(parentDialog, "Выбор заявителя", this, GenericListDialog.SELECT_FILTER_MODE);
+
+		model.readFromDB();
+		model.setFilterString("");
+		model.filterFLs();
+		dialog.setItems(model.getFilteredFLs());
+
+		dialog.setVisible(true);
+
+		if (dialog.getResult() == GenericListDialog.OK) {
+			// получаем выбранное физ лицо
+			int selectedIndex = dialog.getSelectedIndex();
+			selectedFL = model.getFilteredFLs().get(selectedIndex);
+			
+		}
+
+		// Освобождаем ресурсы
+		dialog.dispose();
+		dialog = null;
+
+		return selectedFL;
+	} 
+
+
+	@Override
+	public void readItems() {
+		model.readFromDB();
+		model.filterFLs();
+		List<FL> fls = model.getFilteredFLs();
+		dialog.setItems(fls);
+	}
+
+	/**
 	* Создает в модели фильтрованный список
 	* @param filter определяет фильтр для записей. Если строка пустая - модель будет возвращать полный список.
 	*/
 	@Override
 	public void filterItems(String filter) {
-		model.filterFLList(filter.trim());
+		model.setFilterString(filter.trim());
+		model.filterFLs();
+		List<FL> fls = model.getFilteredFLs();
+		dialog.setItems(fls);
 	}
+
 
 	/**
 	* Открывает диалог добавления нового физического лица
 	*/
 	@Override
-	public void openAddItemDialog() {
+	public boolean openAddItemDialog() {
+		boolean result = false;
 		FLDialog flDialog = new FLDialog(dialog);
 		flDialog.setVisible(true);
 		if (flDialog.getResult() == FLDialog.OK) {
 			// очищаем фильтр
-			filterFLList("");
+			filterItems("");
 			// запоминаем новое физ лицо		
 			FL fl = flDialog.getFL();
 			int index = model.addFL(fl);
 			if (index != -1) {
-				dialog.addedFL(index);
+				dialog.addedItem(index);
+				result = true;
 			}	
 		}
 		flDialog.dispose();
 		flDialog = null;
+
+		return result;
 	}
 
 	/**
 	* Открывает диалог добавления физического лица с введенной фамилией
 	* @param initSurName строка, на основнии которой создается фамилия 
 	*/
-	public void openAddItemDialog(String initSurName) {
+	public boolean openAddItemDialog(String initSurName) {
+		boolean result = false;
 		initSurName = initSurName.toLowerCase();
 		String firstLetter = initSurName.substring(0,1);
 		firstLetter = firstLetter.toUpperCase();
@@ -96,35 +193,44 @@ public class FLListDialogController implements GenericListDialogController{
 			FL fl = flDialog.getFL();
 			int index = model.addFL(fl);
 			if (index != -1) {
-				dialog.addedFL(index);
+				dialog.addedItem(index);
+				result = true;
 			}			
 		}
 		// Освобождаем ресурсы
 		flDialog.dispose();
 		flDialog = null;
+
+		return result;
 	}
 
 
-	public void openEditItemDialog(int index) {
+	public boolean openEditItemDialog(int index) {
+		boolean result = false;
 		FL fl = model.getAllFLs().get(index);
 		FLDialog flDialog = new FLDialog(dialog, fl);
 		flDialog.setVisible(true);
 		
 		if (flDialog.getResult() == FLDialog.OK) {
 			model.updateFL(fl);
-			dialog.updatedFL(index);
+			dialog.updatedItem(index);
+			result = true;
 		}
 
 		// Освобождаем ресурсы
 		flDialog.dispose();
 		flDialog = null;
 
+		return result;
+
 	}
 
-	public void removeItem(int index) {
+	public boolean removeItem(int index) {
 		FL fl = model.getAllFLs().get(index);
 		model.deleteFL(fl);
-		dialog.removedFL(index);
+		dialog.removedItem(index);
+
+		return true;
 	}
 
 }

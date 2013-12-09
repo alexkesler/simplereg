@@ -54,7 +54,7 @@ public class MakeReceptionViewController {
 		view = new MakeReceptionView(this, parentFrame);
 		this.parentFrame = parentFrame;
 		initReception();
-
+		isNew = true;
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
 		view.showView();
@@ -66,7 +66,7 @@ public class MakeReceptionViewController {
 		view = new MakeReceptionView(this, parentDialog);
 		this.parentDialog = parentDialog;
 		initReception();
-
+		isNew = true;
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
 		view.showView();
@@ -121,7 +121,7 @@ public class MakeReceptionViewController {
 		// Создаем пустой список заявителей
 		reception.setApplicators(new ArrayList<Applicator>());
 
-		isNew = true;
+
 
 
 	}
@@ -189,9 +189,12 @@ public class MakeReceptionViewController {
 		 
 		if (flDialog.getResult() == ApplicatorFLDialog.OK) {
 			List<Applicator> applicators = reception.getApplicators();
-			applicators.add(flDialog.getApplicatorFL());
+			Applicator applicator = flDialog.getApplicatorFL();
+			applicator.setReception(reception);
+			applicators.add(applicator);
 			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
 		}
+
 	}
 
 	void addApplicatorUL() {
@@ -200,7 +203,9 @@ public class MakeReceptionViewController {
 		ulDialog.setVisible(true);
 		if (ulDialog.getResult() == ApplicatorULDialog.OK) {
 			List<Applicator> applicators = reception.getApplicators();
-			applicators.add(ulDialog.getApplicatorUL());
+			Applicator applicator = ulDialog.getApplicatorUL();
+			applicator.setReception(reception);
+			applicators.add(applicator);
 			view.getApplicatorsPanel().applicatorAdded(applicators.size()-1);
 		}
 

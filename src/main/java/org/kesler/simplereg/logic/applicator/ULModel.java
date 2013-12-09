@@ -8,6 +8,7 @@ import org.kesler.simplereg.dao.DAOFactory;
 public class ULModel {
 	private List<UL> ulList;
 	private List<UL> filteredULList;
+	private String filterString;
 
 	private static ULModel instance = null;
 
@@ -18,17 +19,26 @@ public class ULModel {
 		return instance;
 	}
 
-	private ULModel() {}
+	private ULModel() {
+		ulList = new ArrayList<UL>();
+		filteredULList = new ArrayList<UL>();
+		filterString = "";
+	}
 
 
 	public List<UL> getAllULs() {
-		if (ulList == null) {
-			readFromDB();
-		}
 		return ulList;
 	}
 
-	public void filterULList(String filterString) {
+	public void readFromDB() {
+		ulList = DAOFactory.getInstance().getULDAO().getAllULs();
+	}
+
+	public void setFilterString(String filterString) {
+		this.filterString = filterString;
+	}
+
+	public void filterULs() {
 		if (!filterString.isEmpty()) {
 			filteredULList = new ArrayList<UL>();
 			for (UL ul: ulList) {
@@ -37,22 +47,15 @@ public class ULModel {
 				}
 			}
 		} else {
-			filteredULList = null;
+			filteredULList = ulList;
 		}
 	}
 
 	public List<UL> getFilteredULs() {
-		if (filteredULList == null) {
-			return getAllULs();
-		} else {
-			return filteredULList;
-		}
+		return filteredULList;
 	}
 
 	public int addUL(UL ul) {
-		if (ulList == null) {
-			readFromDB();
-		}
 
 		Long id = DAOFactory.getInstance().getULDAO().addUL(ul);
 		if (id != null) {
@@ -71,11 +74,6 @@ public class ULModel {
 	public void deleteUL(UL ul) {
 		DAOFactory.getInstance().getULDAO().deleteUL(ul);
 		ulList.remove(ul);
-	}
-
-
-	private void readFromDB() {
-		ulList = DAOFactory.getInstance().getULDAO().getAllULs();
 	}
 
 

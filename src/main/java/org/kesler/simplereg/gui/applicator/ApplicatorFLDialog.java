@@ -156,13 +156,13 @@ public class ApplicatorFLDialog extends AbstractDialog {
 	}
 
 	private void selectApplicatorFL() {
-		FL fl = FLListDialogController.getInstance().openDialog(currentDialog);//Модальный вызов
+		FL fl = FLListDialogController.getInstance().openSelectDialog(currentDialog);//Модальный вызов
 		applicatorFL.setFL(fl);
 		updateLabels();		
 	}
 
 	private void selectRepresFL() {
-		FL fl = FLListDialogController.getInstance().openDialog(currentDialog);//Модальный вызов
+		FL fl = FLListDialogController.getInstance().openSelectDialog(currentDialog);//Модальный вызов
 		applicatorFL.setRepres(fl);
 		updateLabels();
 	}

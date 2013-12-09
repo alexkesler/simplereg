@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.realty;
 
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.realty.RealtyObject;
@@ -12,10 +13,13 @@ import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
+import org.kesler.simplereg.gui.GenericListDialog;
+import org.kesler.simplereg.gui.GenericListDialogController; 
 
-public class RealtyObjectListDialogController implements RealtyObjectsModelStateListener {
 
-	private RealtyObjectListDialog dialog;
+public class RealtyObjectListDialogController implements GenericListDialogController, RealtyObjectsModelStateListener {
+
+	private GenericListDialog dialog;
 	private RealtyObjectsModel model;
 
 	private ProcessDialog processDialog;
@@ -38,11 +42,26 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 	public RealtyObject showDialog(JFrame parentFrame) {
 		RealtyObject realtyObject = null;
 
-		dialog = new RealtyObjectListDialog(this, parentFrame);
+		dialog = new GenericListDialog<RealtyObject>(parentFrame, this);
 		updateRealtyObjects();
 		dialog.setVisible(true);
-		if (dialog.getResult() == RealtyObjectListDialog.OK) {
-			realtyObject = dialog.getSelectedRealtyObject();
+		if (dialog.getResult() == GenericListDialog.OK) {
+			int selectedIndex = dialog.getSelectedIndex();
+			realtyObject = model.getFilteredRealtyObjects().get(selectedIndex);
+		}
+
+		return realtyObject;
+	}
+
+	public RealtyObject showDialog(JDialog parentDialog) {
+		RealtyObject realtyObject = null;
+
+		dialog = new GenericListDialog<RealtyObject>(parentDialog, this);
+		updateRealtyObjects();
+		dialog.setVisible(true);
+		if (dialog.getResult() == GenericListDialog.OK) {
+			int selectedIndex = dialog.getSelectedIndex();
+			realtyObject = model.getFilteredRealtyObjects().get(selectedIndex);
 		}
 
 		return realtyObject;
@@ -61,10 +80,16 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 	}
 
-	public void filterRealtyObjects(String filterString) {
+	@Override
+	public void readItems() {
+		model.readRealtyObjects();
+	}
+
+	@Override
+	public void filterItems(String filterString) {
 		model.filterRealtyObjects(filterString);
 		List<RealtyObject> realtyObjects = model.getFilteredRealtyObjects();
-		dialog.setRealtyObjects(realtyObjects);
+		dialog.setItems(realtyObjects);
 	}
 
 	public void updateAndFilterRealtyObjects(String filterString) {
@@ -72,7 +97,9 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		model.readAndFilterRealtyObjectsInSeparateThread(filterString);
 	}
 
-	public void addRealtyObject() {
+	@Override
+	public boolean openAddItemDialog() {
+		boolean result = false;
 
 		RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog);
 		realtyObjectDialog.setVisible(true);
@@ -80,12 +107,17 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 		if (realtyObjectDialog.getResult() == RealtyObjectDialog.OK) {
 			RealtyObject realtyObject = realtyObjectDialog.getRealtyObject();
 			int index = model.addRealtyObject(realtyObject);
-			dialog.realtyObjectAdded(index);
+			dialog.addedItem(index);
+			result = true;
 		}
+
+		return result;
 
 	}
 
-	public void editRealtyObject(int index) {
+	@Override
+	public boolean openEditItemDialog(int index) {
+		boolean result = false;
 
 		RealtyObject realtyObject = model.getAllRealtyObjects().get(index);
 
@@ -94,17 +126,23 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 
 		if (realtyObjectDialog.getResult() == RealtyObjectDialog.OK) {
 			model.updateRealtyObject(realtyObject);
-			dialog.realtyObjectUpdated(index);			
+			dialog.updatedItem(index);	
+			result = true;		
 		}
+
+		return result;
 
 	}
 
-	public void removeRealtyObject(int index) {
+	@Override
+	public boolean removeItem(int index) {
 
 		RealtyObject realtyObject = model.getAllRealtyObjects().get(index);
 
 		model.removeRealtyObject(realtyObject);
-		dialog.realtyObjectRemoved(index);
+		dialog.removedItem(index);
+
+		return true;
 	
 	}
 
@@ -121,7 +159,7 @@ public class RealtyObjectListDialogController implements RealtyObjectsModelState
 			break;	
 			case UPDATED:
 				List<RealtyObject> realtyObjects = model.getAllRealtyObjects();
-				dialog.setRealtyObjects(realtyObjects);
+				dialog.setItems(realtyObjects);
 				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 			break;
 			case ERROR:

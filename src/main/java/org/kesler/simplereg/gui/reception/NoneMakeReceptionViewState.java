@@ -11,7 +11,11 @@ class NoneMakeReceptionViewState extends MakeReceptionViewState {
 
 	@Override
 	void init() {
-		view.setVisible(false);
+		if (view != null)  {
+			view.setVisible(false);
+			view.dispose();
+			view = null;
+		}	
 	}
 
 	@Override

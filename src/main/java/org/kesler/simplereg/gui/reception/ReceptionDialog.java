@@ -119,6 +119,7 @@ public class ReceptionDialog extends JDialog {
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				MakeReceptionViewController.getInstance().openView(currentDialog, reception);
+				loadGUIDataFromReception();
 			}
 		});
 
@@ -131,7 +132,7 @@ public class ReceptionDialog extends JDialog {
 		dataPanel.add(serviceDataPanel,"growx, wrap");
 		dataPanel.add(statusesComboBox, "w 50");
 		dataPanel.add(saveNewReceptionStatusButton, "wrap");
-		dataPanel.add(editButton, "wrap, center");
+		dataPanel.add(editButton, "wrap, right");
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -175,6 +176,7 @@ public class ReceptionDialog extends JDialog {
 		reception.setStatus(newReceptionStatus);
 		ReceptionsModel.getInstance().updateReception(reception);
 		currentReceptionStatus = newReceptionStatus;
+		statusChanged = false;
 		saveNewReceptionStatusButton.setEnabled(false);		
 	}
 
@@ -182,6 +184,8 @@ public class ReceptionDialog extends JDialog {
 		// определяем наименование услуги
 		serviceNameLabel.setText("<html>" + reception.getServiceName() + "</html>");
 		
+
+		applicatorsPanel.removeAll();
 		// определяем перечень заявителей
 		List<Applicator> applicators = reception.getApplicators();
 		for (Applicator applicator: applicators) {
@@ -202,6 +206,7 @@ public class ReceptionDialog extends JDialog {
 
 		
 		// заполняем список статусов
+		statusesComboBox.removeAllItems();
 		for (ReceptionStatus receptionStatus: receptionStatuses) {
 			statusesComboBox.addItem(receptionStatus);
 		}

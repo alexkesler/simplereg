@@ -8,6 +8,7 @@ import org.kesler.simplereg.dao.DAOFactory;
 public class FLModel {
 	private List<FL> flList;
 	private List<FL> filteredFLList;
+	private String filterString;
 	private static FLModel instance = null;
 
 	public static synchronized FLModel getInstance() {
@@ -19,44 +20,45 @@ public class FLModel {
 
 	private FLModel() {
 
+		flList = new ArrayList<FL>();
+		filteredFLList = new ArrayList<FL>();
+		filterString = "";
+
 	}
 
 	public List<FL> getAllFLs() {
-		if (flList == null) {
-			readFromDB();
-		}
+
 		return flList;
+
 	}
 
-	public void filterFLList(String filter) {
+	public void setFilterString(String filterString) {
+		this.filterString = filterString;
+	}
+
+	public void filterFLs() {
 		
 		// если строка фильтра не пустая - пересоздаем фильтрованный список
-		if (!filter.isEmpty()) {
+		if (!filterString.isEmpty()) {
 			filteredFLList = new ArrayList<FL>();
 			for (FL fl: flList) {
-				if (fl.getSurName().toLowerCase().indexOf(filter.toLowerCase(),0) == 0) {
+				if (fl.getSurName().toLowerCase().indexOf(filterString.toLowerCase(),0) == 0) {
 					filteredFLList.add(fl);
 				}
 			}
 		} else {
-			filteredFLList = null;
+			filteredFLList = flList;
 		}
 
 	}
 
 	public List<FL> getFilteredFLs() {
-		if (filteredFLList == null) {
-			return getAllFLs();
-		} else {
-			return filteredFLList;
-		}
+
+		return filteredFLList;
 		
 	}
 
 	public int addFL(FL fl) {
-		if (flList == null) {
-			readFromDB();
-		}
 		Long id = DAOFactory.getInstance().getFLDAO().addFL(fl);
 		if (id != null) {
 			flList.add(fl);
@@ -76,7 +78,7 @@ public class FLModel {
 		flList.remove(fl);
 	}
 
-	private void readFromDB() {
+	public void readFromDB() {
 		flList = DAOFactory.getInstance().getFLDAO().getAllFLs();
 	}
 
