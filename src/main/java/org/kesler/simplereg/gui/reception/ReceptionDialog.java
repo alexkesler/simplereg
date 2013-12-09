@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.reception.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.applicator.ApplicatorFL;
+import org.kesler.simplereg.logic.realty.RealtyObject;
 
 import org.kesler.simplereg.logic.applicator.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
@@ -42,7 +42,11 @@ public class ReceptionDialog extends JDialog {
 	
 	private Reception reception;
 
+	private JLabel receptionCodeLabel;
+	private JLabel byRecordLabel;
+	private JLabel rosreestrCodeLabel;
 	private JLabel serviceNameLabel;
+	private JLabel realtyObjectLabel;
 	private JPanel applicatorsPanel;
 	private JComboBox statusesComboBox;
 	private JButton saveNewReceptionStatusButton;
@@ -67,14 +71,22 @@ public class ReceptionDialog extends JDialog {
 
 		JPanel dataPanel = new JPanel(new MigLayout("fillx, nogrid"));
 
+		receptionCodeLabel = new JLabel();
+		byRecordLabel = new JLabel();
+		rosreestrCodeLabel = new JLabel();
+
 		serviceNameLabel = new JLabel();
 		serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
+
+		realtyObjectLabel = new JLabel();
+		realtyObjectLabel.setBorder(BorderFactory.createEtchedBorder());
+
 
 		applicatorsPanel = new JPanel(new MigLayout("fillx"));
 		JScrollPane applicatorsPanelScrollPane = new JScrollPane(applicatorsPanel);
 
 		// Панель сведений об услуге
-		JPanel serviceDataPanel = new JPanel();
+		JPanel serviceInfoPanel = new JPanel();
 
 
 
@@ -124,12 +136,19 @@ public class ReceptionDialog extends JDialog {
 		});
 
 		// Собираем панель данных
+		dataPanel.add(new JLabel("Код запроса:"));
+		dataPanel.add(receptionCodeLabel);
+		dataPanel.add(byRecordLabel);
+		dataPanel.add(new JLabel("Код РосРеестра:"), "right");
+		dataPanel.add(rosreestrCodeLabel, "right, wrap");
 		dataPanel.add(new JLabel("Услуга:"),"wrap");
 		dataPanel.add(serviceNameLabel,"growx, wrap");
+		dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
+		dataPanel.add(realtyObjectLabel, "growx, wrap");
 		dataPanel.add(new JLabel("Заявители:"), "wrap");
 		dataPanel.add(applicatorsPanelScrollPane,"push, grow, wrap");
 		dataPanel.add(new JLabel("Состояние дела"), "right");
-		dataPanel.add(serviceDataPanel,"growx, wrap");
+		dataPanel.add(serviceInfoPanel,"growx, wrap");
 		dataPanel.add(statusesComboBox, "w 50");
 		dataPanel.add(saveNewReceptionStatusButton, "wrap");
 		dataPanel.add(editButton, "wrap, right");
@@ -181,9 +200,32 @@ public class ReceptionDialog extends JDialog {
 	}
 
 	private void loadGUIDataFromReception() {
+		
+		String receptionCode = reception.getReceptionCode();
+		if (receptionCode == null) receptionCode = "Не опр";
+		receptionCodeLabel.setText("<html><p color='blue'>" + receptionCode + "</p></html>");
+
+		String byRecord = "";
+		if (reception.isByRecord()!= null && reception.isByRecord()) byRecord = "По записи";
+		byRecordLabel.setText(byRecord);
+
+		String rosreestrCode = reception.getRosreestrCode();
+		if (rosreestrCode == null) rosreestrCode = "Не опр";
+		rosreestrCodeLabel.setText("<html><p color='green'>" + rosreestrCode + "</p></html>");
+
 		// определяем наименование услуги
 		serviceNameLabel.setText("<html>" + reception.getServiceName() + "</html>");
 		
+		// Заполняем информацию по объекту недвижимости
+		String realtyObjectString = "";
+		RealtyObject realtyObject = reception.getRealtyObject();
+		if (realtyObject != null) {
+			realtyObjectString = realtyObject.getType() + " " + realtyObject.getAddress();
+		} else {
+			realtyObjectString = "Не определен";
+		}
+
+		realtyObjectLabel.setText(realtyObjectString);
 
 		applicatorsPanel.removeAll();
 		// определяем перечень заявителей
