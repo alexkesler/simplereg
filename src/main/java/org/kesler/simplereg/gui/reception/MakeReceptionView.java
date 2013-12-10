@@ -459,6 +459,15 @@ class MakeReceptionView extends JDialog{
 
 		PrintPanel() {
 			super(new MigLayout());
+
+			JButton printButton = new JButton("Распечатать запрос");
+			printButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) {
+					controller.printRequest();
+				}
+			});
+
+			this.add(printButton);
 		}
 
 	}
