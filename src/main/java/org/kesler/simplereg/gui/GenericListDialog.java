@@ -16,6 +16,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.AbstractListModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -182,7 +184,19 @@ public class GenericListDialog<T> extends AbstractDialog {
 		});
 
 
+		/// добавление реакции на двойной клик - открытие приема на просмотр
+		itemsList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent ev) {
+				if (ev.getClickCount() == 2) {
+					controller.openEditItemDialog(selectedIndex);
+				}
+			}
+		});
+
+
 		JScrollPane itemsListScrollPane = new JScrollPane(itemsList);
+
+
 
 		JButton addItemButton = new JButton();
 		addItemButton.setIcon(ResourcesUtil.getIcon("add.png"));
