@@ -13,7 +13,7 @@ import java.awt.GridLayout;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 
 public class OperatorReceptionsFilterDialog extends ReceptionsFilterDialog {

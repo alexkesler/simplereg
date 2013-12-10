@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
 import org.kesler.simplereg.logic.realty.RealtyTypesModel;
 

@@ -2,7 +2,7 @@ package org.kesler.simplereg.gui.reestr.column;
 
 import java.text.SimpleDateFormat;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 public class ToIssueDateReestrColumn extends ReestrColumn {
 

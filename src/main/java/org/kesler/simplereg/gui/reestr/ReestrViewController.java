@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.ModelState;

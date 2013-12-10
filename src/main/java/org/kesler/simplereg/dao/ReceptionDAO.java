@@ -3,7 +3,7 @@ package org.kesler.simplereg.dao;
 import java.util.List;
 import java.util.Date;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 public interface ReceptionDAO extends DAOObservable{
 	public void addReception(Reception r);

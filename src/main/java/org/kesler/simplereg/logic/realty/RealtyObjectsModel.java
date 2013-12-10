@@ -3,6 +3,7 @@ package org.kesler.simplereg.logic.realty;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;

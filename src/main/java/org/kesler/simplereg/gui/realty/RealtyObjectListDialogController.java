@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModelStateListener;
 import org.kesler.simplereg.logic.ModelState;

@@ -8,6 +8,8 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.ModelState;
 
+import org.kesler.simplereg.logic.FL;
+
 public class FLModel implements DAOListener{
 	private List<FL> flList;
 	private List<FL> filteredFLList;

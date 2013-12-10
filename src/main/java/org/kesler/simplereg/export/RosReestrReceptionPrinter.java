@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 
 import org.kesler.simplereg.util.OptionsUtil;
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 public class RosReestrReceptionPrinter extends ReceptionPrinter {
 

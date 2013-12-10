@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import java.sql.SQLException;
 
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;

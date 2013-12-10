@@ -21,7 +21,7 @@ import net.miginfocom.swing.MigLayout;
 
 
 import org.kesler.simplereg.gui.AbstractDialog;
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.gui.util.InfoDialog;
 
 

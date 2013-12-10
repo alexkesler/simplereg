@@ -17,8 +17,8 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
-import org.kesler.simplereg.logic.applicator.FL;
-import org.kesler.simplereg.logic.applicator.UL;
+import org.kesler.simplereg.logic.FL;
+import org.kesler.simplereg.logic.UL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 
 import org.kesler.simplereg.gui.AbstractDialog;

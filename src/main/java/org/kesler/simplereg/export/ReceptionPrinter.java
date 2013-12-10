@@ -1,6 +1,6 @@
 package org.kesler.simplereg.export;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 public abstract class ReceptionPrinter {
 

@@ -10,7 +10,7 @@ import org.hibernate.HibernateException;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.ULDAO;
-import org.kesler.simplereg.logic.applicator.UL;
+import org.kesler.simplereg.logic.UL;
 
 public class ULDAOImpl implements ULDAO {
 

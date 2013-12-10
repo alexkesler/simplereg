@@ -8,13 +8,13 @@ import javax.swing.JDialog;
 import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
 
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
-import org.kesler.simplereg.logic.realty.RealtyObject;
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.RealtyObject;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;

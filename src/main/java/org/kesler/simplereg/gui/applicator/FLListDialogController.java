@@ -4,7 +4,7 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 
-import org.kesler.simplereg.logic.applicator.FL;
+import org.kesler.simplereg.logic.FL;
 import org.kesler.simplereg.logic.applicator.FLModel;
 import org.kesler.simplereg.logic.applicator.FLModelStateListener;
 import org.kesler.simplereg.logic.ModelState;

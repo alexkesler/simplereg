@@ -5,7 +5,7 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import org.kesler.simplereg.logic.applicator.UL;
+import org.kesler.simplereg.logic.UL;
 import org.kesler.simplereg.logic.applicator.ULModel;
 import org.kesler.simplereg.logic.applicator.ULModelStateListener;
 import org.kesler.simplereg.logic.ModelState;

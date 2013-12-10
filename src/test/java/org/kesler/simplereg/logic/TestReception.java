@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic.reception;
+package org.kesler.simplereg.logic;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -8,8 +8,8 @@ import org.junit.Ignore;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.kesler.simplereg.logic.applicator.Applicator;
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Applicator;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 
 public class TestReception {

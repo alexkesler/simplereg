@@ -2,7 +2,7 @@ package org.kesler.simplereg.dao;
 
 import java.util.List;
 
-import org.kesler.simplereg.logic.applicator.FL;
+import org.kesler.simplereg.logic.FL;
 
 /**
 * Определяет методы для доступа к записям таблицы физических лиц
@@ -22,20 +22,20 @@ public interface FLDAO {
 	public void updateFL(FL fl);
 
 	/**
-	* Читает из базы данных {@link org.kesler.simplereg.logic.applicator.FL}
+	* Читает из базы данных {@link org.kesler.simplereg.logic.FL}
 	* @param id код записи в базе данных
-	* @return объект {@link org.kesler.simplereg.logic.applicator.FL} из базы данных
+	* @return объект {@link org.kesler.simplereg.logic.FL} из базы данных
 	*/
 	public FL getFLById(Long id);
 
 	/**
-	* Читает из базы данных список {@link org.kesler.simplereg.logic.applicator.FL}
-	* @return список {@link org.kesler.simplereg.logic.applicator.FL} из базы данных
+	* Читает из базы данных список {@link org.kesler.simplereg.logic.FL}
+	* @return список {@link org.kesler.simplereg.logic.FL} из базы данных
 	*/
 	public List<FL> getAllFLs();
 
 	/**
-	* Удаляет из базы данных запись, соответствующую объекту {@link org.kesler.simplereg.logic.applicator.FL}
+	* Удаляет из базы данных запись, соответствующую объекту {@link org.kesler.simplereg.logic.FL}
 	* @param fl физическое лицо 
 	*/
 	public void deleteFL(FL fl);

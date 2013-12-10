@@ -8,7 +8,7 @@ import org.kesler.simplereg.gui.GenericListDialogController;
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.ModelState;
 
 import org.kesler.simplereg.gui.util.InfoDialog;

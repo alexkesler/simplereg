@@ -14,7 +14,7 @@ import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.util.ResourcesUtil;
-import org.kesler.simplereg.logic.applicator.FL;
+import org.kesler.simplereg.logic.FL;
 
 public class FLDialog extends JDialog {
 	

@@ -8,6 +8,8 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.ModelState;
 
+import org.kesler.simplereg.logic.UL;
+
 public class ULModel implements DAOListener {
 	private List<UL> ulList;
 	private List<UL> filteredULList;

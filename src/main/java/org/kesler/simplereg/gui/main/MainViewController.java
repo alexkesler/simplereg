@@ -5,13 +5,13 @@ import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
 import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;

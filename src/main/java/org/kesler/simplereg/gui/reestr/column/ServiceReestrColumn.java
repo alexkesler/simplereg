@@ -1,6 +1,6 @@
 package org.kesler.simplereg.gui.reestr.column;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 public class ServiceReestrColumn extends ReestrColumn {
 

@@ -19,11 +19,11 @@ import javax.swing.JOptionPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.RealtyObject;
 
-import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.gui.reception.MakeReceptionViewController;

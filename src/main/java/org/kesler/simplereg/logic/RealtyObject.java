@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic.realty;
+package org.kesler.simplereg.logic;
 
 
 import javax.persistence.Entity;
@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.kesler.simplereg.logic.realty.RealtyType;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 

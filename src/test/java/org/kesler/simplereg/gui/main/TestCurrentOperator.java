@@ -3,7 +3,7 @@ package org.kesler.simplereg.gui.main;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 
 public class TestCurrentOperator {
 

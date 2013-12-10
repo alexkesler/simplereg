@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic.reception;
+package org.kesler.simplereg.logic;
 
 import java.util.Date;
 import java.util.List;
@@ -21,10 +21,11 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 
 import org.kesler.simplereg.dao.AbstractEntity;
-import org.kesler.simplereg.logic.operator.Operator;
-import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.reception.ReceptionStatus;
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.util.CounterUtil;
 
 /**

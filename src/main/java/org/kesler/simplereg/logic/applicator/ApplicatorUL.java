@@ -8,6 +8,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.hibernate.annotations.Proxy;
 
+import org.kesler.simplereg.logic.Applicator;
+import org.kesler.simplereg.logic.FL;
+import org.kesler.simplereg.logic.UL;
+
 /**
 * Класс представляет заявителя - юр. лица, привязанного к приему документов, включая информацию о представителе  
 */

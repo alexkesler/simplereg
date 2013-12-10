@@ -19,7 +19,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 import com.alee.laf.filechooser.WebFileChooser;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumns;

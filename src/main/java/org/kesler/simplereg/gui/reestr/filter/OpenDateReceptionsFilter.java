@@ -3,7 +3,7 @@ package org.kesler.simplereg.gui.reestr.filter;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 public class OpenDateReceptionsFilter implements ReceptionsFilter {
 

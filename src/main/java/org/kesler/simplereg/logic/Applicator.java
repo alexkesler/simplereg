@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic.applicator;
+package org.kesler.simplereg.logic;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,7 +11,7 @@ import javax.persistence.InheritanceType;
 import org.hibernate.envers.Audited;
 
 import org.kesler.simplereg.dao.AbstractEntity;
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 
 /**
 * Представляет общий интерфейс для разных заявителей, которые могут быть связаны с приемом документов 

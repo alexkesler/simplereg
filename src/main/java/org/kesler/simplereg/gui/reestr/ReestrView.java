@@ -29,7 +29,7 @@ import java.awt.Dimension;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;

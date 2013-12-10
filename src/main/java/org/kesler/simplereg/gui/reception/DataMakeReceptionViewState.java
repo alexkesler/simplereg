@@ -3,7 +3,7 @@ package org.kesler.simplereg.gui.reception;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.RealtyObject;
 
 class DataMakeReceptionViewState extends MakeReceptionViewState {
 

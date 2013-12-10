@@ -35,8 +35,8 @@ import com.alee.extended.date.WebDateField;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
-import org.kesler.simplereg.logic.reception.Reception;
-import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.Applicator;
 
 class MakeReceptionView extends JDialog{
 

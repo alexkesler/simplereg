@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.kesler.simplereg.logic.operator.Operator;
-import org.kesler.simplereg.logic.applicator.Applicator;
+import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.logic.Reception;
+
 
 public class TestReceptionsModel {
 

@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic.operator;
+package org.kesler.simplereg.logic;
 
 import static org.junit.Assert.*;
 import org.junit.Test;

@@ -7,8 +7,8 @@ import org.kesler.simplereg.dao.impl.FLDAOImpl;
 import org.kesler.simplereg.dao.impl.ULDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
 
-import org.kesler.simplereg.logic.operator.Operator;
-import org.kesler.simplereg.logic.realty.RealtyObject;
+import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
 import org.kesler.simplereg.logic.util.Counter;
 

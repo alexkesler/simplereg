@@ -2,7 +2,7 @@ package org.kesler.simplereg.dao;
 
 import java.util.List;
 
-import org.kesler.simplereg.logic.applicator.UL;
+import org.kesler.simplereg.logic.UL;
 
 public interface ULDAO {
 	/**

@@ -2,8 +2,8 @@ package org.kesler.simplereg.gui.reestr.filter;
 
 import java.util.List;
 
-import org.kesler.simplereg.logic.reception.Reception;
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.Operator;
 
 public class OperatorReceptionsFilter implements ReceptionsFilter {
 

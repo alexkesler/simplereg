@@ -3,6 +3,9 @@ package org.kesler.simplereg.logic.applicator;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import org.kesler.simplereg.logic.Applicator;
+
+
 public class TestApplicatorUL {
 
 	@Test

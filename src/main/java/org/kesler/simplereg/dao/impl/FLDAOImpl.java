@@ -9,7 +9,7 @@ import org.hibernate.HibernateException;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.FLDAO;
-import org.kesler.simplereg.logic.applicator.FL;
+import org.kesler.simplereg.logic.FL;
 
 public class FLDAOImpl implements FLDAO {
 
@@ -67,9 +67,9 @@ public class FLDAOImpl implements FLDAO {
 
 
 	/**
-	* Читает из базы данных {@link org.kesler.simplereg.logic.applicator.FL}
+	* Читает из базы данных {@link org.kesler.simplereg.logic.FL}
 	* @param id код записи в базе данных
-	* @return объект {@link org.kesler.simplereg.logic.applicator.FL} из базы данных
+	* @return объект {@link org.kesler.simplereg.logic.FL} из базы данных
 	*/
 	public FL getFLById(Long id) {
 		FL fl = null;
@@ -90,8 +90,8 @@ public class FLDAOImpl implements FLDAO {
 	}
 
 	/**
-	* Читает из базы данных список {@link org.kesler.simplereg.logic.applicator.FL}
-	* @return список {@link org.kesler.simplereg.logic.applicator.FL} из базы данных, при неудаче возвращает пустой список
+	* Читает из базы данных список {@link org.kesler.simplereg.logic.FL}
+	* @return список {@link org.kesler.simplereg.logic.FL} из базы данных, при неудаче возвращает пустой список
 	*/
 	public List<FL> getAllFLs() {
 		List<FL> fls = new ArrayList<FL>();
@@ -112,7 +112,7 @@ public class FLDAOImpl implements FLDAO {
 	}
 
 	/**
-	* Удаляет из базы данных запись, соответствующую объекту {@link org.kesler.simplereg.logic.applicator.FL}
+	* Удаляет из базы данных запись, соответствующую объекту {@link org.kesler.simplereg.logic.FL}
 	* @param fl физическое лицо 
 	*/
 	public void deleteFL(FL fl) {

@@ -3,6 +3,10 @@ package org.kesler.simplereg.logic.applicator;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import org.kesler.simplereg.logic.Applicator;
+import org.kesler.simplereg.logic.FL;
+import org.kesler.simplereg.logic.UL;
+
 public class TestApplicatorFL {
 
 	@Test

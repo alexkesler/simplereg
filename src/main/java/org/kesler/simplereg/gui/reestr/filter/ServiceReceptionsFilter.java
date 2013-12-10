@@ -2,7 +2,7 @@ package org.kesler.simplereg.gui.reestr.filter;
 
 import java.util.List;
 
-import org.kesler.simplereg.logic.reception.Reception;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Service;
 
 public class ServiceReceptionsFilter implements ReceptionsFilter {

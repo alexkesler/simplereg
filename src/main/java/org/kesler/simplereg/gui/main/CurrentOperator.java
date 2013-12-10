@@ -3,7 +3,7 @@ package org.kesler.simplereg.gui.main;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.kesler.simplereg.logic.operator.Operator;
+import org.kesler.simplereg.logic.Operator;
 
 public class CurrentOperator {
 	private static CurrentOperator instance;

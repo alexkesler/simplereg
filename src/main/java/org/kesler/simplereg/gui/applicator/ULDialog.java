@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.util.ResourcesUtil;
-import org.kesler.simplereg.logic.applicator.UL;
+import org.kesler.simplereg.logic.UL;
 
 public class ULDialog extends JDialog {
 
