@@ -54,8 +54,9 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 			return false;
 		}
 
+
 		try {
-			WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.load(requestTemplateFile);
+			wordMLPackage = WordprocessingMLPackage.load(requestTemplateFile);
 		} catch (Docx4JException e) {
 			JOptionPane.showMessageDialog(null,
 									"Файл " + requestTemplateFileName + " не удалось открыть",
@@ -91,7 +92,7 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 									"Ошибка",
 									JOptionPane.ERROR_MESSAGE);
 			
-		}
+		}	
 		
 
 		saveRequest();
@@ -101,7 +102,7 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 	private void fillMappings() {
 
 		mappings = new HashMap<String, String>();
-		mappings.put("receptionCode", reception.getReceptionCode());
+		mappings.put("#ReceptionCode#", reception.getReceptionCode());
 
 	}
 
@@ -113,6 +114,9 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 
 
 		String outDir = new File(jarPath).getParent() + dirSeparator + "out" + dirSeparator;
+
+		File outDirFile = new File(outDir);
+		if (!outDirFile.exists()) outDirFile.mkdir();
 
 		String requestPath = outDir + "request.docx";
 

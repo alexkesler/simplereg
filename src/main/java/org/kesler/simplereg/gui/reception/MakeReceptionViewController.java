@@ -54,10 +54,11 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JFrame parentFrame) {
-		view = new MakeReceptionView(this, parentFrame);
 		this.parentFrame = parentFrame;
 		initReception();
 		isNew = true;
+		
+		view = new MakeReceptionView(this, parentFrame);
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
 		view.showView();
@@ -66,10 +67,11 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JDialog parentDialog) {
-		view = new MakeReceptionView(this, parentDialog);
 		this.parentDialog = parentDialog;
 		initReception();
 		isNew = true;
+
+		view = new MakeReceptionView(this, parentDialog);
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
 		view.showView();
@@ -78,11 +80,12 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JFrame parentFrame, Reception reception) {
-		view = new MakeReceptionView(this, parentFrame);
 		this.parentFrame = parentFrame;
 		this.reception = reception;
 		isNew = false;
 
+		// Создаем новый вид
+		view = new MakeReceptionView(this, parentFrame);
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);
 
@@ -91,11 +94,12 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JDialog parentDialog, Reception reception) {
-		view = new MakeReceptionView(this, parentFrame);
 		this.parentDialog = parentDialog;
 		this.reception = reception;
 		isNew = false;
 
+		// Создаем новый вид
+		view = new MakeReceptionView(this, parentFrame);
 		// Переключаем в начальное состояние
 		viewState = new ServiceMakeReceptionViewState(this, view);		
 

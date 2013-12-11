@@ -10,7 +10,7 @@
             <directory>${project.basedir}/src/main/templates/</directory>
             <outputDirectory>/templates/</outputDirectory>
             <includes>
-                <include>request.dotx</include>
+                <include>request.docx</include>
             </includes>
         </fileSet>
        <fileSet>
