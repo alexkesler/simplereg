@@ -1,6 +1,7 @@
 package org.kesler.simplereg.export;
 
 import java.io.File;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
 import java.io.FileInputStream;
@@ -98,22 +99,31 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		
 		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 
-		// List<Object> content = documentPart.getContent();
+		List<Object> content = ExportUtil.getAllElementFromObject(documentPart, Text.class);
+
+		Set<String> keys = mappings.keySet();
 
 		// заменяем текстовые вставки
+		for (String key : keys) {
+			String value = mappings.get(key);
+			for (Object obj: content) {
+				if(obj instanceof Text) {
+					Text textElem = (Text) obj;
+					String text = textElem.getValue();
+					if(text.contains(key)) {
+						text = text.replace(key,value);
+						textElem.setValue(text);
+						System.out.println("-----Замена----" + key + "--на--" + value + "-----");						
+					}
+				}
 
-		for (Object obj: content) {
-			if(obj instanceof Text) {
-				Text textElem = (Text) obj;
-				int pos = textElem.getValue().indexOf("v_ReceptionCode",0);
-				if (pos != -1) 
 			}
 		}
 
 
 
 		try {
-			documentPart.variableReplace(mappings);
+			// documentPart.variableReplace(mappings);
 			System.out.println("-------Replacing----------");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
@@ -132,9 +142,10 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy г.");
 
 		mappings = new HashMap<String, String>();
-		mappings.put("ReceptionCode", reception.getReceptionCode());
-		mappings.put("CurrentDate", dateFormat.format(reception.getOpenDate()));
-		mappings.put("Operator", reception.getOperator().getFIO());
+		mappings.put("v_ReceptionCode", reception.getReceptionCode());
+		mappings.put("v_CurrentDate", dateFormat.format(reception.getOpenDate()));
+		mappings.put("v_Operator", reception.getOperator().getFIO());
+		mappings.put("v_Service", reception.getService().getName());
 
 	}
 
