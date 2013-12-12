@@ -2,13 +2,18 @@ package org.kesler.simplereg.export;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
+import java.text.SimpleDateFormat;
+import java.awt.Desktop;
 
 import org.docx4j.Docx4J;
+import org.docx4j.wml.P;
+import org.docx4j.wml.Text;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
@@ -74,14 +79,38 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 	public void printReception() {
 		if (!readTemplate()) return;
 
-		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 
+		// Заполняем то, что необходимо заменить
 		fillMappings();
 
 		JOptionPane.showMessageDialog(null,
-								"Заменяем данные " ,
+								"Заменяем данные ",
 								"Инфо",
 								JOptionPane.INFORMATION_MESSAGE);
+
+		// Очищаем документ
+
+		try {
+			org.docx4j.model.datastorage.migration.VariablePrepare.prepare(wordMLPackage);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
+
+		// List<Object> content = documentPart.getContent();
+
+		// заменяем текстовые вставки
+
+		for (Object obj: content) {
+			if(obj instanceof Text) {
+				Text textElem = (Text) obj;
+				int pos = textElem.getValue().indexOf("v_ReceptionCode",0);
+				if (pos != -1) 
+			}
+		}
+
+
 
 		try {
 			documentPart.variableReplace(mappings);
@@ -96,13 +125,16 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		
 
 		saveRequest();
-		
+
 	}
 
 	private void fillMappings() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy г.");
 
 		mappings = new HashMap<String, String>();
-		mappings.put("#ReceptionCode#", reception.getReceptionCode());
+		mappings.put("ReceptionCode", reception.getReceptionCode());
+		mappings.put("CurrentDate", dateFormat.format(reception.getOpenDate()));
+		mappings.put("Operator", reception.getOperator().getFIO());
 
 	}
 
@@ -136,6 +168,21 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 									JOptionPane.ERROR_MESSAGE);
 			
 		}
+
+		Desktop desktop = null;
+		if (Desktop.isDesktopSupported()) {
+		    desktop = Desktop.getDesktop();
+		}
+
+		//Открытие файла:
+
+		try {
+		    desktop.open(new File(requestPath));
+		} catch (IOException ioe) {
+		    ioe.printStackTrace();
+		}
+
+
 
 	}
 
