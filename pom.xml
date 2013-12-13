@@ -89,7 +89,8 @@
 	                    <preCp>anything</preCp>
 	                </classPath>
 	                <jre>
-	                    <minVersion>1.7.0</minVersion>
+                    <!--  <path>jre7/bin</path> -->
+	                    <minVersion>1.6.0</minVersion>
 	                </jre>
 	                <versionInfo>
 	                    <fileVersion>${project.version}.0</fileVersion>
