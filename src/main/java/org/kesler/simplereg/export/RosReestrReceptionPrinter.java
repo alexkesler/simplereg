@@ -99,14 +99,14 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		
 		MainDocumentPart documentPart = wordMLPackage.getMainDocumentPart();
 
-		List<Object> content = ExportUtil.getAllElementFromObject(documentPart, Text.class);
+		List<Object> texts = ExportUtil.getAllElementFromObject(documentPart, Text.class);
 
 		Set<String> keys = mappings.keySet();
 
 		// заменяем текстовые вставки
 		for (String key : keys) {
 			String value = mappings.get(key);
-			for (Object obj: content) {
+			for (Object obj: texts) {
 				if(obj instanceof Text) {
 					Text textElem = (Text) obj;
 					String text = textElem.getValue();
@@ -120,18 +120,6 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 			}
 		}
 
-
-
-		try {
-			// documentPart.variableReplace(mappings);
-			System.out.println("-------Replacing----------");
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null,
-									"Не удалось заменить данные",
-									"Ошибка",
-									JOptionPane.ERROR_MESSAGE);
-			
-		}	
 		
 
 		saveRequest();
