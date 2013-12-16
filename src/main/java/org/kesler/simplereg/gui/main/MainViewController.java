@@ -262,7 +262,7 @@ public class MainViewController implements MainViewListener,
 					break;
 
 			case UPDATED:
-					if (processDialog != null) processDialog.hideProcess();
+					if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 					List<Operator> operators = operatorsModel.getActiveOperators();
 					if (loginDialog != null) loginDialog.setOperators(operators);
 					break;
@@ -272,7 +272,7 @@ public class MainViewController implements MainViewListener,
 
 
 			case ERROR:
-					if (processDialog != null) processDialog.hideProcess();
+					if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 					new InfoDialog(loginDialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
 					break;	
 			

@@ -42,7 +42,7 @@ public class OperatorListDialogController implements GenericListDialogController
 		dialog = new GenericListDialog<Operator>(parentFrame, "Операторы", this);
 		// List<Operator> operators = model.getAllOperators();
 		// dialog.setItems(operators);
-
+		processDialog = new ProcessDialog(dialog);
 		model.readOperatorsInSeparateThread();
 
 		dialog.setVisible(true);

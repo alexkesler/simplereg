@@ -39,6 +39,7 @@ public class ApplicatorUL extends Applicator {
 		this.ul = ul;
 	} 
 
+	@Override
 	public FL getRepres() {
 		return repres;
 	}
@@ -60,6 +61,15 @@ public class ApplicatorUL extends Applicator {
 		String name = "Не определено";
 
 		if (ul!=null) name = ul.getShortName();
+
+		return name;
+	}
+
+	@Override
+	public String getFullName() {
+		String name = "Не определено";
+
+		if (ul!=null) name = ul.getFullName();
 
 		return name;
 	}

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Date;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 
 import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.Applicator;
 
 public class RosReestrReceptionPrinter extends ReceptionPrinter {
 
@@ -129,11 +131,26 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 	private void fillMappings() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy г.");
 
+		String applicatorsString = "";
+		String represesString = "";
+		List<Applicator> applicators = reception.getApplicators();
+		for (Applicator applicator: applicators) {
+			applicatorsString = applicatorsString + applicator.getFullName() + "; ";
+			represesString = represesString + (applicator.getRepres()==null?applicator.getFullName():applicator.getRepres().getFIO()) + " _____________; ";
+		}
+
+		String resultInMFCString = "";
+		if (reception.isResultInMFC()) resultInMFCString = "V";
+
+
 		mappings = new HashMap<String, String>();
+		mappings.put("v_Applicator_Names", applicatorsString);
+		mappings.put("v_Repres_or_Applicator", represesString);
 		mappings.put("v_ReceptionCode", reception.getReceptionCode());
 		mappings.put("v_CurrentDate", dateFormat.format(reception.getOpenDate()));
 		mappings.put("v_Operator", reception.getOperator().getFIO());
 		mappings.put("v_Service", reception.getService().getName());
+		mappings.put("v_Result_in_MFC", resultInMFCString);
 
 	}
 
@@ -149,7 +166,10 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		File outDirFile = new File(outDir);
 		if (!outDirFile.exists()) outDirFile.mkdir();
 
-		String requestPath = outDir + "request.docx";
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh-mm-ss");
+
+
+		String requestPath = outDir + "request " + dateFormat.format(new Date()) +".docx";
 
 		JOptionPane.showMessageDialog(null,
 								"Сохраняем файл " + requestPath ,

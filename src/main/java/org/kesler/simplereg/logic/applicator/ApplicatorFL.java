@@ -40,6 +40,7 @@ public class ApplicatorFL extends Applicator {
 		this.fl = fl;
 	}
 
+	@Override
 	public FL getRepres() {
 		return repres;
 	}
@@ -69,6 +70,15 @@ public class ApplicatorFL extends Applicator {
 		String name = "Не определен";
 
 		if (fl!=null) name = fl.getShortFIO();
+
+		return name;
+	}
+
+	@Override
+	public String getFullName() {
+		String name = "Не определен";
+
+		if (fl!=null) name = fl.getFIO();
 
 		return name;
 	}
