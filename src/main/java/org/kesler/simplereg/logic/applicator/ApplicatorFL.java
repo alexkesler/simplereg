@@ -66,7 +66,7 @@ public class ApplicatorFL extends Applicator {
 	}
 
 	@Override
-	public String getName() {
+	public String getShortName() {
 		String name = "Не определен";
 
 		if (fl!=null) name = fl.getShortFIO();

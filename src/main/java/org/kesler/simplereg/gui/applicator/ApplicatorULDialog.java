@@ -152,7 +152,7 @@ public class ApplicatorULDialog extends AbstractDialog {
 	}
 
 	private void updateLabels() {
-		nameLabel.setText("<html>" + applicatorUL.getName() + "</html>");
+		nameLabel.setText("<html>" + applicatorUL.getShortName() + "</html>");
 		represLabel.setText(applicatorUL.getRepresFIO());
 	}	
 

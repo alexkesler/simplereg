@@ -151,7 +151,7 @@ public class Reception extends AbstractEntity{
 	public String getApplicatorsNames() {
 		String names = "";
 		for (int i = 0; i < applicators.size(); i++) {
-			names += (i+1) + ". " + applicators.get(i).getName() + " "; 
+			names += (i+1) + ". " + applicators.get(i).toString() + " "; 
 		}
 
 		return names;

@@ -57,7 +57,7 @@ public class ApplicatorUL extends Applicator {
 	}	
 
 	@Override
-	public String getName() {
+	public String getShortName() {
 		String name = "Не определено";
 
 		if (ul!=null) name = ul.getShortName();

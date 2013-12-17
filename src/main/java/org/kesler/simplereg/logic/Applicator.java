@@ -35,7 +35,7 @@ public abstract class Applicator extends AbstractEntity {
 		this.reception = reception;
 	}
 
-	public abstract String getName();
+	public abstract String getShortName();
 
 	public abstract String getFullName();
 
