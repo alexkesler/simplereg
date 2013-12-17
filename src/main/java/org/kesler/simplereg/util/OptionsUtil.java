@@ -79,6 +79,7 @@ public class OptionsUtil {
 		options.setProperty("db.driver", "h2 local");
 		options.setProperty("db.user","rroper");
 		options.setProperty("db.password", "q1w2e3R$");
+		options.setProperty("reg.filial", "01");
 		options.setProperty("logic.initRecStatusCode", "1");
 		options.setProperty("print.request","request.docx");
 	}

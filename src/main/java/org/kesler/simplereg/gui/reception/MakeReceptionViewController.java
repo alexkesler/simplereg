@@ -26,6 +26,7 @@ import org.kesler.simplereg.export.RosReestrReceptionPrinter;
 
 
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.util.OptionsUtil;
 
 public class MakeReceptionViewController {
 
@@ -117,6 +118,9 @@ public class MakeReceptionViewController {
 		//Получаем текущего оператора
 		Operator operator = CurrentOperator.getInstance().getOperator();
 		reception.setOperator(operator);
+
+		// Присваиваем номер филиала
+		reception.setFilialCode(OptionsUtil.getOption("reg.filial"));
 
 		// Генерируем код дела
 		reception.generateReceptionCode();

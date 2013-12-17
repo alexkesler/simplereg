@@ -32,6 +32,8 @@ public class OptionsDialog extends JDialog {
 	private JTextField userTextField;
 	private JTextField passwordTextField;
 
+	private JTextField filialTextField;
+
 	private JTextField initRecStatusCodeTextField;
 	private JTextField requestFileNameTextField;
 
@@ -103,6 +105,16 @@ public class OptionsDialog extends JDialog {
 		dbPanel.add(new JLabel("Пароль"));
 		dbPanel.add(passwordTextField);
 
+		JPanel regPanel = new JPanel(new MigLayout("wrap 2",
+													"[right][left]",
+													""));
+		regPanel.setBorder(BorderFactory.createTitledBorder("Регистрационные данные"));
+
+		filialTextField = new JTextField(5);
+
+		regPanel.add(new JLabel("Код филиала"));
+		regPanel.add(filialTextField);
+
 
 		JPanel logicPanel = new JPanel(new MigLayout("wrap 2",
 													"[right][left]",
@@ -120,6 +132,7 @@ public class OptionsDialog extends JDialog {
 
 
 		dataPanel.add(dbPanel, "growx, wrap");
+		dataPanel.add(regPanel, "growx, wrap");		
 		dataPanel.add(logicPanel, "growx, wrap");
 
 		JPanel buttonPanel = new JPanel();
@@ -159,6 +172,8 @@ public class OptionsDialog extends JDialog {
 		String user = options.getProperty("db.user");
 		String password = options.getProperty("db.password");
 
+		String filial = options.getProperty("reg.filial");
+
 		String initRecStatusCode = options.getProperty("logic.initRecStatusCode");
 		String requestFileName = options.getProperty("print.request");
 
@@ -166,6 +181,8 @@ public class OptionsDialog extends JDialog {
 		serverTextField.setText(server);
 		userTextField.setText(user);
 		passwordTextField.setText(password);
+
+		filialTextField.setText(filial);
 
 		initRecStatusCodeTextField.setText(initRecStatusCode);
 		requestFileNameTextField.setText(requestFileName);
@@ -179,6 +196,8 @@ public class OptionsDialog extends JDialog {
 		String server = serverTextField.getText();
 		String user = userTextField.getText();
 		String password = passwordTextField.getText();
+
+		String filial = filialTextField.getText();
 
 		String initRecStatusCode = initRecStatusCodeTextField.getText();
 		String requestFileName = requestFileNameTextField.getText();
@@ -200,6 +219,8 @@ public class OptionsDialog extends JDialog {
 		OptionsUtil.setOption("db.server", server);
 		OptionsUtil.setOption("db.user", user);
 		OptionsUtil.setOption("db.password", password);
+
+		OptionsUtil.setOption("reg.filial", filial);
 
 		OptionsUtil.setOption("logic.initRecStatusCode", initRecStatusCode);
 		OptionsUtil.setOption("print.request", requestFileName);

@@ -25,6 +25,7 @@ import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilter;
 import org.kesler.simplereg.gui.reestr.filter.ResultInMFCReceptionsFilter;
+import org.kesler.simplereg.gui.reestr.filter.FilialReceptionsFilter;
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
@@ -35,6 +36,7 @@ import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ResultInMFCReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.FilialReceptionsFilterDialog;
 
 import org.kesler.simplereg.gui.reestr.print.ReestrExporter;
 
@@ -83,6 +85,9 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		switch (filter) {
 			case OPEN_DATE:
 				receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view);
+			break;
+			case FILIAL:
+				receptionsFilterDialog = new FilialReceptionsFilterDialog(view);
 			break;
 			case BY_RECORD:
 				receptionsFilterDialog = new ByRecordReceptionsFilterDialog(view);
@@ -135,6 +140,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 			ByRecordReceptionsFilter byRecordReceptionsFilter = (ByRecordReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new ByRecordReceptionsFilterDialog(view, byRecordReceptionsFilter);
+
+		} else if (receptionsFilter instanceof FilialReceptionsFilter) { // Фильтр по филиалу
+
+			FilialReceptionsFilter filialReceptionsFilter = (FilialReceptionsFilter) receptionsFilter;
+			receptionsFilterDialog = new FilialReceptionsFilterDialog(view, filialReceptionsFilter);
 
 		} else if (receptionsFilter instanceof StatusReceptionsFilter) { // Фильтр по состоянию
 

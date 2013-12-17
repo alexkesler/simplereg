@@ -114,6 +114,14 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+		// Пункт меню - добавление фильтра по коду филиала;
+		JMenuItem filialFilterMenuItem = new JMenuItem("По коду филиала");
+		filialFilterMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.addFilter(ReceptionsFiltersEnum.FILIAL);
+			}
+		});
+
 		// Пункт меню - добавление фильтра по предварительной записи
 		JMenuItem byRecordFilterMenuItem = new JMenuItem("По предв записи");
 		byRecordFilterMenuItem.addActionListener(new ActionListener() {
@@ -166,6 +174,7 @@ public class ReestrView extends JFrame {
 
 		// собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
+		filtersPopupMenu.add(filialFilterMenuItem);
 		filtersPopupMenu.add(byRecordFilterMenuItem);
 		filtersPopupMenu.add(statusFilterMenuItem);
 		filtersPopupMenu.add(serviceFilterMenuItem);

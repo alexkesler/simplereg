@@ -16,6 +16,9 @@ public class Operator extends AbstractEntity{
 	@Column(name="Code", length=25)
 	private String code;
 
+	@Column(name="FilialCode", length=25)
+	private String filialCode;
+
 	@Column(name="FirstName", length=25)
 	private String firstName;
 
@@ -64,6 +67,16 @@ public class Operator extends AbstractEntity{
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getFilialCode() {
+		String notNullFilialCode = "";
+		if (filialCode != null) notNullFilialCode = filialCode;
+		return notNullFilialCode;
+	}
+
+	public void setFilialCode(String filialCode) {
+		this.filialCode = filialCode;
 	}
 
 	public String getFirstName() {

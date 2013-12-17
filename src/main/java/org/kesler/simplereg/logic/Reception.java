@@ -79,6 +79,9 @@ public class Reception extends AbstractEntity{
 	@Column(name="ResultInMFC")
 	private Boolean resultInMFC;
 
+	@Column(name="FilialCode")
+	private String filialCode;
+
 
 	public Reception() {
 		// for Hibernate
@@ -92,10 +95,10 @@ public class Reception extends AbstractEntity{
 	}
 
 	public void generateReceptionCode() {
-		String operatorCode = "-----";
+		String operatorCode = "--";
 		if (operator!=null) operatorCode = operator.getCode();
 		int count = CounterUtil.getNextCount();
-		String generatedCode = "07-11/1/" + operatorCode + "/" + count;
+		String generatedCode = "07-11/1/" + filialCode + "-" + operatorCode + "/" + count;
 		receptionCode = generatedCode;
 	}
 
@@ -231,6 +234,16 @@ public class Reception extends AbstractEntity{
 
 	public void setResultInMFC(Boolean resultInMFC) {
 		this.resultInMFC = resultInMFC;
+	}
+
+	public String getFilialCode() {
+		String notNullFilialCode = "";
+		if (filialCode != null) notNullFilialCode = filialCode;
+		return notNullFilialCode;
+	}
+
+	public void setFilialCode(String filialCode) {
+		this.filialCode = filialCode;
 	}
 
 
