@@ -102,6 +102,7 @@ public class RealtyObjectsModel implements DAOListener {
 		DAOFactory.getInstance().getRealtyObjectDAO().addItem(realtyObject);
 		// нам нужен индекс от локального списка
 		realtyObjects.add(realtyObject);
+		filterRealtyObjects("");
 		index = realtyObjects.size()-1;
 
 		return index;
