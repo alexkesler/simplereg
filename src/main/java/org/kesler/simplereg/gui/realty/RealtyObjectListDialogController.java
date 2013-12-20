@@ -39,12 +39,30 @@ public class RealtyObjectListDialogController implements GenericListDialogContro
 	}
 
 
-	public RealtyObject showDialog(JFrame parentFrame) {
+	public void showDialog(JFrame parentFrame) {
 		RealtyObject realtyObject = null;
 
-		dialog = new GenericListDialog<RealtyObject>(parentFrame, this);
+		dialog = new GenericListDialog<RealtyObject>(parentFrame, "Объекты недвижимости", this, GenericListDialog.VIEW_FILTER_MODE);
 		updateRealtyObjects();
 		dialog.setVisible(true);
+	}
+
+	public void showDialog(JDialog parentDialog) {
+		RealtyObject realtyObject = null;
+
+		dialog = new GenericListDialog<RealtyObject>(parentDialog, "Объекты недвижимости", this, GenericListDialog.VIEW_FILTER_MODE);
+		updateRealtyObjects();
+		dialog.setVisible(true);
+	}
+
+
+	public RealtyObject showSelectDialog(JFrame parentFrame) {
+		RealtyObject realtyObject = null;
+
+		dialog = new GenericListDialog<RealtyObject>(parentFrame, "Объекты недвижимости", this, GenericListDialog.SELECT_FILTER_MODE);
+		updateRealtyObjects();
+		dialog.setVisible(true);
+
 		if (dialog.getResult() == GenericListDialog.OK) {
 			int selectedIndex = dialog.getSelectedIndex();
 			realtyObject = model.getFilteredRealtyObjects().get(selectedIndex);
@@ -53,12 +71,13 @@ public class RealtyObjectListDialogController implements GenericListDialogContro
 		return realtyObject;
 	}
 
-	public RealtyObject showDialog(JDialog parentDialog) {
+	public RealtyObject showSelectDialog(JDialog parentDialog) {
 		RealtyObject realtyObject = null;
 
-		dialog = new GenericListDialog<RealtyObject>(parentDialog, this);
+		dialog = new GenericListDialog<RealtyObject>(parentDialog, "Объекты недвижимости", this, GenericListDialog.SELECT_FILTER_MODE);
 		updateRealtyObjects();
 		dialog.setVisible(true);
+
 		if (dialog.getResult() == GenericListDialog.OK) {
 			int selectedIndex = dialog.getSelectedIndex();
 			realtyObject = model.getFilteredRealtyObjects().get(selectedIndex);

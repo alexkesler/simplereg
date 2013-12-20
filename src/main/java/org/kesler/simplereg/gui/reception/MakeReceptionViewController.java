@@ -261,7 +261,7 @@ public class MakeReceptionViewController {
 
 	void selectRealtyObject() {
 
-		RealtyObject realtyObject = RealtyObjectListDialogController.getInstance().showDialog(view);
+		RealtyObject realtyObject = RealtyObjectListDialogController.getInstance().showSelectDialog(view);
 		reception.setRealtyObject(realtyObject);
 		viewState.updatePanelData();
 	}
@@ -283,7 +283,7 @@ public class MakeReceptionViewController {
 		printer.printReception();
 	}
 
-	void saveReception() {
+	boolean saveReception() {
 
 		if (isNew) {
 			ReceptionsModel.getInstance().addReception(reception);

@@ -115,7 +115,6 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 					if(text.contains(key)) {
 						text = text.replace(key,value);
 						textElem.setValue(text);
-						System.out.println("-----Замена----" + key + "--на--" + value + "-----");						
 					}
 				}
 
@@ -139,7 +138,7 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 			represesString = represesString + (applicator.getRepres()==null?applicator.getFullName():applicator.getRepres().getFIO()) + " _____________; ";
 		}
 
-		String resultInMFCString = "";
+		String resultInMFCString = "__";
 		if (reception.isResultInMFC()) resultInMFCString = "V";
 
 
@@ -151,6 +150,7 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		mappings.put("v_Operator", reception.getOperator().getFIO());
 		mappings.put("v_Service", reception.getService().getName());
 		mappings.put("v_Result_in_MFC", resultInMFCString);
+		mappings.put("v_ToIssueDate", dateFormat.format(reception.getToIssueDate()));
 
 	}
 
