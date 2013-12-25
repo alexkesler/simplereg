@@ -29,14 +29,7 @@ import org.kesler.simplereg.gui.reestr.filter.FilialReceptionsFilter;
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.ByRecordReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.ResultInMFCReceptionsFilterDialog;
-import org.kesler.simplereg.gui.reestr.filter.FilialReceptionsFilterDialog;
+import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialogFactory;
 
 import org.kesler.simplereg.gui.reestr.print.ReestrExporter;
 
@@ -79,38 +72,12 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	// добавление фильра - вызывается из вида
-	public void addFilter(ReceptionsFiltersEnum filter) {
-		ReceptionsFilterDialog receptionsFilterDialog = null;
-		/// Создаем диалог на основнии сведений о необходимом типе диалога
-		switch (filter) {
-			case OPEN_DATE:
-				receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view);
-			break;
-			case FILIAL:
-				receptionsFilterDialog = new FilialReceptionsFilterDialog(view);
-			break;
-			case BY_RECORD:
-				receptionsFilterDialog = new ByRecordReceptionsFilterDialog(view);
-			break;
-			case STATUS:
-				receptionsFilterDialog = new StatusReceptionsFilterDialog(view);	
-			break;
-			case SERVICE:
-				receptionsFilterDialog = new ServiceReceptionsFilterDialog(view);	
-			break;
-			case OPERATOR:
-				receptionsFilterDialog = new OperatorReceptionsFilterDialog(view);	
-			break;
-			case TO_ISSUE_DATE:
-				receptionsFilterDialog = new ToIssueDateReceptionsFilterDialog(view);	
-			break;
-			case RESULT_IN_MFC:
-				receptionsFilterDialog = new ResultInMFCReceptionsFilterDialog(view);	
-			break;
-			default:
-				return;
-		}
+	public void addFilter(ReceptionsFiltersEnum filterEnum) {
 		
+		
+		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, filterEnum);
+		if (receptionsFilterDialog == null) return;
+
 		/// Дальнейшие действия одинаковы для всех диалогов
 		receptionsFilterDialog.setVisible(true);
 		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
@@ -119,6 +86,28 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 	}
 
+
+	public void addFilter(ReceptionsFilter filter) {
+		Class<?> filterClass = filter.getClass();
+		int index = -1;
+
+		for (int i = 0; i < filters.size(); i++) {
+			ReceptionsFilter f = filters.get(i);
+			if (f.getClass().equals(filterClass)) {
+				index = i;
+			}						
+		}
+
+		if (index != -1) {
+			filters.remove(index);
+			filters.add(index, filter);
+		} else {
+			filters.add(filter);
+		}
+
+	}
+
+
 	// Редактирование фильтра - вызывается из вида
 	public void editFilter(int filterIndex) {
 		if (filterIndex == -1) {
@@ -126,52 +115,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			return ;
 		}
 
-		ReceptionsFilterDialog receptionsFilterDialog = null;
-
+		// Получаем выбранный фильтр
 		ReceptionsFilter receptionsFilter = filters.get(filterIndex);
 
-		// По классу фильтра определяем какой диалог создавать
-		if (receptionsFilter instanceof OpenDateReceptionsFilter) { // Фильтр по дате открытия
-
-			OpenDateReceptionsFilter openDateReceptionsFilter = (OpenDateReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view, openDateReceptionsFilter);
-
-		} else if (receptionsFilter instanceof ByRecordReceptionsFilter) { // Фильтр по предв записи
-
-			ByRecordReceptionsFilter byRecordReceptionsFilter = (ByRecordReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new ByRecordReceptionsFilterDialog(view, byRecordReceptionsFilter);
-
-		} else if (receptionsFilter instanceof FilialReceptionsFilter) { // Фильтр по филиалу
-
-			FilialReceptionsFilter filialReceptionsFilter = (FilialReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new FilialReceptionsFilterDialog(view, filialReceptionsFilter);
-
-		} else if (receptionsFilter instanceof StatusReceptionsFilter) { // Фильтр по состоянию
-
-			StatusReceptionsFilter statusReceptionsFilter = (StatusReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new StatusReceptionsFilterDialog(view, statusReceptionsFilter);
-
-		} else if (receptionsFilter instanceof ServiceReceptionsFilter) { // Фильтр по услуге
-
-			ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new ServiceReceptionsFilterDialog(view, serviceReceptionsFilter);
-
-		} else if (receptionsFilter instanceof OperatorReceptionsFilter) { // Фильтр по оператору
-
-			OperatorReceptionsFilter operatorReceptionsFilter = (OperatorReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new OperatorReceptionsFilterDialog(view, operatorReceptionsFilter);
-
-		} else if (receptionsFilter instanceof ToIssueDateReceptionsFilter) { // Фильтр по дате не выдачу
-
-			ToIssueDateReceptionsFilter toIssueDateReceptionsFilter = (ToIssueDateReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new ToIssueDateReceptionsFilterDialog(view, toIssueDateReceptionsFilter);
-
-		} else if (receptionsFilter instanceof ResultInMFCReceptionsFilter) { // Фильтр по дате не выдачу
-
-			ResultInMFCReceptionsFilter resultInMFCReceptionsFilter = (ResultInMFCReceptionsFilter) receptionsFilter;
-			receptionsFilterDialog = new ResultInMFCReceptionsFilterDialog(view, resultInMFCReceptionsFilter);
-
-		} else return;
+		// Создаем диалог редактирования фильтра
+		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, receptionsFilter);	
 
 		// дальнейшие действия одинаковы для всех диалогов
 		receptionsFilterDialog.setVisible(true);

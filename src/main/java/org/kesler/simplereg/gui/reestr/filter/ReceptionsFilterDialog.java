@@ -11,46 +11,36 @@ import java.awt.event.ActionEvent;
 
 
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilter;
 
+import org.kesler.simplereg.gui.AbstractDialog;
 
-public abstract class ReceptionsFilterDialog extends JDialog {
+public abstract class ReceptionsFilterDialog extends AbstractDialog {
 
-	public static final int NONE = -1;
-	public static final int OK = 0;
-	public static final int CANCEL = 1;
-
-	protected JFrame frame;
-	
 	protected ReceptionsFilter receptionsFilter = null;
-	private int result;
 
-
-	public ReceptionsFilterDialog(JFrame frame, String name) {
-		super(frame, name, true);
-		this.frame = frame;
+	public ReceptionsFilterDialog(JFrame parentFrame, String name) {
+		super(parentFrame, name, true);
 
 		createReceptionsFilter();
 
 		createGUI();
+		this.setLocationRelativeTo(parentFrame);
+
 		loadGUIDataFromReceptionsFilter();
 		result = NONE;
 	}
 
-	public ReceptionsFilterDialog(JFrame frame, String name, ReceptionsFilter filter) {
-		super(frame, name, true);
-		this.frame = frame;
+	public ReceptionsFilterDialog(JFrame parentFrame, String name, ReceptionsFilter filter) {
+		super(parentFrame, name, true);
 		this.receptionsFilter = filter;
 
 		createGUI();
+		this.setLocationRelativeTo(parentFrame);
+
 		loadGUIDataFromReceptionsFilter();
 		result = NONE;
 	}
 
-
-	public int getResult() {
-		return result;
-	}
 
 	public ReceptionsFilter getReceptionsFilter() {
 		return receptionsFilter;
@@ -96,7 +86,6 @@ public abstract class ReceptionsFilterDialog extends JDialog {
 
 		this.setContentPane(mainPanel);
 		this.pack();
-		this.setLocationRelativeTo(frame);
 		
 	}
 

@@ -27,8 +27,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+// import java.beans.PropertyChangeEvent;
+// import java.beans.PropertyChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 import com.alee.extended.date.WebDateField;
@@ -147,6 +147,14 @@ class MakeReceptionView extends JDialog{
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.add(mainPanel, BorderLayout.CENTER);
+
+		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			public void windowClosing(java.awt.event.WindowEvent ev) {
+				
+			}
+		});
 
 		this.setSize(700, 700);
 		this.setLocationRelativeTo(null);

@@ -73,7 +73,7 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 		addServiceButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				
-				Service service = ServicesDialogController.getInstance().openSelectDialog(frame); 
+				Service service = ServicesDialogController.getInstance().openSelectDialog(currentDialog); 
 				
 				if(service != null) {
 
@@ -92,7 +92,7 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 					services.remove(selectedServiceIndex);
 					servicesListModel.serviceRemoved(selectedServiceIndex);
 				} else {
-					JOptionPane.showMessageDialog(frame, "Ничего не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Ошибка", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -116,7 +116,7 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 	protected boolean readReceptionsFilterFromGUIData() {
 
 		if (services.size() == 0) {
-			JOptionPane.showMessageDialog(frame, "Не выбрано ни одной услуги", "Ошибка", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(currentDialog, "Не выбрано ни одной услуги", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
 
