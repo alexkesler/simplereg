@@ -297,7 +297,7 @@ public class MakeReceptionViewController {
 			new InfoDialog(parentFrame, "Сохранено", 500, InfoDialog.GREEN).showInfo();
 		} else if (parentDialog!=null) {
 			new InfoDialog(parentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
-		}
+        }
 		
 		return true;
 	}

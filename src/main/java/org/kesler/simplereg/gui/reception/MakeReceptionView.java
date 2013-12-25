@@ -3,24 +3,9 @@ package org.kesler.simplereg.gui.reception;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JTabbedPane;
-import javax.swing.JList;
-import javax.swing.JCheckBox;
-import javax.swing.AbstractListModel;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JMenuItem;
-import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
@@ -51,6 +36,8 @@ class MakeReceptionView extends JDialog{
 	private JButton readyButton;
 	private JButton cancelButton;
 
+    private JDialog currentDialog;
+
 	private JTabbedPane tabbedPane;
 
 	private ServicePanel servicePanel;
@@ -63,6 +50,7 @@ class MakeReceptionView extends JDialog{
 	public MakeReceptionView(MakeReceptionViewController controller, JFrame parentFrame) {
 		super(parentFrame, "Прием заявителя", true);
 		this.controller = controller;
+        currentDialog = this;
 		createGUI();
 		setLocationRelativeTo(parentFrame);
 	}
@@ -70,6 +58,7 @@ class MakeReceptionView extends JDialog{
 	public MakeReceptionView(MakeReceptionViewController controller, JDialog parentDialog) {
 		super(parentDialog, "Прием заявителя", true);
 		this.controller = controller;
+        currentDialog = this;
 		createGUI();
 		setLocationRelativeTo(parentDialog);
 	}
@@ -121,7 +110,7 @@ class MakeReceptionView extends JDialog{
 			}
 		});
 
-		readyButton = new JButton("Готово");
+		readyButton = new JButton("Сохранить");
 		readyButton.setIcon(ResourcesUtil.getIcon("tick.png"));
 		readyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -151,10 +140,10 @@ class MakeReceptionView extends JDialog{
 		this.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(java.awt.event.WindowEvent ev) {
-				
-			}
-		});
+            public void windowClosing(java.awt.event.WindowEvent ev) {
+//                JOptionPane.showConfirmDialog()
+            }
+        });
 
 		this.setSize(700, 700);
 		this.setLocationRelativeTo(null);
