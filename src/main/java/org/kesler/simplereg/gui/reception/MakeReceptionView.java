@@ -141,7 +141,8 @@ class MakeReceptionView extends JDialog{
 
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent ev) {
-//                JOptionPane.showConfirmDialog()
+                int res = JOptionPane.showConfirmDialog(currentDialog,"Закрыть без сохранения?","Внимание",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+                if (res == JOptionPane.YES_OPTION) controller.cancel();
             }
         });
 
