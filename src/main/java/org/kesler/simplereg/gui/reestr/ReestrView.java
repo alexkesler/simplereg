@@ -1,31 +1,16 @@
 package org.kesler.simplereg.gui.reestr;
 
+import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.Action;
-import javax.swing.AbstractAction;
+import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Dimension;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -71,7 +56,24 @@ public class ReestrView extends JFrame {
 	private void createGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
+        JPanel topPanel = new JPanel(new MigLayout("fill"));
+
+        // Панель быстрого поиска
+        JPanel searchPanel = new JPanel(new MigLayout("fill"));
+        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Быстрый поиск"));
+
+        final JTextField receptionCodeTextField = new JTextField(10);
+
+        final JTextField rosreestrCodeTextField = new JTextField(10);
+
+        searchPanel.add(new JLabel("Код дела"));
+        searchPanel.add(receptionCodeTextField, "wrap");
+        searchPanel.add(new JLabel("Код Росреестра"));
+        searchPanel.add(rosreestrCodeTextField);
+
+
 		JPanel filterPanel = new JPanel(new MigLayout("fill, nogrid"));
+        filterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Фильтр"));
 
 		// делаем лист для отображения и измененения набора фильтров
 		filterListModel = new FilterListModel();
@@ -240,6 +242,10 @@ public class ReestrView extends JFrame {
 		filterPanel.add(exportButton,"span, right, wrap");
 
 
+        topPanel.add(searchPanel);
+        topPanel.add(filterPanel);
+
+
 		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
 
@@ -343,7 +349,7 @@ public class ReestrView extends JFrame {
 		buttonPanel.add(okButton);
 
 
-		mainPanel.add(filterPanel, BorderLayout.NORTH);
+		mainPanel.add(topPanel, BorderLayout.NORTH);
 		mainPanel.add(dataPanel, BorderLayout.CENTER);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
