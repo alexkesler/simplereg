@@ -86,11 +86,16 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 
 	public void searchByReceptionCode(String receptionCodeString) {
-        filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
+        if (!receptionCodeString.isEmpty())
+            filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
+        else
+            filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE);
+        applyFilters();
 	}
 
     public void searchByRosreestrCode(String rosreestrCodeString) {
         filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
+        applyFilters();
     }
 
 	// Редактирование фильтра - вызывается из вида
@@ -138,6 +143,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		model.applyFiltersInSeparateThread();
 
 	}
+
+    public void readFromDBAndApplyFilters() {
+        processDialog = new ProcessDialog(view);
+        model.readReceptionsAndApplyFiltersInSeparateThread();
+    }
 
 	// Очищает все фильтры
 	public void resetFilters() {

@@ -26,7 +26,7 @@ public class TestReceptionsModel {
 
 	@Test
 	public void testCreateEmpty() {
-		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
+		ReceptionsModel receptionsModel = new ReceptionsModel();
 		List<Reception> resultList = receptionsModel.getAllReceptions();
 		assertNotNull("List is null", resultList);
 	}
@@ -35,7 +35,7 @@ public class TestReceptionsModel {
 	@Test
 	public void testAddReception() {
 		// готовим данные для приема
-		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
+		ReceptionsModel receptionsModel = new ReceptionsModel();
 		Service service = new Service();
 		List<Applicator> applicators = new ArrayList<Applicator>();
 		Operator operator = new Operator(); 
@@ -57,7 +57,7 @@ public class TestReceptionsModel {
 
 	@Test
 	public void testSaveRead() {
-		ReceptionsModel receptionsModel = ReceptionsModel.getInstance();
+		ReceptionsModel receptionsModel = new ReceptionsModel();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.AbstractTableModel;
@@ -63,6 +65,27 @@ public class ReestrView extends JFrame {
         searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Быстрый поиск"));
 
         final JTextField receptionCodeTextField = new JTextField(10);
+        receptionCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                setFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                setFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                setFilter();
+            }
+
+            private void setFilter() {
+                String filterString = receptionCodeTextField.getText();
+                controller.searchByReceptionCode(filterString);
+            }
+        });
 
         final JTextField rosreestrCodeTextField = new JTextField(10);
 
@@ -72,7 +95,7 @@ public class ReestrView extends JFrame {
         searchPanel.add(rosreestrCodeTextField);
 
 
-		JPanel filterPanel = new JPanel(new MigLayout("fill, nogrid"));
+		JPanel filterPanel = new JPanel(new MigLayout("fill"));
         filterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Фильтр"));
 
 		// делаем лист для отображения и измененения набора фильтров
@@ -222,6 +245,15 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+        /// Перечитать из БД и применить фильтры
+        JButton readFromDBButton = new JButton("Перечитать из БД");
+        readFromDBButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.readFromDBAndApplyFilters();
+            }
+        });
+
 
 		JButton exportButton = new JButton("Выгрузить список");
 		exportButton.addActionListener(new ActionListener() {
@@ -233,8 +265,9 @@ public class ReestrView extends JFrame {
 
 		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтры: "), "wrap");
-		filterPanel.add(filterListScrollPane, "push, w 500, h 80");
-		filterPanel.add(applyFiltersButton,"growy,wrap");
+		filterPanel.add(filterListScrollPane, "push, spany 2, w 500, h 80");
+        filterPanel.add(readFromDBButton, "wrap");
+		filterPanel.add(applyFiltersButton,"pushy, grow, wrap");
 		filterPanel.add(addFilterButton, "split");
 		filterPanel.add(editFilterButton);
 		filterPanel.add(removeFilterButton);

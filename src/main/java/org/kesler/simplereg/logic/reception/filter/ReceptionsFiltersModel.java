@@ -33,11 +33,15 @@ public class ReceptionsFiltersModel {
             filters.remove(index);
             filters.add(index, quickFilter);
         } else {
-            filters.add(quickFilter);
+            filters.add(0, quickFilter);
             index = filters.size()-1;
         }
 
         return index;
+    }
+
+    public void resetQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum) {
+
     }
 
     public int addFilter(ReceptionsFilter filter) {
