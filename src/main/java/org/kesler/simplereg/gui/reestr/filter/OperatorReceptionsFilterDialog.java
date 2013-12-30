@@ -15,6 +15,7 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.operator.OperatorsModel;
+import org.kesler.simplereg.logic.reception.filter.OperatorReceptionsFilter;
 
 public class OperatorReceptionsFilterDialog extends ReceptionsFilterDialog {
 

@@ -1,12 +1,12 @@
 package org.kesler.simplereg.gui.reestr.filter;
 
-import javax.swing.JFrame;
+import javax.swing.JFrame
+;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
-
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.logic.reception.filter.ResultInMFCReceptionsFilter;
 
 public class ResultInMFCReceptionsFilterDialog extends ReceptionsFilterDialog {
 

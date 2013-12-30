@@ -24,6 +24,7 @@ import org.kesler.simplereg.logic.Service;
 
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 
+import org.kesler.simplereg.logic.reception.filter.ServiceReceptionsFilter;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 

@@ -285,10 +285,12 @@ public class MakeReceptionViewController {
 
 	boolean saveReception() {
 
+        ReceptionsModel model = new ReceptionsModel();
+
 		if (isNew) {
-			ReceptionsModel.getInstance().addReception(reception);
+			model.addReception(reception);
 		} else {
-			ReceptionsModel.getInstance().updateReception(reception);
+			model.updateReception(reception);
 		}
 		
 

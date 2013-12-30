@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.RealtyObject;
@@ -33,7 +34,7 @@ import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 
-public class ReceptionDialog extends JDialog {
+public class ReceptionDialog extends AbstractDialog {
 
 	private final boolean DEBUG = false;
 
@@ -50,6 +51,7 @@ public class ReceptionDialog extends JDialog {
 	private JPanel applicatorsPanel;
 	private JComboBox statusesComboBox;
 	private JButton saveNewReceptionStatusButton;
+    private JButton okButton;
 
 	private ReceptionStatus currentReceptionStatus = null;
 	private ReceptionStatus newReceptionStatus = null;
@@ -156,10 +158,10 @@ public class ReceptionDialog extends JDialog {
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
 
-		JButton okButton = new JButton("Ok");
+		okButton = new JButton("Ok");
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
-				if (statusChanged) {
+                if (statusChanged) {
 					int confirmResult = JOptionPane.showConfirmDialog(currentDialog, "<html>Установить статус: " + 
 															newReceptionStatus.getName() + " ?</html>", 
 															"Сменить статус?", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -178,7 +180,16 @@ public class ReceptionDialog extends JDialog {
 			}
 		});
 
+        JButton cancelButton = new JButton("Отмена");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                result = CANCEL;
+            }
+        });
+
 		buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
 
 		// Собираем основную панель
 		mainPanel.add(dataPanel, BorderLayout.CENTER);
@@ -193,10 +204,12 @@ public class ReceptionDialog extends JDialog {
 
 	private void saveStatus() {
 		reception.setStatus(newReceptionStatus);
-		ReceptionsModel.getInstance().updateReception(reception);
+//		ReceptionsModel.getInstance().updateReception(reception);
 		currentReceptionStatus = newReceptionStatus;
 		statusChanged = false;
-		saveNewReceptionStatusButton.setEnabled(false);		
+		saveNewReceptionStatusButton.setEnabled(false);
+        okButton.setText("Сохранить");
+        result = OK;
 	}
 
 	private void loadGUIDataFromReception() {

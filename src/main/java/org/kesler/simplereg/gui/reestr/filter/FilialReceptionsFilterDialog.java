@@ -7,7 +7,7 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.logic.reception.filter.FilialReceptionsFilter;
 
 public class FilialReceptionsFilterDialog extends ReceptionsFilterDialog {
 

@@ -1,16 +1,16 @@
-package org.kesler.simplereg.gui.reestr.filter;
+package org.kesler.simplereg.logic.reception.filter;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
 import org.kesler.simplereg.logic.Reception;
 
-public class ToIssueDateReceptionsFilter implements ReceptionsFilter {
+public class OpenDateReceptionsFilter implements ReceptionsFilter {
 
 	private Date fromDate = null;
 	private Date toDate = null;
 
-	public ToIssueDateReceptionsFilter(Date fromDate, Date toDate) {
+	public OpenDateReceptionsFilter(Date fromDate, Date toDate) {
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 	}
@@ -34,20 +34,20 @@ public class ToIssueDateReceptionsFilter implements ReceptionsFilter {
 	@Override
 	public boolean checkReception(Reception reception) {
 		if (reception == null) {
-			throw new IllegalArgumentException("Reception argument cannot be null");
+			throw new IllegalArgumentException();
 		}
 
-		Date toIssueDate = reception.getToIssueDate();
+		Date openDate = reception.getOpenDate();
 		
-		if (toIssueDate == null) {// если время принятия не задано - не удовлетворяет
+		if (openDate == null) {// если время принятия не задано - не удовлетворяет
 			return false;
 		}
 
-		if (fromDate != null && toIssueDate.before(fromDate)) {
+		if (fromDate != null && openDate.before(fromDate)) {
 			return false;			
 		}
 
-		if (toDate != null && toIssueDate.after(toDate)) {
+		if (toDate != null && openDate.after(toDate)) {
 			return false;
 		}
 
@@ -56,7 +56,7 @@ public class ToIssueDateReceptionsFilter implements ReceptionsFilter {
 
 	@Override
 	public String toString() {
-		String filterString = "По дате на выдачу результата: ";
+		String filterString = "По дате открытия дела: ";
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
 		filterString += "(";

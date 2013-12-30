@@ -19,8 +19,8 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
-import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 

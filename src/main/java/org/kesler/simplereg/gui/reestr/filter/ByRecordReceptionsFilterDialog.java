@@ -6,7 +6,7 @@ import javax.swing.JCheckBox;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.logic.reception.filter.ByRecordReceptionsFilter;
 
 public class ByRecordReceptionsFilterDialog extends ReceptionsFilterDialog {
 

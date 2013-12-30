@@ -17,21 +17,15 @@ import org.kesler.simplereg.gui.reception.ReceptionDialog;
 
 import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
 
-import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.OpenDateReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.ByRecordReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.StatusReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.ServiceReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.OperatorReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.ToIssueDateReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.ResultInMFCReceptionsFilter;
-import org.kesler.simplereg.gui.reestr.filter.FilialReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersModel;
 
-import org.kesler.simplereg.gui.reestr.filter.ReceptionsFiltersEnum;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
+import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialogFactory;
 
-import org.kesler.simplereg.gui.reestr.print.ReestrExporter;
+import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
 
 
 public class ReestrViewController implements ReceptionsModelStateListener{
@@ -40,7 +34,8 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	private ReestrView view;
 
 	private ReceptionsModel model;
-	private List<ReceptionsFilter> filters;
+    private ReceptionsFiltersModel filtersModel;
+//	private List<ReceptionsFilter> filters;
 
 	private ProcessDialog processDialog = null;
 
@@ -54,9 +49,11 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	private ReestrViewController() {
-		model = ReceptionsModel.getInstance();
+		model = new ReceptionsModel();
 		model.addReceptionsModelStateListener(this);
-		filters = new ArrayList<ReceptionsFilter>();
+
+        filtersModel = model.getFiltersModel();
+//		filters = new ArrayList<ReceptionsFilter>();
 		// создаем вид с привязкой к этому контроллеру
 		
 	}
@@ -68,45 +65,33 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	public List<ReceptionsFilter> getFilters() {
-		return filters;
+		return filtersModel.getFilters();
 	}
 
 	// добавление фильра - вызывается из вида
 	public void addFilter(ReceptionsFiltersEnum filterEnum) {
 		
-		
+		// Создаем подходящий диалог
 		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, filterEnum);
 		if (receptionsFilterDialog == null) return;
 
-		/// Дальнейшие действия одинаковы для всех диалогов
+		/// Открываем диалог
 		receptionsFilterDialog.setVisible(true);
+
 		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
-			filters.add(receptionsFilterDialog.getReceptionsFilter());
-			view.getFilterListModel().filterAdded(filters.size()-1);
+			int index = filtersModel.addFilter(receptionsFilterDialog.getReceptionsFilter());
+			view.getFilterListModel().filterAdded(index);
 		}
 	}
 
 
-	public void addFilter(ReceptionsFilter filter) {
-		Class<?> filterClass = filter.getClass();
-		int index = -1;
-
-		for (int i = 0; i < filters.size(); i++) {
-			ReceptionsFilter f = filters.get(i);
-			if (f.getClass().equals(filterClass)) {
-				index = i;
-			}						
-		}
-
-		if (index != -1) {
-			filters.remove(index);
-			filters.add(index, filter);
-		} else {
-			filters.add(filter);
-		}
-
+	public void searchByReceptionCode(String receptionCodeString) {
+        filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
 	}
 
+    public void searchByRosreestrCode(String rosreestrCodeString) {
+        filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
+    }
 
 	// Редактирование фильтра - вызывается из вида
 	public void editFilter(int filterIndex) {
@@ -116,7 +101,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 
 		// Получаем выбранный фильтр
-		ReceptionsFilter receptionsFilter = filters.get(filterIndex);
+		ReceptionsFilter receptionsFilter = filtersModel.getFilters().get(filterIndex);
 
 		// Создаем диалог редактирования фильтра
 		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, receptionsFilter);	
@@ -135,7 +120,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			return ;
 		}
 
-		filters.remove(index);
+		filtersModel.removeFilter(index);
 		view.getFilterListModel().filterRemoved(index);
 	}
 
@@ -150,22 +135,15 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 		listenReceptionsModel = true;
 		processDialog = new ProcessDialog(view);
-		model.applyFiltersInSeparateThread(filters);
+		model.applyFiltersInSeparateThread();
 
 	}
 
 	// Очищает все фильтры
 	public void resetFilters() {
-		int count = filters.size();
-		filters = new ArrayList<ReceptionsFilter>();
+		int count = filtersModel.getFilters().size();
+		filtersModel.resetFilters();
 		view.getFilterListModel().filtersCleared(count);
-	}
-
-
-	public void openReceptionDialog(Reception reception) {
-		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
-		receptionDialog.setVisible(true);
-		
 	}
 
 
@@ -177,7 +155,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		List<Reception> receptions = model.getFilteredReceptions();
 		Reception reception = receptions.get(index);
 		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
-		receptionDialog.setVisible(true);	
+		receptionDialog.setVisible(true);
+        if (receptionDialog.getResult() == ReceptionDialog.OK) {
+            model.updateReception(reception);
+        }
 		view.tableDataChanged();	
 	}
 
@@ -243,7 +224,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	public void createXLSFromReestrTable() {
-		ReestrExporter.exportReestr();
+		ReestrExporter.exportReestr(model.getFilteredReceptions());
 	}
 
 

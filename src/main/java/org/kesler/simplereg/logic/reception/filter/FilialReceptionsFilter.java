@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.filter;
+package org.kesler.simplereg.logic.reception.filter;
 
 import org.kesler.simplereg.logic.Reception;
 

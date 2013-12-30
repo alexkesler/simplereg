@@ -2,6 +2,18 @@ package org.kesler.simplereg.gui.reestr.filter;
 
 import javax.swing.JFrame;
 
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
+
+import org.kesler.simplereg.logic.reception.filter.OpenDateReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ByRecordReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.FilialReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.StatusReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ServiceReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.OperatorReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ToIssueDateReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ResultInMFCReceptionsFilter;
+
 public abstract class ReceptionsFilterDialogFactory {
 	
 	public static ReceptionsFilterDialog createDialog(JFrame view, ReceptionsFiltersEnum filterEnum) {

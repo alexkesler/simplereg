@@ -16,6 +16,8 @@ import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 
+import org.kesler.simplereg.logic.reception.filter.StatusReceptionsFilter;
+
 public class StatusReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	private List<ReceptionStatus> filterStatuses;

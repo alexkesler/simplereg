@@ -11,6 +11,7 @@ import java.util.Calendar;
 import net.miginfocom.swing.MigLayout;
 import com.alee.extended.date.WebDateField;
 
+import org.kesler.simplereg.logic.reception.filter.ToIssueDateReceptionsFilter;
 
 public class ToIssueDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 

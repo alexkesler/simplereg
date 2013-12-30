@@ -48,7 +48,7 @@ public class MainViewController implements MainViewListener,
 	private ProcessDialog processDialog;
 
 	private MainViewController() {
-		this.receptionsModel = ReceptionsModel.getInstance();
+		this.receptionsModel = new ReceptionsModel();
 		this.operatorsModel = OperatorsModel.getInstance();
 		this.realtyObjectsModel = RealtyObjectsModel.getInstance();
 

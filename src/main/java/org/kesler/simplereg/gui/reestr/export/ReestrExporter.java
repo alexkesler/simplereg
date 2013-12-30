@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.print;
+package org.kesler.simplereg.gui.reestr.export;
 
 import java.util.List;
 import java.io.File;
@@ -26,11 +26,11 @@ import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 
 public class ReestrExporter {
 
-	public static void exportReestr() {
+	public static void exportReestr(List <Reception> receptions) {
 
 		List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();
 
-		List<Reception> receptions = ReceptionsModel.getInstance().getFilteredReceptions();
+//		List<Reception> receptions = ReceptionsModel.getInstance().getFilteredReceptions();
 
 
 		SXSSFWorkbook wb = new SXSSFWorkbook(100);

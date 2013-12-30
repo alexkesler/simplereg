@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 
