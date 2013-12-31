@@ -87,22 +87,22 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	public void searchByReceptionCode(String receptionCodeString) {
         if (!receptionCodeString.isEmpty()) {
-            filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
-            view.getFilterListModel().filterAdded(0);
+            int index = filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
+            view.getFilterListModel().filterAdded(index);
         } else {
-            filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE);
-            view.getFilterListModel().filterRemoved(0);
+            int index = filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE);
+            if (index != -1) view.getFilterListModel().filterRemoved(index);
         }
         applyFilters();
 	}
 
     public void searchByRosreestrCode(String rosreestrCodeString) {
         if (!rosreestrCodeString.isEmpty()) {
-            filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
-            view.getFilterListModel().filterAdded(0);
+            int index = filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
+            view.getFilterListModel().filterAdded(index);
         } else {
-            filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
-            view.getFilterListModel().filterRemoved(0);
+            int index = filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
+            if (index != -1) view.getFilterListModel().filterRemoved(index);
         }
 
         applyFilters();

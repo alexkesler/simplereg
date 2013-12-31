@@ -235,12 +235,14 @@ public class MainViewController implements MainViewListener,
 		if (loginDialog.getResult() == LoginDialog.OK) {
 			Operator operator = loginDialog.getOperator();
 			CurrentOperator.getInstance().setOperator(operator);
+            mainView.setConnected(true);
 			new InfoDialog(mainView, "<html>Добро пожаловать, <p><i>" + 
 										operator.getFirstName() + 
 										" " + operator.getParentName() + "</i>!</p></html>", 1000, InfoDialog.STAR).showInfo();
 		} else {
 			CurrentOperator.getInstance().resetOperator();
 			HibernateUtil.closeConnection();
+            mainView.setConnected(false);
 		}
 		// Освобождаем ресурсы
 		loginDialog.dispose();
@@ -283,6 +285,7 @@ public class MainViewController implements MainViewListener,
 	private void logout() {
 		CurrentOperator.getInstance().resetOperator();
 		HibernateUtil.closeConnection();
+        mainView.setConnected(false);
 	}
 
 	private void openMakeReceptionView() {

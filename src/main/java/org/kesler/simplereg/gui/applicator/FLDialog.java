@@ -13,20 +13,15 @@ import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.util.ResourcesUtil;
 import org.kesler.simplereg.logic.FL;
 
-public class FLDialog extends JDialog {
-	
-	public static final int NONE = -1;
-	public static final int OK = 0;
-	public static final int CANCEL = 1;
+public class FLDialog extends AbstractDialog {
 
 	private FL fl;
 	private JFrame frame;
 	private JDialog dialog;
-
-	private int result = NONE;
 
 	private JTextField surName;
 	private JTextField firstName;
@@ -105,6 +100,7 @@ public class FLDialog extends JDialog {
 		JPanel dataPanel = new JPanel(new MigLayout());
 
 		surName = new JTextField(20);
+
 		firstName = new JTextField(20);
 		parentName = new JTextField(20);
 
@@ -156,9 +152,5 @@ public class FLDialog extends JDialog {
 			this.setLocationRelativeTo(null);
 		}
 	} 
-
-	public int getResult() {
-		return result;
-	}
 
 }

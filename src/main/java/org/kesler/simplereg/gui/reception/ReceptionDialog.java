@@ -200,7 +200,7 @@ public class ReceptionDialog extends AbstractDialog {
 
 
 		this.setContentPane(mainPanel);
-		this.setSize(500,500);
+		this.setSize(600,450);
 		this.setLocationRelativeTo(parentFrame);
 
 	}

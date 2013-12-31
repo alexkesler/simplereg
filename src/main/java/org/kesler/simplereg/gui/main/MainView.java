@@ -28,6 +28,8 @@ import java.util.EnumSet;
 import java.text.SimpleDateFormat;
 import javax.swing.table.AbstractTableModel;
 
+import com.alee.extended.statusbar.WebStatusBar;
+import com.alee.laf.label.WebLabel;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 import org.kesler.simplereg.logic.Reception;
@@ -38,12 +40,14 @@ import org.kesler.simplereg.logic.Reception;
 public class MainView extends JFrame {
 
 
-	private MainViewController controller = null;
+	private MainViewController controller;
 	private MainViewReceptionsTableModel tableModel = null;
 	private JLabel currentOperatorLabel;
 	private List<Action> actions;
 
 	private List<MainViewListener> listeners;
+
+    private WebLabel connectedLabel;
 
 
 	public MainView(MainViewController controller) {
@@ -209,8 +213,15 @@ public class MainView extends JFrame {
 		tablePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		tablePanel.add(receptionTableScrollPane);
 
+        WebStatusBar statusBar = new WebStatusBar();
+        connectedLabel = new WebLabel();
+        statusBar.add(new JLabel("Сервер баз данных:" ));
+        statusBar.add(connectedLabel);
+
+
 		mainPanel.add(BorderLayout.CENTER,tablePanel);
 		mainPanel.add(BorderLayout.NORTH,buttonPanel);
+        mainPanel.add(BorderLayout.SOUTH, statusBar);
 
 		this.add(mainPanel, BorderLayout.CENTER);	
 	
@@ -227,6 +238,11 @@ public class MainView extends JFrame {
 	public void setCurrentOperatorLabel(String text) {
 		currentOperatorLabel.setText(text);
 	}
+
+    public void setConnected(boolean connected) {
+        if (connected) connectedLabel.setText("<html><p color='green'>Подключена</p></html>");
+        else connectedLabel.setText("<html><p color='red'>Нет подключения</p></html>");
+    }
 
 	public void setReceptions(List<Reception> receptions) {
 		tableModel.setReceptions(receptions);

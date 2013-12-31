@@ -41,13 +41,18 @@ public class ReceptionsFiltersModel {
         return index;
     }
 
-    public void resetQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum) {
+    public int resetQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum) {
         Class<? extends ReceptionsFilter> filterClass = QuickReceptionsFilterFactory.getQuickFilterClass(quickFiltersEnum);
         Iterator<ReceptionsFilter> iterator = filters.iterator();
+        int index = -1;
         while (iterator.hasNext()) {
             ReceptionsFilter filter = iterator.next();
-            if (filterClass.equals(filter.getClass())) iterator.remove();
+            if (filterClass.equals(filter.getClass())) {
+                index = filters.indexOf(filter);
+                iterator.remove();
+            }
         }
+        return index;
     }
 
     public int addFilter(ReceptionsFilter filter) {

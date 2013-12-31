@@ -2,8 +2,6 @@ package org.kesler.simplereg.logic.reception.filter;
 
 public enum ReceptionsFiltersEnum {
 	OPEN_DATE,
-	RECEPTION_CODE,
-    ROSREESTRCODE,
 	FL,
     UL,
 	FILIAL,
