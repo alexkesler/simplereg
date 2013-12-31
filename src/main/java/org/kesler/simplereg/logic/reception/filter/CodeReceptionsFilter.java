@@ -26,8 +26,8 @@ public class CodeReceptionsFilter implements ReceptionsFilter {
 		}
 
 		boolean fit = false;
-		
-		if (reception.getReceptionCode().toLowerCase().contains(filterCode.toLowerCase())) {
+		String receptionCode = reception.getReceptionCode();
+		if (receptionCode != null && receptionCode.toLowerCase().contains(filterCode.toLowerCase())) {
 			fit = true;
 		}
 

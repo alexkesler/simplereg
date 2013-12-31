@@ -17,4 +17,17 @@ public class QuickReceptionsFilterFactory {
 
         return filter;
     }
+
+    public static Class<? extends ReceptionsFilter> getQuickFilterClass(QuickReceptionsFiltersEnum filtersEnum) {
+        Class<? extends ReceptionsFilter> filterClass  = null;
+        switch (filtersEnum) {
+            case RECEPTION_CODE:
+                filterClass = CodeReceptionsFilter.class;
+                break;
+            case ROSREESTR_CODE:
+                filterClass = RosreestrCodeReceptionsFilter.class;
+                break;
+        }
+        return filterClass;
+    }
 }

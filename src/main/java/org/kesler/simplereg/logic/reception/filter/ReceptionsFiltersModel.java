@@ -1,6 +1,7 @@
 package org.kesler.simplereg.logic.reception.filter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ReceptionsFiltersModel {
@@ -19,7 +20,7 @@ public class ReceptionsFiltersModel {
 
         ReceptionsFilter quickFilter = QuickReceptionsFilterFactory.createQuickFilter(quickFiltersEnum, filterString);
 
-        Class<?> filterClass = quickFilter.getClass();
+        Class<? extends ReceptionsFilter> filterClass = quickFilter.getClass();
         int index = -1;
 
         for (int i = 0; i < filters.size(); i++) {
@@ -41,7 +42,12 @@ public class ReceptionsFiltersModel {
     }
 
     public void resetQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum) {
-
+        Class<? extends ReceptionsFilter> filterClass = QuickReceptionsFilterFactory.getQuickFilterClass(quickFiltersEnum);
+        Iterator<ReceptionsFilter> iterator = filters.iterator();
+        while (iterator.hasNext()) {
+            ReceptionsFilter filter = iterator.next();
+            if (filterClass.equals(filter.getClass())) iterator.remove();
+        }
     }
 
     public int addFilter(ReceptionsFilter filter) {

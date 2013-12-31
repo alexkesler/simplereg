@@ -64,35 +64,79 @@ public class ReestrView extends JFrame {
         JPanel searchPanel = new JPanel(new MigLayout("fill"));
         searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Быстрый поиск"));
 
-        final JTextField receptionCodeTextField = new JTextField(10);
-        receptionCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
+        final JTextField receptionCodeSearchTextField = new JTextField(10);
+        receptionCodeSearchTextField.addActionListener(new ActionListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                setFilter();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                setFilter();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                setFilter();
-            }
-
-            private void setFilter() {
-                String filterString = receptionCodeTextField.getText();
+            public void actionPerformed(ActionEvent e) {
+                String filterString = receptionCodeSearchTextField.getText();
                 controller.searchByReceptionCode(filterString);
+                receptionCodeSearchTextField.requestFocus();
             }
         });
 
-        final JTextField rosreestrCodeTextField = new JTextField(10);
+        JButton applyReceptionCodeSearchButton = new JButton();
+        applyReceptionCodeSearchButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+        applyReceptionCodeSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filterString = receptionCodeSearchTextField.getText();
+                controller.searchByReceptionCode(filterString);
+                receptionCodeSearchTextField.requestFocus();
+            }
+        });
+
+        JButton resetReceptionCodeSearchButton = new JButton();
+        resetReceptionCodeSearchButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+        resetReceptionCodeSearchButton.setToolTipText("Очистить");
+        resetReceptionCodeSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                receptionCodeSearchTextField.setText("");
+                controller.searchByReceptionCode("");
+            }
+        });
+
+        final JTextField rosreestrCodeSearchTextField = new JTextField(10);
+        rosreestrCodeSearchTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filterString = rosreestrCodeSearchTextField.getText();
+                controller.searchByRosreestrCode(filterString);
+                rosreestrCodeSearchTextField.requestFocus();
+            }
+        });
+
+        JButton applyRosreestrCodeSearchButton = new JButton();
+        applyRosreestrCodeSearchButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+        applyRosreestrCodeSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filterString = rosreestrCodeSearchTextField.getText();
+                controller.searchByRosreestrCode(filterString);
+                rosreestrCodeSearchTextField.requestFocus();
+            }
+        });
+
+        JButton resetRosreestrCodeSearchButton = new JButton();
+        resetRosreestrCodeSearchButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+        resetRosreestrCodeSearchButton.setToolTipText("Очистить");
+        resetRosreestrCodeSearchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                rosreestrCodeSearchTextField.setText("");
+                controller.searchByRosreestrCode("");
+            }
+        });
+
 
         searchPanel.add(new JLabel("Код дела"));
-        searchPanel.add(receptionCodeTextField, "wrap");
+        searchPanel.add(receptionCodeSearchTextField);
+        searchPanel.add(applyReceptionCodeSearchButton);
+        searchPanel.add(resetReceptionCodeSearchButton, "wrap");
         searchPanel.add(new JLabel("Код Росреестра"));
-        searchPanel.add(rosreestrCodeTextField);
+        searchPanel.add(rosreestrCodeSearchTextField);
+        searchPanel.add(applyRosreestrCodeSearchButton);
+        searchPanel.add(resetRosreestrCodeSearchButton, "wrap");
 
 
 		JPanel filterPanel = new JPanel(new MigLayout("fill"));
@@ -126,6 +170,7 @@ public class ReestrView extends JFrame {
 		// кнопка добавления
 		final JButton addFilterButton = new JButton();
 		addFilterButton.setIcon(ResourcesUtil.getIcon("add.png"));
+        addFilterButton.setToolTipText("Добавить");
 		addFilterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				filtersPopupMenu.show(addFilterButton, addFilterButton.getWidth(), 0);
@@ -210,6 +255,7 @@ public class ReestrView extends JFrame {
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();
 		editFilterButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
+        editFilterButton.setToolTipText("Изменить");
 		editFilterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.editFilter(selectedFilterIndex);
@@ -220,6 +266,7 @@ public class ReestrView extends JFrame {
 		// кнопка удаления фильтра
 		JButton removeFilterButton = new JButton();
 		removeFilterButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+        removeFilterButton.setToolTipText("Удалить");
 		removeFilterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.removeFilter(selectedFilterIndex);
@@ -231,6 +278,8 @@ public class ReestrView extends JFrame {
 		resetFiltersButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				controller.resetFilters();
+                receptionCodeSearchTextField.setText("");
+                rosreestrCodeSearchTextField.setText("");
 			}
 		});
 
@@ -246,7 +295,9 @@ public class ReestrView extends JFrame {
 		});
 
         /// Перечитать из БД и применить фильтры
-        JButton readFromDBButton = new JButton("Перечитать из БД");
+        JButton readFromDBButton = new JButton("Перечитать");
+        readFromDBButton.setIcon(ResourcesUtil.getIcon("database_refresh.png"));
+        readFromDBButton.setToolTipText("Перечитать из базы данных");
         readFromDBButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -283,7 +334,7 @@ public class ReestrView extends JFrame {
 		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
 
 		final JButton columnsButton = new JButton();
-		columnsButton.setIcon(ResourcesUtil.getIcon("bullet_wrench.png"));
+		columnsButton.setIcon(ResourcesUtil.getIcon("wrench.png"));
 		columnsButton.setToolTipText("Изменить набор отображаемых колонок");
 		columnsButton.setPreferredSize(new Dimension(16,16));
 		columnsButton.addActionListener(new ActionListener() {

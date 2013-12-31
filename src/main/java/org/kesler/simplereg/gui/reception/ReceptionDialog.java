@@ -52,6 +52,7 @@ public class ReceptionDialog extends AbstractDialog {
 	private JComboBox statusesComboBox;
 	private JButton saveNewReceptionStatusButton;
     private JButton okButton;
+    private JButton cancelButton;
 
 	private ReceptionStatus currentReceptionStatus = null;
 	private ReceptionStatus newReceptionStatus = null;
@@ -180,13 +181,15 @@ public class ReceptionDialog extends AbstractDialog {
 			}
 		});
 
-        JButton cancelButton = new JButton("Отмена");
+        cancelButton = new JButton("Отмена");
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 result = CANCEL;
+                setVisible(false);
             }
         });
+        cancelButton.setVisible(false);
 
 		buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
@@ -209,6 +212,7 @@ public class ReceptionDialog extends AbstractDialog {
 		statusChanged = false;
 		saveNewReceptionStatusButton.setEnabled(false);
         okButton.setText("Сохранить");
+        cancelButton.setVisible(true);
         result = OK;
 	}
 

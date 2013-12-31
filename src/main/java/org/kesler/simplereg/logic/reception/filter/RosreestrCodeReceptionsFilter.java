@@ -4,19 +4,19 @@ import org.kesler.simplereg.logic.Reception;
 
 public class RosreestrCodeReceptionsFilter implements ReceptionsFilter {
 
-    private String filterRosreestrCode;
+    private String rosreestrCodeFilter;
 
 
-    public RosreestrCodeReceptionsFilter(String filterRosreestrCode) {
-        this.filterRosreestrCode = filterRosreestrCode;
+    public RosreestrCodeReceptionsFilter(String rosreestrCodeFilter) {
+        this.rosreestrCodeFilter = rosreestrCodeFilter;
     }
 
     public String getRosreestrCode() {
-        return filterRosreestrCode;
+        return rosreestrCodeFilter;
     }
 
     public void setRosreestrCode(String filterRosreestrCode) {
-        this.filterRosreestrCode = filterRosreestrCode;
+        this.rosreestrCodeFilter = filterRosreestrCode;
     }
 
     @Override
@@ -27,7 +27,8 @@ public class RosreestrCodeReceptionsFilter implements ReceptionsFilter {
 
         boolean fit = false;
 
-        if (reception.getRosreestrCode().toLowerCase().contains(filterRosreestrCode.toLowerCase())) {
+        String rosreestrCode = reception.getRosreestrCode();
+        if (rosreestrCode != null && rosreestrCode.toLowerCase().contains(rosreestrCodeFilter.toLowerCase())) {
             fit = true;
         }
 
@@ -37,7 +38,7 @@ public class RosreestrCodeReceptionsFilter implements ReceptionsFilter {
     @Override
     public String toString() {
 
-        String filterString  = "По коду Росреестра: (" + filterRosreestrCode + ")";
+        String filterString  = "По коду Росреестра: (" + rosreestrCodeFilter + ")";
 
         return filterString;
 

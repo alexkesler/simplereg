@@ -86,15 +86,25 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 
 	public void searchByReceptionCode(String receptionCodeString) {
-        if (!receptionCodeString.isEmpty())
+        if (!receptionCodeString.isEmpty()) {
             filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
-        else
+            view.getFilterListModel().filterAdded(0);
+        } else {
             filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE);
+            view.getFilterListModel().filterRemoved(0);
+        }
         applyFilters();
 	}
 
     public void searchByRosreestrCode(String rosreestrCodeString) {
-        filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
+        if (!rosreestrCodeString.isEmpty()) {
+            filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
+            view.getFilterListModel().filterAdded(0);
+        } else {
+            filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
+            view.getFilterListModel().filterRemoved(0);
+        }
+
         applyFilters();
     }
 
