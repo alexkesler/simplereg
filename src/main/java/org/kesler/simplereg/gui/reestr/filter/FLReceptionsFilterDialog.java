@@ -18,12 +18,12 @@ public class FLReceptionsFilterDialog extends ReceptionsFilterDialog {
 
     public FLReceptionsFilterDialog(JFrame frame) {
         super(frame, "Фильтр по физ. лицу");
-        setSize(150,100);
+        setSize(250,100);
     }
 
     public FLReceptionsFilterDialog(JFrame frame, FLReceptionsFilter filter) {
         super(frame, "Фильтр по физ. лицу", filter);
-        setSize(150,100);
+        setSize(250,100);
     }
 
     @Override
