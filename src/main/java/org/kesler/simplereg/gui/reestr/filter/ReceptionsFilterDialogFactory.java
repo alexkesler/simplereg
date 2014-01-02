@@ -13,9 +13,18 @@ import org.kesler.simplereg.logic.reception.filter.ServiceReceptionsFilter;
 import org.kesler.simplereg.logic.reception.filter.OperatorReceptionsFilter;
 import org.kesler.simplereg.logic.reception.filter.ToIssueDateReceptionsFilter;
 import org.kesler.simplereg.logic.reception.filter.ResultInMFCReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.FLReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.ULReceptionsFilter;
+
 
 public abstract class ReceptionsFilterDialogFactory {
-	
+
+    /**
+     * Создает диалог создания нового фильтра
+     * @param view родительский вид
+     * @param filterEnum тип диалога
+     * @return  диалог создания фильтра
+     */
 	public static ReceptionsFilterDialog createDialog(JFrame view, ReceptionsFiltersEnum filterEnum) {
 		ReceptionsFilterDialog receptionsFilterDialog = null;
 		/// Создаем диалог на основнии сведений о необходимом типе диалога
@@ -23,6 +32,12 @@ public abstract class ReceptionsFilterDialogFactory {
 			case OPEN_DATE:
 				receptionsFilterDialog = new OpenDateReceptionsFilterDialog(view);
 			break;
+            case FL:
+                receptionsFilterDialog = new FLReceptionsFilterDialog(view);
+                break;
+            case UL:
+                receptionsFilterDialog = new ULReceptionsFilterDialog(view);
+                break;
 			case FILIAL:
 				receptionsFilterDialog = new FilialReceptionsFilterDialog(view);
 			break;
@@ -51,9 +66,12 @@ public abstract class ReceptionsFilterDialogFactory {
 		return receptionsFilterDialog;
 	}
 
-	/**
-	* Фильтр по дате открытия
-	*/
+    /**
+     * Создает диалог редактирования фильтра
+     * @param view
+     * @param receptionsFilter
+     * @return
+     */
 	public static ReceptionsFilterDialog createDialog(JFrame view, ReceptionsFilter receptionsFilter) {
 
 		ReceptionsFilterDialog receptionsFilterDialog = null;
@@ -74,7 +92,17 @@ public abstract class ReceptionsFilterDialogFactory {
 			FilialReceptionsFilter filialReceptionsFilter = (FilialReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new FilialReceptionsFilterDialog(view, filialReceptionsFilter);
 
-		} else if (receptionsFilter instanceof StatusReceptionsFilter) { // Фильтр по состоянию
+        } else if (receptionsFilter instanceof FLReceptionsFilter) { // Фильтр по филиалу
+
+            FLReceptionsFilter flReceptionsFilter = (FLReceptionsFilter) receptionsFilter;
+            receptionsFilterDialog = new FLReceptionsFilterDialog(view, flReceptionsFilter);
+
+        } else if (receptionsFilter instanceof ULReceptionsFilter) { // Фильтр по филиалу
+
+            ULReceptionsFilter ulReceptionsFilter = (ULReceptionsFilter) receptionsFilter;
+            receptionsFilterDialog = new ULReceptionsFilterDialog(view, ulReceptionsFilter);
+
+        } else if (receptionsFilter instanceof StatusReceptionsFilter) { // Фильтр по состоянию
 
 			StatusReceptionsFilter statusReceptionsFilter = (StatusReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new StatusReceptionsFilterDialog(view, statusReceptionsFilter);

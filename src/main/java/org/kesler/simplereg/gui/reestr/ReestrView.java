@@ -225,6 +225,23 @@ public class ReestrView extends JFrame {
 			}
 		});
 
+        // Пункт меню - добавление фильтра по операторам
+        JMenuItem flMenuItem = new JMenuItem("По физ лицу");
+        flMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(ReceptionsFiltersEnum.FL);
+            }
+        });
+
+
+        // Пункт меню - добавление фильтра по операторам
+        JMenuItem ulMenuItem = new JMenuItem("По юр лицу");
+        ulMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(ReceptionsFiltersEnum.UL);
+            }
+        });
+
 		// Пункт меню - добавление фильтра по дате на выдачу результата
 		JMenuItem toIssueDateFilterMenuItem = new JMenuItem("По дате на выдачу");
 		toIssueDateFilterMenuItem.addActionListener(new ActionListener() {
@@ -249,6 +266,8 @@ public class ReestrView extends JFrame {
 		filtersPopupMenu.add(statusFilterMenuItem);
 		filtersPopupMenu.add(serviceFilterMenuItem);
 		filtersPopupMenu.add(operatorFilterMenuItem);
+        filtersPopupMenu.add(flMenuItem);
+        filtersPopupMenu.add(ulMenuItem);
 		filtersPopupMenu.add(toIssueDateFilterMenuItem);
 		filtersPopupMenu.add(resultInMFCFilterMenuItem);
 
