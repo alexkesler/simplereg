@@ -9,7 +9,7 @@ public interface ReceptionDAO extends DAOObservable{
 	public void addReception(Reception r);
 	public void updateReception(Reception r);
 	public Reception getReceptionById(Long id);
-	public List getAllReceptions();
-	// public List getReceptionsByOpenDate(Date from, Date to);
+	public List<Reception> getAllReceptions();
+	public List<Reception> getReceptionsByOpenDate(Date from, Date to);
 	public void removeReception(Reception r);
 }

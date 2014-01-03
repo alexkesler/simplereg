@@ -1,12 +1,14 @@
 package org.kesler.simplereg.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
 
+import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.dao.ReceptionDAO;
@@ -108,7 +110,31 @@ public class ReceptionDAOImpl implements ReceptionDAO {
 		return  receptions;
 	}
 
-	public void removeReception(Reception reception) {
+    public List<Reception> getReceptionsByOpenDate(Date beginDate, Date endDate) {
+        Session session = null;
+        List<Reception> receptions = new ArrayList<Reception>();
+        try {
+            notifyListeners(DAOState.CONNECTING);
+            session = HibernateUtil.getSessionFactory().openSession();
+            notifyListeners(DAOState.READING);
+            receptions = session.createCriteria(Reception.class)
+                                                .add(Restrictions.between("openDate",beginDate,endDate))
+                                                .list();
+            notifyListeners(DAOState.READY);
+        } catch (HibernateException he) {
+            System.err.println("Error while reading receptions");
+            he.printStackTrace();
+            notifyListeners(DAOState.ERROR);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return  receptions;
+    }
+
+
+    public void removeReception(Reception reception) {
 		Session session = null;
 		try {
 			notifyListeners(DAOState.CONNECTING);

@@ -1,10 +1,9 @@
 package org.kesler.simplereg.logic.reception;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-
-import java.sql.SQLException;
 
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.dao.DAOFactory;
@@ -61,7 +60,13 @@ public class ReceptionsModel implements DAOListener{
 
 	// читаем данные из БД
 	public void readReceptions() {
-		allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
+        Date fromOpenDate = filtersModel.getFromOpenDate();
+        Date toOpenDate = filtersModel.getToOpenDate();
+        if (fromOpenDate != null || toOpenDate != null) {
+            allReceptions = DAOFactory.getInstance().getReceptionDAO().getReceptionsByOpenDate(fromOpenDate,toOpenDate);
+        } else {
+            allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
+        }
 		notifyListeners(ModelState.UPDATED);
 	}
 

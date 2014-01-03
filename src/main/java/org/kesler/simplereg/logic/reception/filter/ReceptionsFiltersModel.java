@@ -1,8 +1,6 @@
 package org.kesler.simplereg.logic.reception.filter;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ReceptionsFiltersModel {
 
@@ -10,6 +8,7 @@ public class ReceptionsFiltersModel {
 
     public ReceptionsFiltersModel() {
         filters = new ArrayList<ReceptionsFilter>();
+        initFilters(); // Ограничиваем список закружаемых из БД приемов последним месяцем (по умолчанию)
     }
 
     public List<ReceptionsFilter> getFilters() {
@@ -66,6 +65,46 @@ public class ReceptionsFiltersModel {
 
     public void resetFilters() {
         filters = new ArrayList<ReceptionsFilter>();
+    }
+
+    public Date getFromOpenDate () {
+        Date fromOpenDate = null;
+
+        for (ReceptionsFilter filter: filters) {
+            if (filter instanceof OpenDateReceptionsFilter) {
+                OpenDateReceptionsFilter openDateFilter = (OpenDateReceptionsFilter) filter;
+                Date filterFromOpenDate =  openDateFilter.getFromDate();
+                if (fromOpenDate == null || (fromOpenDate != null && filterFromOpenDate != null && fromOpenDate.getTime() < filterFromOpenDate.getTime()) )  {
+                    fromOpenDate = filterFromOpenDate;
+                }
+
+            }
+        }
+
+        return fromOpenDate;
+    }
+    public Date getToOpenDate () {
+        Date toOpenDate = null;
+
+        for (ReceptionsFilter filter: filters) {
+            if (filter instanceof OpenDateReceptionsFilter) {
+                OpenDateReceptionsFilter openDateFilter = (OpenDateReceptionsFilter) filter;
+                Date filterToOpenDate =  openDateFilter.getToDate();
+                if (toOpenDate == null || (toOpenDate != null && filterToOpenDate != null && toOpenDate.getTime() > filterToOpenDate.getTime()) )
+                    toOpenDate = filterToOpenDate;
+            }
+        }
+
+        return toOpenDate;
+    }
+
+    private void initFilters() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.MONTH,-1);
+        Date fromDate = calendar.getTime();
+        Date toDate = new Date();
+        ReceptionsFilter openDateFilter = new OpenDateReceptionsFilter(fromDate, toDate);
+        filters.add(openDateFilter);
     }
 
 }
