@@ -102,15 +102,20 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 
 
 	public Service addSubService(Service parentService) {
-		Service newService = null;
 
-		ServiceDialog serviceDialog = new ServiceDialog(dialog); // вызываем диалог создания услуги
+        Service newService = new Service();
+        newService.setParentService(parentService); // назначаем ей родительскую услугу
+        newService.setCode(parentService.getCode());
+        newService.setEnabled(true);
+
+		ServiceDialog serviceDialog = new ServiceDialog(dialog, newService); // вызываем диалог создания услуги
 		serviceDialog.setVisible(true);
 		if (serviceDialog.getResult() == ServiceDialog.OK) {
-			newService = serviceDialog.getService();    // получаем услугу с наименованием и признаком действующей
-			newService.setParentService(parentService); // назначаем ей родительскую услугу
-			model.addService(newService);               // сохраняем услугу в базу	
-		} 
+//			newService = serviceDialog.getService();    // получаем услугу с наименованием и признаком действующей
+			model.addService(newService);               // сохраняем услугу в базу
+		}  else {
+            newService = null;
+        }
 
 		// Освобождаем ресурсы
 		serviceDialog.dispose();
@@ -137,7 +142,7 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 		serviceDialog.dispose();
 		serviceDialog = null;
 
-		return true;
+		return result;
 	}
 
 	public void removeService(Service service) {

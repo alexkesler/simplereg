@@ -21,12 +21,9 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 
 import org.kesler.simplereg.dao.AbstractEntity;
-import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.Applicator;
-import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
-import org.kesler.simplereg.logic.RealtyObject;
-import org.kesler.simplereg.logic.util.CounterUtil;
+import org.kesler.simplereg.util.Counter;
+import org.kesler.simplereg.util.CounterUtil;
 
 /**
 * Класс предсталяет сущность приема заявителей
@@ -40,6 +37,9 @@ public class Reception extends AbstractEntity{
 	
 	@Column(name="receptionCode", length=25)
 	private String receptionCode;
+
+    @Column(name = "receptionCodeNum")
+    private Integer receptionCodeNum;
 
 	@ManyToOne
 	@JoinColumn(name="ServiceID")
@@ -84,7 +84,7 @@ public class Reception extends AbstractEntity{
 
 
 	public Reception() {
-		// for Hibernate
+
 	}
 
 	public Reception(Service service, List<Applicator> applicators, Operator operator, Date openDate) {
@@ -95,10 +95,13 @@ public class Reception extends AbstractEntity{
 	}
 
 	public void generateReceptionCode() {
-		String operatorCode = "--";
+		String serviceCode = "----";
+        if (service!=null) serviceCode = service.getCode();
+
+        String operatorCode = "--";
 		if (operator!=null) operatorCode = operator.getCode();
-		int count = CounterUtil.getNextCount();
-		String generatedCode = "07-11/1/" + filialCode + "-" + operatorCode + "/" + count;
+//		int count = CounterUtil.getNextCount();
+		String generatedCode = serviceCode + "/" + filialCode + "-" + operatorCode + "/" + receptionCodeNum;
 		receptionCode = generatedCode;
 	}
 
@@ -227,6 +230,10 @@ public class Reception extends AbstractEntity{
 	public void setReceptionCode(String receptionCode) {
 		this.receptionCode = receptionCode;
 	}
+
+    public Integer getReceptionCodeNum() {return receptionCodeNum;}
+
+    public void setReceptionCodeNum(Integer receptionCodeNum) {this.receptionCodeNum = receptionCodeNum;}
 
 	public Boolean isResultInMFC() {
 		return resultInMFC;

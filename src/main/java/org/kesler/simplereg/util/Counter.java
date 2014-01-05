@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic.util;
+package org.kesler.simplereg.util;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

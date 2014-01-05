@@ -10,7 +10,7 @@ import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
-import org.kesler.simplereg.logic.util.Counter;
+import org.kesler.simplereg.util.Counter;
 
 public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;

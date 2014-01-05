@@ -1,13 +1,6 @@
 package org.kesler.simplereg.gui.services;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -28,6 +21,7 @@ public class ServiceDialog extends JDialog {
 
 	private Service service;
 
+    private JTextField codeTextField;
 	private JTextArea nameTextArea;
 	private JCheckBox enabledCheckBox;
 
@@ -67,6 +61,8 @@ public class ServiceDialog extends JDialog {
 		// Панель данных
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
+        codeTextField = new JTextField(10);
+
 		nameTextArea = new JTextArea();
 		nameTextArea.setLineWrap(true);
 		nameTextArea.setWrapStyleWord(true);
@@ -75,9 +71,10 @@ public class ServiceDialog extends JDialog {
 
 		enabledCheckBox = new JCheckBox("Действующая");
 
-
+        dataPanel.add(new JLabel("Номер соглашения"));
+        dataPanel.add(codeTextField, "wrap");
 		dataPanel.add(new JLabel("Наименование: "), "wrap");
-		dataPanel.add(nameTextAreaScrollPane, "push, grow, wrap");
+		dataPanel.add(nameTextAreaScrollPane, "span, pushy, grow");
 		dataPanel.add(enabledCheckBox);
 
 		// Панель кнопок
@@ -123,21 +120,29 @@ public class ServiceDialog extends JDialog {
 	}
 
 	private void loadGUIFromService() {
-		String name = service.getName();
-		if (name == null) {
-			name = "";
-		}
+
+        String code = service.getCode();
+        if(code == null) code = "";
+
+        codeTextField.setText(code);
+
+
+        String name = service.getName();
+		if (name == null) name = "";
+
 		nameTextArea.setText(name);
 
 		Boolean enabled = service.getEnabled();
-		if (enabled == null) {
-			enabled = new Boolean(false);
-		}
+		if (enabled == null) enabled = false;
+
 		enabledCheckBox.setSelected(enabled);
 	}
 
 	private boolean saveServiceFromGUI() {
-		
+
+        String code = codeTextField.getText();
+        service.setCode(code);
+
 		String name = nameTextArea.getText();
 		if (!name.isEmpty()) {
 			service.setName(name);

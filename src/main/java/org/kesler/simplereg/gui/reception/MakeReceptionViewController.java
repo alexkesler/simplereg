@@ -26,6 +26,7 @@ import org.kesler.simplereg.export.RosReestrReceptionPrinter;
 
 
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.util.CounterUtil;
 import org.kesler.simplereg.util.OptionsUtil;
 
 public class MakeReceptionViewController {
@@ -122,6 +123,10 @@ public class MakeReceptionViewController {
 		// Присваиваем номер филиала
 		reception.setFilialCode(OptionsUtil.getOption("reg.filial"));
 
+        // Генерим уникальный номер
+        int currentCount = CounterUtil.getNextCount();
+        reception.setReceptionCodeNum(currentCount);
+
 		// Генерируем код дела
 		reception.generateReceptionCode();
 
@@ -180,9 +185,15 @@ public class MakeReceptionViewController {
 		reception.setReceptionCode(receptionCode);
 	}
 
+    void regenerateReceptionCode() {
+        reception.generateReceptionCode();
+        viewState.updatePanelData();
+    }
+
 	void selectService() {
 		Service service = ServicesDialogController.getInstance().openSelectDialog(view);	
-		reception.setService(service);	
+		reception.setService(service);
+        reception.generateReceptionCode(); // заново генерируем код дела - уже с кодом услуги
 		viewState.updatePanelData();
 
 	}

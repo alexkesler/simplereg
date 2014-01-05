@@ -169,6 +169,17 @@ class MakeReceptionView extends JDialog{
 				}
 			});
 
+            JButton regenerateReceptionCodeButton = new JButton();
+            regenerateReceptionCodeButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
+            regenerateReceptionCodeButton.setToolTipText("Пересчитать код дела");
+            regenerateReceptionCodeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    controller.regenerateReceptionCode();
+                }
+            });
+
+
 
 			serviceNameLabel = new JLabel();
 			serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
@@ -187,8 +198,9 @@ class MakeReceptionView extends JDialog{
 				}
 			});
 
-			this.add(new JLabel("Код дела: "));
-			this.add(receptionCodeTextField, "wrap");
+			this.add(new JLabel("Код дела: "),"span, split 3");
+			this.add(receptionCodeTextField);
+            this.add(regenerateReceptionCodeButton, "wrap");
 			this.add(new JLabel("Услуга: "),"ay top");
 			this.add(serviceNameLabel,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");

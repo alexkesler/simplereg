@@ -12,6 +12,7 @@ import org.hibernate.envers.Audited;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.dao.EntityState;
+import org.kesler.simplereg.logic.reception.filter.StatusReceptionsFilter;
 
 
 @Entity
@@ -25,6 +26,9 @@ public class Service extends AbstractEntity {
 
 	@Column(name="Name", length=255)
 	private String name;
+
+    @Column(name="Code", length=50)
+    private String code;
 
 	@Column(name="Enabled")
 	private Boolean enabled;
@@ -67,6 +71,10 @@ public class Service extends AbstractEntity {
 		this.name = name;
 		state = EntityState.CHANGED;
 	}
+
+    public String getCode() { return code; }
+
+    public void setCode(String code) {this.code = code;}
 
 	public Boolean getEnabled() {
 		return enabled;
