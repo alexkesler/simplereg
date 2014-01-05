@@ -30,6 +30,7 @@ import javax.swing.table.AbstractTableModel;
 
 import com.alee.extended.statusbar.WebStatusBar;
 import com.alee.laf.label.WebLabel;
+import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 import org.kesler.simplereg.logic.Reception;
@@ -240,8 +241,9 @@ public class MainView extends JFrame {
 	}
 
     public void setConnected(boolean connected) {
-        if (connected) connectedLabel.setText("<html><p color='green'>Подключена</p></html>");
-        else connectedLabel.setText("<html><p color='red'>Нет подключения</p></html>");
+        String server = OptionsUtil.getOption("db.server");
+        if (connected) connectedLabel.setText("<html><span color = blue>" + server + "</span> <span color='green'> подключен</span></html>");
+        else connectedLabel.setText("<html><span color='red'>Нет подключения</span></html>");
     }
 
 	public void setReceptions(List<Reception> receptions) {
