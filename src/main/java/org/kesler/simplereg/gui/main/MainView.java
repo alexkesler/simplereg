@@ -1,18 +1,6 @@
 package org.kesler.simplereg.gui.main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.BorderFactory;
-import javax.swing.AbstractAction;
-import javax.swing.BoxLayout;
-import javax.swing.Box;
+import javax.swing.*;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -20,12 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 import java.awt.Image;
 
-import javax.swing.Action;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.text.SimpleDateFormat;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import com.alee.extended.statusbar.WebStatusBar;
@@ -49,6 +39,8 @@ public class MainView extends JFrame {
 	private List<MainViewListener> listeners;
 
     private WebLabel connectedLabel;
+
+    private Reception selectedReception;
 
 
 	public MainView(MainViewController controller) {
@@ -202,12 +194,43 @@ public class MainView extends JFrame {
 		buttonPanel.add(updateButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(200,0)));
 
+
 		// поправляем ширину столбцов, чтобы было покрасивей
-		JTable receptionTable = new JTable(tableModel);
+		final JTable receptionTable = new JTable(tableModel);
+        receptionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		receptionTable.getColumnModel().getColumn(0).setMinWidth(30);
 		receptionTable.getColumnModel().getColumn(0).setMaxWidth(40);
 		receptionTable.getColumnModel().getColumn(1).setMinWidth(100);
 		receptionTable.getColumnModel().getColumn(1).setMaxWidth(500);
+
+        receptionTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int selectedIndex = receptionTable.getSelectedRow();
+                selectedIndex =  receptionTable.convertRowIndexToModel(selectedIndex);
+                selectedReception = tableModel.getReception(selectedIndex);
+            }
+        });
+
+        final JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem editReceptionMenuItem = new JMenuItem("Изменить прием");
+        editReceptionMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.editReception(selectedReception);
+            }
+        });
+        popupMenu.add(editReceptionMenuItem);
+
+        receptionTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                // для текущего оператора вызываем меню
+                if (CurrentOperator.getInstance().getOperator().equals(selectedReception.getOperator()))
+                    popupMenu.show(receptionTable,e.getX(),e.getY());
+            }
+        });
 
 		JScrollPane receptionTableScrollPane = new JScrollPane(receptionTable);
 		JPanel tablePanel = new JPanel(new GridLayout(1,0));
@@ -226,7 +249,7 @@ public class MainView extends JFrame {
 
 		this.add(mainPanel, BorderLayout.CENTER);	
 	
-		this.setSize(800,600);
+		this.setSize(900,600);
 
 		this.setLocationRelativeTo(null);
 		// this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -250,6 +273,8 @@ public class MainView extends JFrame {
 		tableModel.setReceptions(receptions);
 	}
 
+    public
+
 	class MainViewReceptionsTableModel extends AbstractTableModel {
 		private List<Reception> receptions;
 
@@ -262,12 +287,16 @@ public class MainView extends JFrame {
 			fireTableDataChanged();
 		}
 
+        public Reception getReception(int index) {
+            return receptions.get(index);
+        }
+
 		public int getRowCount() {
 			return receptions.size();
 		}
 
 		public int getColumnCount() {
-			return 4;
+			return 5;
 		}
 
 		public String getColumnName(int column) {
@@ -275,11 +304,13 @@ public class MainView extends JFrame {
 			switch (column) {
 					case 0: columnName = "№";
 					break;
-					case 1: columnName = "Создано";
+                    case 1: columnName = "Код дела";
+                    break;
+					case 2: columnName = "Создано";
 					break;
-					case 2: columnName = "Заявители";
+					case 3: columnName = "Заявители";
 					break;
-					case 3: columnName = "Услуга";
+					case 4: columnName = "Услуга";
 					break;
 				}
 				return columnName;
@@ -294,11 +325,13 @@ public class MainView extends JFrame {
 				switch (column) {
 					case 0: value = reception.getId();
 					break;
-					case 1: value = dateFormat.format(reception.getOpenDate());
+                    case 1: value = reception.getReceptionCode();
+                    break;
+					case 2: value = dateFormat.format(reception.getOpenDate());
 					break;
-					case 2: value = reception.getApplicatorsNames();
+					case 3: value = reception.getApplicatorsNames();
 					break;
-					case 3: value = reception.getServiceName();
+					case 4: value = reception.getServiceName();
 					break;
 				}
 

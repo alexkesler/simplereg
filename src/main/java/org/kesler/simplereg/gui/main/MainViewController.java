@@ -151,7 +151,7 @@ public class MainViewController implements MainViewListener,
 			mainView.getActionByCommand(MainViewCommand.Logout).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
-			
+
 			if (operator.isControler()) { // для контролера
 				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
@@ -332,6 +332,10 @@ public class MainViewController implements MainViewListener,
 	private void openRealtyObjectTypes() {
 		RealtyTypeListDialogController.getInstance().showDialog(mainView);
 	}
+
+    public void editReception(Reception reception) {
+        MakeReceptionViewController.getInstance().openView(mainView, reception);
+    }
 
 
 	/**
