@@ -1,5 +1,7 @@
 package org.kesler.simplereg.gui.reestr.column;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -72,6 +74,19 @@ public class ReestrColumnsDialog extends JDialog {
 				}				
 			}
 		});
+        inactiveColumnsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getClickCount() == 2) {
+                    if (reestrColumns.activateColumn(selectedInactiveColumn)) {
+                        inactiveColumnsListModel.columnRemoved(selectedInactiveColumnIndex);
+                        activeColumnsListModel.columnAdded(reestrColumns.getActiveColumns().size()-1);
+                    }
+
+                }
+            }
+        });
 		JScrollPane inactiveColumnsListScrollPane = new JScrollPane(inactiveColumnsList);
 
 		// кнопка переноса неактивных полей в активные
@@ -124,6 +139,18 @@ public class ReestrColumnsDialog extends JDialog {
 				}				
 			}
 		});
+        activeColumnsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getClickCount()==2) {
+                    if (reestrColumns.deactivateColumn(selectedActiveColumn)) {
+                        activeColumnsListModel.columnRemoved(selectedActiveColumnIndex);
+                        inactiveColumnsListModel.columnAdded(reestrColumns.getInactiveColumns().size()-1);
+                    }
+                }
+            }
+        });
 		JScrollPane activeColumnsListScrollPane = new JScrollPane(activeColumnsList);
 
 

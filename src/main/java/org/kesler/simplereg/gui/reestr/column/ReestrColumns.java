@@ -33,6 +33,7 @@ public class ReestrColumns {
 		ReestrColumn byRecordReestrColumn = new ByRecordReestrColumn();
 		ReestrColumn receptionCodeReestrColumn = new ReceptionCodeReestrColumn();
 		ReestrColumn rosreestrCodeReestrColumn = new RosreestrCodeReestrColumn();
+        ReestrColumn realtyObjectReestrColumn = new RealtyObjectReestrColumn();
 		ReestrColumn resultInMFCReestrColumn = new ResultInMFCReestrColumn();
 
 
@@ -45,6 +46,7 @@ public class ReestrColumns {
 		allColumns.add(operatorReestrColumn);
 		allColumns.add(toIssueDateReestrColumn);
 		allColumns.add(rosreestrCodeReestrColumn);
+        allColumns.add(realtyObjectReestrColumn);
 		allColumns.add(resultInMFCReestrColumn);
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
@@ -66,6 +68,7 @@ public class ReestrColumns {
 		inactiveColumns.add(operatorReestrColumn);
 		inactiveColumns.add(toIssueDateReestrColumn);
 		inactiveColumns.add(rosreestrCodeReestrColumn);
+        inactiveColumns.add(realtyObjectReestrColumn);
 	}
 
 	public List<ReestrColumn> getAllColumns() {
