@@ -212,6 +212,9 @@ public class MainView extends JFrame {
             }
         });
 
+        receptionTable.getColumnModel().getColumn(5).setCellRenderer(new ButtonCellRenderer());
+        // receptionTable.setDefaultRenderer(JButton.class, new ButtonCellRenderer());
+
         final JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem editReceptionMenuItem = new JMenuItem("Изменить прием");
         editReceptionMenuItem.addActionListener(new ActionListener() {
@@ -243,8 +246,8 @@ public class MainView extends JFrame {
         statusBar.add(connectedLabel);
 
 
-		mainPanel.add(BorderLayout.CENTER,tablePanel);
-		mainPanel.add(BorderLayout.NORTH,buttonPanel);
+		mainPanel.add(BorderLayout.CENTER, tablePanel);
+		mainPanel.add(BorderLayout.NORTH, buttonPanel);
         mainPanel.add(BorderLayout.SOUTH, statusBar);
 
 		this.add(mainPanel, BorderLayout.CENTER);	
@@ -273,17 +276,18 @@ public class MainView extends JFrame {
 		tableModel.setReceptions(receptions);
 	}
 
-    public
-
 	class MainViewReceptionsTableModel extends AbstractTableModel {
 		private List<Reception> receptions;
+		private List<JButton> editButtons;
 
 		public MainViewReceptionsTableModel() {
 			this.receptions = new ArrayList<Reception>();
+			editButtons = new ArrayList<JButton>();
 		}
 
 		public void setReceptions(List<Reception> receptions) {
 			this.receptions = receptions;
+			createEditButtonsArray();
 			fireTableDataChanged();
 		}
 
@@ -296,7 +300,7 @@ public class MainView extends JFrame {
 		}
 
 		public int getColumnCount() {
-			return 5;
+			return 6;
 		}
 
 		public String getColumnName(int column) {
@@ -311,6 +315,8 @@ public class MainView extends JFrame {
 					case 3: columnName = "Заявители";
 					break;
 					case 4: columnName = "Услуга";
+					break;
+					case 5: columnName = "Ред";
 					break;
 				}
 				return columnName;
@@ -333,6 +339,8 @@ public class MainView extends JFrame {
 					break;
 					case 4: value = reception.getServiceName();
 					break;
+					case 5: value = editButtons.get(row);
+					break;
 				}
 
 			}
@@ -340,8 +348,44 @@ public class MainView extends JFrame {
 			return value;
 
 		}
+
+
+
+		private void createEditButtonsArray() {
+			editButtons = new ArrayList<JButton>();
+			for (int i=0; i < receptions.size(); i++) {
+				Reception reception = receptions.get(i);
+				JButton button = null;
+				if (reception.getOperator().equals(CurrentOperator.getInstance().getOperator())) {
+					button = new JButton("#");
+					button.addActionListener(new EditButtonActionListener());
+				} else {
+					button = new JButton("?");
+				}
+				editButtons.add(button);
+				
+			}
+		}
+
+
+		class EditButtonActionListener implements ActionListener {
+				public void actionPerformed(ActionEvent ev) {
+					controller.editReception(selectedReception);
+				}		
+		}
+
+
+
 	}
 
+	class ButtonCellRenderer implements javax.swing.table.TableCellRenderer {
+		public java.awt.Component getTableCellRendererComponent(JTable table,
+										Object button, boolean isSelected,
+										boolean hasFocus, int row, int column) {
+			JButton btn = (JButton) button;
+			return btn;
+		}
+	}
 
 	public Action getActionByCommand(MainViewCommand command) {
 		Action selectedAction = null;
@@ -363,6 +407,8 @@ public class MainView extends JFrame {
 			listener.performMainViewCommand(command);
 		}
 	}
+
+
 
 
 }
