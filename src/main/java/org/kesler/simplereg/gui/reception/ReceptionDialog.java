@@ -10,7 +10,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
@@ -21,15 +20,11 @@ import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.RealtyObject;
 
 import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
-import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
-
-
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
