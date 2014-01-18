@@ -1,26 +1,23 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JComboBox;
-import javax.swing.BorderFactory;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-import javax.swing.JOptionPane;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.reception.ReceptionStatusChange;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.RealtyObject;
 
@@ -50,6 +47,7 @@ public class ReceptionDialog extends AbstractDialog {
 	private JLabel realtyObjectLabel;
 	private JPanel applicatorsPanel;
 	private JComboBox statusesComboBox;
+    private ReceptionStatusChangesTableModel receptionStatusChangesTableModel;
 	private JButton saveNewReceptionStatusButton;
     private JButton okButton;
     private JButton cancelButton;
@@ -72,7 +70,7 @@ public class ReceptionDialog extends AbstractDialog {
 
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel dataPanel = new JPanel(new MigLayout("fillx, nogrid"));
+		JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
 
 		receptionCodeLabel = new JLabel();
 		byRecordLabel = new JLabel();
@@ -126,11 +124,14 @@ public class ReceptionDialog extends AbstractDialog {
 			}
 		});
 
-
+        receptionStatusChangesTableModel = new ReceptionStatusChangesTableModel();
+        JTable statusChangesTable = new JTable(receptionStatusChangesTableModel);
+        JScrollPane statusChangesTableScrollPane = new JScrollPane(statusChangesTable);
 
 
 
 		JButton editButton = new JButton("Изменить");
+        editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				MakeReceptionViewController.getInstance().openView(currentDialog, reception);
@@ -140,10 +141,11 @@ public class ReceptionDialog extends AbstractDialog {
 
 		// Собираем панель данных
 		dataPanel.add(new JLabel("Код запроса:"));
-		dataPanel.add(receptionCodeLabel);
-		dataPanel.add(byRecordLabel);
-		dataPanel.add(new JLabel("Код РосРеестра:"), "right");
-		dataPanel.add(rosreestrCodeLabel, "right, wrap");
+		dataPanel.add(receptionCodeLabel, "growx");
+        dataPanel.add(editButton, "right, wrap");
+        dataPanel.add(byRecordLabel, "wrap");
+        dataPanel.add(new JLabel("Код РосРеестра:"));
+		dataPanel.add(rosreestrCodeLabel, "wrap");
 		dataPanel.add(new JLabel("Услуга:"),"wrap");
 		dataPanel.add(serviceNameLabel,"growx, wrap");
 		dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
@@ -152,9 +154,10 @@ public class ReceptionDialog extends AbstractDialog {
 		dataPanel.add(applicatorsPanelScrollPane,"push, grow, wrap");
 		dataPanel.add(new JLabel("Состояние дела"), "right");
 		dataPanel.add(serviceInfoPanel,"growx, wrap");
-		dataPanel.add(statusesComboBox, "w 50");
+		dataPanel.add(statusesComboBox, "w 100");
 		dataPanel.add(saveNewReceptionStatusButton, "wrap");
-		dataPanel.add(editButton, "wrap, right");
+        dataPanel.add(statusChangesTableScrollPane, "growx, h 100, wrap");
+
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -180,6 +183,7 @@ public class ReceptionDialog extends AbstractDialog {
 				}
 			}
 		});
+        okButton.requestFocus();
 
         cancelButton = new JButton("Отмена");
         cancelButton.addActionListener(new ActionListener() {
@@ -200,13 +204,15 @@ public class ReceptionDialog extends AbstractDialog {
 
 
 		this.setContentPane(mainPanel);
-		this.setSize(600,450);
+		this.setSize(600,600);
 		this.setLocationRelativeTo(parentFrame);
 
 	}
 
 	private void saveStatus() {
 		reception.setStatus(newReceptionStatus);
+        receptionStatusChangesTableModel.update(); // обновляем табличку со статусами
+
 //		ReceptionsModel.getInstance().updateReception(reception);
 		currentReceptionStatus = newReceptionStatus;
 		statusChanged = false;
@@ -222,8 +228,8 @@ public class ReceptionDialog extends AbstractDialog {
 		if (receptionCode == null) receptionCode = "Не опр";
 		receptionCodeLabel.setText("<html><p color='blue'>" + receptionCode + "</p></html>");
 
-		String byRecord = "";
-		if (reception.isByRecord()!= null && reception.isByRecord()) byRecord = "По записи";
+		String byRecord = "По записи: нет";
+		if (reception.isByRecord()!= null && reception.isByRecord()) byRecord = "По записи: да";
 		byRecordLabel.setText(byRecord);
 
 		String rosreestrCode = reception.getRosreestrCode();
@@ -275,5 +281,69 @@ public class ReceptionDialog extends AbstractDialog {
 
 
 	}
+
+    class ReceptionStatusChangesTableModel extends AbstractTableModel {
+
+        private List<ReceptionStatusChange> statusChanges;
+
+        ReceptionStatusChangesTableModel() {
+            statusChanges = reception.getStatusChanges();
+        }
+
+        public void update() {
+            fireTableDataChanged();
+        }
+
+        @Override
+        public int getRowCount() {
+            return statusChanges.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 3;
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            String columnName = "Не  опр";
+
+            switch (column) {
+                case 0:
+                    columnName = "Состояние";
+                    break;
+                case 1:
+                    columnName = "Время установки";
+                    break;
+                case 2:
+                    columnName = "Кто установил";
+                    break;
+            }
+
+            return columnName;
+        }
+
+        @Override
+        public Object getValueAt(int row, int column) {
+            Object value = null;
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+            ReceptionStatusChange statusChange = statusChanges.get(row);
+            switch (column) {
+                case 0:
+                    value = statusChange.getStatus().getName();
+                    break;
+                case 1:
+                    value = dateFormat.format(statusChange.getChangeTime());
+                    break;
+                case 2:
+                    value = statusChange.getOperator().getShortFIO();
+            }
+
+            return value;
+        }
+
+    }
 
 }
