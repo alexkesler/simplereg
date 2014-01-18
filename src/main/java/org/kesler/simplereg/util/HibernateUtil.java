@@ -70,6 +70,7 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.simplereg.logic.Operator.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.Reception.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.reception.ReceptionStatus.class)
+                        .addAnnotatedClass(org.kesler.simplereg.logic.reception.ReceptionStatusChange.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.RealtyObject.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.realty.RealtyType.class)
 						.addAnnotatedClass(org.kesler.simplereg.util.Counter.class)

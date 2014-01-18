@@ -1,5 +1,6 @@
 package org.kesler.simplereg.logic;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
@@ -21,7 +22,9 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.envers.Audited;
 
 import org.kesler.simplereg.dao.AbstractEntity;
+import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
+import org.kesler.simplereg.logic.reception.ReceptionStatusChange;
 import org.kesler.simplereg.util.Counter;
 import org.kesler.simplereg.util.CounterUtil;
 
@@ -66,6 +69,11 @@ public class Reception extends AbstractEntity{
 	@JoinColumn(name="ReceptionStatusID")
 	private ReceptionStatus status;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception")
+    @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+    @Fetch(FetchMode.SUBSELECT)
+    private List<ReceptionStatusChange> statusChanges;
+
 	@Column(name="ByRecord")
 	private Boolean byRecord;
 
@@ -84,7 +92,8 @@ public class Reception extends AbstractEntity{
 
 
 	public Reception() {
-
+        applicators = new ArrayList<Applicator>();
+        statusChanges = new ArrayList<ReceptionStatusChange>();
 	}
 
 	public Reception(Service service, List<Applicator> applicators, Operator operator, Date openDate) {
@@ -189,7 +198,13 @@ public class Reception extends AbstractEntity{
 
 	public void setStatus(ReceptionStatus status) {
 		this.status = status;
+        // запоминаем изменение состояния
+        Operator currentOperator = CurrentOperator.getInstance().getOperator();
+        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, new Date(), currentOperator);
+        statusChanges.add(statusChange);
 	}
+
+    public List<ReceptionStatusChange> getStatusChanges() {return statusChanges;}
 
 	public String getStatusName() {
 		String statusName = "Не определено";
