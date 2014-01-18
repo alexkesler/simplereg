@@ -143,6 +143,7 @@ public class ReceptionDialog extends AbstractDialog {
 		dataPanel.add(new JLabel("Код запроса:"));
 		dataPanel.add(receptionCodeLabel, "growx");
         dataPanel.add(editButton, "right, wrap");
+        dataPanel.add(new JLabel("По записи: "));
         dataPanel.add(byRecordLabel, "wrap");
         dataPanel.add(new JLabel("Код РосРеестра:"));
 		dataPanel.add(rosreestrCodeLabel, "wrap");
@@ -228,8 +229,8 @@ public class ReceptionDialog extends AbstractDialog {
 		if (receptionCode == null) receptionCode = "Не опр";
 		receptionCodeLabel.setText("<html><p color='blue'>" + receptionCode + "</p></html>");
 
-		String byRecord = "По записи: нет";
-		if (reception.isByRecord()!= null && reception.isByRecord()) byRecord = "По записи: да";
+		String byRecord = "<html><p color='limegreen'>нет</p></html>";
+		if (reception.isByRecord()!= null && reception.isByRecord()) byRecord = "<html><p color='limegreen'>да</p></html>";
 		byRecordLabel.setText(byRecord);
 
 		String rosreestrCode = reception.getRosreestrCode();
