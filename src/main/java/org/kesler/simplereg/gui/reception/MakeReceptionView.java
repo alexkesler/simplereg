@@ -12,9 +12,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.table.AbstractTableModel;
 // import java.beans.PropertyChangeEvent;
 // import java.beans.PropertyChangeListener;
 
+import com.alee.laf.button.WebButton;
+import com.alee.managers.popup.PopupWay;
+import com.alee.managers.popup.WebButtonPopup;
 import net.miginfocom.swing.MigLayout;
 import com.alee.extended.date.WebDateField;
 
@@ -226,6 +230,7 @@ class MakeReceptionView extends JDialog{
 	class ApplicatorsPanel extends JPanel {
 		private JLabel serviceNameLabel;
 		private ApplicatorsListModel applicatorsListModel;
+        private LastApplicatorsListModel lastApplicatorsListModel;
 		private int selectedApplicatorIndex;
 
 		ApplicatorsPanel() {
@@ -303,10 +308,32 @@ class MakeReceptionView extends JDialog{
 				}
 			});
 
+            // Кнопка выбора недавних списков заявителей
+            WebButton selectApplicatorsFromLastReceptionsButton = new WebButton(ResourcesUtil.getIcon("book_previous.png"));
+            selectApplicatorsFromLastReceptionsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    controller.readLastReceptions();
+                }
+            });
+            WebButtonPopup selectApplicatorsFromLastReceptionPopup = new WebButtonPopup(selectApplicatorsFromLastReceptionsButton, PopupWay.downRight);
+
+            JPanel lastReceptionsPopupPanel = new JPanel(new MigLayout("fill"));
+            lastApplicatorsListModel = new LastApplicatorsListModel();
+            JList lastApplicatorsList = new JList(lastApplicatorsListModel);
+            JScrollPane lastApplicatorsListScrollPane = new JScrollPane(lastApplicatorsList,ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            lastReceptionsPopupPanel.add(lastApplicatorsListScrollPane,"grow");
+
+            selectApplicatorsFromLastReceptionPopup.setContent(lastReceptionsPopupPanel);
+
+
+
+
 
 			this.add(addButton,"split");
 			this.add(editButton);
-			this.add(deleteButton, "wrap");
+			this.add(deleteButton);
+            this.add(selectApplicatorsFromLastReceptionsButton, "wrap");
 
 		}
 
@@ -346,6 +373,33 @@ class MakeReceptionView extends JDialog{
 			}
 		}
 
+
+        class LastApplicatorsListModel extends AbstractListModel {
+            List<Reception> lastReceptions;
+            LastApplicatorsListModel() {
+                lastReceptions = new ArrayList<Reception>();
+            }
+
+            void setLastReceptions(List<Reception> lastReceptions) {
+                this.lastReceptions = lastReceptions;
+                fireContentsChanged(this,0,lastReceptions.size()-1);
+            }
+
+            @Override
+            public Object getElementAt(int index) {
+                return "<html>" + lastReceptions.get(index).getApplicatorsNames() + "</html>";
+            }
+
+            @Override
+            public int getSize() {
+                return lastReceptions.size();
+            }
+
+        }
+
+
+
+
 		////// Методы для установки и обновления содержимого ApplicatorsPanel
 
 		// Вызывается контроллером при добавлении заявителя
@@ -368,7 +422,12 @@ class MakeReceptionView extends JDialog{
 
 		void setServiceName(String serviceName) {
 			serviceNameLabel.setText("<html>" + serviceName + "</html>");
-		} 
+		}
+
+        void setLastReceptions(List<Reception> receptions) {
+            lastApplicatorsListModel.setLastReceptions(receptions);
+        }
+
 
 
 	}

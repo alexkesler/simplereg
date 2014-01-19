@@ -266,7 +266,11 @@ public class MakeReceptionViewController {
 		applicators.remove(index);
 		view.getApplicatorsPanel().applicatorRemoved(index);
 
-	} 
+	}
+
+    void readLastReceptions() {
+
+    }
 
 	/// блок ввода дополнительных данных по приему
 
