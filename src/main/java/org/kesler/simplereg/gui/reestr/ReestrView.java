@@ -160,6 +160,15 @@ public class ReestrView extends JFrame {
 				}				
 			}
 		});
+        filterList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (e.getClickCount()==2) {
+                    controller.editFilter(selectedFilterIndex);
+                }
+            }
+        });
 		JScrollPane filterListScrollPane = new JScrollPane(filterList);
 
 		////// кнопки управления набором фильтров
