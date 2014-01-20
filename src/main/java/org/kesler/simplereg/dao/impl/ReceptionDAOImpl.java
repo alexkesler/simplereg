@@ -120,6 +120,7 @@ public class ReceptionDAOImpl implements ReceptionDAO {
             receptions = session.createCriteria(Reception.class)
                                                 .add(Restrictions.between("openDate",beginDate,endDate))
                                                 .list();
+            System.out.println("----Receptions in DAO-----" + receptions.size());
             notifyListeners(DAOState.READY);
         } catch (HibernateException he) {
             System.err.println("Error while reading receptions");

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Proxy(lazy = false)
-@Table(name="ReceptionStatuses")
+@Table(name="ReceptionStatusChanges")
 public class ReceptionStatusChange extends AbstractEntity {
 
     @ManyToOne

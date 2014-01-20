@@ -184,7 +184,7 @@ public class MainViewController implements MainViewListener,
 
 	private void readReceptions() {
 		processDialog = new ProcessDialog(mainView);
-		receptionsModel.readReceptionsInSeparateThread();
+		receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
 
 	}
 
@@ -207,12 +207,16 @@ public class MainViewController implements MainViewListener,
 				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 			break;	
 			
-			case UPDATED:
-				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-				List<Reception> receptions = receptionsModel.getAllReceptions();
-				mainView.setReceptions(receptions);
-			break;
-			
+//			case UPDATED:
+//				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+//				mainView.setReceptions(receptionsModel.getAllReceptions());
+//			break;
+
+            case FILTERED:
+                if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
+                mainView.setReceptions(receptionsModel.getFilteredReceptions());
+                break;
+
 			case ERROR:
 				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
 				new InfoDialog(mainView, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();

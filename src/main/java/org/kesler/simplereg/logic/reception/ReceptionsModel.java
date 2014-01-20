@@ -1,8 +1,6 @@
 package org.kesler.simplereg.logic.reception;
 
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.Reception;
@@ -20,12 +18,15 @@ public class ReceptionsModel implements DAOListener{
     private ReceptionsFiltersModel filtersModel;
 	private List<Reception> allReceptions;
 	private List<Reception> filteredReceptions;
+    private List<Reception> lastReceptions;
 
 	private List<ReceptionsModelStateListener> listeners;
 
 	public ReceptionsModel() {
 		allReceptions = new ArrayList<Reception>();
 		filteredReceptions = new ArrayList<Reception>();
+        lastReceptions = new ArrayList<Reception>();
+
 		listeners = new ArrayList<ReceptionsModelStateListener>();
 		DAOFactory.getInstance().getReceptionDAO().addDAOListener(this);
 
@@ -52,10 +53,13 @@ public class ReceptionsModel implements DAOListener{
 		return allReceptions;
 	}
 
-
 	public List<Reception> getFilteredReceptions() {
 		return filteredReceptions;
 	}
+
+    public List<Reception> getLastReceptions() {
+        return lastReceptions;
+    }
 
 
 	// читаем данные из БД
@@ -67,6 +71,7 @@ public class ReceptionsModel implements DAOListener{
         } else {
             allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
         }
+        System.out.println("----Receptions in model----" + allReceptions.size());
 		notifyListeners(ModelState.UPDATED);
 	}
 
@@ -156,6 +161,17 @@ public class ReceptionsModel implements DAOListener{
         filterThread.start();
     }
 
+
+    /**
+     *
+     */
+    public void readLastReceptions() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.add(Calendar.HOUR, -2);
+        Date fromDate = calendar.getTime();
+        Date toDate = new Date();
+        lastReceptions = DAOFactory.getInstance().getReceptionDAO().getReceptionsByOpenDate(fromDate, toDate);
+    }
 
     /**
      * Сохраняет новый прием

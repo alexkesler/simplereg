@@ -310,19 +310,37 @@ class MakeReceptionView extends JDialog{
 
             // Кнопка выбора недавних списков заявителей
             WebButton selectApplicatorsFromLastReceptionsButton = new WebButton(ResourcesUtil.getIcon("book_previous.png"));
+            selectApplicatorsFromLastReceptionsButton.setToolTipText("Выбрать из недавних");
             selectApplicatorsFromLastReceptionsButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     controller.readLastReceptions();
                 }
             });
-            WebButtonPopup selectApplicatorsFromLastReceptionPopup = new WebButtonPopup(selectApplicatorsFromLastReceptionsButton, PopupWay.downRight);
+            final WebButtonPopup selectApplicatorsFromLastReceptionPopup = new WebButtonPopup(selectApplicatorsFromLastReceptionsButton, PopupWay.downRight);
 
             JPanel lastReceptionsPopupPanel = new JPanel(new MigLayout("fill"));
             lastApplicatorsListModel = new LastApplicatorsListModel();
-            JList lastApplicatorsList = new JList(lastApplicatorsListModel);
-            JScrollPane lastApplicatorsListScrollPane = new JScrollPane(lastApplicatorsList,ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            lastReceptionsPopupPanel.add(lastApplicatorsListScrollPane,"grow");
+            final JList lastApplicatorsList = new JList(lastApplicatorsListModel);
+            lastApplicatorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            JScrollPane lastApplicatorsListScrollPane = new JScrollPane(lastApplicatorsList);
+//            lastApplicatorsListScrollPane.setSize(300,200);
+
+            JButton selectFromLastReceptionsButton = new JButton("Выбрать");
+            selectFromLastReceptionsButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int selectedIndex = lastApplicatorsList.getSelectedIndex();
+                    if (selectedIndex != -1) {
+                        Reception selectedReception = lastApplicatorsListModel.getLastReceptions().get(selectedIndex);
+                        controller.copyApplicatorsFromReception(selectedReception);
+                        selectApplicatorsFromLastReceptionPopup.hidePopup();
+                    }
+                }
+            });
+
+            lastReceptionsPopupPanel.add(lastApplicatorsListScrollPane,"w 300, h 200, wrap");
+            lastReceptionsPopupPanel.add(selectFromLastReceptionsButton);
 
             selectApplicatorsFromLastReceptionPopup.setContent(lastReceptionsPopupPanel);
 
@@ -383,6 +401,10 @@ class MakeReceptionView extends JDialog{
             void setLastReceptions(List<Reception> lastReceptions) {
                 this.lastReceptions = lastReceptions;
                 fireContentsChanged(this,0,lastReceptions.size()-1);
+            }
+
+            List<Reception> getLastReceptions() {
+                return lastReceptions;
             }
 
             @Override

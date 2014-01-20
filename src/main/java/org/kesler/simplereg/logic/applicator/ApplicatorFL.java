@@ -92,4 +92,12 @@ public class ApplicatorFL extends Applicator {
 		if (repres!=null) represFIO = " (" + repres.getFIO() + ")";
 		return applicatorFIO + represFIO;
 	}
+
+    @Override
+    public Applicator copyThis() {
+        ApplicatorFL newApplicator = new ApplicatorFL();
+        newApplicator.setFL(fl);
+        newApplicator.setRepres(repres);
+        return newApplicator;
+    }
 }

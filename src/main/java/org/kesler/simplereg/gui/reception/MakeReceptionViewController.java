@@ -269,7 +269,21 @@ public class MakeReceptionViewController {
 	}
 
     void readLastReceptions() {
+        ReceptionsModel lastReceptionsModel = new ReceptionsModel();
+        lastReceptionsModel.readLastReceptions();
+        view.getApplicatorsPanel().setLastReceptions(lastReceptionsModel.getLastReceptions());
+    }
 
+    void copyApplicatorsFromReception(Reception receptionToCopy) {
+        List<Applicator> applicatorsToCopy = receptionToCopy.getApplicators();
+        List<Applicator> copiedApplicators = new ArrayList<Applicator>();
+        for(Applicator applicatorToCopy: applicatorsToCopy) {
+            Applicator copiedApplicator = applicatorToCopy.copyThis();
+            copiedApplicator.setReception(reception);
+            copiedApplicators.add(copiedApplicator);
+        }
+        reception.setApplicators(copiedApplicators);
+        viewState.updatePanelData();
     }
 
 	/// блок ввода дополнительных данных по приему

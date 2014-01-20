@@ -84,4 +84,12 @@ public class ApplicatorUL extends Applicator {
 		return ulShortName + represFIO;
 
 	}
+
+    @Override
+    public Applicator copyThis() {
+        ApplicatorUL newAppilcatorUL = new ApplicatorUL();
+        newAppilcatorUL.setUL(ul);
+        newAppilcatorUL.setRepres(repres);
+        return newAppilcatorUL;
+    }
 }

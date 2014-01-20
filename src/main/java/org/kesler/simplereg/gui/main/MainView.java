@@ -207,8 +207,10 @@ public class MainView extends JFrame {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int selectedIndex = receptionTable.getSelectedRow();
-                selectedIndex =  receptionTable.convertRowIndexToModel(selectedIndex);
-                selectedReception = tableModel.getReception(selectedIndex);
+                if (selectedIndex != -1) {
+                    selectedIndex =  receptionTable.convertRowIndexToModel(selectedIndex);
+                    selectedReception = tableModel.getReception(selectedIndex);
+                }
             }
         });
 
