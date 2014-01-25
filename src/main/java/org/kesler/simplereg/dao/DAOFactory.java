@@ -3,12 +3,12 @@ package org.kesler.simplereg.dao;
 import org.kesler.simplereg.dao.impl.ServiceDAOImpl;	
 import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
 import org.kesler.simplereg.dao.impl.GenericDAOImpl;
-import org.kesler.simplereg.dao.impl.FLDAOImpl;
-import org.kesler.simplereg.dao.impl.ULDAOImpl;
-import org.kesler.simplereg.dao.impl.ReceptionStatusDAOImpl;
 
 import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.FL;
+import org.kesler.simplereg.logic.UL;
 import org.kesler.simplereg.logic.RealtyObject;
+import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.realty.RealtyType;
 import org.kesler.simplereg.util.Counter;
 
@@ -16,9 +16,9 @@ public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
 	private static GenericDAO<Operator> operatorDAO = null;
 	private static ReceptionDAO receptionDAO = null;
-	private static FLDAO flDAO = null;
-	private static ULDAO ulDAO = null;
-	private static ReceptionStatusDAO receptionStatusDAO = null;
+	private static GenericDAO<FL> flDAO = null;
+	private static GenericDAO<UL> ulDAO = null;
+	private static GenericDAO<ReceptionStatus> receptionStatusDAO = null;
 	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
 	private static GenericDAO<RealtyType> realtyTypeDAO = null;
 	private static GenericDAO<Counter> counterDAO = null;
@@ -54,23 +54,23 @@ public class DAOFactory {
 		return receptionDAO;
 	}
 
-	public FLDAO getFLDAO() {
+	public GenericDAO<FL> getFLDAO() {
 		if (flDAO == null) {
-			flDAO = new FLDAOImpl();
+			flDAO = new GenericDAOImpl<FL>(FL.class);
 		}
 		return flDAO;
 	}
 
-	public ULDAO getULDAO() {
+	public GenericDAO<UL> getULDAO() {
 		if (ulDAO == null) {
-			ulDAO = new ULDAOImpl();
+			ulDAO = new GenericDAOImpl<UL>(UL.class);
 		}
 		return ulDAO;
 	}
 
-	public ReceptionStatusDAO getReceptionStatusDAO() {
+	public GenericDAO<ReceptionStatus> getReceptionStatusDAO() {
 		if (receptionStatusDAO == null) {
-			receptionStatusDAO = new ReceptionStatusDAOImpl();
+			receptionStatusDAO = new GenericDAOImpl<ReceptionStatus>(ReceptionStatus.class);
 		}
 		return receptionStatusDAO;
 	}

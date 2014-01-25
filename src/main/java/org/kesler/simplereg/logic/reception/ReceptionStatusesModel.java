@@ -28,7 +28,7 @@ public class ReceptionStatusesModel {
 
 
 	private void readFromDB() {
-		receptionStatuses = DAOFactory.getInstance().getReceptionStatusDAO().getAllReceptionStatuses();
+		receptionStatuses = DAOFactory.getInstance().getReceptionStatusDAO().getAllItems();
 		checkDefaultStatus();
 	}
 
@@ -37,7 +37,7 @@ public class ReceptionStatusesModel {
 		if (receptionStatuses == null) {
 			readFromDB();
 		}
-		Long id = DAOFactory.getInstance().getReceptionStatusDAO().addReceptionStatus(receptionStatus);
+		Long id = DAOFactory.getInstance().getReceptionStatusDAO().addItem(receptionStatus);
 		if (id != null) {
 			receptionStatuses.add(receptionStatus);
 			return receptionStatuses.size()-1;
@@ -48,11 +48,11 @@ public class ReceptionStatusesModel {
 	}
 
 	public void updateReceptionStatus(ReceptionStatus receptionStatus) {
-		DAOFactory.getInstance().getReceptionStatusDAO().updateReceptionStatus(receptionStatus);
+		DAOFactory.getInstance().getReceptionStatusDAO().updateItem(receptionStatus);
 	}
 
 	public void removeReceptionStatus(ReceptionStatus receptionStatus) {
-		DAOFactory.getInstance().getReceptionStatusDAO().removeReceptionStatus(receptionStatus);
+		DAOFactory.getInstance().getReceptionStatusDAO().removeItem(receptionStatus);
 		receptionStatuses.remove(receptionStatus);
 	}
 

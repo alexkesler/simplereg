@@ -80,7 +80,7 @@ public class FLModel implements DAOListener{
 	}
 
 	public int addFL(FL fl) {
-		Long id = DAOFactory.getInstance().getFLDAO().addFL(fl);
+		Long id = DAOFactory.getInstance().getFLDAO().addItem(fl);
 		if (id != null) {
 			flList.add(fl);
 			return flList.size()-1;
@@ -91,16 +91,16 @@ public class FLModel implements DAOListener{
 	}
 
 	public void updateFL(FL fl) {
-		DAOFactory.getInstance().getFLDAO().updateFL(fl);
+		DAOFactory.getInstance().getFLDAO().updateItem(fl);
 	}
 
 	public void deleteFL(FL fl) {
-		DAOFactory.getInstance().getFLDAO().deleteFL(fl);
+		DAOFactory.getInstance().getFLDAO().removeItem(fl);
 		flList.remove(fl);
 	}
 
 	public void readLFs() {
-		flList = DAOFactory.getInstance().getFLDAO().getAllFLs();
+		flList = DAOFactory.getInstance().getFLDAO().getAllItems();
 		notifyListeners(ModelState.UPDATED);
 	}
 
