@@ -57,7 +57,7 @@ public class HibernateUtil {
 		hibernateProperties.setProperty("hibernate.c3p0.timeout","1800");
 		hibernateProperties.setProperty("hibernate.c3p0.max_statement","50");
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto","update");
-		hibernateProperties.setProperty("hibernate.show_sql","true");
+		hibernateProperties.setProperty("hibernate.show_sql","false");
 
 
 		Configuration hibernateConfiguration = new AnnotationConfiguration()

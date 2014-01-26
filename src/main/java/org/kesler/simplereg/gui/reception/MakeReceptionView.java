@@ -13,8 +13,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
-// import java.beans.PropertyChangeEvent;
-// import java.beans.PropertyChangeListener;
 
 import com.alee.laf.button.WebButton;
 import com.alee.managers.popup.PopupWay;

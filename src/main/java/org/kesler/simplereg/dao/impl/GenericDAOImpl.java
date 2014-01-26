@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
+import org.apache.log4j.Logger;
 
 import org.kesler.simplereg.dao.GenericDAO;
 import org.kesler.simplereg.dao.AbstractEntity;
@@ -14,6 +15,7 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.util.HibernateUtil;
 
 public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> {
+	protected final Logger log;
 
 	private List<DAOListener> listeners = new ArrayList<DAOListener>();
 
@@ -21,6 +23,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	public GenericDAOImpl(Class<T> type) {
 		this.type = type;
+		log = Logger.getLogger("GenericDAO<"+ type.getSimpleName() + ">");
 	}
 
 	@Override
@@ -35,13 +38,16 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
+			log.debug("Begin to write item");
 			notifyListeners(DAOState.WRITING);
 			tx = session.beginTransaction();
 			session.save(item);
 			tx.commit();
+			log.info("Adding item complete");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			if (tx != null) tx.rollback();
+			log.error("Error writing item", he);
 			he.printStackTrace();
 			notifyListeners(DAOState.ERROR);
 		} finally {
@@ -61,14 +67,16 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
+			log.debug("Updating item");
 			notifyListeners(DAOState.WRITING);
 			tx = session.beginTransaction();
 			session.update(item);
 			tx.commit();
+			log.info("Updating item complete");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			if (tx != null) tx.rollback();
-			he.printStackTrace();
+			log.error("Error updating item", he);
 			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
@@ -84,11 +92,13 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
+			log.debug("Reading item");
 			notifyListeners(DAOState.READING);
 			item = (T) session.load(type, id);
+			log.info("Reading item complete");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
-			he.printStackTrace();
+			log.error("Reading item error", he);
 			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session != null && session.isOpen()) {
@@ -104,11 +114,13 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
+			log.debug("Reading items");
 			notifyListeners(DAOState.READING);
 			list = session.createCriteria(type).list();
+			log.info("Readed " + list.size() + " items");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
-			he.printStackTrace();
+			log.error("Error reading items", he);
 			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session!=null && session.isOpen()) {
@@ -125,14 +137,16 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction tx = null;
 		try {
+			log.debug("Removing item");
 			notifyListeners(DAOState.WRITING);
 			tx = session.beginTransaction();
 			session.delete(item);
 			tx.commit();
+			log.info("Item removed");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
 			if (tx != null) tx.rollback();
-			he.printStackTrace();
+			log.error("Error removing item", he);
 			notifyListeners(DAOState.ERROR);
 		} finally {
 			if (session!=null && session.isOpen()) {
@@ -142,7 +156,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	}
 
-	private void notifyListeners(DAOState state) {
+	protected void notifyListeners(DAOState state) {
 		for (DAOListener listener: listeners) {
 			listener.daoStateChanged(state);
 		}

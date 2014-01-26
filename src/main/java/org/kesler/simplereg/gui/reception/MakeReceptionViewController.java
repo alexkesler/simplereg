@@ -24,12 +24,14 @@ import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.export.ReceptionPrinter;
 import org.kesler.simplereg.export.RosReestrReceptionPrinter;
 
+import org.apache.log4j.Logger;
 
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.util.CounterUtil;
 import org.kesler.simplereg.util.OptionsUtil;
 
 public class MakeReceptionViewController {
+	private final Logger log;
 
 	private static MakeReceptionViewController instance;
 	private MakeReceptionView view;
@@ -43,7 +45,8 @@ public class MakeReceptionViewController {
 
 
 	private MakeReceptionViewController() {
-		initReception();
+		log = Logger.getLogger("MakeReceptionViewController");
+		// initReception();
 		// view = new MakeReceptionView(this);
 		viewState = new NoneMakeReceptionViewState(this, view);
 	}
@@ -110,6 +113,7 @@ public class MakeReceptionViewController {
 	}
 
 	private void initReception() {
+		log.info("Init reception");
 		// Создаем экземпляр приема заявтеля
 		reception = new Reception();
 
