@@ -188,7 +188,12 @@ public class GenericListDialog<T> extends AbstractDialog {
 		itemsList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ev) {
 				if (ev.getClickCount() == 2) {
-					controller.openEditItemDialog(selectedIndex);
+					if (isSelect) {
+						result = OK;
+						setVisible(false);										
+					} else {
+						controller.openEditItemDialog(selectedIndex);
+					}
 				}
 			}
 		});
