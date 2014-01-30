@@ -244,12 +244,12 @@ class MakeReceptionView extends JDialog{
 
 			// Добавляем список заявителей
 			applicatorsListModel = new ApplicatorsListModel(controller.getApplicators());
-			JList applicatorsList = new JList(applicatorsListModel);
+			final JList applicatorsList = new JList(applicatorsListModel);
 
 			applicatorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			applicatorsList.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent lse) {
-					selectedApplicatorIndex = lse.getFirstIndex();
+					selectedApplicatorIndex = applicatorsList.getSelectedIndex();
 				}
 			});
 
