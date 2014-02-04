@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
+import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -127,6 +128,9 @@ public class MainViewController implements MainViewListener,
 			case Options:	
 				openOptions();
 				break;
+            case FIAS:
+                openFIASDialog();
+                break;
 			case Exit:
 				System.exit(0);	
 
@@ -172,7 +176,8 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
-				
+                mainView.getActionByCommand(MainViewCommand.FIAS).setEnabled(true);
+
 			}
 
 		} else { // если оператор не назначен
@@ -337,9 +342,16 @@ public class MainViewController implements MainViewListener,
 		RealtyTypeListDialogController.getInstance().showDialog(mainView);
 	}
 
+    private void openFIASDialog() {
+        FIASDialog dialog = new FIASDialog(mainView,true);
+        dialog.setVisible(true);
+    }
+
     public void editReception(Reception reception) {
         MakeReceptionViewController.getInstance().openView(mainView, reception);
     }
+
+
 
 
 	/**

@@ -1,6 +1,7 @@
 package org.kesler.simplereg.dao;
 
-import org.kesler.simplereg.dao.impl.ServiceDAOImpl;	
+import org.kesler.simplereg.dao.impl.FIASRecordDAOImpl;
+import org.kesler.simplereg.dao.impl.ServiceDAOImpl;
 import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
 import org.kesler.simplereg.dao.impl.GenericDAOImpl;
 
@@ -22,6 +23,7 @@ public class DAOFactory {
 	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
 	private static GenericDAO<RealtyType> realtyTypeDAO = null;
 	private static GenericDAO<Counter> counterDAO = null;
+    private static FIASRecordDAO fiasRecordDAO = null;
 	
 	private static DAOFactory instance = null;
 
@@ -98,6 +100,13 @@ public class DAOFactory {
 		
 		return counterDAO;
 	}
+
+    public FIASRecordDAO getFiasRecordDAO() {
+        if (fiasRecordDAO == null) {
+            fiasRecordDAO = new FIASRecordDAOImpl();
+        }
+        return fiasRecordDAO;
+    }
 
 
 }

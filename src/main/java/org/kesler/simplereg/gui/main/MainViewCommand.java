@@ -18,6 +18,7 @@ public enum MainViewCommand {
 	RealtyObjectTypes("Типы недвижимости","realtyObjectTypes","house.png"),	
 	Operators("Операторы", "operators", "user_suit.png"),
 	Options("Настройки", "options", "wrench.png"),
+    FIAS("Загрузка ФИАС","fias","building.png"),
 	Exit("Закрыть","exit", "door_out.png");
 
 
