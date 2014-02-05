@@ -5,14 +5,9 @@ import java.util.List;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 
-
-import com.alee.laf.list.WebList;
-import com.alee.laf.scroll.WebScrollPane;
-import com.alee.laf.text.WebTextField;
-import com.alee.managers.popup.PopupStyle;
-import com.alee.managers.popup.WebPopup;
-import com.alee.utils.swing.DocumentChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.fias.FIASModel;
@@ -29,36 +24,35 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 
 	private RealtyObject realtyObject;
 
-	private JDialog parentDialog;
 
     private FIASModel fiasModel;
 
 
     private JComboBox realtyTypeComboBox;
-	private WebTextField addressTextField;
-    private WebList addressesList;
-    private WebPopup addressPopup;
+	private JComboBox addressComboBox;
+
+    private String currentAddress;
 
     private int waiterCount = 0;
 
 	public RealtyObjectDialog(JDialog parentDialog) {
 		super(parentDialog, "Объект недвижимости", true);
-		this.parentDialog = parentDialog;
         fiasModel = new FIASModel(this);
 
 		realtyObject = new RealtyObject();
 
 		createGUI();
+        setLocationRelativeTo(parentDialog);
 		loadGUIDataFromRealtyObject();
 	}
 
 	public RealtyObjectDialog(JDialog parentDialog, RealtyObject realtyObject) {
 		super(parentDialog, "Изменить объект недвижимости", true);
-		this.parentDialog = parentDialog;
 
 		this.realtyObject = realtyObject;
 
 		createGUI();
+        setLocationRelativeTo(parentDialog);
 		loadGUIDataFromRealtyObject();
 
 	}
@@ -72,7 +66,7 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 		// основная панель
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel dataPanel = new JPanel(new MigLayout("fill"));
+		JPanel dataPanel = new JPanel(new MigLayout("fillx"));
 
 
 		realtyTypeComboBox = new JComboBox();
@@ -83,65 +77,43 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 		}
 
 
-		addressTextField = new WebTextField(45);
+		addressComboBox = new JComboBox();
+        addressComboBox.setEditable(true);
+        addressComboBox.setSize(200,addressComboBox.getHeight());
+        addressComboBox.setMaximumRowCount(10);
 
-        addressPopup = new WebPopup(PopupStyle.lightSmall);
-        addressPopup.setRequestFocusOnShow(false);
-        addressPopup.setSize(addressTextField.getWidth(), 50);
+        final JTextField addressComboBoxEditor = (JTextField) addressComboBox.getEditor().getEditorComponent();
 
-        addressTextField.getDocument().addDocumentListener(new DocumentChangeListener() {
+        addressComboBoxEditor.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void documentChanged(DocumentEvent documentEvent) {
-               computeAddressesByString(addressTextField.getText());
-            }
-        });
-
-        addressTextField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectAddress();
-            }
-        });
-
-        addressTextField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode()==KeyEvent.VK_DOWN ||
-                        e.getKeyCode()==KeyEvent.VK_UP) {
-                    addressesList.requestFocusInWindow();
-                    super.keyPressed(e);
+            public void insertUpdate(DocumentEvent e) {
+                if(e.getLength()==1) {
+                    currentAddress = addressComboBoxEditor.getText();
+                    computeAddressesByString(currentAddress);
                 }
 
             }
-        });
 
-        addressesList = new WebList();
-        addressesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        addressesList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                if(e.getClickCount()==2) selectAddress();
+            public void removeUpdate(DocumentEvent e) {
+                if (e.getLength()==1) {
+                    currentAddress = addressComboBoxEditor.getText();
+                    computeAddressesByString(currentAddress);
+                }
             }
-        });
-        addressesList.addKeyListener(new KeyAdapter() {
+
             @Override
-            public void keyPressed(KeyEvent e) {
-//                super.keyPressed(e);
-                if(e.getKeyCode() == KeyEvent.VK_ENTER) selectAddress();
+            public void changedUpdate(DocumentEvent e) {
+
             }
         });
 
-        WebScrollPane addressesListScrollPane = new WebScrollPane(addressesList);
-
-        addressPopup.add(addressesListScrollPane);
-        addressPopup.setAnimated(true);
 
         //собираем панель данных
 		dataPanel.add(new JLabel("Тип объекта"), "right");
 		dataPanel.add(realtyTypeComboBox, "wrap");
 		dataPanel.add(new JLabel("Адрес объекта"), "right");
-		dataPanel.add(addressTextField, "wrap");
+		dataPanel.add(addressComboBox, "pushx, growx, wrap");
 
 
 		// панель кнопок
@@ -176,8 +148,7 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 
 
 		this.setContentPane(mainPanel);
-		this.pack();
-		this.setLocationRelativeTo(parentDialog);
+		this.setSize(600,150);
 	}
 
 	private void loadGUIDataFromRealtyObject() {
@@ -189,7 +160,7 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 			realtyTypeComboBox.setSelectedIndex(-1);
 		}
 
-		addressTextField.setText(realtyObject.getAddress());
+		addressComboBox.setSelectedItem(realtyObject.getAddress());
 
 	}
 
@@ -200,7 +171,8 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 			return false;			
 		}
 
-		if (addressTextField.getText().isEmpty()) {
+        String address = (String) addressComboBox.getSelectedItem();
+		if (address == null || address.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Поле адрес не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
@@ -208,7 +180,7 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 		RealtyType type = (RealtyType) (realtyTypeComboBox.getSelectedItem());
 
 		realtyObject.setType(type);
-		realtyObject.setAddress(addressTextField.getText());
+		realtyObject.setAddress(address);
 
 		return true;
 	}
@@ -233,29 +205,32 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 
         waiter.start();
 
-
-//        List<String> addresses = FIASModel.getInstance().computeAddress(searchString);
-//        mainView.setAddressVariants(addresses);
     }
 
-    private void selectAddress() {
-        addressTextField.setText((String)addressesList.getSelectedValue());
-        addressTextField.requestFocus();
-    }
+//    private void selectAddress() {
+//        addressTextField.setText((String)addressesList.getSelectedValue());
+//        addressTextField.requestFocus();
+//    }
 
 
     @Override
     public void addresesFiltered(List<String> addresses) {
-        addressesList.setListData(addresses.toArray());
 
-        if(addresses.size() > 0) {
-            addressesList.setSelectedIndex(0);
-            if(!addressPopup.isShowing()){
-//                addressPopup.packPopup();
-                addressPopup.showPopup(addressTextField,0,addressTextField.getHeight());
-            }
+        addressComboBox.removeAllItems();
+        for(String address: addresses) {
+            addressComboBox.addItem(address);
         }
-        else addressPopup.hidePopup();
+//        addressComboBox.setSelectedIndex(-1);
+        addressComboBox.setSelectedItem(currentAddress);
+        JTextComponent editor = (JTextComponent) addressComboBox.getEditor().getEditorComponent();
+        editor.setCaretPosition(currentAddress.length());
+
+        if (addresses.size() > 0 /*&& !addressComboBox.isPopupVisible()*/) {
+            addressComboBox.showPopup();
+        } else {
+            addressComboBox.hidePopup();
+        }
+
     }
 
 

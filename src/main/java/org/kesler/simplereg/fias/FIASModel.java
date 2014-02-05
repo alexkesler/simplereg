@@ -15,7 +15,7 @@ public class FIASModel {
 
     private List<FIASRecord> allRecords;
 
-
+    private List<String> lastSearchAddresses;
 
     private FIASModelListener listener;
 
@@ -29,17 +29,22 @@ public class FIASModel {
 
     public void computeAddressesInSeparateThread(final String searchString) {
         // Ограничиваем поиск
-        if(searchString.length() < 3 || searchString.length() > 10) {
-            listener.addresesFiltered(new ArrayList<String>());
-            return;
-        }
+//        if(searchString.length() < 3) {
+//            listener.addresesFiltered(new ArrayList<String>());
+//            return;
+//        }
+
+//        if(searchString.length() > 10) {
+//            listener.addresesFiltered(lastSearchAddresses);
+//            return;
+//        }
 
         Thread computeThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 threadCount++;   // Запускаем еще процесс
-                List<String> addresses = computeAddress(searchString);
-                listener.addresesFiltered(addresses);
+                lastSearchAddresses = computeAddress(searchString);
+                listener.addresesFiltered(lastSearchAddresses);
                 threadCount--;    // Закончили
             }
         });
@@ -65,7 +70,7 @@ public class FIASModel {
     private String createAddress(FIASRecord record) {
         StringBuilder address = new StringBuilder();
 
-        address.append(makeFormalName(record));
+        address.append(makeFormalName(record) + " ");
 
         String parentGUID = record.getParentGUID();
         while (parentGUID != null) {
