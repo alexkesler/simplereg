@@ -3,7 +3,6 @@ package org.kesler.simplereg.gui.realty;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
