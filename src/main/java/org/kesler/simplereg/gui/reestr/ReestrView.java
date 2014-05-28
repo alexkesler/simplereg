@@ -217,7 +217,15 @@ public class ReestrView extends JFrame {
 			}
 		});
 
-		// Пункт меню - добавление фильтра по услугам
+        // Пункт меню - добавление фильтра по дате смены состояния
+        JMenuItem statusChangeDateFilterMenuItem = new JMenuItem("По дате смены состояния");
+        statusChangeDateFilterMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(ReceptionsFiltersEnum.STATUS_CHANGE_DATE);
+            }
+        });
+
+        // Пункт меню - добавление фильтра по услугам
 		JMenuItem serviceFilterMenuItem = new JMenuItem("По услуге");
 		serviceFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {

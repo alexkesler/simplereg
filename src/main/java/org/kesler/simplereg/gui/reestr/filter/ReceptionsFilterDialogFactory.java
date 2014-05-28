@@ -2,19 +2,7 @@ package org.kesler.simplereg.gui.reestr.filter;
 
 import javax.swing.JFrame;
 
-import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
-
-import org.kesler.simplereg.logic.reception.filter.OpenDateReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ByRecordReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.FilialReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.StatusReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ServiceReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.OperatorReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ToIssueDateReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ResultInMFCReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.FLReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ULReceptionsFilter;
+import org.kesler.simplereg.logic.reception.filter.*;
 
 
 public abstract class ReceptionsFilterDialogFactory {
@@ -47,6 +35,9 @@ public abstract class ReceptionsFilterDialogFactory {
 			case STATUS:
 				receptionsFilterDialog = new StatusReceptionsFilterDialog(view);	
 			break;
+            case STATUS_CHANGE_DATE:
+                receptionsFilterDialog = new StatusChangeDateReceptionsFilterDialog(view);
+                break;
 			case SERVICE:
 				receptionsFilterDialog = new ServiceReceptionsFilterDialog(view);	
 			break;
@@ -107,7 +98,12 @@ public abstract class ReceptionsFilterDialogFactory {
 			StatusReceptionsFilter statusReceptionsFilter = (StatusReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new StatusReceptionsFilterDialog(view, statusReceptionsFilter);
 
-		} else if (receptionsFilter instanceof ServiceReceptionsFilter) { // Фильтр по услуге
+        } else if (receptionsFilter instanceof StatusChangeDateReceptionsFilter) { // Фильтр по состоянию
+
+            StatusChangeDateReceptionsFilter statusChangeDateReceptionsFilter = (StatusChangeDateReceptionsFilter) receptionsFilter;
+            receptionsFilterDialog = new StatusChangeDateReceptionsFilterDialog(view, statusChangeDateReceptionsFilter);
+
+        } else if (receptionsFilter instanceof ServiceReceptionsFilter) { // Фильтр по услуге
 
 			ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
 			receptionsFilterDialog = new ServiceReceptionsFilterDialog(view, serviceReceptionsFilter);

@@ -69,6 +69,10 @@ public class Reception extends AbstractEntity{
 	@JoinColumn(name="ReceptionStatusID")
 	private ReceptionStatus status;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="StatusChangeDate")
+    private Date statusChangeDate;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception")
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
     @Fetch(FetchMode.SUBSELECT)
@@ -198,11 +202,16 @@ public class Reception extends AbstractEntity{
 
 	public void setStatus(ReceptionStatus status) {
 		this.status = status;
+        Date changeDate = new Date();
+        this.statusChangeDate = changeDate;
+
         // запоминаем изменение состояния
         Operator currentOperator = CurrentOperator.getInstance().getOperator();
-        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, new Date(), currentOperator);
+        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, currentOperator);
         statusChanges.add(statusChange);
 	}
+
+    public Date getStatusChangeDate() {return statusChangeDate;}
 
     public List<ReceptionStatusChange> getStatusChanges() {return statusChanges;}
 
