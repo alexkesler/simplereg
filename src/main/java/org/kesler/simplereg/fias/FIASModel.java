@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Алексей on 01.02.14.
+ * Модель для получения адресных объектов
  */
 public class FIASModel {
 
@@ -26,7 +26,12 @@ public class FIASModel {
         allRecords = DAOFactory.getInstance().getFiasRecordDAO().getAllRecords();
     }
 
-
+    /**
+     * Получаем список адресов, удовлетворяющих строке поиска
+     * поиск осуществляется в отдельном потоке
+     * результаты поиска отправляются FIASModelListener
+     * @param searchString строка поиска
+     */
     public void computeAddressesInSeparateThread(final String searchString) {
         // Ограничиваем поиск
 //        if(searchString.length() < 3) {
@@ -67,14 +72,20 @@ public class FIASModel {
         return addreses;
     }
 
+    // Создаем полную адресную строку на основе записи ФИАС
     private String createAddress(FIASRecord record) {
         StringBuilder address = new StringBuilder();
 
-        address.append(makeFormalName(record) + " ");
+        address.append(makeFormalName(record)).append(", ");
 
         String parentGUID = record.getParentGUID();
+
         while (parentGUID != null) {
             FIASRecord parentRecord = searchRecordByGUID(parentGUID);
+
+            // если родительский элемент = элемент первого уровня - заканчиваем
+            if(parentRecord.getAoLevel().equalsIgnoreCase("1")) break;
+
             address.insert(0, makeFormalName(parentRecord) + ", ");
             parentGUID = parentRecord.getParentGUID();
         }
@@ -83,6 +94,7 @@ public class FIASModel {
         return address.toString();
     }
 
+    // получаем наименование из объекта ФИАС
     private String makeFormalName(FIASRecord record) {
         String name = null;
         if(record.getAoLevel().equalsIgnoreCase("1")) {
@@ -95,6 +107,7 @@ public class FIASModel {
         return name;
     }
 
+    // Ищем объект ФИАС по его GUID
     private FIASRecord searchRecordByGUID(String guid) {
         FIASRecord findRecord = null;
         for(FIASRecord record: allRecords)  {
@@ -106,6 +119,7 @@ public class FIASModel {
         return findRecord;
     }
 
+    // ищм записи, удовлетворяющие условиям поиска
     private List<FIASRecord> searchRecords(String searchString) {
         List<FIASRecord> filteredRecords = new ArrayList<FIASRecord>();
 
@@ -118,7 +132,7 @@ public class FIASModel {
             if(record.getFormalName().toLowerCase().indexOf(searchString) == 0)
                 filteredRecords.add(record);
 
-            if(filteredRecords.size() > 10) break;
+            if(filteredRecords.size() > 30) break;
         }
 
         log.info("Find " + filteredRecords.size() + " by search: " + searchString);

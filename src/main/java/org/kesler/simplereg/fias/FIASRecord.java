@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
- * Created by Алексей on 01.02.14.
+ * Сущность для
  */
 
 @XmlAccessorType(XmlAccessType.NONE)
