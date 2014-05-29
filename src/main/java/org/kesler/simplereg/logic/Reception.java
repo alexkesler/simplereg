@@ -19,14 +19,10 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import org.hibernate.envers.Audited;
-
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusChange;
-import org.kesler.simplereg.util.Counter;
-import org.kesler.simplereg.util.CounterUtil;
 
 /**
 * Класс предсталяет сущность приема заявителей
