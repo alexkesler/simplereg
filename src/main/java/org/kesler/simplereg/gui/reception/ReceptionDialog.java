@@ -49,6 +49,7 @@ public class ReceptionDialog extends AbstractDialog {
 	private JComboBox statusesComboBox;
     private ReceptionStatusChangesTableModel receptionStatusChangesTableModel;
 	private JButton saveNewReceptionStatusButton;
+    private JButton removeLastReceptionStatusChangeButton;
     private JButton okButton;
     private JButton cancelButton;
 
@@ -124,6 +125,14 @@ public class ReceptionDialog extends AbstractDialog {
 			}
 		});
 
+        removeLastReceptionStatusChangeButton = new JButton(ResourcesUtil.getIcon("undo.png"));
+        removeLastReceptionStatusChangeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeLastStatusChange();
+            }
+        });
+
         receptionStatusChangesTableModel = new ReceptionStatusChangesTableModel();
         JTable statusChangesTable = new JTable(receptionStatusChangesTableModel);
         JScrollPane statusChangesTableScrollPane = new JScrollPane(statusChangesTable);
@@ -156,7 +165,8 @@ public class ReceptionDialog extends AbstractDialog {
 		dataPanel.add(new JLabel("Состояние дела"), "right");
 		dataPanel.add(serviceInfoPanel,"growx, wrap");
 		dataPanel.add(statusesComboBox, "w 100");
-		dataPanel.add(saveNewReceptionStatusButton, "wrap");
+		dataPanel.add(saveNewReceptionStatusButton);
+        dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
         dataPanel.add(statusChangesTableScrollPane, "growx, h 100, wrap");
 
 
@@ -213,15 +223,37 @@ public class ReceptionDialog extends AbstractDialog {
 	private void saveStatus() {
 		reception.setStatus(newReceptionStatus);
         receptionStatusChangesTableModel.update(); // обновляем табличку со статусами
+        checkStatusRemoveAbility();
 
 //		ReceptionsModel.getInstance().updateReception(reception);
 		currentReceptionStatus = newReceptionStatus;
 		statusChanged = false;
 		saveNewReceptionStatusButton.setEnabled(false);
+        receptionChanged();
+	}
+
+    private void removeLastStatusChange() {
+        reception.removeLastStatusChange();
+        receptionStatusChangesTableModel.update();
+        checkStatusRemoveAbility();
+        receptionChanged();
+    }
+
+    private void receptionChanged() {
         okButton.setText("Сохранить");
         cancelButton.setVisible(true);
         result = OK;
-	}
+    }
+
+    private void checkStatusRemoveAbility() {
+        if (reception.getStatusChanges().size() > 1) {
+            removeLastReceptionStatusChangeButton.setEnabled(true);
+        }  else {
+            removeLastReceptionStatusChangeButton.setEnabled(false);
+        }
+    }
+
+
 
 	private void loadGUIDataFromReception() {
 		
