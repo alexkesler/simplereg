@@ -200,9 +200,9 @@ public class Reception extends AbstractEntity{
 		this.status = status;
         Date changeDate = new Date();
         this.statusChangeDate = changeDate;
+        Operator currentOperator = CurrentOperator.getInstance().getOperator();
 
         // запоминаем изменение состояния
-        Operator currentOperator = CurrentOperator.getInstance().getOperator();
         ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, currentOperator);
         statusChanges.add(statusChange);
 	}
