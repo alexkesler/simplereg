@@ -215,6 +215,15 @@ public class Reception extends AbstractEntity{
 
     public List<ReceptionStatusChange> getStatusChanges() {return statusChanges;}
 
+    public void removeLastStatusChange() {
+        if (statusChanges.size() > 1) {
+            statusChanges.remove(statusChanges.size()-1);
+            ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
+            this.status = lastChange.getStatus();
+            this.statusChangeDate = lastChange.getChangeTime();
+        }
+    }
+
 	public String getStatusName() {
 		String statusName = "Не определено";
 		if (status != null) {
