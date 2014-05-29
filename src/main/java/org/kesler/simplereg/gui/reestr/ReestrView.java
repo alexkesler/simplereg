@@ -281,6 +281,7 @@ public class ReestrView extends JFrame {
 		filtersPopupMenu.add(filialFilterMenuItem);
 		filtersPopupMenu.add(byRecordFilterMenuItem);
 		filtersPopupMenu.add(statusFilterMenuItem);
+        filtersPopupMenu.add(statusChangeDateFilterMenuItem);
 		filtersPopupMenu.add(serviceFilterMenuItem);
 		filtersPopupMenu.add(operatorFilterMenuItem);
         filtersPopupMenu.add(flMenuItem);
