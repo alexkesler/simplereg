@@ -7,7 +7,6 @@ public enum ReceptionsFiltersEnum {
 	FILIAL,
 	SERVICE,
 	STATUS,
-    STATUS_CHANGE_DATE,
     OPERATOR,
 	TO_ISSUE_DATE,
 	BY_RECORD,

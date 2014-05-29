@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.HibernateException;
 
@@ -126,9 +127,16 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
             notifyListeners(DAOState.CONNECTING);
             session = HibernateUtil.getSessionFactory().openSession();
             notifyListeners(DAOState.READING);
-            receptions = session.createCriteria(Reception.class)
-                                                .add(Restrictions.between("openDate",beginDate,endDate))
-                                                .list();
+            Criteria criteria = session.createCriteria(Reception.class);
+
+            if (beginDate!=null) {
+                criteria.add(Restrictions.ge("openDate",beginDate));
+            }
+            if (endDate!=null) {
+                criteria.add(Restrictions.le("openDate",endDate));
+            }
+            receptions = criteria.list();
+
             log.info("Reading " + receptions.size() + " receptions complete");                                    
             System.out.println("----Receptions in DAO-----" + receptions.size());
             notifyListeners(DAOState.READY);

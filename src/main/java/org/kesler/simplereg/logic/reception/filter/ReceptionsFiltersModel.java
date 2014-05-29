@@ -1,5 +1,7 @@
 package org.kesler.simplereg.logic.reception.filter;
 
+import org.kesler.simplereg.util.DateUtil;
+
 import java.util.*;
 
 public class ReceptionsFiltersModel {
@@ -102,7 +104,11 @@ public class ReceptionsFiltersModel {
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.MONTH,-1);
         Date fromDate = calendar.getTime();
+        fromDate = DateUtil.toBeginOfDay(fromDate);
+
         Date toDate = new Date();
+        toDate = DateUtil.toEndOfDay(toDate);
+
         ReceptionsFilter openDateFilter = new OpenDateReceptionsFilter(fromDate, toDate);
         filters.add(openDateFilter);
     }
