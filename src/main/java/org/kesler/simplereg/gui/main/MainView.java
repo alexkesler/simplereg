@@ -169,6 +169,10 @@ public class MainView extends JFrame {
 
 		// Меню О программе
 		JMenu aboutMenu = new JMenu("О программе");
+        JMenuItem aboutMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.About));
+        aboutMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.About.getIconName()));
+        aboutMenu.add(aboutMenuItem);
+
 
 		// Формируем меню окна
 		menuBar.add(mainMenu);

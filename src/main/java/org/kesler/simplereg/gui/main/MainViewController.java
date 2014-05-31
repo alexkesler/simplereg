@@ -91,8 +91,11 @@ public class MainViewController implements MainViewListener,
 				break;
 			case Logout:
 				logout();
-				break;	
-			case NewReception: 
+				break;
+            case About:
+                about();
+                break;
+            case NewReception:
 				openMakeReceptionView();
 				break;
 			case UpdateReceptions: 
@@ -148,6 +151,7 @@ public class MainViewController implements MainViewListener,
 		// Элемент Закрыть всегда активен
 		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
 		mainView.getActionByCommand(MainViewCommand.Options).setEnabled(true);
+        mainView.getActionByCommand(MainViewCommand.About).setEnabled(true);
 
 		
 		if (operator != null) { // оператор назначен
@@ -261,6 +265,8 @@ public class MainViewController implements MainViewListener,
 
 	}
 
+
+
 	public void operatorsModelStateChanged(ModelState state) {
 		switch (state) {
 			case CONNECTING:
@@ -296,6 +302,11 @@ public class MainViewController implements MainViewListener,
 		HibernateUtil.closeConnection();
         mainView.setConnected(false);
 	}
+
+    private void about() {
+        AboutDialog aboutDialog = new AboutDialog(mainView);
+        aboutDialog.showDialog();
+    }
 
 	private void openMakeReceptionView() {
 		MakeReceptionViewController.getInstance().openView(mainView);
