@@ -90,10 +90,18 @@ public class Reception extends AbstractEntity{
 	@Column(name="FilialCode")
 	private String filialCode;
 
+    @JoinColumn(name = "ParentReceptionID")
+    private Reception parentReception;
 
-	public Reception() {
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentReception")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Reception> subReceptions;
+
+
+    public Reception() {
         applicators = new ArrayList<Applicator>();
         statusChanges = new ArrayList<ReceptionStatusChange>();
+        subReceptions = new ArrayList<Reception>();
 	}
 
 	public Reception(Service service, List<Applicator> applicators, Operator operator, Date openDate) {
@@ -282,5 +290,16 @@ public class Reception extends AbstractEntity{
 		this.filialCode = filialCode;
 	}
 
+    public Reception getParentReception() {return parentReception;}
+    public void setParentReception(Reception parentReception) {
+        this.parentReception = parentReception;
+        parentReception.addSubReception(this);
+    }
+
+
+    public List<Reception> getSubReceptions() {return subReceptions;}
+    public void addSubReception(Reception subReception) {
+        subReceptions.add(subReception);
+    }
 
 }
