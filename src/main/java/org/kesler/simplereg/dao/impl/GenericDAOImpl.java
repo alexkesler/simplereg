@@ -94,7 +94,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		try {
 			log.debug("Reading item");
 			notifyListeners(DAOState.READING);
-			item = (T) session.load(type, id);
+			item = (T) session.get(type, id);
 			log.info("Reading item complete");
 			notifyListeners(DAOState.READY);
 		} catch (HibernateException he) {
