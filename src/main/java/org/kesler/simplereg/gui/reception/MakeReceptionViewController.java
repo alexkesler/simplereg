@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
 
+import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.Applicator;
@@ -205,6 +206,22 @@ public class MakeReceptionViewController {
 	void setReceptionByRecord(boolean byRecord) {
 		reception.setByRecord(byRecord);
 	}
+
+    void selectParentReception() {
+        SelectReceptionDialog dialog = new SelectReceptionDialog(view);
+        dialog.showDialog();
+        if(dialog.getResult()== AbstractDialog.OK) {
+            Reception parentReception = dialog.getSelectedReception();
+            reception.setParentReception(parentReception);
+            copyApplicatorsFromReception(parentReception);
+            reception.setRealtyObject(parentReception.getRealtyObject());
+            reception.setToIssueDate(parentReception.getToIssueDate());
+            reception.setResultInMFC(parentReception.isResultInMFC());
+            reception.setRosreestrCode(parentReception.getRosreestrCode());
+        }
+        viewState.updatePanelData();
+    }
+
 
 	////// Блок добавления, редактирования, удаления заявителей
 

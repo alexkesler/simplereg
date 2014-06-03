@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.reception;
 
 import javax.swing.JOptionPane;
 
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 
@@ -82,6 +83,10 @@ class ServiceMakeReceptionViewState extends MakeReceptionViewState {
 		if (byRecord == null) byRecord = false;
 
 		view.getServicePanel().setByRecord(byRecord);
+
+        Reception parentReception = controller.getReception().getParentReception();
+        String parentReceptionCode = parentReception==null?"":parentReception.getRosreestrCode();
+        view.getServicePanel().setParentReceptionCode(parentReceptionCode);
 	}
 
 

@@ -90,6 +90,7 @@ public class Reception extends AbstractEntity{
 	@Column(name="FilialCode")
 	private String filialCode;
 
+    @ManyToOne
     @JoinColumn(name = "ParentReceptionID")
     private Reception parentReception;
 

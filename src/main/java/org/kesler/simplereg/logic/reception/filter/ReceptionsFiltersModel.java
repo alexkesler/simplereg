@@ -1,14 +1,17 @@
 package org.kesler.simplereg.logic.reception.filter;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.util.DateUtil;
 
 import java.util.*;
 
 public class ReceptionsFiltersModel {
+    protected final Logger log;
 
     private List<ReceptionsFilter> filters;
 
     public ReceptionsFiltersModel() {
+        log = Logger.getLogger(this.getClass().getSimpleName());
         filters = new ArrayList<ReceptionsFilter>();
         initFilters(); // Ограничиваем список закружаемых из БД приемов последним месяцем (по умолчанию)
     }
@@ -18,6 +21,7 @@ public class ReceptionsFiltersModel {
     }
 
     public int setQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum, String filterString) {
+        log.info("Set quick filter: " + quickFiltersEnum + " ("+filterString+ ")");
 
         ReceptionsFilter quickFilter = QuickReceptionsFilterFactory.createQuickFilter(quickFiltersEnum, filterString);
 
@@ -43,6 +47,7 @@ public class ReceptionsFiltersModel {
     }
 
     public int resetQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum) {
+        log.info("Reset quick filter: " + quickFiltersEnum);
         Class<? extends ReceptionsFilter> filterClass = QuickReceptionsFilterFactory.getQuickFilterClass(quickFiltersEnum);
         Iterator<ReceptionsFilter> iterator = filters.iterator();
         int index = -1;
@@ -57,15 +62,18 @@ public class ReceptionsFiltersModel {
     }
 
     public int addFilter(ReceptionsFilter filter) {
+        log.info("Adding filter: " + filter);
         filters.add(filter);
         return filters.size()-1;
     }
 
     public void removeFilter(int index) {
+        log.info("Remove filter:" + filters.get(index));
         filters.remove(index);
     }
 
     public void resetFilters() {
+        log.info("Reset filters");
         filters = new ArrayList<ReceptionsFilter>();
     }
 
@@ -110,7 +118,7 @@ public class ReceptionsFiltersModel {
         toDate = DateUtil.toEndOfDay(toDate);
 
         ReceptionsFilter openDateFilter = new OpenDateReceptionsFilter(fromDate, toDate);
-        filters.add(openDateFilter);
+        addFilter(openDateFilter);
     }
 
 }

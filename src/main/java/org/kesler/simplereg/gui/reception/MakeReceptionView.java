@@ -158,6 +158,7 @@ class MakeReceptionView extends JDialog{
 		JTextField receptionCodeTextField;
 		JLabel serviceNameLabel;
 		JCheckBox byRecordCheckBox;
+        JLabel parentReceptionLabel;
 
 		ServicePanel() {
 			super(new MigLayout("fillx"));
@@ -200,13 +201,29 @@ class MakeReceptionView extends JDialog{
 				}
 			});
 
+            parentReceptionLabel = new JLabel("");
+            parentReceptionLabel.setBorder(BorderFactory.createEtchedBorder());
+            JButton selectParentReceptionButton = new JButton("Выбрать");
+            selectParentReceptionButton.setIcon(ResourcesUtil.getIcon("book_previous.png"));
+            selectParentReceptionButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    controller.selectParentReception();
+                }
+            });
+
+
 			this.add(new JLabel("Код дела: "),"span, split 3");
 			this.add(receptionCodeTextField);
             this.add(regenerateReceptionCodeButton, "wrap");
 			this.add(new JLabel("Услуга: "),"ay top");
 			this.add(serviceNameLabel,"pushx, grow");
 			this.add(selectServiceButton, "right, wrap");
-			this.add(byRecordCheckBox,"span,wrap");
+			this.add(byRecordCheckBox,"span,wrap,skip");
+            this.add(new JLabel("Основное дело: "));
+            this.add(parentReceptionLabel, "grow");
+            this.add(selectParentReceptionButton,"wrap");
+
 
 		}
 
@@ -221,6 +238,8 @@ class MakeReceptionView extends JDialog{
 		void setByRecord(boolean byRecord) {
 			byRecordCheckBox.setSelected(byRecord);
 		}
+
+        void setParentReceptionCode(String parentReceptionCode) {parentReceptionLabel.setText(parentReceptionCode);}
 
 	}
 
