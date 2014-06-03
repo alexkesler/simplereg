@@ -9,6 +9,8 @@ import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 
 public class ULReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.UL;
+
     private UL ul;
 
 
@@ -19,6 +21,12 @@ public class ULReceptionsFilter implements ReceptionsFilter {
     public UL getUl() {
         return ul;
     }
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
+
 
     @Override
     public boolean checkReception(Reception reception) {

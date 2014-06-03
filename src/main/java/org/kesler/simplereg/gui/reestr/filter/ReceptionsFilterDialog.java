@@ -30,21 +30,24 @@ public abstract class ReceptionsFilterDialog extends AbstractDialog {
 		result = NONE;
 	}
 
-	public ReceptionsFilterDialog(JFrame parentFrame, String name, ReceptionsFilter filter) {
-		super(parentFrame, name, true);
-		this.receptionsFilter = filter;
-
-		createGUI();
-		this.setLocationRelativeTo(parentFrame);
-
-		loadGUIDataFromReceptionsFilter();
-		result = NONE;
-	}
-
+//	public ReceptionsFilterDialog(JFrame parentFrame, String name, ReceptionsFilter filter) {
+//		super(parentFrame, name, true);
+//		this.receptionsFilter = filter;
+//
+//		createGUI();
+//		this.setLocationRelativeTo(parentFrame);
+//
+//		loadGUIDataFromReceptionsFilter();
+//		result = NONE;
+//	}
 
 	public ReceptionsFilter getReceptionsFilter() {
 		return receptionsFilter;
 	}
+    public void setReceptionsFilter(ReceptionsFilter receptionsFilter) {
+        this.receptionsFilter = receptionsFilter;
+        loadGUIDataFromReceptionsFilter();
+    }
 
 	private void createGUI() {
 

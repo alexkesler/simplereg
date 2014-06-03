@@ -4,6 +4,8 @@ import org.kesler.simplereg.logic.Reception;
 
 public class ResultInMFCReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.RESULT_IN_MFC;
+
 	private Boolean resultInMFC;
 
 	public ResultInMFCReceptionsFilter(Boolean resultInMFC) {
@@ -17,6 +19,11 @@ public class ResultInMFCReceptionsFilter implements ReceptionsFilter {
 	public void setResultInMFC(Boolean resultInMFC) {
 		this.resultInMFC = resultInMFC;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

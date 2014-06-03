@@ -10,5 +10,7 @@ public enum ReceptionsFiltersEnum {
     OPERATOR,
 	TO_ISSUE_DATE,
 	BY_RECORD,
-	RESULT_IN_MFC
+	RESULT_IN_MFC,
+    CODE,
+    ROSREESTR_CODE
 }
