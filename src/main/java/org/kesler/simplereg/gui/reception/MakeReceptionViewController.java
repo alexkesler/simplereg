@@ -213,11 +213,16 @@ public class MakeReceptionViewController {
         if(dialog.getResult()== AbstractDialog.OK) {
             Reception parentReception = dialog.getSelectedReception();
             reception.setParentReception(parentReception);
-            copyApplicatorsFromReception(parentReception);
-            reception.setRealtyObject(parentReception.getRealtyObject());
-            reception.setToIssueDate(parentReception.getToIssueDate());
-            reception.setResultInMFC(parentReception.isResultInMFC());
-            reception.setRosreestrCode(parentReception.getRosreestrCode());
+            if(reception.getApplicators().size()==0)
+                copyApplicatorsFromReception(parentReception);
+            if (reception.getRealtyObject()==null)
+                reception.setRealtyObject(parentReception.getRealtyObject());
+            if (reception.getToIssueDate()==null)
+                reception.setToIssueDate(parentReception.getToIssueDate());
+            if (reception.isResultInMFC()==null)
+                reception.setResultInMFC(parentReception.isResultInMFC());
+            if (reception.getRosreestrCode()==null)
+                reception.setRosreestrCode(parentReception.getRosreestrCode());
         }
         viewState.updatePanelData();
     }
