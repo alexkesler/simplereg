@@ -4,6 +4,8 @@ import org.kesler.simplereg.logic.Reception;
 
 public class ByRecordReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.BY_RECORD;
+
 	private Boolean byRecord;
 
 	public ByRecordReceptionsFilter(Boolean byRecord) {
@@ -17,6 +19,11 @@ public class ByRecordReceptionsFilter implements ReceptionsFilter {
 	public void setByRecord(Boolean byRecord) {
 		this.byRecord = byRecord;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

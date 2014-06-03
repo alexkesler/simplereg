@@ -9,6 +9,8 @@ import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 
 public class FLReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.FL;
+
     private FL fl;
 
 
@@ -18,6 +20,11 @@ public class FLReceptionsFilter implements ReceptionsFilter {
 
     public FL getFl() {
         return fl;
+    }
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
     }
 
     @Override

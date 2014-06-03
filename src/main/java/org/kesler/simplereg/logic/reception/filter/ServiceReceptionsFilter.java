@@ -7,6 +7,8 @@ import org.kesler.simplereg.logic.Service;
 
 public class ServiceReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.SERVICE;
+
 	private List<Service> filterServices;
 
 
@@ -17,6 +19,11 @@ public class ServiceReceptionsFilter implements ReceptionsFilter {
 	public List<Service> getServices() {
 		return filterServices;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

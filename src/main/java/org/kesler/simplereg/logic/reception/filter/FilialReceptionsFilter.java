@@ -4,6 +4,7 @@ import org.kesler.simplereg.logic.Reception;
 
 public class FilialReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.FILIAL;
 	private String filterFilialCode;
 
 
@@ -18,6 +19,11 @@ public class FilialReceptionsFilter implements ReceptionsFilter {
 	public void setFilialCode(String filterFilialCode) {
 		this.filterFilialCode = filterFilialCode;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

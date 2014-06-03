@@ -121,11 +121,13 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		// Создаем диалог редактирования фильтра
 		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, receptionsFilter);	
 
-		// дальнейшие действия одинаковы для всех диалогов
-		receptionsFilterDialog.setVisible(true);
-		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
-			view.getFilterListModel().filterUpdated(filterIndex);
-		}
+		if(receptionsFilterDialog!=null) {
+            receptionsFilterDialog.setVisible(true);
+            if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
+                view.getFilterListModel().filterUpdated(filterIndex);
+            }
+
+        }
 
 	}
 
