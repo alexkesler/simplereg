@@ -4,7 +4,7 @@
 
   <groupId>org.kesler</groupId>
   <artifactId>simplereg</artifactId>
-  <version>1.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>simplereg</name>
@@ -53,10 +53,7 @@
                     <classpathLayoutType>simple</classpathLayoutType>
                     <mainClass>org.kesler.simplereg.SimpleReg</mainClass>
                 </manifest>
-                <manifestEntries>
-                    <Version>${buildNumber}</Version>
-                </manifestEntries>
-            </archive>
+             </archive>
         </configuration>
     </plugin>
 
