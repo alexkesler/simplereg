@@ -1,10 +1,9 @@
 package org.kesler.simplereg.gui.reestr.filter;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.Calendar;
 
@@ -12,6 +11,8 @@ import net.miginfocom.swing.MigLayout;
 import com.alee.extended.date.WebDateField;
 
 import org.kesler.simplereg.logic.reception.filter.ToIssueDateReceptionsFilter;
+import org.kesler.simplereg.util.DateUtil;
+import org.kesler.simplereg.util.ResourcesUtil;
 
 public class ToIssueDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 
@@ -28,18 +29,10 @@ public class ToIssueDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	@Override
 	protected void createReceptionsFilter() {
-	
-		Calendar fromCalendar = Calendar.getInstance();
-		fromCalendar.set(Calendar.HOUR_OF_DAY, 0);
-		fromCalendar.set(Calendar.MINUTE, 0);
-		fromCalendar.set(Calendar.SECOND, 0);
-		Calendar toCalendar = Calendar.getInstance();
-		toCalendar.set(Calendar.HOUR_OF_DAY, 23);
-		fromCalendar.set(Calendar.MINUTE, 59);
-		fromCalendar.set(Calendar.SECOND, 59);
 
-		Date fromDate = fromCalendar.getTime();
-		Date toDate = toCalendar.getTime();
+
+		Date fromDate = DateUtil.toBeginOfDay(new Date());
+		Date toDate = DateUtil.toEndOfDay(new Date());
 
 		receptionsFilter = new ToIssueDateReceptionsFilter(fromDate, toDate);
 	}
@@ -49,13 +42,29 @@ public class ToIssueDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 		JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
 		fromWebDateField = new WebDateField();
+        JButton clearFromDateButton = new JButton(ResourcesUtil.getIcon("cancel.png"));
+        clearFromDateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fromWebDateField.setDate(null);
+            }
+        });
 
 		toWebDateField = new WebDateField();
+        JButton clearToDateButton = new JButton(ResourcesUtil.getIcon("cancel.png"));
+        clearToDateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toWebDateField.setDate(null);
+            }
+        });
 
 		dataPanel.add(new JLabel("Начальная дата: "));
-		dataPanel.add(fromWebDateField, "w 100, wrap");
+		dataPanel.add(fromWebDateField, "w 100");
+        dataPanel.add(clearFromDateButton,"wrap");
 		dataPanel.add(new JLabel("Конечная дата"));
-		dataPanel.add(toWebDateField, "w 100, wrap");
+		dataPanel.add(toWebDateField, "w 100");
+        dataPanel.add(clearToDateButton, "wrap");
 
 		
 
@@ -80,7 +89,10 @@ public class ToIssueDateReceptionsFilterDialog extends ReceptionsFilterDialog {
 		Date fromDate = fromWebDateField.getDate();
 		Date toDate = toWebDateField.getDate();
 
-		if(fromDate == null && toDate == null) {
+        fromDate = DateUtil.toBeginOfDay(fromDate);
+        toDate = DateUtil.toEndOfDay(toDate);
+
+        if(fromDate == null && toDate == null) {
 			JOptionPane.showMessageDialog(this, "Необходимо задать хотя бы одну дату", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}

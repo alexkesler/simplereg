@@ -86,6 +86,7 @@ public abstract class ReceptionsFilterDialog extends AbstractDialog {
 
 		this.setContentPane(mainPanel);
 		this.pack();
+        this.setSize(this.getWidth()+20,this.getHeight()+20);
 		
 	}
 

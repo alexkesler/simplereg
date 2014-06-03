@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Arrays;
 import javax.swing.JOptionPane;
 
+import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -90,8 +91,11 @@ public class MainViewController implements MainViewListener,
 				break;
 			case Logout:
 				logout();
-				break;	
-			case NewReception: 
+				break;
+            case About:
+                about();
+                break;
+            case NewReception:
 				openMakeReceptionView();
 				break;
 			case UpdateReceptions: 
@@ -127,6 +131,9 @@ public class MainViewController implements MainViewListener,
 			case Options:	
 				openOptions();
 				break;
+            case FIAS:
+                openFIASDialog();
+                break;
 			case Exit:
 				System.exit(0);	
 
@@ -144,6 +151,7 @@ public class MainViewController implements MainViewListener,
 		// Элемент Закрыть всегда активен
 		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
 		mainView.getActionByCommand(MainViewCommand.Options).setEnabled(true);
+        mainView.getActionByCommand(MainViewCommand.About).setEnabled(true);
 
 		
 		if (operator != null) { // оператор назначен
@@ -172,7 +180,8 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
 				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
-				
+                mainView.getActionByCommand(MainViewCommand.FIAS).setEnabled(true);
+
 			}
 
 		} else { // если оператор не назначен
@@ -256,6 +265,8 @@ public class MainViewController implements MainViewListener,
 
 	}
 
+
+
 	public void operatorsModelStateChanged(ModelState state) {
 		switch (state) {
 			case CONNECTING:
@@ -291,6 +302,11 @@ public class MainViewController implements MainViewListener,
 		HibernateUtil.closeConnection();
         mainView.setConnected(false);
 	}
+
+    private void about() {
+        AboutDialog aboutDialog = new AboutDialog(mainView);
+        aboutDialog.showDialog();
+    }
 
 	private void openMakeReceptionView() {
 		MakeReceptionViewController.getInstance().openView(mainView);
@@ -337,9 +353,16 @@ public class MainViewController implements MainViewListener,
 		RealtyTypeListDialogController.getInstance().showDialog(mainView);
 	}
 
+    private void openFIASDialog() {
+        FIASDialog dialog = new FIASDialog(mainView,true);
+        dialog.setVisible(true);
+    }
+
     public void editReception(Reception reception) {
         MakeReceptionViewController.getInstance().openView(mainView, reception);
     }
+
+
 
 
 	/**

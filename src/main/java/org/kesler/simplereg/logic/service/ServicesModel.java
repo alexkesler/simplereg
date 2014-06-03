@@ -41,7 +41,7 @@ public class ServicesModel implements DAOListener{
     * Читает услуги из базы данных во внутренний список
     */
 	public void readServices() {
-		services = DAOFactory.getInstance().getServiceDAO().getAllServices();
+		services = DAOFactory.getInstance().getServiceDAO().getAllItems();
 		notifyListeners(ModelState.UPDATED);	
 	}
 
@@ -88,14 +88,14 @@ public class ServicesModel implements DAOListener{
 	*/
 	public void addService(Service service) {
 		services.add(service);
-		DAOFactory.getInstance().getServiceDAO().addService(service);							
+		DAOFactory.getInstance().getServiceDAO().addItem(service);							
 	}
 
 	/**
 	* Обновляет услугу в базе данных
 	*/
 	public void updateService(Service service) {
-		DAOFactory.getInstance().getServiceDAO().updateService(service);
+		DAOFactory.getInstance().getServiceDAO().updateItem(service);
 	}
 
 
@@ -103,7 +103,7 @@ public class ServicesModel implements DAOListener{
 	* Удаляет услугу из базы данных
 	*/
 	public void deleteService(Service service) {
-		DAOFactory.getInstance().getServiceDAO().deleteService(service);
+		DAOFactory.getInstance().getServiceDAO().removeItem(service);
 	}
 
 	/**

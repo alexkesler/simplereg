@@ -158,12 +158,21 @@ public class MainView extends JFrame {
 		JMenuItem optionsMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.Options));
 		optionsMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.Options.getIconName()));
 
+        JMenuItem fiasMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.FIAS));
+        fiasMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.FIAS.getIconName()));
+
+
 		// Собираем меню настроек
 		optionsMenu.add(operatorsMenuItem);
+        optionsMenu.add(fiasMenuItem);
 		optionsMenu.add(optionsMenuItem);
 
 		// Меню О программе
 		JMenu aboutMenu = new JMenu("О программе");
+        JMenuItem aboutMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.About));
+        aboutMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.About.getIconName()));
+        aboutMenu.add(aboutMenuItem);
+
 
 		// Формируем меню окна
 		menuBar.add(mainMenu);

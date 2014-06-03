@@ -217,7 +217,7 @@ public class ReestrView extends JFrame {
 			}
 		});
 
-		// Пункт меню - добавление фильтра по услугам
+        // Пункт меню - добавление фильтра по услугам
 		JMenuItem serviceFilterMenuItem = new JMenuItem("По услуге");
 		serviceFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -273,7 +273,7 @@ public class ReestrView extends JFrame {
 		filtersPopupMenu.add(filialFilterMenuItem);
 		filtersPopupMenu.add(byRecordFilterMenuItem);
 		filtersPopupMenu.add(statusFilterMenuItem);
-		filtersPopupMenu.add(serviceFilterMenuItem);
+ 		filtersPopupMenu.add(serviceFilterMenuItem);
 		filtersPopupMenu.add(operatorFilterMenuItem);
         filtersPopupMenu.add(flMenuItem);
         filtersPopupMenu.add(ulMenuItem);

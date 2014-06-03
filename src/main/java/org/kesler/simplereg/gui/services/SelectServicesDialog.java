@@ -84,26 +84,7 @@ public class SelectServicesDialog extends ServicesDialog{
 		selectButton.setIcon(ResourcesUtil.getIcon("accept.png"));
 		selectButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				if (selectedService == null) {
-					JOptionPane.showMessageDialog(null,
-                				"Услуга не выбрана",
-                				"Ошибка",
-                				JOptionPane.ERROR_MESSAGE);
-					return ;
-				} 
-
-				if (!selectedNode.isLeaf()) {
-					JOptionPane.showMessageDialog(null,
-                				"Нельзя выбрать обобщающую услугу",
-                				"Ошибка",
-                				JOptionPane.ERROR_MESSAGE);
-					return ;
-					
-				}
-
-				result = OK;
-				setVisible(false);
-
+				selectService();
 			}
 		});
 
@@ -132,6 +113,29 @@ public class SelectServicesDialog extends ServicesDialog{
 
 	}
 
+	private void selectService() {
+		if (selectedService == null) {
+			JOptionPane.showMessageDialog(null,
+        				"Услуга не выбрана",
+        				"Ошибка",
+        				JOptionPane.ERROR_MESSAGE);
+			return ;
+		} 
+
+		if (!selectedNode.isLeaf()) {
+			JOptionPane.showMessageDialog(null,
+        				"Нельзя выбрать обобщающую услугу",
+        				"Ошибка",
+        				JOptionPane.ERROR_MESSAGE);
+			return ;
+			
+		}
+
+		result = OK;
+		setVisible(false);
+
+	}
+
 
 	// создает панель с возможностью выбора услуги без возможности редактирования
 	private JPanel createSelectTreePanel() {
@@ -151,6 +155,13 @@ public class SelectServicesDialog extends ServicesDialog{
 				}	
 				selectedNode = node;
 				selectedService = (Service)node.getUserObject();
+			}
+		});
+
+		servicesTree.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override 
+			public void mouseClicked(java.awt.event.MouseEvent ev) {
+				if (ev.getClickCount() == 2) selectService();
 			}
 		});
 

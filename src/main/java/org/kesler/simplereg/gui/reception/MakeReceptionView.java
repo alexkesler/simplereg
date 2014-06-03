@@ -13,8 +13,6 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.AbstractTableModel;
-// import java.beans.PropertyChangeEvent;
-// import java.beans.PropertyChangeListener;
 
 import com.alee.laf.button.WebButton;
 import com.alee.managers.popup.PopupWay;
@@ -246,12 +244,12 @@ class MakeReceptionView extends JDialog{
 
 			// Добавляем список заявителей
 			applicatorsListModel = new ApplicatorsListModel(controller.getApplicators());
-			JList applicatorsList = new JList(applicatorsListModel);
+			final JList applicatorsList = new JList(applicatorsListModel);
 
 			applicatorsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			applicatorsList.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent lse) {
-					selectedApplicatorIndex = lse.getFirstIndex();
+					selectedApplicatorIndex = applicatorsList.getSelectedIndex();
 				}
 			});
 

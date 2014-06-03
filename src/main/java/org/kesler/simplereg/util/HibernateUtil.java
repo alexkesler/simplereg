@@ -52,12 +52,12 @@ public class HibernateUtil {
 		hibernateProperties.setProperty("hibernate.connection.username",userName);
 		hibernateProperties.setProperty("hibernate.connection.password",password);
 
-		hibernateProperties.setProperty("hibernate.c3p0.minPoolSize","5");
+		hibernateProperties.setProperty("hibernate.c3p0.minPoolSize","1");
 		hibernateProperties.setProperty("hibernate.c3p0.maxPoolSize","20");
-		hibernateProperties.setProperty("hibernate.c3p0.timeout","1800");
+//		hibernateProperties.setProperty("hibernate.c3p0.timeout","10000");
 		hibernateProperties.setProperty("hibernate.c3p0.max_statement","50");
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto","update");
-		hibernateProperties.setProperty("hibernate.show_sql","true");
+		hibernateProperties.setProperty("hibernate.show_sql","false");
 
 
 		Configuration hibernateConfiguration = new AnnotationConfiguration()
@@ -74,6 +74,7 @@ public class HibernateUtil {
 						.addAnnotatedClass(org.kesler.simplereg.logic.RealtyObject.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.realty.RealtyType.class)
 						.addAnnotatedClass(org.kesler.simplereg.util.Counter.class)
+                        .addAnnotatedClass(org.kesler.simplereg.fias.FIASRecord.class)
 						.setProperties(hibernateProperties);
 
 		/// Пытаемся сконфигурировать Hibernate

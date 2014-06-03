@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.FL;
+import org.kesler.simplereg.logic.UL;
 
 public class TestDAOFactory{
 
@@ -42,7 +44,7 @@ public class TestDAOFactory{
 	@Test
 	public void testGetFLDAO() {
 
-		FLDAO flDAO = DAOFactory.getInstance().getFLDAO();
+		GenericDAO<FL> flDAO = DAOFactory.getInstance().getFLDAO();
 		assertNotNull("FLDAO not returned", flDAO);
 		
 	}
@@ -50,7 +52,7 @@ public class TestDAOFactory{
 	@Test
 	public void testGetULDAO() {
 
-		ULDAO ulDAO = DAOFactory.getInstance().getULDAO();
+		GenericDAO<UL> ulDAO = DAOFactory.getInstance().getULDAO();
 		assertNotNull("ULDAO not returned", ulDAO);
 		
 	}

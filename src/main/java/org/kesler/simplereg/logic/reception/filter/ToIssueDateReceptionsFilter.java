@@ -62,11 +62,11 @@ public class ToIssueDateReceptionsFilter implements ReceptionsFilter {
 		filterString += "(";
 
 		if (fromDate != null) {
-			filterString += "с " + dateFormat.format(fromDate);
+			filterString += "с " + dateFormat.format(fromDate) + " ";
 		}
 
 		if (toDate != null) {
-			filterString += " по " + dateFormat.format(toDate);
+			filterString += "по " + dateFormat.format(toDate);
 		}
 
 		filterString += ")";

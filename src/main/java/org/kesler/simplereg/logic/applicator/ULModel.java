@@ -42,7 +42,7 @@ public class ULModel implements DAOListener {
 	}
 
 	public void readULs() {
-		ulList = DAOFactory.getInstance().getULDAO().getAllULs();
+		ulList = DAOFactory.getInstance().getULDAO().getAllItems();
 		notifyListeners(ModelState.UPDATED);
 	}
 
@@ -91,7 +91,7 @@ public class ULModel implements DAOListener {
 
 	public int addUL(UL ul) {
 
-		Long id = DAOFactory.getInstance().getULDAO().addUL(ul);
+		Long id = DAOFactory.getInstance().getULDAO().addItem(ul);
 		if (id != null) {
 			ulList.add(ul);
 			return ulList.size()-1;			
@@ -102,11 +102,11 @@ public class ULModel implements DAOListener {
 	}
 
 	public void updateUL(UL ul) {
-		DAOFactory.getInstance().getULDAO().updateUL(ul);
+		DAOFactory.getInstance().getULDAO().updateItem(ul);
 	}
 
 	public void deleteUL(UL ul) {
-		DAOFactory.getInstance().getULDAO().deleteUL(ul);
+		DAOFactory.getInstance().getULDAO().removeItem(ul);
 		ulList.remove(ul);
 	}
 

@@ -19,14 +19,10 @@ import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import org.hibernate.envers.Audited;
-
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusChange;
-import org.kesler.simplereg.util.Counter;
-import org.kesler.simplereg.util.CounterUtil;
 
 /**
 * Класс предсталяет сущность приема заявителей
@@ -68,6 +64,10 @@ public class Reception extends AbstractEntity{
 	@ManyToOne
 	@JoinColumn(name="ReceptionStatusID")
 	private ReceptionStatus status;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="StatusChangeDate")
+    private Date statusChangeDate;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception")
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
@@ -198,13 +198,27 @@ public class Reception extends AbstractEntity{
 
 	public void setStatus(ReceptionStatus status) {
 		this.status = status;
-        // запоминаем изменение состояния
+        Date changeDate = new Date();
+        this.statusChangeDate = changeDate;
         Operator currentOperator = CurrentOperator.getInstance().getOperator();
-        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, new Date(), currentOperator);
+
+        // запоминаем изменение состояния
+        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, currentOperator);
         statusChanges.add(statusChange);
 	}
 
+    public Date getStatusChangeDate() {return statusChangeDate;}
+
     public List<ReceptionStatusChange> getStatusChanges() {return statusChanges;}
+
+    public void removeLastStatusChange() {
+        if (statusChanges.size() > 1) {
+            statusChanges.remove(statusChanges.size()-1);
+            ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
+            this.status = lastChange.getStatus();
+            this.statusChangeDate = lastChange.getChangeTime();
+        }
+    }
 
 	public String getStatusName() {
 		String statusName = "Не определено";

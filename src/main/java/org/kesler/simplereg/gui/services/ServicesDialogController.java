@@ -105,7 +105,9 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 
         Service newService = new Service();
         newService.setParentService(parentService); // назначаем ей родительскую услугу
-        newService.setCode(parentService.getCode());
+        String code = "";
+        if (parentService != null) code = parentService.getCode();
+        newService.setCode(code);
         newService.setEnabled(true);
 
 		ServiceDialog serviceDialog = new ServiceDialog(dialog, newService); // вызываем диалог создания услуги

@@ -5,7 +5,8 @@ package org.kesler.simplereg.gui.main;
 */
 public enum MainViewCommand {
 	Login("Войти","login","connect.png"),
-	Logout("Выйти","logout", "disconnect.png"), 
+	Logout("Выйти","logout", "disconnect.png"),
+    About("О программе","about","information.png"),
 	NewReception("Новый прием","newReception", "asterisk_yellow.png"),
 	UpdateReceptions("Обновить","updateReceptions", "arrow_refresh.png"),
 	OpenStatistic("Статистика","statistic", "chart_pie.png"),
@@ -18,6 +19,7 @@ public enum MainViewCommand {
 	RealtyObjectTypes("Типы недвижимости","realtyObjectTypes","house.png"),	
 	Operators("Операторы", "operators", "user_suit.png"),
 	Options("Настройки", "options", "wrench.png"),
+    FIAS("Загрузка ФИАС","fias","building.png"),
 	Exit("Закрыть","exit", "door_out.png");
 
 
