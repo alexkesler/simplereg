@@ -95,6 +95,7 @@ public class Reception extends AbstractEntity{
     private Reception parentReception;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentReception")
+    @Cascade(CascadeType.SAVE_UPDATE)
     @Fetch(FetchMode.SUBSELECT)
     private List<Reception> subReceptions;
 
@@ -162,11 +163,7 @@ public class Reception extends AbstractEntity{
 	* Возвращает ФИО оператора, если оператор не присоединен, возвращает пустую строку
 	*/
 	public String getOperatorFIO() {
-		String operatorFIO = "";
-		if (operator!=null) {
-			operatorFIO = operator.getFIO();
-		}
-		return operatorFIO;
+		return operator==null?"":operator.getFIO();
 	}
 
 	/**
@@ -188,7 +185,6 @@ public class Reception extends AbstractEntity{
 	public Date getOpenDate() {
 		return openDate;
 	}
-
 	public void setOpenDate(Date openDate) {
 		this.openDate = openDate;
 	}
@@ -196,7 +192,6 @@ public class Reception extends AbstractEntity{
 	public RealtyObject getRealtyObject () {
 		return realtyObject;
 	}
-
 	public void setRealtyObject(RealtyObject realtyObject) {
 		this.realtyObject = realtyObject;
 	}
@@ -204,7 +199,6 @@ public class Reception extends AbstractEntity{
 	public ReceptionStatus getStatus() {
 		return status;
 	}
-
 	public void setStatus(ReceptionStatus status) {
 		this.status = status;
         Date changeDate = new Date();
@@ -214,7 +208,26 @@ public class Reception extends AbstractEntity{
         // запоминаем изменение состояния
         ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, currentOperator);
         statusChanges.add(statusChange);
+
+        //Изменяем состояния подзапросов
+        for (Reception subReception:subReceptions) {
+            subReception.setStatus(status,changeDate,operator);
+        }
 	}
+
+    public void setStatus(ReceptionStatus status, Date changeDate, Operator operator) {
+        this.status = status;
+        this.statusChangeDate = changeDate;
+
+        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, operator);
+        statusChanges.add(statusChange);
+
+        //Изменяем состояния подзапросов
+        for (Reception subReception:subReceptions) {
+            subReception.setStatus(status,changeDate,operator);
+        }
+
+    }
 
     public Date getStatusChangeDate() {return statusChangeDate;}
 
@@ -222,19 +235,42 @@ public class Reception extends AbstractEntity{
 
     public void removeLastStatusChange() {
         if (statusChanges.size() > 1) {
-            statusChanges.remove(statusChanges.size()-1);
+            ReceptionStatusChange change = statusChanges.get(statusChanges.size()-1);
+            removeStatusChange(change);
+
+            // Назначаем статус предпоследнего
             ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
             this.status = lastChange.getStatus();
             this.statusChangeDate = lastChange.getChangeTime();
         }
     }
 
+    public void removeStatusChange(ReceptionStatusChange statusChange) {
+        statusChanges.remove(statusChange);
+        for (Reception subReception: subReceptions) {
+            subReception.removeSameStatusChange(statusChange);
+        }
+    }
+
+    public void removeSameStatusChange(ReceptionStatusChange sameStatusChange) {
+        int index = -1;
+        for (ReceptionStatusChange statusChange:statusChanges) {
+            if(statusChange.getStatus()==sameStatusChange.getStatus() &&
+                    statusChange.getChangeTime() == sameStatusChange.getChangeTime() &&
+                    statusChange.getOperator() == sameStatusChange.getOperator())
+                index = statusChanges.indexOf(statusChange);
+        }
+        if (index !=- 1) {
+            if (index == statusChanges.size()-1) {
+                removeLastStatusChange();
+            } else {
+                removeStatusChange(statusChanges.get(index));
+            }
+        }
+    }
+
 	public String getStatusName() {
-		String statusName = "Не определено";
-		if (status != null) {
-			statusName = status.getName();
-		}
-		return statusName;
+		return status == null?"Не определено":status.getName();
 	}
 
 	public Boolean isByRecord() {

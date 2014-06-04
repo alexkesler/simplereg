@@ -40,18 +40,11 @@ public class ReceptionStatusChange extends AbstractEntity {
 
     public Reception getReception() {return reception;}
 
-//    public void setReception(Reception reception) {this.reception = reception;}
-
     public ReceptionStatus getStatus() {return status;}
-
-//    public void setStatus(ReceptionStatus status) {this.status = status;}
 
     public Date getChangeTime() {return changeTime;}
 
-//    public void setChangeTime(Date changeTime) {this.changeTime = changeTime;}
-
     public Operator getOperator() {return operator;}
 
-//    public void setOperator(Operator operator) {this.operator = operator;}
 
 }
