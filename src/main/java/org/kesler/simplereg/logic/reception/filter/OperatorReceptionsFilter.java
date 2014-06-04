@@ -7,16 +7,23 @@ import org.kesler.simplereg.logic.Operator;
 
 public class OperatorReceptionsFilter implements ReceptionsFilter {
 
-	private List<Operator> filterOperators;
+	private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.OPERATOR;
+    private List<Operator> filterOperators;
+
 
 
 	public OperatorReceptionsFilter(List<Operator> filterOperators) {
 		this.filterOperators = filterOperators;
 	}
 
-	public List<Operator> getOperators() {
+    public List<Operator> getOperators() {
 		return filterOperators;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

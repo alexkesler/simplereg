@@ -7,6 +7,7 @@ import org.kesler.simplereg.logic.Reception;
 
 public class OpenDateReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.OPEN_DATE;
 	private Date fromDate = null;
 	private Date toDate = null;
 
@@ -30,6 +31,11 @@ public class OpenDateReceptionsFilter implements ReceptionsFilter {
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

@@ -4,6 +4,8 @@ import org.kesler.simplereg.logic.Reception;
 
 public class RosreestrCodeReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.ROSREESTR_CODE;
+
     private String rosreestrCodeFilter;
 
 
@@ -17,6 +19,11 @@ public class RosreestrCodeReceptionsFilter implements ReceptionsFilter {
 
     public void setRosreestrCode(String filterRosreestrCode) {
         this.rosreestrCodeFilter = filterRosreestrCode;
+    }
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
     }
 
     @Override
