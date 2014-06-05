@@ -332,4 +332,12 @@ public class Reception extends AbstractEntity{
         subReceptions.add(subReception);
     }
 
+    public String getSubReceptionsRosreestrCodes() {
+        String codes = "";
+
+        for(Reception subReception:subReceptions)
+            codes += subReception.getRosreestrCode() + "; ";
+
+        return codes;
+    }
 }

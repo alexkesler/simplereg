@@ -46,7 +46,7 @@ public class MakeReceptionViewController {
 
 
 	private MakeReceptionViewController() {
-		log = Logger.getLogger("MakeReceptionViewController");
+		log = Logger.getLogger(this.getClass().getSimpleName());
 		// initReception();
 		// view = new MakeReceptionView(this);
 		viewState = new NoneMakeReceptionViewState(this, view);
@@ -60,6 +60,7 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JFrame parentFrame) {
+        log.info("Open view for new Reception");
 		this.parentFrame = parentFrame;
 		initReception();
 		isNew = true;
@@ -86,6 +87,7 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JFrame parentFrame, Reception reception) {
+        log.info("Open view for reception " + reception.getReceptionCode());
 		this.parentFrame = parentFrame;
 		this.reception = reception;
 		isNew = false;
@@ -100,6 +102,7 @@ public class MakeReceptionViewController {
 	}
 
 	public void openView(JDialog parentDialog, Reception reception) {
+        log.info("Open view for reception " + reception.getReceptionCode());
 		this.parentDialog = parentDialog;
 		this.reception = reception;
 		isNew = false;
@@ -213,6 +216,7 @@ public class MakeReceptionViewController {
         if(dialog.getResult()== AbstractDialog.OK) {
             Reception parentReception = dialog.getSelectedReception();
             reception.setParentReception(parentReception);
+            // Устанавливаем поля как у основного дела
             if(reception.getApplicators().size()==0)
                 copyApplicatorsFromReception(parentReception);
             if (reception.getRealtyObject()==null)

@@ -176,22 +176,9 @@ public class ReceptionDialog extends AbstractDialog {
 		okButton = new JButton("Ok");
 		okButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
-                if (statusChanged) {
-					int confirmResult = JOptionPane.showConfirmDialog(currentDialog, "<html>Установить статус: " + 
-															newReceptionStatus.getName() + " ?</html>", 
-															"Сменить статус?", JOptionPane.YES_NO_CANCEL_OPTION);
 
-					if (confirmResult == JOptionPane.YES_OPTION) {
-						saveStatus();
-						setVisible(false);
-					} else if (confirmResult == JOptionPane.NO_OPTION) {
-						setVisible(false);
-					} else {
-						/// При отмене не делаем ничего
-					}
-				} else {
-					setVisible(false);
-				}
+                setVisible(false);
+
 			}
 		});
         okButton.requestFocus();
@@ -242,6 +229,7 @@ public class ReceptionDialog extends AbstractDialog {
     private void receptionChanged() {
         okButton.setText("Сохранить");
         cancelButton.setVisible(true);
+        statusChanged = true;
         result = OK;
     }
 
