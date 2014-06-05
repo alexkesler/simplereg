@@ -69,7 +69,7 @@ public class Reception extends AbstractEntity{
     @Column(name="StatusChangeDate")
     private Date statusChangeDate;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception", orphanRemoval = true)
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
     @Fetch(FetchMode.SUBSELECT)
     private List<ReceptionStatusChange> statusChanges;
