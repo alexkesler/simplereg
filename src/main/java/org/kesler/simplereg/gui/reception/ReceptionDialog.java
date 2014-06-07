@@ -115,7 +115,7 @@ public class ReceptionDialog extends AbstractDialog {
 			}
 		});
 
-		
+		// кнопка сохранения установленного статуса
 		saveNewReceptionStatusButton = new JButton();
 		saveNewReceptionStatusButton.setIcon(ResourcesUtil.getIcon("disk.png"));
 		saveNewReceptionStatusButton.setEnabled(false);
@@ -125,6 +125,7 @@ public class ReceptionDialog extends AbstractDialog {
 			}
 		});
 
+        // кнопка удаления последнего установленного статуса
         removeLastReceptionStatusChangeButton = new JButton(ResourcesUtil.getIcon("undo.png"));
         removeLastReceptionStatusChangeButton.addActionListener(new ActionListener() {
             @Override
@@ -133,6 +134,7 @@ public class ReceptionDialog extends AbstractDialog {
             }
         });
 
+        // таблица с измемениями статуса
         receptionStatusChangesTableModel = new ReceptionStatusChangesTableModel();
         JTable statusChangesTable = new JTable(receptionStatusChangesTableModel);
         JScrollPane statusChangesTableScrollPane = new JScrollPane(statusChangesTable);

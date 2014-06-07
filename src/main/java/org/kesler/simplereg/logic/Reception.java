@@ -69,7 +69,7 @@ public class Reception extends AbstractEntity{
     @Column(name="StatusChangeDate")
     private Date statusChangeDate;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception", orphanRemoval = true)
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
     @Fetch(FetchMode.SUBSELECT)
     private List<ReceptionStatusChange> statusChanges;
@@ -228,38 +228,42 @@ public class Reception extends AbstractEntity{
 
     public void removeLastStatusChange() {
         if (statusChanges.size() > 1) {
-            ReceptionStatusChange change = statusChanges.get(statusChanges.size()-1);
-            removeStatusChange(change);
+            ReceptionStatusChange statusChange = statusChanges.get(statusChanges.size()-1);
+            statusChanges.remove(statusChange);
 
             // Назначаем статус предпоследнего
             ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
             this.status = lastChange.getStatus();
             this.statusChangeDate = lastChange.getChangeTime();
+
+            // удаляем похожее последнее изменение для подзапросов
+            for (Reception subReception : subReceptions)
+                subReception.removeLastSameStatusChange(statusChange);
+
         }
     }
 
-    public void removeStatusChange(ReceptionStatusChange statusChange) {
-        statusChanges.remove(statusChange);
-        for (Reception subReception: subReceptions) {
-            subReception.removeSameStatusChange(statusChange);
-        }
-    }
+    private void removeLastSameStatusChange(ReceptionStatusChange originStatusChange) {
+        if (statusChanges.size() > 1) {
+             ReceptionStatusChange statusChange = statusChanges.get(statusChanges.size()-1);
+             if (statusChange.getChangeTime() == originStatusChange.getChangeTime() &&
+                     statusChange.getStatus() == originStatusChange.getStatus() &&
+                     statusChange.getOperator() == originStatusChange.getOperator()) {
+                 statusChanges.remove(statusChange);
+             }
 
-    public void removeSameStatusChange(ReceptionStatusChange sameStatusChange) {
-        int index = -1;
-        for (ReceptionStatusChange statusChange:statusChanges) {
-            if(statusChange.getStatus()==sameStatusChange.getStatus() &&
-                    statusChange.getChangeTime() == sameStatusChange.getChangeTime() &&
-                    statusChange.getOperator() == sameStatusChange.getOperator())
-                index = statusChanges.indexOf(statusChange);
+            // Назначаем статус предпоследнего
+            ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
+            this.status = lastChange.getStatus();
+            this.statusChangeDate = lastChange.getChangeTime();
+
+            // удаляем похожее последнее изменение для подзапросов
+            for (Reception subReception : subReceptions)
+                subReception.removeLastSameStatusChange(originStatusChange);
+
         }
-        if (index !=- 1) {
-            if (index == statusChanges.size()-1) {
-                removeLastStatusChange();
-            } else {
-                removeStatusChange(statusChanges.get(index));
-            }
-        }
+
+
     }
 
 	public String getStatusName() {
