@@ -43,6 +43,7 @@ public class ReceptionDialog extends AbstractDialog {
 	private JLabel receptionCodeLabel;
 	private JLabel byRecordLabel;
 	private JLabel rosreestrCodeLabel;
+    private JLabel parentRosreestrCodeLabel;
 	private JLabel serviceNameLabel;
 	private JLabel realtyObjectLabel;
 	private JPanel applicatorsPanel;
@@ -76,6 +77,7 @@ public class ReceptionDialog extends AbstractDialog {
 		receptionCodeLabel = new JLabel();
 		byRecordLabel = new JLabel();
 		rosreestrCodeLabel = new JLabel();
+        parentRosreestrCodeLabel = new JLabel();
 
 		serviceNameLabel = new JLabel();
 		serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
@@ -158,6 +160,8 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(byRecordLabel, "wrap");
         dataPanel.add(new JLabel("Код РосРеестра:"));
 		dataPanel.add(rosreestrCodeLabel, "wrap");
+        dataPanel.add(new JLabel("Код росреестра основного дела:"));
+        dataPanel.add(parentRosreestrCodeLabel, "wrap");
 		dataPanel.add(new JLabel("Услуга:"),"wrap");
 		dataPanel.add(serviceNameLabel,"growx, wrap");
 		dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
@@ -258,6 +262,9 @@ public class ReceptionDialog extends AbstractDialog {
 		String rosreestrCode = reception.getRosreestrCode();
 		if (rosreestrCode == null) rosreestrCode = "Не опр";
 		rosreestrCodeLabel.setText("<html><p color='green'>" + rosreestrCode + "</p></html>");
+
+        String parentRosreestrCode = reception.getParentReception()==null?"":reception.getParentReception().getRosreestrCode();
+        parentRosreestrCodeLabel.setText("<html><strong color='green'>"+ parentRosreestrCode + "</strong></html>");
 
 		// определяем наименование услуги
 		serviceNameLabel.setText("<html>" + reception.getServiceName() + "</html>");
