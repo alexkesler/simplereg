@@ -14,7 +14,6 @@ import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
 import org.kesler.simplereg.logic.ModelState;
 
 public class ReceptionsModel implements DAOListener{
-//	private static ReceptionsModel instance = null;
     protected final Logger log;
 
 
@@ -44,13 +43,6 @@ public class ReceptionsModel implements DAOListener{
 	public void addReceptionsModelStateListener(ReceptionsModelStateListener listener) {
 		listeners.add(listener);
 	}
-
-//	public static synchronized ReceptionsModel getInstance() {
-//		if (instance == null) {
-//			instance = new ReceptionsModel();
-//		}
-//		return instance;
-//	}
 
 
 	public List<Reception> getAllReceptions() {

@@ -211,10 +211,8 @@ public class MakeReceptionViewController {
 	}
 
     void selectParentReception() {
-        SelectReceptionDialog dialog = new SelectReceptionDialog(view);
-        dialog.showDialog();
-        if(dialog.getResult()== AbstractDialog.OK) {
-            Reception parentReception = dialog.getSelectedReception();
+        Reception parentReception = SelectReceptionDialogController.getInstance().showDialog(view);
+        if(parentReception!=null) {
             reception.setParentReception(parentReception);
             // Устанавливаем поля как у основного дела
             if(reception.getApplicators().size()==0)

@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.reception;
 
+import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.ModelState;
@@ -7,6 +8,7 @@ import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
+import org.kesler.simplereg.util.ResourcesUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -26,17 +28,20 @@ import java.awt.BorderLayout;
 /**
  * Диалог выбора дела
  */
-public class SelectReceptionDialog extends AbstractDialog implements ReceptionsModelStateListener{
+public class SelectReceptionDialog extends AbstractDialog {
 
-    ReceptionsModel receptionsModel;
+
+
+    private SelectReceptionDialogController controller;
     private ReceptionsTableModel receptionsTableModel;
+    private WebDateField fromDateField;
+    private WebDateField toDateField;
     private JTextField searchTextField;
     private Reception selectedReception = null;
 
-    public SelectReceptionDialog(JDialog parentDialog) {
+    SelectReceptionDialog(JDialog parentDialog, SelectReceptionDialogController controller) {
         super(parentDialog,"Выбрать основное дело",true);
-        receptionsModel = new ReceptionsModel();
-        receptionsModel.addReceptionsModelStateListener(this);
+        this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentDialog);
     }
@@ -47,21 +52,29 @@ public class SelectReceptionDialog extends AbstractDialog implements ReceptionsM
         // Панель данных
         JPanel dataPanel = new JPanel(new MigLayout());
 
+        fromDateField = new WebDateField(controller.getFromDate());
+        toDateField = new WebDateField(controller.getToDate());
+
+        JButton setDatesButton = new JButton(ResourcesUtil.getIcon("accept.png"));
+        setDatesButton.setToolTipText("Перечитать для новых дат");
+        setDatesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setDates(fromDateField.getDate(),toDateField.getDate());
+            }
+        });
+
         searchTextField = new JTextField(15);
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                searchReceptions(searchTextField.getText());
-            }
+            public void insertUpdate(DocumentEvent e) { controller.searchReceptions(searchTextField.getText()); }
 
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                searchReceptions(searchTextField.getText());
-            }
+            public void removeUpdate(DocumentEvent e) { controller.searchReceptions(searchTextField.getText()); }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                searchReceptions(searchTextField.getText());
+                controller.searchReceptions(searchTextField.getText());
             }
 
         });
@@ -85,6 +98,12 @@ public class SelectReceptionDialog extends AbstractDialog implements ReceptionsM
 
 
         // Собираем панель данных
+
+        dataPanel.add(new JLabel("Дела с "),"span, split 5");
+        dataPanel.add(fromDateField);
+        dataPanel.add(new JLabel(" по "));
+        dataPanel.add(toDateField);
+        dataPanel.add(setDatesButton);
 
         dataPanel.add(new JLabel("Код Росреестра: "));
         dataPanel.add(searchTextField, "wrap");
@@ -126,36 +145,12 @@ public class SelectReceptionDialog extends AbstractDialog implements ReceptionsM
 
     }
 
-    public void showDialog() {
-        readReceptions();
-        setVisible(true);
-    }
-
-
-    public Reception getSelectedReception() {
+    Reception getSelectedReception() {
         return selectedReception;
     }
 
-    @Override
-    public void receptionsModelStateChanged(ModelState state) {
-
-        if (state==ModelState.FILTERED) {
-            receptionsTableModel.setReceptions(receptionsModel.getFilteredReceptions());
-        }
-    }
-
-    private void readReceptions() {
-        receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
-    }
-
-    private void searchReceptions(String rosreestrCodeString) {
-        if (!rosreestrCodeString.isEmpty()) {
-            receptionsModel.getFiltersModel().setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE, rosreestrCodeString);
-        } else {
-            receptionsModel.getFiltersModel().resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
-        }
-        receptionsModel.applyFiltersInSeparateThread();
-
+    void setReceptions(List<Reception> receptions) {
+        receptionsTableModel.setReceptions(receptions);
     }
 
     class ReceptionsTableModel extends AbstractTableModel {
@@ -181,7 +176,7 @@ public class SelectReceptionDialog extends AbstractDialog implements ReceptionsM
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -190,8 +185,6 @@ public class SelectReceptionDialog extends AbstractDialog implements ReceptionsM
                 case 0:
                     return "Код Росреестра";
                 case 1:
-                    return "Код дела";
-                case 2:
                     return "Дата приема";
                 default:
                     return "";
@@ -200,20 +193,19 @@ public class SelectReceptionDialog extends AbstractDialog implements ReceptionsM
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
             Reception reception = receptions.get(rowIndex);
             switch (columnIndex) {
                 case 0:
                     return reception.getRosreestrCode();
                 case 1:
-                    return reception.getReceptionCode();
-                case 2:
                     return dateFormat.format(reception.getOpenDate());
                 default:
                     return null;
             }
 
         }
+
     }
 
 

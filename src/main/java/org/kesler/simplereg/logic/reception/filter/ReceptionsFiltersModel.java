@@ -1,14 +1,21 @@
 package org.kesler.simplereg.logic.reception.filter;
 
+import com.google.inject.internal.util.ImmutableList;
 import org.apache.log4j.Logger;
+import org.hibernate.mapping.*;
 import org.kesler.simplereg.util.DateUtil;
 
 import java.util.*;
+import java.util.Collection;
+import java.util.List;
+
+import static org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum.*;
 
 public class ReceptionsFiltersModel {
     protected final Logger log;
 
     private List<ReceptionsFilter> filters;
+    private OpenDateReceptionsFilter openDateReceptionsFilter = null;
 
     public ReceptionsFiltersModel() {
         log = Logger.getLogger(this.getClass().getSimpleName());
@@ -17,7 +24,7 @@ public class ReceptionsFiltersModel {
     }
 
     public List<ReceptionsFilter> getFilters() {
-        return filters;
+        return Collections.unmodifiableList(filters);
     }
 
     public int setQuickFilter(QuickReceptionsFiltersEnum quickFiltersEnum, String filterString) {
@@ -63,49 +70,48 @@ public class ReceptionsFiltersModel {
 
     public int addFilter(ReceptionsFilter filter) {
         log.info("Adding filter: " + filter);
+        if (filter.getFiltersEnum()== OPEN_DATE) {
+            // назначаем новый фильтр по дате открытия
+            openDateReceptionsFilter = (OpenDateReceptionsFilter) filter;
+            // Подчищаем такие же фильтры из списка
+            Iterator<ReceptionsFilter> filterIterator = filters.iterator();
+            while (filterIterator.hasNext()) {
+                if (filterIterator.next().getFiltersEnum()== OPEN_DATE) filterIterator.remove();
+            }
+        }
         filters.add(filter);
         return filters.size()-1;
     }
 
     public void removeFilter(int index) {
         log.info("Remove filter:" + filters.get(index));
+        if (filters.get(index).getFiltersEnum()== OPEN_DATE) openDateReceptionsFilter = null;
         filters.remove(index);
     }
 
     public void resetFilters() {
         log.info("Reset filters");
         filters = new ArrayList<ReceptionsFilter>();
+        openDateReceptionsFilter = null;
     }
 
     public Date getFromOpenDate () {
-        Date fromOpenDate = null;
-
-        for (ReceptionsFilter filter: filters) {
-            if (filter instanceof OpenDateReceptionsFilter) {
-                OpenDateReceptionsFilter openDateFilter = (OpenDateReceptionsFilter) filter;
-                Date filterFromOpenDate =  openDateFilter.getFromDate();
-                if (fromOpenDate == null || (fromOpenDate != null && filterFromOpenDate != null && fromOpenDate.getTime() < filterFromOpenDate.getTime()) )  {
-                    fromOpenDate = filterFromOpenDate;
-                }
-
-            }
-        }
-
-        return fromOpenDate;
+        return openDateReceptionsFilter==null?null:openDateReceptionsFilter.getFromDate();
     }
     public Date getToOpenDate () {
-        Date toOpenDate = null;
+        return openDateReceptionsFilter==null?null:openDateReceptionsFilter.getToDate();
+    }
 
-        for (ReceptionsFilter filter: filters) {
-            if (filter instanceof OpenDateReceptionsFilter) {
-                OpenDateReceptionsFilter openDateFilter = (OpenDateReceptionsFilter) filter;
-                Date filterToOpenDate =  openDateFilter.getToDate();
-                if (toOpenDate == null || (toOpenDate != null && filterToOpenDate != null && toOpenDate.getTime() > filterToOpenDate.getTime()) )
-                    toOpenDate = filterToOpenDate;
-            }
+    public void setOpenDates(Date fromDate, Date toDate) {
+        fromDate = DateUtil.toBeginOfDay(fromDate);
+        toDate = DateUtil.toEndOfDay(toDate);
+        if(openDateReceptionsFilter==null) {
+            openDateReceptionsFilter = new OpenDateReceptionsFilter(fromDate,toDate);
+            filters.add(0,openDateReceptionsFilter);
+        } else {
+            openDateReceptionsFilter.setFromDate(fromDate);
+            openDateReceptionsFilter.setToDate(toDate);
         }
-
-        return toOpenDate;
     }
 
     private void initFilters() {
@@ -117,8 +123,8 @@ public class ReceptionsFiltersModel {
         Date toDate = new Date();
         toDate = DateUtil.toEndOfDay(toDate);
 
-        ReceptionsFilter openDateFilter = new OpenDateReceptionsFilter(fromDate, toDate);
-        addFilter(openDateFilter);
+        openDateReceptionsFilter = new OpenDateReceptionsFilter(fromDate, toDate);
+        filters.add(openDateReceptionsFilter);
     }
 
 }
