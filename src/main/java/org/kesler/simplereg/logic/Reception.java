@@ -330,7 +330,6 @@ public class Reception extends AbstractEntity{
         parentReception.addSubReception(this);
     }
 
-
     public List<Reception> getSubReceptions() {return subReceptions;}
     public void addSubReception(Reception subReception) {
         subReceptions.add(subReception);

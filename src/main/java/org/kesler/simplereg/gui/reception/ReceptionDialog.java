@@ -46,7 +46,8 @@ public class ReceptionDialog extends AbstractDialog {
     private JLabel parentRosreestrCodeLabel;
 	private JLabel serviceNameLabel;
 	private JLabel realtyObjectLabel;
-	private JPanel applicatorsPanel;
+    private ApplicatorsListModel applicatorsListModel;
+    private SubReceptionsListModel subReceptionsListModel;
 	private JComboBox statusesComboBox;
     private ReceptionStatusChangesTableModel receptionStatusChangesTableModel;
 	private JButton saveNewReceptionStatusButton;
@@ -85,13 +86,17 @@ public class ReceptionDialog extends AbstractDialog {
 		realtyObjectLabel = new JLabel();
 		realtyObjectLabel.setBorder(BorderFactory.createEtchedBorder());
 
+        // Панель сведений об услуге
+        JPanel serviceInfoPanel = new JPanel();
 
-		applicatorsPanel = new JPanel(new MigLayout("fillx"));
-		JScrollPane applicatorsPanelScrollPane = new JScrollPane(applicatorsPanel);
 
-		// Панель сведений об услуге
-		JPanel serviceInfoPanel = new JPanel();
+        applicatorsListModel = new ApplicatorsListModel();
+        JList<Applicator> applicatorsList = new JList<Applicator>(applicatorsListModel);
+		JScrollPane applicatorsListScrollPane = new JScrollPane(applicatorsList);
 
+        subReceptionsListModel = new SubReceptionsListModel();
+        JList<String> subReceptionsList = new JList<String>(subReceptionsListModel);
+        JScrollPane subReceptionsListScrollPane = new JScrollPane(subReceptionsList);
 
 
 
@@ -167,13 +172,15 @@ public class ReceptionDialog extends AbstractDialog {
 		dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
 		dataPanel.add(realtyObjectLabel, "growx, wrap");
 		dataPanel.add(new JLabel("Заявители:"), "wrap");
-		dataPanel.add(applicatorsPanelScrollPane,"push, grow, wrap");
+		dataPanel.add(applicatorsListScrollPane,"growx, h 50:100:, wrap");
+        dataPanel.add(new JLabel("Дополнительные дела:"), "wrap");
+        dataPanel.add(subReceptionsListScrollPane,"growx, h 50:100:, wrap");
 		dataPanel.add(new JLabel("Состояние дела"), "right");
 		dataPanel.add(serviceInfoPanel,"growx, wrap");
 		dataPanel.add(statusesComboBox, "w 100");
 		dataPanel.add(saveNewReceptionStatusButton);
         dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
-        dataPanel.add(statusChangesTableScrollPane, "growx, h 100, wrap");
+        dataPanel.add(statusChangesTableScrollPane, "growx, h 100!, wrap");
 
 
 		// Панель кнопок
@@ -280,15 +287,11 @@ public class ReceptionDialog extends AbstractDialog {
 
 		realtyObjectLabel.setText(realtyObjectString);
 
-		applicatorsPanel.removeAll();
-		// определяем перечень заявителей
-		List<Applicator> applicators = reception.getApplicators();
-		for (Applicator applicator: applicators) {
-			JLabel applicatorLabel = new JLabel("<html>" + applicator.toString() + "</html>");
-			applicatorLabel.setBorder(BorderFactory.createEtchedBorder());
-			applicatorsPanel.add(applicatorLabel, "growx, wrap");
-			// applicatorsPanel.add(applicatorButton,"wrap");
-		}
+		// обновляем перечень заявителей
+		applicatorsListModel.setApplicators(reception.getApplicators());
+
+        // обновляем список подзапросов
+        subReceptionsListModel.setSubReceptions(reception.getSubReceptions());
 
 		// Получаем список статусов
 		List<ReceptionStatus> receptionStatuses = ReceptionStatusesModel.getInstance().getReceptionStatuses();
@@ -311,6 +314,53 @@ public class ReceptionDialog extends AbstractDialog {
 
 
 	}
+
+    class SubReceptionsListModel extends AbstractListModel<String> {
+        private List<Reception> subReceptions;
+
+        SubReceptionsListModel() {
+            subReceptions = new ArrayList<Reception>();
+        }
+
+        public void setSubReceptions(List<Reception> subReceptions) {
+            this.subReceptions = subReceptions;
+            fireContentsChanged(this,0,subReceptions.size()-1);
+        }
+
+        @Override
+        public int getSize() {
+            return subReceptions.size();
+        }
+
+        @Override
+        public String getElementAt(int index) {
+            return subReceptions.get(index).getRosreestrCode();
+        }
+    }
+
+    class ApplicatorsListModel extends AbstractListModel<Applicator> {
+
+        private List<Applicator> applicators;
+
+        ApplicatorsListModel() {
+            applicators = new ArrayList<Applicator>();
+        }
+
+        public void setApplicators(List<Applicator> applicators) {
+            this.applicators = applicators;
+            fireContentsChanged(this,0,applicators.size()-1);
+        }
+
+        @Override
+        public int getSize() {
+            return applicators.size();
+        }
+
+        @Override
+        public Applicator getElementAt(int index) {
+            return applicators.get(index);
+        }
+    }
 
     class ReceptionStatusChangesTableModel extends AbstractTableModel {
 
