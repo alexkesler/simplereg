@@ -223,8 +223,7 @@ public class MakeReceptionViewController {
                 reception.setToIssueDate(parentReception.getToIssueDate());
             if (reception.isResultInMFC()==null)
                 reception.setResultInMFC(parentReception.isResultInMFC());
-            if (reception.getRosreestrCode()==null)
-                reception.setRosreestrCode(parentReception.getRosreestrCode());
+
         }
         viewState.updatePanelData();
     }
