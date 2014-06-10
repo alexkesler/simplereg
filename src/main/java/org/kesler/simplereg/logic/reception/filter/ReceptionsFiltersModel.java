@@ -1,13 +1,9 @@
 package org.kesler.simplereg.logic.reception.filter;
 
-import com.google.inject.internal.util.ImmutableList;
 import org.apache.log4j.Logger;
-import org.hibernate.mapping.*;
 import org.kesler.simplereg.util.DateUtil;
 
 import java.util.*;
-import java.util.Collection;
-import java.util.List;
 
 import static org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum.*;
 

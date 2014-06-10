@@ -56,13 +56,12 @@ public class ReestrColumns {
 		// добавляем в активные поля 
 		activeColumns = new ArrayList<ReestrColumn>();
 
-		activeColumns.add(receptionCodeReestrColumn);
+		activeColumns.add(rosreestrCodeReestrColumn);
         activeColumns.add(parentRosreestrCodeReestrColumn);
 		activeColumns.add(openDateReestrColumn);
 		activeColumns.add(applicatorsReestrColumn);
 		activeColumns.add(serviceReestrColumn);
 		activeColumns.add(statusReestrColumn);
-		activeColumns.add(resultInMFCReestrColumn);
         activeColumns.add(subReceptionsRosreestrCodesReesrtColumn);
 		
 
@@ -71,7 +70,8 @@ public class ReestrColumns {
 		inactiveColumns.add(byRecordReestrColumn);
 		inactiveColumns.add(operatorReestrColumn);
 		inactiveColumns.add(toIssueDateReestrColumn);
-		inactiveColumns.add(rosreestrCodeReestrColumn);
+		inactiveColumns.add(receptionCodeReestrColumn);
+        inactiveColumns.add(resultInMFCReestrColumn);
         inactiveColumns.add(realtyObjectReestrColumn);
 	}
 
