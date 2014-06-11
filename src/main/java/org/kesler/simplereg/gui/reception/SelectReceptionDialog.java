@@ -46,6 +46,14 @@ public class SelectReceptionDialog extends AbstractDialog {
         setLocationRelativeTo(parentDialog);
     }
 
+    SelectReceptionDialog(JFrame parentFrame, SelectReceptionDialogController controller) {
+        super(parentFrame,"Выбрать основное дело",true);
+        this.controller = controller;
+        createGUI();
+        setLocationRelativeTo(parentFrame);
+    }
+
+
     private void createGUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
 

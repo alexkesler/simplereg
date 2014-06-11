@@ -38,6 +38,7 @@ public class ReestrView extends JFrame {
 
 	private Action openReceptionAction;
 	private Action changeReceptionsStatusAction;
+    private Action selectMainReceptionAction;
 	private Action removeReceptionsAction;
 
 	private FilterListModel filterListModel;
@@ -394,15 +395,18 @@ public class ReestrView extends JFrame {
 				if (reestrTable.getSelectedRows().length==0) {
 					openReceptionAction.setEnabled(false);
 					changeReceptionsStatusAction.setEnabled(false);
+                    selectMainReceptionAction.setEnabled(false);
 					removeReceptionsAction.setEnabled(false);
 				} else if (reestrTable.getSelectedRows().length==1) {
 					openReceptionAction.setEnabled(true);
 					changeReceptionsStatusAction.setEnabled(true);
+                    selectMainReceptionAction.setEnabled(true);
 					removeReceptionsAction.setEnabled(true);
 					removeReceptionsAction.putValue(Action.NAME, "Удалить запрос");
 				} else {
 					openReceptionAction.setEnabled(false);
 					changeReceptionsStatusAction.setEnabled(true);
+                    selectMainReceptionAction.setEnabled(true);
 					removeReceptionsAction.setEnabled(true);
 					removeReceptionsAction.putValue(Action.NAME, "Удалить запросы");
 				}
@@ -444,12 +448,21 @@ public class ReestrView extends JFrame {
 			setReceptionStatusMenu.add(statusMenuItem);
 		}
 
+        JMenu mainReceptionMenu = new JMenu("Основное дело");
+
+        selectMainReceptionAction = new SelectMainReceptionAction();
+        selectMainReceptionAction.setEnabled(false);
+        JMenuItem selectMainReceptionMenuItem = new JMenuItem(selectMainReceptionAction);
+
+        mainReceptionMenu.add(selectMainReceptionMenuItem);
+
 		removeReceptionsAction = new RemoveReceptionsAction();
 		removeReceptionsAction.setEnabled(false);
 		JMenuItem removeReceptionsMenuItem = new JMenuItem(removeReceptionsAction);
 
 		reestrPopupMenu.add(openReceptionMenuItem);
 		reestrPopupMenu.add(setReceptionStatusMenu);
+        reestrPopupMenu.add(mainReceptionMenu);
 		reestrPopupMenu.add(removeReceptionsMenuItem);
 
 		reestrTable.setComponentPopupMenu(reestrPopupMenu);
@@ -629,6 +642,16 @@ public class ReestrView extends JFrame {
 			controller.changeReceptionsStatus(selectedReceptionsIndexes, status);
 		}
 	}
+
+    class SelectMainReceptionAction extends AbstractAction {
+        SelectMainReceptionAction() {super("Выбрать");}
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
+            controller.selectMainReception(selectedReceptionsIndexes);
+        }
+    }
 
 	class RemoveReceptionsAction extends AbstractAction {
 		RemoveReceptionsAction() {

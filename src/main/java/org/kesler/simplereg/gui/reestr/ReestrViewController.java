@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
+import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
 
@@ -197,7 +198,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		for (int i=0; i<indexes.length; i++) {
 			Reception reception = receptions.get(indexes[i]);
 			selectedReceptions.add(reception);	
-			selectedReceptionsString += "<p>" + reception.getReceptionCode() + ";</p>";		
+			selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
 		}
 
 		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " + 
@@ -215,6 +216,46 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	}
 
+
+    public void selectMainReception(int[] indexes) {
+        if (indexes.length == 0) {
+            new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+            return;
+        }
+
+        Reception mainReception = SelectReceptionDialogController.getInstance().showDialog(view);
+        if (mainReception==null) return;
+
+        List<Reception> receptions = model.getFilteredReceptions();
+        String selectedReceptionsString = "";
+        List<Reception> selectedReceptions = new ArrayList<Reception>();
+        for (int i=0; i<indexes.length; i++) {
+            Reception reception = receptions.get(indexes[i]);
+            selectedReceptions.add(reception);
+            selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
+        }
+
+        if (selectedReceptions.contains(mainReception)) {
+            JOptionPane.showMessageDialog(view,"Нельзя назначить делу " + mainReception.getRosreestrCode() + " основным само себя",
+                    "Ошибка",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " +
+                        selectedReceptionsString +
+                        " основное дело: " + mainReception.getRosreestrCode() + " ?</html>",
+                "Установить основное дело?", JOptionPane.YES_NO_OPTION);
+
+        if (confirmResult == JOptionPane.OK_OPTION) {
+            for (Reception reception: selectedReceptions) {
+                reception.setParentReception(mainReception);
+                model.updateReception(reception);
+            }
+            view.tableDataChanged();
+        }
+
+
+    }
 
 	public void removeReceptions(int[] indexes) {
 		if (indexes.length == 0) {

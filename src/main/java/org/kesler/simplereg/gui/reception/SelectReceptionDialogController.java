@@ -41,6 +41,18 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         return reception;
     }
 
+    public Reception showDialog(JFrame parentFrame) {
+        log.info("Opening dialog");
+        Reception reception = null;
+        dialog = new SelectReceptionDialog(parentFrame,this);
+        readReceptions();
+        dialog.setVisible(true);
+        if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
+        dialog.dispose();
+        return reception;
+    }
+
+
     void readReceptions() {
         receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
     }
