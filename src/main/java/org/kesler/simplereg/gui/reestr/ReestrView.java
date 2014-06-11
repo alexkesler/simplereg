@@ -22,9 +22,10 @@ import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
 
 import org.kesler.simplereg.util.ResourcesUtil;
+
+import static org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum.*;
 
 public class ReestrView extends JFrame {
 
@@ -189,7 +190,7 @@ public class ReestrView extends JFrame {
 		JMenuItem openDateFilterMenuItem = new JMenuItem("По дате открытия");
 		openDateFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.OPEN_DATE);
+				controller.addFilter(OPEN_DATE);
 			}
 		});
 
@@ -197,7 +198,7 @@ public class ReestrView extends JFrame {
 		JMenuItem filialFilterMenuItem = new JMenuItem("По коду филиала");
 		filialFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.FILIAL);
+				controller.addFilter(FILIAL);
 			}
 		});
 
@@ -205,7 +206,7 @@ public class ReestrView extends JFrame {
 		JMenuItem byRecordFilterMenuItem = new JMenuItem("По предв записи");
 		byRecordFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.BY_RECORD);
+				controller.addFilter(BY_RECORD);
 			}
 		});
 
@@ -213,7 +214,7 @@ public class ReestrView extends JFrame {
 		JMenuItem statusFilterMenuItem = new JMenuItem("По состоянию");
 		statusFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.STATUS);
+				controller.addFilter(STATUS);
 			}
 		});
 
@@ -221,7 +222,7 @@ public class ReestrView extends JFrame {
 		JMenuItem serviceFilterMenuItem = new JMenuItem("По услуге");
 		serviceFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.SERVICE);
+				controller.addFilter(SERVICE);
 			}
 		});
 
@@ -230,7 +231,7 @@ public class ReestrView extends JFrame {
 		JMenuItem operatorFilterMenuItem = new JMenuItem("По оператору");
 		operatorFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.OPERATOR);
+				controller.addFilter(OPERATOR);
 			}
 		});
 
@@ -238,7 +239,7 @@ public class ReestrView extends JFrame {
         JMenuItem flMenuItem = new JMenuItem("По физ лицу");
         flMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                controller.addFilter(ReceptionsFiltersEnum.FL);
+                controller.addFilter(FL);
             }
         });
 
@@ -247,7 +248,7 @@ public class ReestrView extends JFrame {
         JMenuItem ulMenuItem = new JMenuItem("По юр лицу");
         ulMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                controller.addFilter(ReceptionsFiltersEnum.UL);
+                controller.addFilter(UL);
             }
         });
 
@@ -255,7 +256,7 @@ public class ReestrView extends JFrame {
 		JMenuItem toIssueDateFilterMenuItem = new JMenuItem("По дате на выдачу");
 		toIssueDateFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.TO_ISSUE_DATE);
+				controller.addFilter(TO_ISSUE_DATE);
 			}
 		});
 
@@ -263,12 +264,20 @@ public class ReestrView extends JFrame {
 		JMenuItem resultInMFCFilterMenuItem = new JMenuItem("По месту получения результата");
 		resultInMFCFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.RESULT_IN_MFC);
+				controller.addFilter(RESULT_IN_MFC);
 			}
 		});
 
+        // Пункт меню - добавление фильтра по месту получения результата
+        JMenuItem mainFilterMenuItem = new JMenuItem("Для основных/дополнительных дел");
+        mainFilterMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(MAIN);
+            }
+        });
 
-		// собираем всплывающее меню добавления фильтра
+
+        // собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
 		filtersPopupMenu.add(filialFilterMenuItem);
 		filtersPopupMenu.add(byRecordFilterMenuItem);
@@ -279,6 +288,7 @@ public class ReestrView extends JFrame {
         filtersPopupMenu.add(ulMenuItem);
 		filtersPopupMenu.add(toIssueDateFilterMenuItem);
 		filtersPopupMenu.add(resultInMFCFilterMenuItem);
+        filtersPopupMenu.add(mainFilterMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();

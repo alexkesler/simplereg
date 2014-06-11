@@ -12,5 +12,6 @@ public enum ReceptionsFiltersEnum {
 	BY_RECORD,
 	RESULT_IN_MFC,
     CODE,
-    ROSREESTR_CODE
+    ROSREESTR_CODE,
+    MAIN
 }

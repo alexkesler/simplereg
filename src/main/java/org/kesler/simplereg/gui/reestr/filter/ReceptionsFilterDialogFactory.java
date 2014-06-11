@@ -47,6 +47,9 @@ public abstract class ReceptionsFilterDialogFactory {
 			case RESULT_IN_MFC:
 				receptionsFilterDialog = new ResultInMFCReceptionsFilterDialog(view);	
 			break;
+            case MAIN:
+                receptionsFilterDialog = new MainReceptionFilerDialog(view);
+                break;
 			default:
 				break;
 		}
