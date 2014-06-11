@@ -326,14 +326,22 @@ public class Reception extends AbstractEntity{
 
     public Reception getParentReception() {return parentReception;}
     public void setParentReception(Reception parentReception) {
-        this.parentReception = parentReception;
-        parentReception.addSubReception(this);
+        if (parentReception!=null) {
+            this.parentReception = parentReception;
+            parentReception.addSubReception(this);
+        } else {
+            if (this.parentReception!=null) {
+                this.parentReception.removeSubReception(this);
+                this.parentReception = null;
+            }
+        }
     }
 
     public List<Reception> getSubReceptions() {return subReceptions;}
     public void addSubReception(Reception subReception) {
         subReceptions.add(subReception);
     }
+    public void removeSubReception(Reception subReception) {subReceptions.remove(subReception);}
 
     public String getSubReceptionsRosreestrCodes() {
         String codes = "";

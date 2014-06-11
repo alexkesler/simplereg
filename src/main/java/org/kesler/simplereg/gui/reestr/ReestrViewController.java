@@ -246,14 +246,42 @@ public class ReestrViewController implements ReceptionsModelStateListener{
                         " основное дело: " + mainReception.getRosreestrCode() + " ?</html>",
                 "Установить основное дело?", JOptionPane.YES_NO_OPTION);
 
-        if (confirmResult == JOptionPane.OK_OPTION) {
+        if (confirmResult == JOptionPane.YES_OPTION) {
             for (Reception reception: selectedReceptions) {
                 reception.setParentReception(mainReception);
                 model.updateReception(reception);
             }
             view.tableDataChanged();
         }
+    }
 
+    public void resetMainReception(int[] indexes) {
+        if (indexes.length == 0) {
+            new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+            return;
+        }
+
+        List<Reception> receptions = model.getFilteredReceptions();
+        String selectedReceptionsString = "";
+        List<Reception> selectedReceptions = new ArrayList<Reception>();
+        for (int i=0; i<indexes.length; i++) {
+            Reception reception = receptions.get(indexes[i]);
+            selectedReceptions.add(reception);
+            selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
+        }
+
+        int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Сбросить для дел: " +
+                        selectedReceptionsString +
+                        " основное дело ?</html>",
+                "Сбросить основное дело?", JOptionPane.YES_NO_OPTION);
+
+        if (confirmResult == JOptionPane.YES_OPTION) {
+            for (Reception reception: selectedReceptions) {
+                reception.setParentReception(null);
+                model.updateReception(reception);
+            }
+            view.tableDataChanged();
+        }
 
     }
 

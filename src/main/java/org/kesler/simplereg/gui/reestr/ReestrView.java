@@ -39,6 +39,7 @@ public class ReestrView extends JFrame {
 	private Action openReceptionAction;
 	private Action changeReceptionsStatusAction;
     private Action selectMainReceptionAction;
+    private Action resetMainReceptionAction;
 	private Action removeReceptionsAction;
 
 	private FilterListModel filterListModel;
@@ -396,17 +397,20 @@ public class ReestrView extends JFrame {
 					openReceptionAction.setEnabled(false);
 					changeReceptionsStatusAction.setEnabled(false);
                     selectMainReceptionAction.setEnabled(false);
+                    resetMainReceptionAction.setEnabled(false);
 					removeReceptionsAction.setEnabled(false);
 				} else if (reestrTable.getSelectedRows().length==1) {
 					openReceptionAction.setEnabled(true);
 					changeReceptionsStatusAction.setEnabled(true);
                     selectMainReceptionAction.setEnabled(true);
+                    resetMainReceptionAction.setEnabled(true);
 					removeReceptionsAction.setEnabled(true);
 					removeReceptionsAction.putValue(Action.NAME, "Удалить запрос");
 				} else {
 					openReceptionAction.setEnabled(false);
 					changeReceptionsStatusAction.setEnabled(true);
                     selectMainReceptionAction.setEnabled(true);
+                    resetMainReceptionAction.setEnabled(true);
 					removeReceptionsAction.setEnabled(true);
 					removeReceptionsAction.putValue(Action.NAME, "Удалить запросы");
 				}
@@ -454,7 +458,12 @@ public class ReestrView extends JFrame {
         selectMainReceptionAction.setEnabled(false);
         JMenuItem selectMainReceptionMenuItem = new JMenuItem(selectMainReceptionAction);
 
+        resetMainReceptionAction = new ResetMainReceptionAction();
+        resetMainReceptionAction.setEnabled(false);
+        JMenuItem resetMainReceptionMenuItem = new JMenuItem(resetMainReceptionAction);
+
         mainReceptionMenu.add(selectMainReceptionMenuItem);
+        mainReceptionMenu.add(resetMainReceptionMenuItem);
 
 		removeReceptionsAction = new RemoveReceptionsAction();
 		removeReceptionsAction.setEnabled(false);
@@ -653,7 +662,17 @@ public class ReestrView extends JFrame {
         }
     }
 
-	class RemoveReceptionsAction extends AbstractAction {
+    class ResetMainReceptionAction extends AbstractAction {
+        ResetMainReceptionAction() {super("Сбросить");}
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
+            controller.resetMainReception(selectedReceptionsIndexes);
+        }
+    }
+
+    class RemoveReceptionsAction extends AbstractAction {
 		RemoveReceptionsAction() {
 			super("Удалить запросы");
 		}
