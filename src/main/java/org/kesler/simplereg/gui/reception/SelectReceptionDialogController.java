@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * Контроллер для управления диалогом выбора дела
  */
-public class SelectReceptionDialogController implements ReceptionsModelStateListener{
+public class SelectReceptionDialogController implements ReceptionsModelStateListener {
 
     protected final Logger log;
     private static SelectReceptionDialogController instance = new SelectReceptionDialogController();
@@ -22,18 +22,20 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
     ReceptionsModel receptionsModel;
     SelectReceptionDialog dialog;
 
-    private SelectReceptionDialogController () {
+    private SelectReceptionDialogController() {
         log = Logger.getLogger(this.getClass().getSimpleName());
         receptionsModel = new ReceptionsModel();
         receptionsModel.addReceptionsModelStateListener(this);
     }
 
-    public static SelectReceptionDialogController getInstance() {return instance;}
+    public static SelectReceptionDialogController getInstance() {
+        return instance;
+    }
 
     public Reception showDialog(JDialog parentDialog) {
         log.info("Opening dialog");
         Reception reception = null;
-        dialog = new SelectReceptionDialog(parentDialog,this);
+        dialog = new SelectReceptionDialog(parentDialog, this);
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -44,7 +46,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
     public Reception showDialog(JFrame parentFrame) {
         log.info("Opening dialog");
         Reception reception = null;
-        dialog = new SelectReceptionDialog(parentFrame,this);
+        dialog = new SelectReceptionDialog(parentFrame, this);
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -68,7 +70,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
     }
 
     void setDates(Date fromDate, Date toDate) {
-        receptionsModel.getFiltersModel().setOpenDates(fromDate,toDate);
+        receptionsModel.getFiltersModel().setOpenDates(fromDate, toDate);
         receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
     }
 

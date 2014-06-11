@@ -19,141 +19,141 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class ReceptionStatusDialog extends JDialog {
 
-	public static int NONE = -1;
-	public static int OK = 0;
-	public static int CANCEL = 1;
+    public static int NONE = -1;
+    public static int OK = 0;
+    public static int CANCEL = 1;
 
-	private JDialog parentDialog;
+    private JDialog parentDialog;
 
-	private int result;
-	private ReceptionStatus receptionStatus;
+    private int result;
+    private ReceptionStatus receptionStatus;
 
-	private JTextField codeField;
-	private JTextField nameField;
+    private JTextField codeField;
+    private JTextField nameField;
 
-	public ReceptionStatusDialog(JDialog parentDialog) {
-		super(parentDialog, "Создать", true);
-		this.parentDialog = parentDialog;
-		result = NONE;
-		receptionStatus = new ReceptionStatus();
-		createGUI();
-	}
+    public ReceptionStatusDialog(JDialog parentDialog) {
+        super(parentDialog, "Создать", true);
+        this.parentDialog = parentDialog;
+        result = NONE;
+        receptionStatus = new ReceptionStatus();
+        createGUI();
+    }
 
-	public ReceptionStatusDialog(JDialog parentDialog, ReceptionStatus receptionStatus) {
-		super(parentDialog, "Изменить", true);
-		this.parentDialog = parentDialog;
-		result = NONE;
-		this.receptionStatus = receptionStatus;
-		createGUI();
-	}
+    public ReceptionStatusDialog(JDialog parentDialog, ReceptionStatus receptionStatus) {
+        super(parentDialog, "Изменить", true);
+        this.parentDialog = parentDialog;
+        result = NONE;
+        this.receptionStatus = receptionStatus;
+        createGUI();
+    }
 
-	public int getResult() {
-		return result;
-	}
+    public int getResult() {
+        return result;
+    }
 
-	public ReceptionStatus getReceptionStatus() {
-		return receptionStatus;
-	}
+    public ReceptionStatus getReceptionStatus() {
+        return receptionStatus;
+    }
 
-	private void createGUI() {
+    private void createGUI() {
 
-		JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-		JPanel dataPanel = new JPanel(new MigLayout("fill"));
+        JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-		codeField = new JTextField(5);
-		codeField.setToolTipText("Введите код состояния (число)");
-		nameField = new JTextField(20);
+        codeField = new JTextField(5);
+        codeField.setToolTipText("Введите код состояния (число)");
+        nameField = new JTextField(20);
 
-		// Собираем панель данных
-		dataPanel.add(new JLabel("Код: "));
-		dataPanel.add(codeField, "wrap");
+        // Собираем панель данных
+        dataPanel.add(new JLabel("Код: "));
+        dataPanel.add(codeField, "wrap");
 
-		dataPanel.add(new JLabel("Наименование: "));
-		dataPanel.add(nameField);
-
-
-		// панель кнопок
-		JPanel buttonPanel = new JPanel();
-
-		JButton okButton = new JButton("Ok");
-		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				result = OK;
-				if (saveStatusFromGUI()) {
-					setVisible(false);
-				}
-				
-			}
-		});
+        dataPanel.add(new JLabel("Наименование: "));
+        dataPanel.add(nameField);
 
 
-		JButton cancelButton = new JButton("Отмена");
-		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				result = CANCEL;
-				setVisible(false);
-			}
-		});
+        // панель кнопок
+        JPanel buttonPanel = new JPanel();
+
+        JButton okButton = new JButton("Ok");
+        okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                result = OK;
+                if (saveStatusFromGUI()) {
+                    setVisible(false);
+                }
+
+            }
+        });
 
 
-		// Собираем панель кнопок
-		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
+        JButton cancelButton = new JButton("Отмена");
+        cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                result = CANCEL;
+                setVisible(false);
+            }
+        });
 
-		mainPanel.add(dataPanel, BorderLayout.CENTER);
-		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		this.setContentPane(mainPanel);
-		this.pack();
-		this.setLocationRelativeTo(parentDialog);
+        // Собираем панель кнопок
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
 
-		loadStatusToGUI();
+        mainPanel.add(dataPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-	}
+        this.setContentPane(mainPanel);
+        this.pack();
+        this.setLocationRelativeTo(parentDialog);
 
-	private void loadStatusToGUI() {
-		if (receptionStatus.getCode() != null) {
-			codeField.setText(receptionStatus.getCode().toString());
-		} else {
-			codeField.setText("");
-		}
+        loadStatusToGUI();
 
-		if (receptionStatus.getName() != null) {
-			nameField.setText(receptionStatus.getName());
-		} else {
-			nameField.setText("");
-		}
-		
-	}
+    }
 
-	private boolean saveStatusFromGUI() {
-		if (codeField.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(parentDialog, "Поле 'Код' не может быть пустым.", "Ошибка", JOptionPane.ERROR_MESSAGE);
-			codeField.requestFocus();
-			return false;
-		}
+    private void loadStatusToGUI() {
+        if (receptionStatus.getCode() != null) {
+            codeField.setText(receptionStatus.getCode().toString());
+        } else {
+            codeField.setText("");
+        }
 
-		if (nameField.getText().isEmpty()) {
-			JOptionPane.showMessageDialog(parentDialog, "Поле 'Наименование' не может быть пустым.", "Ошибка", JOptionPane.ERROR_MESSAGE);
-			nameField.requestFocus();
-			return false;
+        if (receptionStatus.getName() != null) {
+            nameField.setText(receptionStatus.getName());
+        } else {
+            nameField.setText("");
+        }
 
-		}
+    }
 
-		try {
-			receptionStatus.setCode(Integer.parseInt(codeField.getText()));
-		} catch (NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(parentDialog, "Поле 'Код' должно быть числом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		
-		receptionStatus.setName(nameField.getText());
+    private boolean saveStatusFromGUI() {
+        if (codeField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(parentDialog, "Поле 'Код' не может быть пустым.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            codeField.requestFocus();
+            return false;
+        }
 
-		return true;
-	}
+        if (nameField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(parentDialog, "Поле 'Наименование' не может быть пустым.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            nameField.requestFocus();
+            return false;
+
+        }
+
+        try {
+            receptionStatus.setCode(Integer.parseInt(codeField.getText()));
+        } catch (NumberFormatException nfe) {
+            JOptionPane.showMessageDialog(parentDialog, "Поле 'Код' должно быть числом.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        receptionStatus.setName(nameField.getText());
+
+        return true;
+    }
 
 
 }

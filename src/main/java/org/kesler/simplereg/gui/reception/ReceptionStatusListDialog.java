@@ -24,171 +24,171 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class ReceptionStatusListDialog extends JDialog {
 
-	public static int NONE = -1;
-	public static int OK = 0;
-	public static int CANCEL = 1;
+    public static int NONE = -1;
+    public static int OK = 0;
+    public static int CANCEL = 1;
 
-	private int result = NONE;
+    private int result = NONE;
 
-	private JFrame frame;
-	private ReceptionStatusListDialogController controller;
+    private JFrame frame;
+    private ReceptionStatusListDialogController controller;
 
-	private JList statusesList;
-	private StatusesListModel statusesListModel;
-	private int selectedIndex;
+    private JList statusesList;
+    private StatusesListModel statusesListModel;
+    private int selectedIndex;
 
-	public ReceptionStatusListDialog(JFrame frame, ReceptionStatusListDialogController controller) {
-		super(frame, "Статусы дел", true);
-		this.frame = frame;
-		this.controller = controller;
+    public ReceptionStatusListDialog(JFrame frame, ReceptionStatusListDialogController controller) {
+        super(frame, "Статусы дел", true);
+        this.frame = frame;
+        this.controller = controller;
 
-		selectedIndex = -1;
+        selectedIndex = -1;
 
-		createGUI();
-	}
+        createGUI();
+    }
 
-	public int getResult() {
-		return result;
-	}
+    public int getResult() {
+        return result;
+    }
 
-	private void createGUI() {
+    private void createGUI() {
 
-		// Основная панель
-		JPanel mainPanel = new JPanel(new BorderLayout());
+        // Основная панель
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
-		// Панель данных
-		JPanel dataPanel = new JPanel(new MigLayout("fill,nogrid"));
+        // Панель данных
+        JPanel dataPanel = new JPanel(new MigLayout("fill,nogrid"));
 
-		statusesListModel = new StatusesListModel();
-		statusesList = new JList(statusesListModel);
-		// Можно выбрать только один элемент
-		statusesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        statusesListModel = new StatusesListModel();
+        statusesList = new JList(statusesListModel);
+        // Можно выбрать только один элемент
+        statusesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		statusesList.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent lse) {
-				if(lse.getValueIsAdjusting() == false) {
-					selectedIndex = statusesList.getSelectedIndex();
-				}				
-			}
-		});
-
-
-		JScrollPane statusesListScrollPane = new JScrollPane(statusesList);
-
-		JButton addStatusButton = new JButton();
-		addStatusButton.setIcon(ResourcesUtil.getIcon("add.png"));
-		addStatusButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.openAddStatusDialog();
-			}
-		});
-
-		JButton editStatusButton = new JButton();
-		editStatusButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
-		editStatusButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				if (selectedIndex != -1) {
-					controller.openEditStatusDialog(selectedIndex);
-				} else {
-					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
-				}
-				
-			}
-		});
-
-		JButton removeStatusButton = new JButton();
-		removeStatusButton.setIcon(ResourcesUtil.getIcon("delete.png"));
-		removeStatusButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				if (selectedIndex != -1) {
-					controller.removeReceptionStatus(selectedIndex);
-				} else {
-					JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
-				}
-
-			}
-		});
-
-		// собираем панель данных
-		dataPanel.add(statusesListScrollPane, "push, grow, wrap, w 200");
-		dataPanel.add(addStatusButton);
-		dataPanel.add(editStatusButton);
-		dataPanel.add(removeStatusButton);
-
-		// Панель кнопок
-		JPanel buttonPanel = new JPanel();
-
-        JButton okButton = new JButton("Ok");         
-		okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				result = OK;
-				setVisible(false);
-			}
-		});
+        statusesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lse) {
+                if (lse.getValueIsAdjusting() == false) {
+                    selectedIndex = statusesList.getSelectedIndex();
+                }
+            }
+        });
 
 
-		JButton cancelButton = new JButton("Отмена");
-		cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				result = CANCEL;
-				setVisible(false);
-			}
-		});
+        JScrollPane statusesListScrollPane = new JScrollPane(statusesList);
 
-		// Собираем панель кнопок
-		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
+        JButton addStatusButton = new JButton();
+        addStatusButton.setIcon(ResourcesUtil.getIcon("add.png"));
+        addStatusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.openAddStatusDialog();
+            }
+        });
 
-		// Собираем основную панель
-		mainPanel.add(dataPanel, BorderLayout.CENTER);
-		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        JButton editStatusButton = new JButton();
+        editStatusButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
+        editStatusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                if (selectedIndex != -1) {
+                    controller.openEditStatusDialog(selectedIndex);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
 
-		this.setContentPane(mainPanel);
-		this.setSize(300,300);
-		this.setLocationRelativeTo(frame);
+            }
+        });
 
-	}
+        JButton removeStatusButton = new JButton();
+        removeStatusButton.setIcon(ResourcesUtil.getIcon("delete.png"));
+        removeStatusButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                if (selectedIndex != -1) {
+                    controller.removeReceptionStatus(selectedIndex);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Ничего не выбрано.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
 
-	void addedStatus(int index) {
-		statusesListModel.addedStatus(index);
-	}
+            }
+        });
 
-	void updatedStatus(int index) {
-		statusesListModel.updatedStatus(index);
-	}
+        // собираем панель данных
+        dataPanel.add(statusesListScrollPane, "push, grow, wrap, w 200");
+        dataPanel.add(addStatusButton);
+        dataPanel.add(editStatusButton);
+        dataPanel.add(removeStatusButton);
 
-	void removedStatus(int index) {
-		statusesListModel.removedStatus(index);
-	}
+        // Панель кнопок
+        JPanel buttonPanel = new JPanel();
 
-	class StatusesListModel extends AbstractListModel {
+        JButton okButton = new JButton("Ok");
+        okButton.setIcon(ResourcesUtil.getIcon("accept.png"));
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                result = OK;
+                setVisible(false);
+            }
+        });
 
-		@Override
-		public int getSize() {
-			return controller.getReceptionStatuses().size();
-		}
 
-		@Override
-		public String getElementAt(int index) {
-			String value = controller.getReceptionStatuses().get(index).toString();
-			return value;
-		}
+        JButton cancelButton = new JButton("Отмена");
+        cancelButton.setIcon(ResourcesUtil.getIcon("cancel.png"));
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                result = CANCEL;
+                setVisible(false);
+            }
+        });
 
-		void addedStatus(int index) {
-			fireIntervalAdded(this, index, index);
-		}
+        // Собираем панель кнопок
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
 
-		void updatedStatus(int index) {
-			fireContentsChanged(this, index, index);
-		}
+        // Собираем основную панель
+        mainPanel.add(dataPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		void removedStatus(int index) {
-			fireIntervalRemoved(this, index, index);
-		}
-	}
+        this.setContentPane(mainPanel);
+        this.setSize(300, 300);
+        this.setLocationRelativeTo(frame);
+
+    }
+
+    void addedStatus(int index) {
+        statusesListModel.addedStatus(index);
+    }
+
+    void updatedStatus(int index) {
+        statusesListModel.updatedStatus(index);
+    }
+
+    void removedStatus(int index) {
+        statusesListModel.removedStatus(index);
+    }
+
+    class StatusesListModel extends AbstractListModel {
+
+        @Override
+        public int getSize() {
+            return controller.getReceptionStatuses().size();
+        }
+
+        @Override
+        public String getElementAt(int index) {
+            String value = controller.getReceptionStatuses().get(index).toString();
+            return value;
+        }
+
+        void addedStatus(int index) {
+            fireIntervalAdded(this, index, index);
+        }
+
+        void updatedStatus(int index) {
+            fireContentsChanged(this, index, index);
+        }
+
+        void removedStatus(int index) {
+            fireIntervalRemoved(this, index, index);
+        }
+    }
 
 
 }

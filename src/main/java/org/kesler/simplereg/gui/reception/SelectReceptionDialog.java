@@ -24,12 +24,10 @@ import java.util.List;
 import java.awt.BorderLayout;
 
 
-
 /**
  * Диалог выбора дела
  */
 public class SelectReceptionDialog extends AbstractDialog {
-
 
 
     private SelectReceptionDialogController controller;
@@ -40,14 +38,14 @@ public class SelectReceptionDialog extends AbstractDialog {
     private Reception selectedReception = null;
 
     SelectReceptionDialog(JDialog parentDialog, SelectReceptionDialogController controller) {
-        super(parentDialog,"Выбрать основное дело",true);
+        super(parentDialog, "Выбрать основное дело", true);
         this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentDialog);
     }
 
     SelectReceptionDialog(JFrame parentFrame, SelectReceptionDialogController controller) {
-        super(parentFrame,"Выбрать основное дело",true);
+        super(parentFrame, "Выбрать основное дело", true);
         this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentFrame);
@@ -68,17 +66,21 @@ public class SelectReceptionDialog extends AbstractDialog {
         setDatesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setDates(fromDateField.getDate(),toDateField.getDate());
+                controller.setDates(fromDateField.getDate(), toDateField.getDate());
             }
         });
 
         searchTextField = new JTextField(15);
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) { controller.searchReceptions(searchTextField.getText()); }
+            public void insertUpdate(DocumentEvent e) {
+                controller.searchReceptions(searchTextField.getText());
+            }
 
             @Override
-            public void removeUpdate(DocumentEvent e) { controller.searchReceptions(searchTextField.getText()); }
+            public void removeUpdate(DocumentEvent e) {
+                controller.searchReceptions(searchTextField.getText());
+            }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -107,7 +109,7 @@ public class SelectReceptionDialog extends AbstractDialog {
 
         // Собираем панель данных
 
-        dataPanel.add(new JLabel("Дела с "),"span, split 5");
+        dataPanel.add(new JLabel("Дела с "), "span, split 5");
         dataPanel.add(fromDateField);
         dataPanel.add(new JLabel(" по "));
         dataPanel.add(toDateField);
@@ -124,8 +126,8 @@ public class SelectReceptionDialog extends AbstractDialog {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selectedReception==null) {
-                    JOptionPane.showMessageDialog(currentDialog,"Ничего не выбрано","Внимание",JOptionPane.WARNING_MESSAGE);
+                if (selectedReception == null) {
+                    JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
                 } else {
                     result = OK;
                     setVisible(false);
@@ -145,11 +147,11 @@ public class SelectReceptionDialog extends AbstractDialog {
         buttonPanel.add(cancelButton);
 
         // Собираем основную панель
-        mainPanel.add(dataPanel,BorderLayout.CENTER);
-        mainPanel.add(buttonPanel,BorderLayout.SOUTH);
+        mainPanel.add(dataPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
-        setSize(500,300);
+        setSize(500, 300);
 
     }
 
@@ -164,7 +166,7 @@ public class SelectReceptionDialog extends AbstractDialog {
     class ReceptionsTableModel extends AbstractTableModel {
         private java.util.List<Reception> receptions;
 
-        ReceptionsTableModel () {
+        ReceptionsTableModel() {
             receptions = new ArrayList<Reception>();
         }
 
@@ -172,6 +174,7 @@ public class SelectReceptionDialog extends AbstractDialog {
             this.receptions = receptions;
             fireTableDataChanged();
         }
+
         Reception getReceptionAt(int index) {
             return receptions.get(index);
         }
