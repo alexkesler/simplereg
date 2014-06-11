@@ -228,6 +228,10 @@ public class MakeReceptionViewController {
         viewState.updatePanelData();
     }
 
+    void resetParentReception() {
+        reception.setParentReception(null);
+        viewState.updatePanelData();
+    }
 
 	////// Блок добавления, редактирования, удаления заявителей
 

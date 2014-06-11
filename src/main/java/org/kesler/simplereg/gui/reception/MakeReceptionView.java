@@ -203,6 +203,13 @@ class MakeReceptionView extends JDialog{
 
             parentReceptionLabel = new JLabel("");
             parentReceptionLabel.setBorder(BorderFactory.createEtchedBorder());
+            JButton resetParentReceptionButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+            resetParentReceptionButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    controller.resetParentReception();
+                }
+            });
             JButton selectParentReceptionButton = new JButton("Выбрать");
             selectParentReceptionButton.setIcon(ResourcesUtil.getIcon("book_previous.png"));
             selectParentReceptionButton.addActionListener(new ActionListener() {
@@ -221,8 +228,9 @@ class MakeReceptionView extends JDialog{
 			this.add(selectServiceButton, "right, wrap");
 			this.add(byRecordCheckBox,"span,wrap,skip");
             this.add(new JLabel("Основное дело: "));
-            this.add(parentReceptionLabel, "grow");
-            this.add(selectParentReceptionButton,"wrap");
+            this.add(parentReceptionLabel, "span, split 3, grow");
+            this.add(resetParentReceptionButton);
+            this.add(selectParentReceptionButton);
 
 
 		}

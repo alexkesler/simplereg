@@ -340,8 +340,12 @@ public class Reception extends AbstractEntity{
     public List<Reception> getSubReceptions() {return subReceptions;}
     public void addSubReception(Reception subReception) {
         subReceptions.add(subReception);
+        subReception.parentReception = this;
     }
-    public void removeSubReception(Reception subReception) {subReceptions.remove(subReception);}
+    public void removeSubReception(Reception subReception) {
+        subReceptions.remove(subReception);
+        subReception.parentReception=null;
+    }
 
     public String getSubReceptionsRosreestrCodes() {
         String codes = "";
