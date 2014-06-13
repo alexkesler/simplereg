@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.reception;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.AbstractDialog;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
@@ -26,6 +27,8 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
 
     List<Reception> receptionsToStrike;
 
+    ProcessDialog processDialog;
+
     private SelectReceptionDialogController() {
         log = Logger.getLogger(this.getClass().getSimpleName());
         receptionsModel = new ReceptionsModel();
@@ -41,6 +44,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         Reception reception = null;
         dialog = new SelectReceptionDialog(parentDialog, this);
         receptionsToStrike = new ArrayList<Reception>();
+        resetSearchFilter();
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -53,6 +57,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         Reception reception = null;
         dialog = new SelectReceptionDialog(parentDialog, this);
         this.receptionsToStrike = receptionsToStrike;
+        resetSearchFilter();
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -65,6 +70,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         Reception reception = null;
         dialog = new SelectReceptionDialog(parentFrame, this);
         receptionsToStrike = new ArrayList<Reception>();
+        resetSearchFilter();
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -77,6 +83,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         Reception reception = null;
         dialog = new SelectReceptionDialog(parentFrame, this);
         this.receptionsToStrike = receptionsToStrike;
+        resetSearchFilter();
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -87,6 +94,8 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
 
     void readReceptions() {
         receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
+        processDialog = new ProcessDialog(dialog);
+        processDialog.showProcess("Загружаю список дел");
     }
 
     void searchReceptions(String rosreestrCodeString) {
@@ -97,6 +106,10 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         }
         receptionsModel.applyFiltersInSeparateThread();
 
+    }
+
+    void resetSearchFilter() {
+        receptionsModel.getFiltersModel().resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
     }
 
     void setDates(Date fromDate, Date toDate) {
@@ -119,6 +132,7 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
             List<Reception> receptions = receptionsModel.getFilteredReceptions();
             receptions.removeAll(receptionsToStrike);
             dialog.setReceptions(receptions);
+            if(processDialog!=null) processDialog.hideProcess();
         }
     }
 
