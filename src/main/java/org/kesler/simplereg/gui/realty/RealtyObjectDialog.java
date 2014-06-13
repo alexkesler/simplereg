@@ -25,11 +25,12 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 	private final RealtyObject realtyObject;
 
 
-    private FIASModel fiasModel;
+//    private FIASModel fiasModel;
 
 
     private JComboBox realtyTypeComboBox;
-	private JComboBox addressComboBox;
+//	private JComboBox addressComboBox;
+    private JTextField addressTextField;
 
     private String currentAddress;
 
@@ -37,7 +38,7 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 
 	public RealtyObjectDialog(JDialog parentDialog) {
 		super(parentDialog, "Объект недвижимости", true);
-        fiasModel = new FIASModel(this);
+//        fiasModel = new FIASModel(this);
 
 		realtyObject = new RealtyObject();
 
@@ -48,8 +49,9 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 
 	public RealtyObjectDialog(JDialog parentDialog, RealtyObject realtyObject) {
 		super(parentDialog, "Изменить объект недвижимости", true);
+//        fiasModel = new FIASModel(this);
 
-		this.realtyObject = realtyObject;
+        this.realtyObject = realtyObject;
 
 		createGUI();
         setLocationRelativeTo(parentDialog);
@@ -77,43 +79,46 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 		}
 
 
-		addressComboBox = new JComboBox();
-        addressComboBox.setEditable(true);
-        addressComboBox.setSize(200,addressComboBox.getHeight());
-        addressComboBox.setMaximumRowCount(10);
+        addressTextField = new JTextField();
 
-        final JTextField addressComboBoxEditor = (JTextField) addressComboBox.getEditor().getEditorComponent();
-
-        addressComboBoxEditor.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if(e.getLength()==1) {
-                    currentAddress = addressComboBoxEditor.getText();
-                    computeAddressesByString(currentAddress);
-                }
-
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                if (e.getLength()==1) {
-                    currentAddress = addressComboBoxEditor.getText();
-                    computeAddressesByString(currentAddress);
-                }
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-
-            }
-        });
+//		addressComboBox = new JComboBox();
+//        addressComboBox.setEditable(true);
+//        addressComboBox.setSize(200,addressComboBox.getHeight());
+//        addressComboBox.setMaximumRowCount(10);
+//
+//        final JTextField addressComboBoxEditor = (JTextField) addressComboBox.getEditor().getEditorComponent();
+//
+//        addressComboBoxEditor.getDocument().addDocumentListener(new DocumentListener() {
+//            @Override
+//            public void insertUpdate(DocumentEvent e) {
+//                if(e.getLength()==1) {
+//                    currentAddress = addressComboBoxEditor.getText();
+//                    computeAddressesByString(currentAddress);
+//                }
+//
+//            }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) {
+//                if (e.getLength()==1) {
+//                    currentAddress = addressComboBoxEditor.getText();
+//                    computeAddressesByString(currentAddress);
+//                }
+//            }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) {
+//
+//            }
+//        });
 
 
         //собираем панель данных
 		dataPanel.add(new JLabel("Тип объекта"), "right");
 		dataPanel.add(realtyTypeComboBox, "wrap");
 		dataPanel.add(new JLabel("Адрес объекта"), "right");
-		dataPanel.add(addressComboBox, "pushx, growx, wrap");
+        dataPanel.add(addressTextField, "pushx, growx, wrap");
+//		dataPanel.add(addressComboBox, "pushx, growx, wrap");
 
 
 		// панель кнопок
@@ -160,7 +165,9 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 			realtyTypeComboBox.setSelectedIndex(-1);
 		}
 
-		addressComboBox.setSelectedItem(realtyObject.getAddress());
+        addressTextField.setText(realtyObject.getAddress());
+
+//		addressComboBox.setSelectedItem(realtyObject.getAddress());
 
 	}
 
@@ -171,8 +178,10 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 			return false;			
 		}
 
-        String address = (String) addressComboBox.getSelectedItem();
-		if (address == null || address.isEmpty()) {
+//        String address = (String) addressComboBox.getSelectedItem();
+        String address  = addressTextField.getText();
+
+        if (address == null || address.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Поле адрес не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
@@ -186,26 +195,26 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 	}
 
 
-    private void computeAddressesByString(final String searchString) {
-
-        // реализуем ожидание 1 сек пока не введем все
-        Thread waiter = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                waiterCount++;
-                try {
-                    Thread.sleep(700);
-                } catch (Exception e) {}
-                // если по окончании ожидания больше клавиш не нажато - запускаемся
-                System.out.println("WaiterCount = " + waiterCount + " Search: " + searchString);
-                if (waiterCount < 2) fiasModel.computeAddressesInSeparateThread(searchString);
-                waiterCount--;
-            }
-        });
-
-        waiter.start();
-
-    }
+//    private void computeAddressesByString(final String searchString) {
+//
+//        // реализуем ожидание 1 сек пока не введем все
+//        Thread waiter = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                waiterCount++;
+//                try {
+//                    Thread.sleep(700);
+//                } catch (Exception e) {}
+//                // если по окончании ожидания больше клавиш не нажато - запускаемся
+//                System.out.println("WaiterCount = " + waiterCount + " Search: " + searchString);
+//                if (waiterCount < 2) fiasModel.computeAddressesInSeparateThread(searchString);
+//                waiterCount--;
+//            }
+//        });
+//
+//        waiter.start();
+//
+//    }
 
 //    private void selectAddress() {
 //        addressTextField.setText((String)addressesList.getSelectedValue());
@@ -216,20 +225,20 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
     @Override
     public void addresesFiltered(List<String> addresses) {
 
-        addressComboBox.removeAllItems();
-        for(String address: addresses) {
-            addressComboBox.addItem(address);
-        }
-//        addressComboBox.setSelectedIndex(-1);
-        addressComboBox.setSelectedItem(currentAddress);
-        JTextComponent editor = (JTextComponent) addressComboBox.getEditor().getEditorComponent();
-        editor.setCaretPosition(currentAddress.length());
-
-        if (addresses.size() > 0 /*&& !addressComboBox.isPopupVisible()*/) {
-            addressComboBox.showPopup();
-        } else {
-            addressComboBox.hidePopup();
-        }
+//        addressComboBox.removeAllItems();
+//        for(String address: addresses) {
+//            addressComboBox.addItem(address);
+//        }
+////        addressComboBox.setSelectedIndex(-1);
+//        addressComboBox.setSelectedItem(currentAddress);
+//        JTextComponent editor = (JTextComponent) addressComboBox.getEditor().getEditorComponent();
+//        editor.setCaretPosition(currentAddress.length());
+//
+//        if (addresses.size() > 0 /*&& !addressComboBox.isPopupVisible()*/) {
+//            addressComboBox.showPopup();
+//        } else {
+//            addressComboBox.hidePopup();
+//        }
 
     }
 
