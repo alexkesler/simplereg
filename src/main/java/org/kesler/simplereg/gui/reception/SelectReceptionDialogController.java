@@ -41,48 +41,34 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
 
     public Reception showDialog(JDialog parentDialog) {
         log.info("Opening dialog");
-        Reception reception = null;
         dialog = new SelectReceptionDialog(parentDialog, this);
         receptionsToStrike = new ArrayList<Reception>();
-        resetSearchFilter();
-        readReceptions();
-        dialog.setVisible(true);
-        if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
-        dialog.dispose();
-        return reception;
+        return performDialog();
     }
 
     public Reception showDialog(JDialog parentDialog, List<Reception> receptionsToStrike) {
         log.info("Opening dialog");
-        Reception reception = null;
         dialog = new SelectReceptionDialog(parentDialog, this);
         this.receptionsToStrike = receptionsToStrike;
-        resetSearchFilter();
-        readReceptions();
-        dialog.setVisible(true);
-        if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
-        dialog.dispose();
-        return reception;
+        return performDialog();
     }
 
     public Reception showDialog(JFrame parentFrame) {
         log.info("Opening dialog");
-        Reception reception = null;
         dialog = new SelectReceptionDialog(parentFrame, this);
         receptionsToStrike = new ArrayList<Reception>();
-        resetSearchFilter();
-        readReceptions();
-        dialog.setVisible(true);
-        if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
-        dialog.dispose();
-        return reception;
+        return performDialog();
     }
 
     public Reception showDialog(JFrame parentFrame, List<Reception> receptionsToStrike) {
         log.info("Opening dialog");
-        Reception reception = null;
         dialog = new SelectReceptionDialog(parentFrame, this);
         this.receptionsToStrike = receptionsToStrike;
+        return performDialog();
+    }
+
+    private Reception performDialog() {
+        Reception reception = null;
         resetSearchFilter();
         readReceptions();
         dialog.setVisible(true);
@@ -91,12 +77,22 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         return reception;
     }
 
+    void readReceptionsFromDB() {
+        processDialog = new ProcessDialog(dialog);
+        processDialog.showProcess("Загружаю список дел из БД");
+        receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
+
+    }
 
     void readReceptions() {
-        receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
-        processDialog = new ProcessDialog(dialog);
-        processDialog.showProcess("Загружаю список дел");
-    }
+        if(receptionsModel.getAllReceptions().size()==0) {
+            readReceptionsFromDB();
+        } else {
+            processDialog = new ProcessDialog(dialog);
+            processDialog.showProcess("Загружаю список дел");
+            receptionsModel.applyFiltersInSeparateThread();
+        }
+     }
 
     void searchReceptions(String rosreestrCodeString) {
         if (!rosreestrCodeString.isEmpty()) {
