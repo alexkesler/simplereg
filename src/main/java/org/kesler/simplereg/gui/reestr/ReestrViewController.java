@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
+import org.kesler.simplereg.gui.reception.ReceptionDialogController;
+import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
+import org.kesler.simplereg.gui.reestr.export.ReestrExportEnum;
+import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
+import org.kesler.simplereg.gui.reestr.export.ReestrExporterFactory;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
 
@@ -13,7 +18,6 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.gui.reception.ReceptionDialog;
 
 import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
 
@@ -24,8 +28,6 @@ import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialogFactory;
-
-import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
 
 
 public class ReestrViewController implements ReceptionsModelStateListener{
@@ -121,11 +123,13 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		// Создаем диалог редактирования фильтра
 		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, receptionsFilter);	
 
-		// дальнейшие действия одинаковы для всех диалогов
-		receptionsFilterDialog.setVisible(true);
-		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
-			view.getFilterListModel().filterUpdated(filterIndex);
-		}
+		if(receptionsFilterDialog!=null) {
+            receptionsFilterDialog.setVisible(true);
+            if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
+                view.getFilterListModel().filterUpdated(filterIndex);
+            }
+
+        }
 
 	}
 
@@ -174,12 +178,9 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 		List<Reception> receptions = model.getFilteredReceptions();
 		Reception reception = receptions.get(index);
-		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
-		receptionDialog.setVisible(true);
-        if (receptionDialog.getResult() == ReceptionDialog.OK) {
-            model.updateReception(reception);
+        if (ReceptionDialogController.getInstance().showDialog(view,reception)) {
+            view.tableDataChanged();
         }
-		view.tableDataChanged();	
 	}
 
 
@@ -195,7 +196,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		for (int i=0; i<indexes.length; i++) {
 			Reception reception = receptions.get(indexes[i]);
 			selectedReceptions.add(reception);	
-			selectedReceptionsString += "<p>" + reception.getReceptionCode() + ";</p>";		
+			selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
 		}
 
 		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " + 
@@ -213,6 +214,77 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	}
 
+
+    public void selectMainReception(int[] indexes) {
+        if (indexes.length == 0) {
+            new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+            return;
+        }
+        // Получаем дела, которые выбраны
+        List<Reception> receptions = model.getFilteredReceptions();
+        String selectedReceptionsString = "";
+        List<Reception> selectedReceptions = new ArrayList<Reception>();
+        for (int i=0; i<indexes.length; i++) {
+            Reception reception = receptions.get(indexes[i]);
+            selectedReceptions.add(reception);
+            selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
+        }
+
+        // Формируем список дел, которые нужно исключить из выбора
+        List<Reception> receptionsToStrike = new ArrayList<Reception>();
+        receptionsToStrike.addAll(selectedReceptions);
+        // поддела также убираем, чтобы не было циклов
+        for(Reception reception:selectedReceptions)
+                receptionsToStrike.addAll(reception.getSubReceptions());
+
+        // Вызываем диалог выбора основного дела, запоминаем
+        Reception mainReception = SelectReceptionDialogController.getInstance().showDialog(view,receptionsToStrike);
+        if (mainReception==null) return;
+
+
+        int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " +
+                        selectedReceptionsString +
+                        " основное дело: " + mainReception.getRosreestrCode() + " ?</html>",
+                "Установить основное дело?", JOptionPane.YES_NO_OPTION);
+
+        if (confirmResult == JOptionPane.YES_OPTION) {
+            for (Reception reception: selectedReceptions) {
+                reception.setParentReception(mainReception);
+                model.updateReception(reception);
+            }
+            view.tableDataChanged();
+        }
+    }
+
+    public void resetMainReception(int[] indexes) {
+        if (indexes.length == 0) {
+            new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
+            return;
+        }
+
+        List<Reception> receptions = model.getFilteredReceptions();
+        String selectedReceptionsString = "";
+        List<Reception> selectedReceptions = new ArrayList<Reception>();
+        for (int i=0; i<indexes.length; i++) {
+            Reception reception = receptions.get(indexes[i]);
+            selectedReceptions.add(reception);
+            selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
+        }
+
+        int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Сбросить для дел: " +
+                        selectedReceptionsString +
+                        " основное дело ?</html>",
+                "Сбросить основное дело?", JOptionPane.YES_NO_OPTION);
+
+        if (confirmResult == JOptionPane.YES_OPTION) {
+            for (Reception reception: selectedReceptions) {
+                reception.setParentReception(null);
+                model.updateReception(reception);
+            }
+            view.tableDataChanged();
+        }
+
+    }
 
 	public void removeReceptions(int[] indexes) {
 		if (indexes.length == 0) {
@@ -243,10 +315,17 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	}
 
-	public void createXLSFromReestrTable() {
-		ReestrExporter.exportReestr(model.getFilteredReceptions());
+	public void exportSelectedColumns() {
+        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.SELECTED_COLUMNS).export(model.getFilteredReceptions());
 	}
 
+    public void exportForArchive() {
+        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.FOR_ARCHIVE).export(model.getFilteredReceptions());
+    }
+
+    public void exportForReturn() {
+        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.FOR_RETURN).export(model.getFilteredReceptions());
+    }
 
 	// реализует интерфейс для слушателя модели приемов 
 	@Override

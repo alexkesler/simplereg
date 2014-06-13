@@ -9,6 +9,8 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class StatusReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.STATUS;
+
 	private List<ReceptionStatus> filterReceptionStatuses;
     private Date fromDate = null;
     private Date toDate = null;
@@ -36,6 +38,11 @@ public class StatusReceptionsFilter implements ReceptionsFilter {
     }
     public void setToDate(Date toDate) {
         this.toDate = toDate;
+    }
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
     }
 
 

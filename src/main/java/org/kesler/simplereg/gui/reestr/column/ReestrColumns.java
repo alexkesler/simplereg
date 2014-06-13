@@ -35,7 +35,8 @@ public class ReestrColumns {
 		ReestrColumn rosreestrCodeReestrColumn = new RosreestrCodeReestrColumn();
         ReestrColumn realtyObjectReestrColumn = new RealtyObjectReestrColumn();
 		ReestrColumn resultInMFCReestrColumn = new ResultInMFCReestrColumn();
-
+        ReestrColumn parentRosreestrCodeReestrColumn = new ParentRosreestrCodeReestrColumn();
+        ReestrColumn subReceptionsRosreestrCodesReesrtColumn = new SubReceptionsRosreestrCodesReesrtColumn();
 
 
 		allColumns.add(receptionCodeReestrColumn);
@@ -48,18 +49,20 @@ public class ReestrColumns {
 		allColumns.add(rosreestrCodeReestrColumn);
         allColumns.add(realtyObjectReestrColumn);
 		allColumns.add(resultInMFCReestrColumn);
+        allColumns.add(parentRosreestrCodeReestrColumn);
 
 		allColumns = Collections.unmodifiableList(allColumns); /// делаем полный список колонок неизменным во избежание
 
 		// добавляем в активные поля 
 		activeColumns = new ArrayList<ReestrColumn>();
 
-		activeColumns.add(receptionCodeReestrColumn);		
+		activeColumns.add(rosreestrCodeReestrColumn);
+        activeColumns.add(parentRosreestrCodeReestrColumn);
 		activeColumns.add(openDateReestrColumn);
 		activeColumns.add(applicatorsReestrColumn);
 		activeColumns.add(serviceReestrColumn);
 		activeColumns.add(statusReestrColumn);
-		activeColumns.add(resultInMFCReestrColumn);
+        activeColumns.add(subReceptionsRosreestrCodesReesrtColumn);
 		
 
 		// список неактивных полей
@@ -67,7 +70,8 @@ public class ReestrColumns {
 		inactiveColumns.add(byRecordReestrColumn);
 		inactiveColumns.add(operatorReestrColumn);
 		inactiveColumns.add(toIssueDateReestrColumn);
-		inactiveColumns.add(rosreestrCodeReestrColumn);
+		inactiveColumns.add(receptionCodeReestrColumn);
+        inactiveColumns.add(resultInMFCReestrColumn);
         inactiveColumns.add(realtyObjectReestrColumn);
 	}
 

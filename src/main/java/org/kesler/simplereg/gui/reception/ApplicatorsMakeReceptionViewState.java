@@ -4,64 +4,64 @@ import javax.swing.JOptionPane;
 
 class ApplicatorsMakeReceptionViewState extends MakeReceptionViewState {
 
-	ApplicatorsMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
-		super(controller, view);
-		init();
-	} 
+    ApplicatorsMakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
+        super(controller, view);
+        init();
+    }
 
-	@Override 
-	void init() {
+    @Override
+    void init() {
 
-		updateTabbedPaneState();
-		updateCommonButtons();
-		updatePanelData();
-	}
+        updateTabbedPaneState();
+        updateCommonButtons();
+        updatePanelData();
+    }
 
-	@Override
-	void back() {
-		// Переходим назад к выбору услуги
-		controller.setState(new ServiceMakeReceptionViewState(controller, view));
-	}
+    @Override
+    void back() {
+        // Переходим назад к выбору услуги
+        controller.setState(new ServiceMakeReceptionViewState(controller, view));
+    }
 
-	@Override
-	void next() {
-		// переходим к печати, если есть заявители
-		if (controller.getApplicators().size() > 0) {
-			controller.setState(new DataMakeReceptionViewState(controller, view));
-		} else {
-			JOptionPane.showMessageDialog(view,
-    									"Нет ни одного заявителя. Пожалуйста, добавьте заявителей.",
-    									"Ошибка",
-    									JOptionPane.ERROR_MESSAGE);
-			
-		}
-		
-	}
+    @Override
+    void next() {
+        // переходим к печати, если есть заявители
+        if (controller.getApplicators().size() > 0) {
+            controller.setState(new DataMakeReceptionViewState(controller, view));
+        } else {
+            JOptionPane.showMessageDialog(view,
+                    "Нет ни одного заявителя. Пожалуйста, добавьте заявителей.",
+                    "Ошибка",
+                    JOptionPane.ERROR_MESSAGE);
 
-	@Override
-	void ready() {
-		// Кнопка неактивна
-	}
+        }
 
-	private void updateTabbedPaneState() {
-		view.getTabbedPane().setEnabledAt(view.SERVICE_STATE,false);
-		view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE,true);
-		view.getTabbedPane().setEnabledAt(view.DATA_STATE,false);
-		view.getTabbedPane().setEnabledAt(view.PRINT_STATE,false);
+    }
 
-		view.getTabbedPane().setSelectedIndex(view.APPLICATORS_STATE);
-	}
+    @Override
+    void ready() {
+        // Кнопка неактивна
+    }
 
-	private void updateCommonButtons() {
-		view.getBackButton().setEnabled(true);
-		view.getNextButton().setEnabled(true);
-		view.getReadyButton().setEnabled(false);
-	}
+    private void updateTabbedPaneState() {
+        view.getTabbedPane().setEnabledAt(view.SERVICE_STATE, false);
+        view.getTabbedPane().setEnabledAt(view.APPLICATORS_STATE, true);
+        view.getTabbedPane().setEnabledAt(view.DATA_STATE, false);
+        view.getTabbedPane().setEnabledAt(view.PRINT_STATE, false);
 
-	void updatePanelData() {
-		view.getApplicatorsPanel().setApplicators(controller.getApplicators());
-		view.getApplicatorsPanel().setServiceName(controller.getService().getName());
-	}
+        view.getTabbedPane().setSelectedIndex(view.APPLICATORS_STATE);
+    }
+
+    private void updateCommonButtons() {
+        view.getBackButton().setEnabled(true);
+        view.getNextButton().setEnabled(true);
+        view.getReadyButton().setEnabled(false);
+    }
+
+    void updatePanelData() {
+        view.getApplicatorsPanel().setApplicators(controller.getApplicators());
+        view.getApplicatorsPanel().setServiceName(controller.getService().getName());
+    }
 
 
 }

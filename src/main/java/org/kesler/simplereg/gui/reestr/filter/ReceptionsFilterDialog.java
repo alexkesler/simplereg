@@ -41,10 +41,13 @@ public abstract class ReceptionsFilterDialog extends AbstractDialog {
 		result = NONE;
 	}
 
-
 	public ReceptionsFilter getReceptionsFilter() {
 		return receptionsFilter;
 	}
+    public void setReceptionsFilter(ReceptionsFilter receptionsFilter) {
+        this.receptionsFilter = receptionsFilter;
+        loadGUIDataFromReceptionsFilter();
+    }
 
 	private void createGUI() {
 

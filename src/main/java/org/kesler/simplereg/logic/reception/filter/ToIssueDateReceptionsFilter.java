@@ -7,6 +7,8 @@ import org.kesler.simplereg.logic.Reception;
 
 public class ToIssueDateReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.TO_ISSUE_DATE;
+
 	private Date fromDate = null;
 	private Date toDate = null;
 
@@ -54,7 +56,12 @@ public class ToIssueDateReceptionsFilter implements ReceptionsFilter {
 		return true;
 	}
 
-	@Override
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
+
+    @Override
 	public String toString() {
 		String filterString = "По дате на выдачу результата: ";
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");

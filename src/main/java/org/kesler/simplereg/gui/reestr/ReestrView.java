@@ -22,9 +22,10 @@ import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
 import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
-import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
 
 import org.kesler.simplereg.util.ResourcesUtil;
+
+import static org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum.*;
 
 public class ReestrView extends JFrame {
 
@@ -37,6 +38,8 @@ public class ReestrView extends JFrame {
 
 	private Action openReceptionAction;
 	private Action changeReceptionsStatusAction;
+    private Action selectMainReceptionAction;
+    private Action resetMainReceptionAction;
 	private Action removeReceptionsAction;
 
 	private FilterListModel filterListModel;
@@ -189,7 +192,7 @@ public class ReestrView extends JFrame {
 		JMenuItem openDateFilterMenuItem = new JMenuItem("По дате открытия");
 		openDateFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.OPEN_DATE);
+				controller.addFilter(OPEN_DATE);
 			}
 		});
 
@@ -197,7 +200,7 @@ public class ReestrView extends JFrame {
 		JMenuItem filialFilterMenuItem = new JMenuItem("По коду филиала");
 		filialFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.FILIAL);
+				controller.addFilter(FILIAL);
 			}
 		});
 
@@ -205,7 +208,7 @@ public class ReestrView extends JFrame {
 		JMenuItem byRecordFilterMenuItem = new JMenuItem("По предв записи");
 		byRecordFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.BY_RECORD);
+				controller.addFilter(BY_RECORD);
 			}
 		});
 
@@ -213,7 +216,7 @@ public class ReestrView extends JFrame {
 		JMenuItem statusFilterMenuItem = new JMenuItem("По состоянию");
 		statusFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.STATUS);
+				controller.addFilter(STATUS);
 			}
 		});
 
@@ -221,7 +224,7 @@ public class ReestrView extends JFrame {
 		JMenuItem serviceFilterMenuItem = new JMenuItem("По услуге");
 		serviceFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.SERVICE);
+				controller.addFilter(SERVICE);
 			}
 		});
 
@@ -230,7 +233,7 @@ public class ReestrView extends JFrame {
 		JMenuItem operatorFilterMenuItem = new JMenuItem("По оператору");
 		operatorFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.OPERATOR);
+				controller.addFilter(OPERATOR);
 			}
 		});
 
@@ -238,7 +241,7 @@ public class ReestrView extends JFrame {
         JMenuItem flMenuItem = new JMenuItem("По физ лицу");
         flMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                controller.addFilter(ReceptionsFiltersEnum.FL);
+                controller.addFilter(FL);
             }
         });
 
@@ -247,7 +250,7 @@ public class ReestrView extends JFrame {
         JMenuItem ulMenuItem = new JMenuItem("По юр лицу");
         ulMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                controller.addFilter(ReceptionsFiltersEnum.UL);
+                controller.addFilter(UL);
             }
         });
 
@@ -255,7 +258,7 @@ public class ReestrView extends JFrame {
 		JMenuItem toIssueDateFilterMenuItem = new JMenuItem("По дате на выдачу");
 		toIssueDateFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.TO_ISSUE_DATE);
+				controller.addFilter(TO_ISSUE_DATE);
 			}
 		});
 
@@ -263,12 +266,20 @@ public class ReestrView extends JFrame {
 		JMenuItem resultInMFCFilterMenuItem = new JMenuItem("По месту получения результата");
 		resultInMFCFilterMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.addFilter(ReceptionsFiltersEnum.RESULT_IN_MFC);
+				controller.addFilter(RESULT_IN_MFC);
 			}
 		});
 
+        // Пункт меню - добавление фильтра по месту получения результата
+        JMenuItem mainFilterMenuItem = new JMenuItem("Для основных/дополнительных дел");
+        mainFilterMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.addFilter(MAIN);
+            }
+        });
 
-		// собираем всплывающее меню добавления фильтра
+
+        // собираем всплывающее меню добавления фильтра
 		filtersPopupMenu.add(openDateFilterMenuItem);
 		filtersPopupMenu.add(filialFilterMenuItem);
 		filtersPopupMenu.add(byRecordFilterMenuItem);
@@ -279,6 +290,7 @@ public class ReestrView extends JFrame {
         filtersPopupMenu.add(ulMenuItem);
 		filtersPopupMenu.add(toIssueDateFilterMenuItem);
 		filtersPopupMenu.add(resultInMFCFilterMenuItem);
+        filtersPopupMenu.add(mainFilterMenuItem);
 
 		// кнопка реадктирования
 		JButton editFilterButton = new JButton();
@@ -334,13 +346,6 @@ public class ReestrView extends JFrame {
         });
 
 
-		JButton exportButton = new JButton("Выгрузить список");
-		exportButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.createXLSFromReestrTable();
-			}
-		});
-
 
 		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтры: "), "wrap");
@@ -351,11 +356,44 @@ public class ReestrView extends JFrame {
 		filterPanel.add(editFilterButton);
 		filterPanel.add(removeFilterButton);
 		filterPanel.add(resetFiltersButton, "wrap");
-		filterPanel.add(exportButton,"span, right, wrap");
 
+        JPanel exportPanel = new JPanel();
+        exportPanel.setLayout(new BoxLayout(exportPanel,BoxLayout.Y_AXIS));
+        exportPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Ведомости"));
+
+        JButton exportSelectedColumnsButton = new JButton("Список");
+        exportSelectedColumnsButton.setIcon(ResourcesUtil.getIcon("table.png"));
+        exportSelectedColumnsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.exportSelectedColumns();
+            }
+        });
+
+        JButton exportForArchiveButton = new JButton("Для архива");
+        exportForArchiveButton.setIcon(ResourcesUtil.getIcon("package.png"));
+        exportForArchiveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportForArchive();
+            }
+        });
+
+        JButton exportForReturnButton = new JButton("Возврат");
+        exportForReturnButton.setIcon(ResourcesUtil.getIcon("arrow_undo.png"));
+        exportForReturnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportForReturn();
+            }
+        });
+
+        exportPanel.add(exportSelectedColumnsButton);
+        exportPanel.add(exportForArchiveButton);
+        exportPanel.add(exportForReturnButton);
 
         topPanel.add(searchPanel);
         topPanel.add(filterPanel);
+        topPanel.add(exportPanel);
 
 
 		// Панель данных
@@ -384,15 +422,21 @@ public class ReestrView extends JFrame {
 				if (reestrTable.getSelectedRows().length==0) {
 					openReceptionAction.setEnabled(false);
 					changeReceptionsStatusAction.setEnabled(false);
+                    selectMainReceptionAction.setEnabled(false);
+                    resetMainReceptionAction.setEnabled(false);
 					removeReceptionsAction.setEnabled(false);
 				} else if (reestrTable.getSelectedRows().length==1) {
 					openReceptionAction.setEnabled(true);
 					changeReceptionsStatusAction.setEnabled(true);
+                    selectMainReceptionAction.setEnabled(true);
+                    resetMainReceptionAction.setEnabled(true);
 					removeReceptionsAction.setEnabled(true);
 					removeReceptionsAction.putValue(Action.NAME, "Удалить запрос");
 				} else {
 					openReceptionAction.setEnabled(false);
 					changeReceptionsStatusAction.setEnabled(true);
+                    selectMainReceptionAction.setEnabled(true);
+                    resetMainReceptionAction.setEnabled(true);
 					removeReceptionsAction.setEnabled(true);
 					removeReceptionsAction.putValue(Action.NAME, "Удалить запросы");
 				}
@@ -434,12 +478,26 @@ public class ReestrView extends JFrame {
 			setReceptionStatusMenu.add(statusMenuItem);
 		}
 
+        JMenu mainReceptionMenu = new JMenu("Основное дело");
+
+        selectMainReceptionAction = new SelectMainReceptionAction();
+        selectMainReceptionAction.setEnabled(false);
+        JMenuItem selectMainReceptionMenuItem = new JMenuItem(selectMainReceptionAction);
+
+        resetMainReceptionAction = new ResetMainReceptionAction();
+        resetMainReceptionAction.setEnabled(false);
+        JMenuItem resetMainReceptionMenuItem = new JMenuItem(resetMainReceptionAction);
+
+        mainReceptionMenu.add(selectMainReceptionMenuItem);
+        mainReceptionMenu.add(resetMainReceptionMenuItem);
+
 		removeReceptionsAction = new RemoveReceptionsAction();
 		removeReceptionsAction.setEnabled(false);
 		JMenuItem removeReceptionsMenuItem = new JMenuItem(removeReceptionsAction);
 
 		reestrPopupMenu.add(openReceptionMenuItem);
 		reestrPopupMenu.add(setReceptionStatusMenu);
+        reestrPopupMenu.add(mainReceptionMenu);
 		reestrPopupMenu.add(removeReceptionsMenuItem);
 
 		reestrTable.setComponentPopupMenu(reestrPopupMenu);
@@ -620,7 +678,27 @@ public class ReestrView extends JFrame {
 		}
 	}
 
-	class RemoveReceptionsAction extends AbstractAction {
+    class SelectMainReceptionAction extends AbstractAction {
+        SelectMainReceptionAction() {super("Выбрать");}
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
+            controller.selectMainReception(selectedReceptionsIndexes);
+        }
+    }
+
+    class ResetMainReceptionAction extends AbstractAction {
+        ResetMainReceptionAction() {super("Сбросить");}
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
+            controller.resetMainReception(selectedReceptionsIndexes);
+        }
+    }
+
+    class RemoveReceptionsAction extends AbstractAction {
 		RemoveReceptionsAction() {
 			super("Удалить запросы");
 		}

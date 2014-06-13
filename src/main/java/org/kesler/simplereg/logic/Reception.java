@@ -90,10 +90,20 @@ public class Reception extends AbstractEntity{
 	@Column(name="FilialCode")
 	private String filialCode;
 
+    @ManyToOne
+    @JoinColumn(name = "ParentReceptionID")
+    private Reception parentReception;
 
-	public Reception() {
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentReception")
+    @Cascade(CascadeType.SAVE_UPDATE)
+    @Fetch(FetchMode.SUBSELECT)
+    private List<Reception> subReceptions;
+
+
+    public Reception() {
         applicators = new ArrayList<Applicator>();
         statusChanges = new ArrayList<ReceptionStatusChange>();
+        subReceptions = new ArrayList<Reception>();
 	}
 
 	public Reception(Service service, List<Applicator> applicators, Operator operator, Date openDate) {
@@ -153,11 +163,7 @@ public class Reception extends AbstractEntity{
 	* Возвращает ФИО оператора, если оператор не присоединен, возвращает пустую строку
 	*/
 	public String getOperatorFIO() {
-		String operatorFIO = "";
-		if (operator!=null) {
-			operatorFIO = operator.getFIO();
-		}
-		return operatorFIO;
+		return operator==null?"":operator.getFIO();
 	}
 
 	/**
@@ -179,7 +185,6 @@ public class Reception extends AbstractEntity{
 	public Date getOpenDate() {
 		return openDate;
 	}
-
 	public void setOpenDate(Date openDate) {
 		this.openDate = openDate;
 	}
@@ -187,7 +192,6 @@ public class Reception extends AbstractEntity{
 	public RealtyObject getRealtyObject () {
 		return realtyObject;
 	}
-
 	public void setRealtyObject(RealtyObject realtyObject) {
 		this.realtyObject = realtyObject;
 	}
@@ -195,17 +199,28 @@ public class Reception extends AbstractEntity{
 	public ReceptionStatus getStatus() {
 		return status;
 	}
-
 	public void setStatus(ReceptionStatus status) {
-		this.status = status;
+        // запоминаем дату изменения статуса и оператора
         Date changeDate = new Date();
-        this.statusChangeDate = changeDate;
         Operator currentOperator = CurrentOperator.getInstance().getOperator();
 
-        // запоминаем изменение состояния
-        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, currentOperator);
+        setStatus(status,changeDate,currentOperator);
+ 	}
+
+    private void setStatus(ReceptionStatus status, Date changeDate, Operator operator) {
+
+        this.status = status;
+        this.statusChangeDate = changeDate;
+
+        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, operator);
         statusChanges.add(statusChange);
-	}
+
+        //Изменяем состояния подзапросов
+        for (Reception subReception:subReceptions) {
+            subReception.setStatus(status,changeDate,operator);
+        }
+
+    }
 
     public Date getStatusChangeDate() {return statusChangeDate;}
 
@@ -213,19 +228,46 @@ public class Reception extends AbstractEntity{
 
     public void removeLastStatusChange() {
         if (statusChanges.size() > 1) {
-            statusChanges.remove(statusChanges.size()-1);
+            ReceptionStatusChange statusChange = statusChanges.get(statusChanges.size()-1);
+            statusChanges.remove(statusChange);
+
+            // Назначаем статус предпоследнего
             ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
             this.status = lastChange.getStatus();
             this.statusChangeDate = lastChange.getChangeTime();
+
+            // удаляем похожее последнее изменение для подзапросов
+            for (Reception subReception : subReceptions)
+                subReception.removeLastSameStatusChange(statusChange);
+
         }
     }
 
+    private void removeLastSameStatusChange(ReceptionStatusChange originStatusChange) {
+        if (statusChanges.size() > 1) {
+             ReceptionStatusChange statusChange = statusChanges.get(statusChanges.size()-1);
+             if (statusChange.getChangeTime() == originStatusChange.getChangeTime() &&
+                     statusChange.getStatus() == originStatusChange.getStatus() &&
+                     statusChange.getOperator() == originStatusChange.getOperator()) {
+                 statusChanges.remove(statusChange);
+             }
+
+            // Назначаем статус предпоследнего
+            ReceptionStatusChange lastChange = statusChanges.get(statusChanges.size()-1);
+            this.status = lastChange.getStatus();
+            this.statusChangeDate = lastChange.getChangeTime();
+
+            // удаляем похожее последнее изменение для подзапросов
+            for (Reception subReception : subReceptions)
+                subReception.removeLastSameStatusChange(originStatusChange);
+
+        }
+
+
+    }
+
 	public String getStatusName() {
-		String statusName = "Не определено";
-		if (status != null) {
-			statusName = status.getName();
-		}
-		return statusName;
+		return status == null?"Не определено":status.getName();
 	}
 
 	public Boolean isByRecord() {
@@ -282,5 +324,35 @@ public class Reception extends AbstractEntity{
 		this.filialCode = filialCode;
 	}
 
+    public Reception getParentReception() {return parentReception;}
+    public void setParentReception(Reception parentReception) {
+        if (parentReception!=null) {
+            this.parentReception = parentReception;
+            parentReception.addSubReception(this);
+        } else {
+            if (this.parentReception!=null) {
+                this.parentReception.removeSubReception(this);
+                this.parentReception = null;
+            }
+        }
+    }
 
+    public List<Reception> getSubReceptions() {return subReceptions;}
+    public void addSubReception(Reception subReception) {
+        subReceptions.add(subReception);
+        subReception.parentReception = this;
+    }
+    public void removeSubReception(Reception subReception) {
+        subReceptions.remove(subReception);
+        subReception.parentReception=null;
+    }
+
+    public String getSubReceptionsRosreestrCodes() {
+        String codes = "";
+
+        for(Reception subReception:subReceptions)
+            codes += subReception.getRosreestrCode() + "; ";
+
+        return codes;
+    }
 }

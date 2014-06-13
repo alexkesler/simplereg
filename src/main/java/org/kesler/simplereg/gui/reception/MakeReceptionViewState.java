@@ -1,27 +1,27 @@
 package org.kesler.simplereg.gui.reception;
 
 abstract class MakeReceptionViewState {
-	protected MakeReceptionViewController controller;
-	protected MakeReceptionView view;
+    protected MakeReceptionViewController controller;
+    protected MakeReceptionView view;
 
-	public MakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
-		this.controller = controller;
-		this.view = view;
-	}
+    public MakeReceptionViewState(MakeReceptionViewController controller, MakeReceptionView view) {
+        this.controller = controller;
+        this.view = view;
+    }
 
-	abstract void init();
+    abstract void init();
 
-	abstract void back();
+    abstract void back();
 
-	abstract void next();
+    abstract void next();
 
-	abstract void ready();
+    abstract void ready();
 
-	void cancel() {
-		view.setVisible(false);
-	}
+    void cancel() {
+        view.setVisible(false);
+    }
 
-	// Обновляет данные на панели
-	abstract void updatePanelData();
+    // Обновляет данные на панели
+    abstract void updatePanelData();
 }
 

@@ -4,6 +4,7 @@ import org.kesler.simplereg.logic.Reception;
 
 public class CodeReceptionsFilter implements ReceptionsFilter {
 
+    private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.CODE;
 	private String filterCode;
 
 
@@ -18,6 +19,11 @@ public class CodeReceptionsFilter implements ReceptionsFilter {
 	public void setCode(String filterCode) {
 		this.filterCode = filterCode;
 	}
+
+    @Override
+    public ReceptionsFiltersEnum getFiltersEnum() {
+        return filtersEnum;
+    }
 
 	@Override
 	public boolean checkReception(Reception reception) {

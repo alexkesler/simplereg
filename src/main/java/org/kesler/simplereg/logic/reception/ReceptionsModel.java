@@ -3,6 +3,7 @@ package org.kesler.simplereg.logic.reception;
 import java.util.*;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
@@ -13,7 +14,8 @@ import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
 import org.kesler.simplereg.logic.ModelState;
 
 public class ReceptionsModel implements DAOListener{
-//	private static ReceptionsModel instance = null;
+    protected final Logger log;
+
 
     private ReceptionsFiltersModel filtersModel;
 	private List<Reception> allReceptions;
@@ -23,7 +25,8 @@ public class ReceptionsModel implements DAOListener{
 	private List<ReceptionsModelStateListener> listeners;
 
 	public ReceptionsModel() {
-		allReceptions = new ArrayList<Reception>();
+        log = Logger.getLogger(this.getClass().getSimpleName());
+        allReceptions = new ArrayList<Reception>();
 		filteredReceptions = new ArrayList<Reception>();
         lastReceptions = new ArrayList<Reception>();
 
@@ -41,13 +44,6 @@ public class ReceptionsModel implements DAOListener{
 		listeners.add(listener);
 	}
 
-//	public static synchronized ReceptionsModel getInstance() {
-//		if (instance == null) {
-//			instance = new ReceptionsModel();
-//		}
-//		return instance;
-//	}
-
 
 	public List<Reception> getAllReceptions() {
 		return allReceptions;
@@ -64,6 +60,7 @@ public class ReceptionsModel implements DAOListener{
 
 	// читаем данные из БД
 	public void readReceptions() {
+        log.info("Reading receptions from DB...");
         Date fromOpenDate = filtersModel.getFromOpenDate();
         Date toOpenDate = filtersModel.getToOpenDate();
         if (fromOpenDate != null || toOpenDate != null) {
@@ -71,7 +68,7 @@ public class ReceptionsModel implements DAOListener{
         } else {
             allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
         }
-        System.out.println("----Receptions in model----" + allReceptions.size());
+        log.info("Readed " + allReceptions.size() + " receptions");
 		notifyListeners(ModelState.UPDATED);
 	}
 
@@ -87,6 +84,7 @@ public class ReceptionsModel implements DAOListener{
 	// применяем фильтры
 	public void applyFilters() {
         List<ReceptionsFilter> filters = filtersModel.getFilters();
+        log.info("Applying filters: " + filters);
 		filteredReceptions = new ArrayList<Reception>();
 		notifyListeners(ModelState.FILTERING);
 		for (Reception reception: allReceptions) {
@@ -135,6 +133,7 @@ public class ReceptionsModel implements DAOListener{
      * @param filters Фильтры, которые необходимо применить
      */
     public void applyFiltersSequently(List<ReceptionsFilter> filters) {
+        log.info("Applying filters sequently..");
         List<Reception> newFilteredReceptions = new ArrayList<Reception>();
         notifyListeners(ModelState.FILTERING);
         for (Reception reception: filteredReceptions) {
@@ -274,10 +273,11 @@ public class ReceptionsModel implements DAOListener{
 	}
 
 	private void notifyListeners(ModelState state) {
+        log.info("State: "+state);
 		for (ReceptionsModelStateListener listener: listeners) {
 			listener.receptionsModelStateChanged(state);
 		}
-	} 
+	}
 
 }
 
