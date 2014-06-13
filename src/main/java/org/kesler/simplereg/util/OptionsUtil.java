@@ -51,7 +51,7 @@ public class OptionsUtil {
 									"\nПроведите корректную настройку приложения.",
 									"Файл не найден",
 									JOptionPane.ERROR_MESSAGE);
-			setDefaultOptions(); 	// Загружаем настройки по умолчанию
+			options = getDefaultOptions(); 	// Загружаем настройки по умолчанию
 			saveOptions();   		// Сохраняем настройки по умолчанию
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(null,
@@ -73,15 +73,17 @@ public class OptionsUtil {
 		}
 	}
 
-	private static void setDefaultOptions() {
-		options = new Properties();
-		options.setProperty("db.server","");
-		options.setProperty("db.driver", "h2 local");
-		options.setProperty("db.user","rroper");
-		options.setProperty("db.password", "q1w2e3R$");
-		options.setProperty("reg.filial", "01");
-		options.setProperty("logic.initRecStatusCode", "1");
-		options.setProperty("print.request","request.docx");
+	private static Properties getDefaultOptions() {
+		Properties defaultOptions = new Properties();
+        defaultOptions.setProperty("db.server","");
+        defaultOptions.setProperty("db.driver", "h2 local");
+        defaultOptions.setProperty("db.user","rroper");
+        defaultOptions.setProperty("db.password", "q1w2e3R$");
+        defaultOptions.setProperty("db.name","simplereg");
+        defaultOptions.setProperty("reg.filial", "01");
+        defaultOptions.setProperty("logic.initRecStatusCode", "1");
+        defaultOptions.setProperty("print.request","request.docx");
+        return defaultOptions;
 	}
 
 
@@ -103,7 +105,15 @@ public class OptionsUtil {
 		if (options == null) {
 			readOptions();
 		}
-		return options.getProperty(propName);
+        String property = options.getProperty(propName);
+        if (property==null) {
+            property = getDefaultOptions().getProperty(propName);
+            JOptionPane.showMessageDialog(null,
+                    "Не найден параметр: " + propName + ". Используем значение: " + property + ". Проверьте и сохраните настройки."
+            ,"Внимание!", JOptionPane.WARNING_MESSAGE);
+            options.setProperty(propName,property);
+        }
+		return property;
 	}
 
 	/**

@@ -63,12 +63,13 @@ public class SelectReceptionDialog extends AbstractDialog {
         fromDateField = new WebDateField(controller.getFromDate());
         toDateField = new WebDateField(controller.getToDate());
 
-        JButton setDatesButton = new JButton(ResourcesUtil.getIcon("accept.png"));
-        setDatesButton.setToolTipText("Перечитать для новых дат");
+        JButton setDatesButton = new JButton(ResourcesUtil.getIcon("database_refresh.png"));
+        setDatesButton.setToolTipText("Перечитать из базы данных");
         setDatesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.setDates(fromDateField.getDate(), toDateField.getDate());
+                controller.readReceptionsFromDB();
             }
         });
 

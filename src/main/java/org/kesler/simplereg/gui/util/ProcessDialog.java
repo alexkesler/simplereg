@@ -40,6 +40,7 @@ public class ProcessDialog extends JDialog {
 		setLocationRelativeTo(parentFrame);
 	}
 
+
 	public ProcessDialog(JDialog parentDialog) {
 		super(parentDialog, false);
 		this.parentDialog = parentDialog;
@@ -50,7 +51,16 @@ public class ProcessDialog extends JDialog {
 		setLocationRelativeTo(parentDialog);
 	}
 
-	public void addProcessDialogListener(ProcessDialogListener listener) {
+    public ProcessDialog() {
+        super();
+        listeners = new ArrayList<ProcessDialogListener>();
+
+        createGUI();
+        // setContent(content);
+        setLocationRelativeTo(null);
+    }
+
+    public void addProcessDialogListener(ProcessDialogListener listener) {
 		listeners.add(listener);
 	}
 
