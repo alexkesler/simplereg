@@ -4,7 +4,7 @@
 
   <groupId>org.kesler</groupId>
   <artifactId>simplereg</artifactId>
-  <version>1.0.2</version>
+  <version>1.2.0</version>
   <packaging>jar</packaging>
 
   <name>simplereg</name>
@@ -93,7 +93,7 @@
 	                    <fileVersion>${project.version}.0</fileVersion>
 	                    <txtFileVersion>${project.version}</txtFileVersion>
 	                    <fileDescription>Программа для регистрации заявителей</fileDescription>
-	                    <copyright>Copyright © 2013 ${product.company}</copyright>
+	                    <copyright>Copyright © 2014 ${product.company}</copyright>
 	                    <productVersion>${project.version}.0</productVersion>
 	                    <txtProductVersion>${project.version}</txtProductVersion>
 	                    <companyName>${product.company}</companyName>
