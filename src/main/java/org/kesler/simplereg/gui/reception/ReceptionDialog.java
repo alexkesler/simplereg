@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -34,10 +36,9 @@ public class ReceptionDialog extends AbstractDialog {
 
     private final boolean DEBUG = false;
 
-    private JFrame parentFrame;
-    private JDialog currentDialog;
+    private ReceptionDialogController controller;
 
-    private Reception reception;
+    private final Reception reception; // чтобы нигде ненароком не переназначить - исходник в контроллере
 
     private JLabel receptionCodeLabel;
     private JLabel byRecordLabel;
@@ -47,6 +48,7 @@ public class ReceptionDialog extends AbstractDialog {
     private JLabel realtyObjectLabel;
     private ApplicatorsListModel applicatorsListModel;
     private SubReceptionsListModel subReceptionsListModel;
+    private Reception selectedSubReception;
     private JComboBox statusesComboBox;
     private ReceptionStatusChangesTableModel receptionStatusChangesTableModel;
     private JButton saveNewReceptionStatusButton;
@@ -58,13 +60,20 @@ public class ReceptionDialog extends AbstractDialog {
     private ReceptionStatus newReceptionStatus = null;
     private boolean statusChanged = false;
 
-    public ReceptionDialog(JFrame parentFrame, Reception reception) {
+    ReceptionDialog(JFrame parentFrame, Reception reception, ReceptionDialogController controller) {
         super(parentFrame, true);
+        this.controller = controller;
         currentDialog = this;
-        this.parentFrame = parentFrame;
         this.reception = reception;
 
         createGUI();
+        loadGUIDataFromReception();
+        this.setSize(600, 600);
+        this.setLocationRelativeTo(parentFrame);
+
+    }
+
+    void updateViewData() {
         loadGUIDataFromReception();
     }
 
@@ -85,6 +94,15 @@ public class ReceptionDialog extends AbstractDialog {
         realtyObjectLabel = new JLabel();
         realtyObjectLabel.setBorder(BorderFactory.createEtchedBorder());
 
+        JButton editRealtyObjectButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
+        editRealtyObjectButton.setToolTipText("Редактировать объект недвижимости");
+        editRealtyObjectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.editRealtyObject();
+            }
+        });
+
         // Панель сведений об услуге
         JPanel serviceInfoPanel = new JPanel();
 
@@ -96,7 +114,32 @@ public class ReceptionDialog extends AbstractDialog {
         subReceptionsListModel = new SubReceptionsListModel();
         JList<String> subReceptionsList = new JList<String>(subReceptionsListModel);
         JScrollPane subReceptionsListScrollPane = new JScrollPane(subReceptionsList);
+        subReceptionsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        subReceptionsList.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getFirstIndex()>=0)
+                    selectedSubReception = subReceptionsListModel.getSubReception(e.getFirstIndex());
+            }
+        });
 
+        JButton addSubReceptionButton = new JButton(ResourcesUtil.getIcon("add.png"));
+        addSubReceptionButton.setToolTipText("Добавить дополнительное дело");
+        addSubReceptionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.addSubReception();
+            }
+        });
+
+        JButton removeSubReceptionButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+        removeSubReceptionButton.setToolTipText("Удалить выбранное дополнительное дело");
+        removeSubReceptionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.removeSubReception(selectedSubReception);
+            }
+        });
 
         // получаем новый статус дела
         statusesComboBox = new JComboBox();
@@ -133,6 +176,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         // кнопка удаления последнего установленного статуса
         removeLastReceptionStatusChangeButton = new JButton(ResourcesUtil.getIcon("undo.png"));
+        removeLastReceptionStatusChangeButton.setToolTipText("Отменить последнее изменение состояния");
         removeLastReceptionStatusChangeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,8 +194,7 @@ public class ReceptionDialog extends AbstractDialog {
         editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                MakeReceptionViewController.getInstance().openView(currentDialog, reception);
-                loadGUIDataFromReception();
+                controller.editReception();
             }
         });
 
@@ -168,10 +211,13 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(new JLabel("Услуга:"), "wrap");
         dataPanel.add(serviceNameLabel, "growx, wrap");
         dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
-        dataPanel.add(realtyObjectLabel, "growx, wrap");
+        dataPanel.add(realtyObjectLabel, "growx");
+        dataPanel.add(editRealtyObjectButton, "wrap");
         dataPanel.add(new JLabel("Заявители:"), "wrap");
         dataPanel.add(applicatorsListScrollPane, "growx, h 50:100:, wrap");
-        dataPanel.add(new JLabel("Дополнительные дела:"), "wrap");
+        dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3, pushx");
+        dataPanel.add(addSubReceptionButton);
+        dataPanel.add(removeSubReceptionButton, "wrap");
         dataPanel.add(subReceptionsListScrollPane, "growx, h 50:100:, wrap");
         dataPanel.add(new JLabel("Состояние дела"), "right");
         dataPanel.add(serviceInfoPanel, "growx, wrap");
@@ -213,8 +259,6 @@ public class ReceptionDialog extends AbstractDialog {
 
 
         this.setContentPane(mainPanel);
-        this.setSize(600, 600);
-        this.setLocationRelativeTo(parentFrame);
 
     }
 
@@ -237,12 +281,14 @@ public class ReceptionDialog extends AbstractDialog {
         receptionChanged();
     }
 
-    private void receptionChanged() {
+    void receptionChanged() {
+        loadGUIDataFromReception();
         okButton.setText("Сохранить");
         cancelButton.setVisible(true);
         statusChanged = true;
         result = OK;
     }
+
 
     private void checkStatusRemoveAbility() {
         if (reception.getStatusChanges().size() > 1) {
@@ -322,6 +368,10 @@ public class ReceptionDialog extends AbstractDialog {
         public void setSubReceptions(List<Reception> subReceptions) {
             this.subReceptions = subReceptions;
             fireContentsChanged(this, 0, subReceptions.size() - 1);
+        }
+
+        Reception getSubReception(int index) {
+            return subReceptions.get(index);
         }
 
         @Override

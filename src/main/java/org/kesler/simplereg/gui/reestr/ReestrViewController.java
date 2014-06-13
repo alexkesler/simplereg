@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
+import org.kesler.simplereg.gui.reception.ReceptionDialogController;
 import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
@@ -177,12 +178,9 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 		List<Reception> receptions = model.getFilteredReceptions();
 		Reception reception = receptions.get(index);
-		ReceptionDialog receptionDialog = new ReceptionDialog(view, reception);
-		receptionDialog.setVisible(true);
-        if (receptionDialog.getResult() == ReceptionDialog.OK) {
-            model.updateReception(reception);
+        if (ReceptionDialogController.getInstance().showDialog(view,reception)) {
+            view.tableDataChanged();
         }
-		view.tableDataChanged();	
 	}
 
 
@@ -222,10 +220,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
             new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
             return;
         }
-
-        Reception mainReception = SelectReceptionDialogController.getInstance().showDialog(view);
-        if (mainReception==null) return;
-
+        // Получаем дела, которые выбраны
         List<Reception> receptions = model.getFilteredReceptions();
         String selectedReceptionsString = "";
         List<Reception> selectedReceptions = new ArrayList<Reception>();
@@ -235,11 +230,17 @@ public class ReestrViewController implements ReceptionsModelStateListener{
             selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
         }
 
-        if (selectedReceptions.contains(mainReception)) {
-            JOptionPane.showMessageDialog(view,"Нельзя назначить делу " + mainReception.getRosreestrCode() + " основным само себя",
-                    "Ошибка",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        // Формируем список дел, которые нужно исключить из выбора
+        List<Reception> receptionsToStrike = new ArrayList<Reception>();
+        receptionsToStrike.addAll(selectedReceptions);
+        // поддела также убираем, чтобы не было циклов
+        for(Reception reception:selectedReceptions)
+                receptionsToStrike.addAll(reception.getSubReceptions());
+
+        // Вызываем диалог выбора основного дела, запоминаем
+        Reception mainReception = SelectReceptionDialogController.getInstance().showDialog(view,receptionsToStrike);
+        if (mainReception==null) return;
+
 
         int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " +
                         selectedReceptionsString +

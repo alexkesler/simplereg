@@ -18,6 +18,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +40,14 @@ public class SelectReceptionDialog extends AbstractDialog {
     private Reception selectedReception = null;
 
     SelectReceptionDialog(JDialog parentDialog, SelectReceptionDialogController controller) {
-        super(parentDialog, "Выбрать основное дело", true);
+        super(parentDialog, "Выбрать дело", true);
         this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentDialog);
     }
 
     SelectReceptionDialog(JFrame parentFrame, SelectReceptionDialogController controller) {
-        super(parentFrame, "Выбрать основное дело", true);
+        super(parentFrame, "Выбрать дело", true);
         this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentFrame);
@@ -103,6 +105,16 @@ public class SelectReceptionDialog extends AbstractDialog {
                     selectedReception = null;
                 }
 
+            }
+        });
+        receptionsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(e.getClickCount()==2) {
+                    result = OK;
+                    setVisible(false);
+                }
             }
         });
 

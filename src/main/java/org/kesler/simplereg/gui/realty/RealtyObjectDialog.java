@@ -22,7 +22,7 @@ import org.kesler.simplereg.util.ResourcesUtil;
 public class RealtyObjectDialog extends AbstractDialog implements FIASModelListener{
 
 
-	private RealtyObject realtyObject;
+	private final RealtyObject realtyObject;
 
 
     private FIASModel fiasModel;

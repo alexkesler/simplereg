@@ -9,7 +9,9 @@ import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Контроллер для управления диалогом выбора дела
@@ -21,6 +23,8 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
 
     ReceptionsModel receptionsModel;
     SelectReceptionDialog dialog;
+
+    List<Reception> receptionsToStrike;
 
     private SelectReceptionDialogController() {
         log = Logger.getLogger(this.getClass().getSimpleName());
@@ -36,6 +40,19 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         log.info("Opening dialog");
         Reception reception = null;
         dialog = new SelectReceptionDialog(parentDialog, this);
+        receptionsToStrike = new ArrayList<Reception>();
+        readReceptions();
+        dialog.setVisible(true);
+        if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
+        dialog.dispose();
+        return reception;
+    }
+
+    public Reception showDialog(JDialog parentDialog, List<Reception> receptionsToStrike) {
+        log.info("Opening dialog");
+        Reception reception = null;
+        dialog = new SelectReceptionDialog(parentDialog, this);
+        this.receptionsToStrike = receptionsToStrike;
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -47,6 +64,19 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
         log.info("Opening dialog");
         Reception reception = null;
         dialog = new SelectReceptionDialog(parentFrame, this);
+        receptionsToStrike = new ArrayList<Reception>();
+        readReceptions();
+        dialog.setVisible(true);
+        if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
+        dialog.dispose();
+        return reception;
+    }
+
+    public Reception showDialog(JFrame parentFrame, List<Reception> receptionsToStrike) {
+        log.info("Opening dialog");
+        Reception reception = null;
+        dialog = new SelectReceptionDialog(parentFrame, this);
+        this.receptionsToStrike = receptionsToStrike;
         readReceptions();
         dialog.setVisible(true);
         if (dialog.getResult() == AbstractDialog.OK) reception = dialog.getSelectedReception();
@@ -86,7 +116,9 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
     public void receptionsModelStateChanged(ModelState state) {
 
         if (state == ModelState.FILTERED) {
-            dialog.setReceptions(receptionsModel.getFilteredReceptions());
+            List<Reception> receptions = receptionsModel.getFilteredReceptions();
+            receptions.removeAll(receptionsToStrike);
+            dialog.setReceptions(receptions);
         }
     }
 
