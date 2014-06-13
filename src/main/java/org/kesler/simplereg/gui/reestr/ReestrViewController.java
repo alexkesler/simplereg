@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
 import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
+import org.kesler.simplereg.gui.reestr.export.ReestrExportEnum;
+import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
+import org.kesler.simplereg.gui.reestr.export.ReestrExporterFactory;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
 
@@ -15,7 +18,6 @@ import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.gui.reception.ReceptionDialog;
 
 import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
 
@@ -26,8 +28,6 @@ import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersEnum;
 import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialog;
 import org.kesler.simplereg.gui.reestr.filter.ReceptionsFilterDialogFactory;
-
-import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
 
 
 public class ReestrViewController implements ReceptionsModelStateListener{
@@ -315,10 +315,17 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	}
 
-	public void createXLSFromReestrTable() {
-		ReestrExporter.exportReestr(model.getFilteredReceptions());
+	public void exportSelectedColumns() {
+        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.SELECTED_COLUMNS).export(model.getFilteredReceptions());
 	}
 
+    public void exportForArchive() {
+        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.FOR_ARCHIVE).export(model.getFilteredReceptions());
+    }
+
+    public void exportForReturn() {
+        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.FOR_RETURN).export(model.getFilteredReceptions());
+    }
 
 	// реализует интерфейс для слушателя модели приемов 
 	@Override

@@ -1,114 +1,74 @@
 package org.kesler.simplereg.gui.reestr.export;
 
-import java.util.List;
-import java.io.File;
-import java.io.FileOutputStream;
+import com.alee.laf.filechooser.WebFileChooser;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.kesler.simplereg.logic.Reception;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-// import org.apache.poi.xssf.util.CellReference;
-// import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+/**
+ * Корневой класс для классов формирования ведомостей
+ */
+public abstract class ReestrExporter {
 
-import com.alee.laf.filechooser.WebFileChooser;
+    List <Reception> receptions;
 
-import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.gui.reestr.column.ReestrColumn;
-import org.kesler.simplereg.gui.reestr.column.ReestrColumns;
+    protected SXSSFWorkbook wb = new SXSSFWorkbook(100);
 
-public class ReestrExporter {
+    public abstract ReestrExportEnum getEnum();
 
-	public static void exportReestr(List <Reception> receptions) {
+    public void export(List<Reception> receptions) {
+        if(receptions.size()==0) {
+            JOptionPane.showMessageDialog(null,"Список пуст","Ошибка",JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        this.receptions = receptions;
+        prepare();
+        save();
+    }
 
-		List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();
-
-//		List<Reception> receptions = ReceptionsModel.getInstance().getFilteredReceptions();
+    protected abstract void prepare();
 
 
-		SXSSFWorkbook wb = new SXSSFWorkbook(100);
-		Sheet sh = wb.createSheet();
-		
-		// Впечатываем наименования
+    private void save() {
+        WebFileChooser fileChooser = new WebFileChooser();
+        //fileChooser.setMultiSelectionEnabled(false);
+        FileFilter fileFilter = new FileNameExtensionFilter("Excel file", "xlsx");
+        fileChooser.setFileFilter(fileFilter);
 
-		Row titleRow = sh.createRow(0);
-		for (int colnum = 0; colnum < reestrColumns.size(); colnum++) {
-			int width = reestrColumns.get(colnum).getWidth();
-			sh.setColumnWidth(colnum, 256*width);
-			Cell cell = titleRow.createCell(colnum);
-			String value = reestrColumns.get(colnum).getName();
-			cell.setCellValue(value);
-			CellStyle cellStyle = wb.createCellStyle();
-			cellStyle.setWrapText(true);
-			cellStyle.setBorderTop(CellStyle.BORDER_THIN);
-			cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
-			cellStyle.setBorderRight(CellStyle.BORDER_THIN);
-			cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        File file = null;
 
-			cell.setCellStyle(cellStyle);	
-		}
+        file = fileChooser.showSaveDialog();
 
-		// Впечатываем значения
+        if (file == null) {
+            return;
+        }
 
-		for (int rownum = 0; rownum < receptions.size(); rownum++) {
-			Row row = sh.createRow(rownum+1);
-			for (int colnum = 0; colnum < reestrColumns.size(); colnum++) {
-				Cell cell = row.createCell(colnum);
-				String value = reestrColumns.get(colnum).getValue(receptions.get(rownum)).toString();
-				cell.setCellValue(value);
+        String filePath = file.getPath();
+        if(filePath.indexOf(".xlsx") == -1) {
+            filePath += ".xlsx";
+            file = new File(filePath);
+        }
 
-				CellStyle cellStyle = wb.createCellStyle();
-				cellStyle.setWrapText(true);
-				cellStyle.setBorderTop(CellStyle.BORDER_THIN);
-				cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
-				cellStyle.setBorderRight(CellStyle.BORDER_THIN);
-				cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+        if (file.exists()) {
 
-				cell.setCellStyle(cellStyle);	
-				}
-		}
+        }
 
-		WebFileChooser fileChooser = new WebFileChooser();
-		//fileChooser.setMultiSelectionEnabled(false);
-		FileFilter fileFilter = new FileNameExtensionFilter("Excel file", "xlsx");
-		fileChooser.setFileFilter(fileFilter);
+        try {
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            wb.write(out);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		File file = null;
+    }
 
-		file = fileChooser.showSaveDialog();
-
-		if (file == null) {
-			return;
-		}
-
-		String filePath = file.getPath();
-		if(filePath.indexOf(".xlsx") == -1) {
-			filePath += ".xlsx";
-			file = new File(filePath);
-		}
-
-		if (file.exists()) {
-
-		} 
-
-		try {
-			file.createNewFile();
-			FileOutputStream out = new FileOutputStream(file);
-			wb.write(out);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// wb.dispose();
-
-	}
 
 }
