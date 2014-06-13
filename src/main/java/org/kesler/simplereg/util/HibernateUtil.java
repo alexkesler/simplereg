@@ -18,6 +18,7 @@ public class HibernateUtil {
 		String userName = OptionsUtil.getOption("db.user");
 		String password = OptionsUtil.getOption("db.password");
 		String server   = OptionsUtil.getOption("db.server");
+        String dbName   = OptionsUtil.getOption("db.name");
 
 		String driverClass = "";
 		String connectionUrl = "";
@@ -27,15 +28,15 @@ public class HibernateUtil {
 
 		if (database.equals("h2 local")) { 					///// для локальной базы данных H2
 			driverClass = "org.h2.Driver";
-			connectionUrl = "jdbc:h2:" + OptionsUtil.getCurrentDir() + "db/simplereg";
+			connectionUrl = "jdbc:h2:" + OptionsUtil.getCurrentDir() + "db/" + dbName;
 			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database.equals("h2 net")) { 					///// для сетевой базы данных H2
 			driverClass = "org.h2.Driver";
-			connectionUrl = "jdbc:h2:tcp://" + server + "/db/simplereg";
+			connectionUrl = "jdbc:h2:tcp://" + server + "/db/" + dbName;
 			dialect = "org.hibernate.dialect.H2Dialect";
 		} else if (database.equals("mysql")) { 			///// для базы данных  MySQL
 			driverClass = "com.mysql.jdbc.Driver";
-			connectionUrl = "jdbc:mysql://" + server + ":3306/simplereg";
+			connectionUrl = "jdbc:mysql://" + server + ":3306/" + dbName;
 			dialect = "org.hibernate.dialect.MySQLDialect";
 		}
 
@@ -60,7 +61,7 @@ public class HibernateUtil {
 		hibernateProperties.setProperty("hibernate.show_sql","false");
 
 
-		Configuration hibernateConfiguration = new AnnotationConfiguration()
+		Configuration hibernateConfiguration = new Configuration()
 						.addAnnotatedClass(org.kesler.simplereg.logic.Service.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.FL.class)
 						.addAnnotatedClass(org.kesler.simplereg.logic.UL.class)

@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.main;
+package org.kesler.simplereg.gui.options;
 
 import javax.swing.JFrame;
 import javax.swing.JDialog;
@@ -29,6 +29,7 @@ public class OptionsDialog extends JDialog {
 
 	private JComboBox dbComboBox;
 	private JTextField serverTextField;
+    private JTextField dbNameTextField;
 	private JTextField userTextField;
 	private JTextField passwordTextField;
 
@@ -88,6 +89,7 @@ public class OptionsDialog extends JDialog {
 		});
 
 		serverTextField = new JTextField(15);
+        dbNameTextField = new JTextField(15);
 		userTextField = new JTextField(10);
 		passwordTextField = new JTextField(15);
 
@@ -100,6 +102,8 @@ public class OptionsDialog extends JDialog {
 		dbPanel.add(dbComboBox);
 		dbPanel.add(new JLabel("Сервер"));
 		dbPanel.add(serverTextField);
+        dbPanel.add(new JLabel("База данных"));
+        dbPanel.add(dbNameTextField);
 		dbPanel.add(new JLabel("Логин"));
 		dbPanel.add(userTextField);
 		dbPanel.add(new JLabel("Пароль"));
@@ -169,6 +173,7 @@ public class OptionsDialog extends JDialog {
 
 		String db = options.getProperty("db.driver");
 		String server = options.getProperty("db.server");
+        String dbName = options.getProperty("db.name");
 		String user = options.getProperty("db.user");
 		String password = options.getProperty("db.password");
 
@@ -179,6 +184,7 @@ public class OptionsDialog extends JDialog {
 
 		dbComboBox.setSelectedItem(db);
 		serverTextField.setText(server);
+        dbNameTextField.setText(dbName);
 		userTextField.setText(user);
 		passwordTextField.setText(password);
 
@@ -194,6 +200,7 @@ public class OptionsDialog extends JDialog {
 
 		String db = (String) dbComboBox.getSelectedItem();
 		String server = serverTextField.getText();
+        String dbName = dbNameTextField.getText();
 		String user = userTextField.getText();
 		String password = passwordTextField.getText();
 
@@ -217,6 +224,7 @@ public class OptionsDialog extends JDialog {
 
 		OptionsUtil.setOption("db.driver", db);
 		OptionsUtil.setOption("db.server", server);
+        OptionsUtil.setOption("db.name", dbName);
 		OptionsUtil.setOption("db.user", user);
 		OptionsUtil.setOption("db.password", password);
 

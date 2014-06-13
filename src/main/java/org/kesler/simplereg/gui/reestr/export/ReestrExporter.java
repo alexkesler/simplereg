@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.reestr.export;
 
 import com.alee.laf.filechooser.WebFileChooser;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.Reception;
 
 import javax.swing.*;
@@ -17,6 +18,7 @@ import java.util.List;
 public abstract class ReestrExporter {
 
     List <Reception> receptions;
+    ProcessDialog processDialog;
 
     protected SXSSFWorkbook wb = new SXSSFWorkbook(100);
 
@@ -28,11 +30,26 @@ public abstract class ReestrExporter {
             return;
         }
         this.receptions = receptions;
+        Thread processThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                process();
+            }
+        });
+        processDialog = new ProcessDialog();
+        processDialog.showProcess("Обрабатываю данные");
+
+        processThread.start();
+    }
+
+    private void process() {
         prepare();
+        if(processDialog!=null) processDialog.hideProcess();
         save();
     }
 
     protected abstract void prepare();
+
 
 
     private void save() {
