@@ -58,7 +58,7 @@ public class ReceptionDialogController {
         realtyObjectDialog.setVisible(true);
         if (realtyObjectDialog.getResult()==AbstractDialog.OK) {
             RealtyObjectsModel.getInstance().updateRealtyObject(reception.getRealtyObject());
-            dialog.receptionChanged();
+            dialog.updateViewData();
         }
 
         realtyObjectDialog.dispose();

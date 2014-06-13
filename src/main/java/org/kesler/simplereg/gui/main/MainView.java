@@ -277,7 +277,8 @@ public class MainView extends JFrame {
 
     public void setConnected(boolean connected) {
         String server = OptionsUtil.getOption("db.server");
-        if (connected) connectedLabel.setText("<html><span color = blue>" + server + "</span> <span color='green'> подключен</span></html>");
+        String dbName = OptionsUtil.getOption("db.name");
+        if (connected) connectedLabel.setText("<html><span color = blue>" + server +"/"+ dbName +"</span> <span color='green'> подключен</span></html>");
         else connectedLabel.setText("<html><span color='red'>Нет подключения</span></html>");
     }
 
