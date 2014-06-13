@@ -346,13 +346,6 @@ public class ReestrView extends JFrame {
         });
 
 
-		JButton exportButton = new JButton("Выгрузить список");
-		exportButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				controller.createXLSFromReestrTable();
-			}
-		});
-
 
 		// Собираем панель фильтра
 		filterPanel.add(new JLabel("Фильтры: "), "wrap");
@@ -363,11 +356,44 @@ public class ReestrView extends JFrame {
 		filterPanel.add(editFilterButton);
 		filterPanel.add(removeFilterButton);
 		filterPanel.add(resetFiltersButton, "wrap");
-		filterPanel.add(exportButton,"span, right, wrap");
 
+        JPanel exportPanel = new JPanel();
+        exportPanel.setLayout(new BoxLayout(exportPanel,BoxLayout.Y_AXIS));
+        exportPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Ведомости"));
+
+        JButton exportSelectedColumnsButton = new JButton("Список");
+        exportSelectedColumnsButton.setIcon(ResourcesUtil.getIcon("table.png"));
+        exportSelectedColumnsButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                controller.exportSelectedColumns();
+            }
+        });
+
+        JButton exportForArchiveButton = new JButton("Для архива");
+        exportForArchiveButton.setIcon(ResourcesUtil.getIcon("package.png"));
+        exportForArchiveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportForArchive();
+            }
+        });
+
+        JButton exportForReturnButton = new JButton("Возврат");
+        exportForReturnButton.setIcon(ResourcesUtil.getIcon("arrow_undo.png"));
+        exportForReturnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.exportForReturn();
+            }
+        });
+
+        exportPanel.add(exportSelectedColumnsButton);
+        exportPanel.add(exportForArchiveButton);
+        exportPanel.add(exportForReturnButton);
 
         topPanel.add(searchPanel);
         topPanel.add(filterPanel);
+        topPanel.add(exportPanel);
 
 
 		// Панель данных
