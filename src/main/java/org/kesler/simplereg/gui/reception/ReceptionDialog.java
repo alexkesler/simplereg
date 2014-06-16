@@ -348,6 +348,8 @@ public class ReceptionDialog extends AbstractDialog {
 
 
     private void loadGUIDataFromReception() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
 
         String receptionCode = reception.getReceptionCode();
         if (receptionCode == null) receptionCode = "Не опр";
@@ -362,7 +364,11 @@ public class ReceptionDialog extends AbstractDialog {
         if (rosreestrCode == null) rosreestrCode = "Не опр";
         rosreestrCodeTextField.setText(rosreestrCode);
 
-        String parentRosreestrCode = reception.getParentReception() == null ? "" : reception.getParentReception().getRosreestrCode();
+        String parentRosreestrCode = "";
+        Reception parentReception  = reception.getParentReception();
+        if (parentReception!= null) {
+            parentRosreestrCode = parentReception.getRosreestrCode() + " от " + simpleDateFormat.format(parentReception.getOpenDate());
+        }
         parentRosreestrCodeLabel.setText("<html><strong color='green'>" + parentRosreestrCode + "</strong></html>");
 
         // определяем наименование услуги
@@ -408,6 +414,7 @@ public class ReceptionDialog extends AbstractDialog {
 
     class SubReceptionsListModel extends AbstractListModel<String> {
         private List<Reception> subReceptions;
+        private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
         SubReceptionsListModel() {
             subReceptions = new ArrayList<Reception>();
@@ -429,7 +436,8 @@ public class ReceptionDialog extends AbstractDialog {
 
         @Override
         public String getElementAt(int index) {
-            return subReceptions.get(index).getRosreestrCode();
+            Reception subReception = subReceptions.get(index);
+            return subReception.getRosreestrCode() + " от " + simpleDateFormat.format(subReception.getOpenDate());
         }
     }
 
