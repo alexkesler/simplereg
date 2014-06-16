@@ -1,20 +1,20 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import com.alee.utils.swing.DocumentChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.gui.AbstractDialog;
@@ -40,9 +40,9 @@ public class ReceptionDialog extends AbstractDialog {
 
     private final Reception reception; // чтобы нигде ненароком не переназначить - исходник в контроллере
 
-    private JLabel receptionCodeLabel;
+    private JTextField receptionCodeTextField;
     private JLabel byRecordLabel;
-    private JLabel rosreestrCodeLabel;
+    private JTextField rosreestrCodeTextField;
     private JLabel parentRosreestrCodeLabel;
     private JLabel serviceNameLabel;
     private JLabel realtyObjectLabel;
@@ -83,10 +83,45 @@ public class ReceptionDialog extends AbstractDialog {
 
         JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
 
-        receptionCodeLabel = new JLabel();
+        receptionCodeTextField = new JTextField(30);
+        receptionCodeTextField.getDocument().addDocumentListener( new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { documentChanged(); }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) { documentChanged(); }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) { documentChanged(); }
+
+            private void documentChanged() {
+                if(!receptionCodeTextField.getText().equals(reception.getReceptionCode()))
+                    controller.setReceptionCode(receptionCodeTextField.getText());
+            }
+        });
+
         byRecordLabel = new JLabel();
-        rosreestrCodeLabel = new JLabel();
+
+        rosreestrCodeTextField = new JTextField(30);
+        rosreestrCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) { textChanged(); }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) { textChanged(); }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) { textChanged(); }
+
+            private void textChanged() {
+                if (!rosreestrCodeTextField.getText().equals(reception.getRosreestrCode()))
+                    controller.setRosreestrCode(rosreestrCodeTextField.getText());
+            }
+
+         });
+
         parentRosreestrCodeLabel = new JLabel();
+
 
         serviceNameLabel = new JLabel();
         serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
@@ -200,14 +235,14 @@ public class ReceptionDialog extends AbstractDialog {
 
         // Собираем панель данных
         dataPanel.add(new JLabel("Код запроса:"));
-        dataPanel.add(receptionCodeLabel, "growx");
+        dataPanel.add(receptionCodeTextField, "growx");
         dataPanel.add(editButton, "right, wrap");
         dataPanel.add(new JLabel("По записи: "));
         dataPanel.add(byRecordLabel, "wrap");
-        dataPanel.add(new JLabel("Код РосРеестра:"));
-        dataPanel.add(rosreestrCodeLabel, "wrap");
-        dataPanel.add(new JLabel("Код росреестра основного дела:"));
-        dataPanel.add(parentRosreestrCodeLabel, "wrap");
+        dataPanel.add(new JLabel("Код Росреестра:"));
+        dataPanel.add(rosreestrCodeTextField, "wrap");
+        dataPanel.add(new JLabel("Код Росреестра основного дела:"));
+        dataPanel.add(parentRosreestrCodeLabel,"wrap");
         dataPanel.add(new JLabel("Услуга:"), "wrap");
         dataPanel.add(serviceNameLabel, "growx, wrap");
         dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
@@ -257,6 +292,7 @@ public class ReceptionDialog extends AbstractDialog {
         mainPanel.add(dataPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+        okButton.requestFocus();
 
         this.setContentPane(mainPanel);
 
@@ -282,7 +318,6 @@ public class ReceptionDialog extends AbstractDialog {
     }
 
     void receptionChanged() {
-        loadGUIDataFromReception();
         okButton.setText("Сохранить");
         cancelButton.setVisible(true);
         statusChanged = true;
@@ -303,7 +338,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         String receptionCode = reception.getReceptionCode();
         if (receptionCode == null) receptionCode = "Не опр";
-        receptionCodeLabel.setText("<html><p color='blue'>" + receptionCode + "</p></html>");
+        receptionCodeTextField.setText(receptionCode);
 
         String byRecord = "<html><p color='limegreen'>нет</p></html>";
         if (reception.isByRecord() != null && reception.isByRecord())
@@ -312,7 +347,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         String rosreestrCode = reception.getRosreestrCode();
         if (rosreestrCode == null) rosreestrCode = "Не опр";
-        rosreestrCodeLabel.setText("<html><p color='green'>" + rosreestrCode + "</p></html>");
+        rosreestrCodeTextField.setText(rosreestrCode);
 
         String parentRosreestrCode = reception.getParentReception() == null ? "" : reception.getParentReception().getRosreestrCode();
         parentRosreestrCodeLabel.setText("<html><strong color='green'>" + parentRosreestrCode + "</strong></html>");
