@@ -41,8 +41,10 @@ public class ReceptionDialog extends AbstractDialog {
     private final Reception reception; // чтобы нигде ненароком не переназначить - исходник в контроллере
 
     private JTextField receptionCodeTextField;
+    private JButton saveReceptionCodeButton;
     private JLabel byRecordLabel;
     private JTextField rosreestrCodeTextField;
+    private JButton saveRosreestrCodeButton;
     private JLabel parentRosreestrCodeLabel;
     private JLabel serviceNameLabel;
     private JLabel realtyObjectLabel;
@@ -81,44 +83,53 @@ public class ReceptionDialog extends AbstractDialog {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        JPanel dataPanel = new JPanel(new MigLayout("fill, nogrid"));
+        JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-        receptionCodeTextField = new JTextField(30);
-        receptionCodeTextField.getDocument().addDocumentListener( new DocumentListener() {
+        receptionCodeTextField = new JTextField(25);
+        receptionCodeTextField.setEnabled(false);
+        receptionCodeTextField.addMouseListener(new MouseAdapter() {
             @Override
-            public void insertUpdate(DocumentEvent e) { documentChanged(); }
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                receptionCodeTextField.setEnabled(true);
+                saveReceptionCodeButton.setVisible(true);
+            }
+        });
 
+        saveReceptionCodeButton = new JButton(ResourcesUtil.getIcon("accept.png"));
+        saveReceptionCodeButton.setVisible(false);
+        saveReceptionCodeButton.addActionListener(new ActionListener() {
             @Override
-            public void removeUpdate(DocumentEvent e) { documentChanged(); }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) { documentChanged(); }
-
-            private void documentChanged() {
-                if(!receptionCodeTextField.getText().equals(reception.getReceptionCode()))
-                    controller.setReceptionCode(receptionCodeTextField.getText());
+            public void actionPerformed(ActionEvent e) {
+                controller.setReceptionCode(receptionCodeTextField.getText());
+                receptionCodeTextField.setEnabled(false);
+                saveReceptionCodeButton.setVisible(false);
             }
         });
 
         byRecordLabel = new JLabel();
 
-        rosreestrCodeTextField = new JTextField(30);
-        rosreestrCodeTextField.getDocument().addDocumentListener(new DocumentListener() {
+        rosreestrCodeTextField = new JTextField(25);
+        rosreestrCodeTextField.setEnabled(false);
+        rosreestrCodeTextField.addMouseListener(new MouseAdapter() {
             @Override
-            public void insertUpdate(DocumentEvent e) { textChanged(); }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) { textChanged(); }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) { textChanged(); }
-
-            private void textChanged() {
-                if (!rosreestrCodeTextField.getText().equals(reception.getRosreestrCode()))
-                    controller.setRosreestrCode(rosreestrCodeTextField.getText());
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                rosreestrCodeTextField.setEnabled(true);
+                saveRosreestrCodeButton.setVisible(true);
             }
+        });
 
-         });
+        saveRosreestrCodeButton = new JButton(ResourcesUtil.getIcon("accept.png"));
+        saveRosreestrCodeButton.setVisible(false);
+        saveRosreestrCodeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.setRosreestrCode(rosreestrCodeTextField.getText());
+                rosreestrCodeTextField.setEnabled(false);
+                saveRosreestrCodeButton.setVisible(false);
+            }
+        });
 
         parentRosreestrCodeLabel = new JLabel();
 
@@ -234,32 +245,34 @@ public class ReceptionDialog extends AbstractDialog {
         });
 
         // Собираем панель данных
-        dataPanel.add(new JLabel("Код запроса:"));
-        dataPanel.add(receptionCodeTextField, "growx");
-        dataPanel.add(editButton, "right, wrap");
+        dataPanel.add(editButton, "span, right");
+        dataPanel.add(new JLabel("Код запроса:"),"span, split 3");
+        dataPanel.add(receptionCodeTextField);
+        dataPanel.add(saveReceptionCodeButton, "wrap");
         dataPanel.add(new JLabel("По записи: "));
         dataPanel.add(byRecordLabel, "wrap");
-        dataPanel.add(new JLabel("Код Росреестра:"));
-        dataPanel.add(rosreestrCodeTextField, "wrap");
-        dataPanel.add(new JLabel("Код Росреестра основного дела:"));
+        dataPanel.add(new JLabel("Код Росреестра:"), "span, split 3");
+        dataPanel.add(rosreestrCodeTextField);
+        dataPanel.add(saveRosreestrCodeButton, "wrap");
+        dataPanel.add(new JLabel("Код Росреестра основного дела:"), "span, split 2");
         dataPanel.add(parentRosreestrCodeLabel,"wrap");
-        dataPanel.add(new JLabel("Услуга:"), "wrap");
-        dataPanel.add(serviceNameLabel, "growx, wrap");
-        dataPanel.add(new JLabel("Объект недвижимости:"), "wrap");
-        dataPanel.add(realtyObjectLabel, "growx");
+        dataPanel.add(new JLabel("Услуга:"), "span");
+        dataPanel.add(serviceNameLabel, "span, growx");
+        dataPanel.add(new JLabel("Объект недвижимости:"), "span");
+        dataPanel.add(realtyObjectLabel, "span, split 2, growx");
         dataPanel.add(editRealtyObjectButton, "wrap");
-        dataPanel.add(new JLabel("Заявители:"), "wrap");
-        dataPanel.add(applicatorsListScrollPane, "growx, h 50:100:, wrap");
-        dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3, pushx");
+        dataPanel.add(new JLabel("Заявители:"), "span");
+        dataPanel.add(applicatorsListScrollPane, "span, growx, h 50::");
+        dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
         dataPanel.add(addSubReceptionButton);
         dataPanel.add(removeSubReceptionButton, "wrap");
-        dataPanel.add(subReceptionsListScrollPane, "growx, h 50:100:, wrap");
-        dataPanel.add(new JLabel("Состояние дела"), "right");
-        dataPanel.add(serviceInfoPanel, "growx, wrap");
-        dataPanel.add(statusesComboBox, "w 100");
+        dataPanel.add(subReceptionsListScrollPane, "span, growx, h 50::");
+        dataPanel.add(new JLabel("Состояние дела"), "span");
+//        dataPanel.add(serviceInfoPanel, "growx, wrap");
+        dataPanel.add(statusesComboBox, "span,split 3,w 100");
         dataPanel.add(saveNewReceptionStatusButton);
         dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
-        dataPanel.add(statusChangesTableScrollPane, "growx, h 100!, wrap");
+        dataPanel.add(statusChangesTableScrollPane, "span, growx, h 100!");
 
 
         // Панель кнопок
