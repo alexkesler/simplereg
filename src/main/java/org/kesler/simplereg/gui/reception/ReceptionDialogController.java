@@ -53,6 +53,16 @@ public class ReceptionDialogController {
         dialog.updateViewData();
     }
 
+    void setReceptionCode(String receptionCode) {
+        reception.setReceptionCode(receptionCode);
+        dialog.receptionChanged();
+    }
+
+    void setRosreestrCode(String rosreestrCode) {
+        reception.setRosreestrCode(rosreestrCode);
+        dialog.receptionChanged();
+    }
+
     void editRealtyObject() {
         RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog,reception.getRealtyObject());
         realtyObjectDialog.setVisible(true);
@@ -88,5 +98,6 @@ public class ReceptionDialogController {
             receptionsModel.updateReception(subReception);
         }
     }
+
 
 }
