@@ -278,12 +278,10 @@ public class ReceptionDialog extends AbstractDialog {
         // Панель кнопок
         JPanel buttonPanel = new JPanel();
 
-        okButton = new JButton("Ok");
+        okButton = new JButton("Закрыть");
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-
                 setVisible(false);
-
             }
         });
         okButton.requestFocus();
