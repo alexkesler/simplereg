@@ -14,7 +14,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <product.title>Регистрация заявителей</product.title>
     <product.company>ГБУ СО "Многофункциональный центр"</product.company>
-    <product.year>2013</product.year>
+    <product.year>2014</product.year>
     <jdkVersion>1.7</jdkVersion>
   </properties>
 
