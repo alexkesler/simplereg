@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.kesler.simplereg.logic.Reception;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,11 +25,13 @@ public class ArchiveReestrExporter extends ReestrExporter {
 
     @Override
     protected void prepare() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Sheet sh = wb.createSheet();
 
         sh.setColumnWidth(0, 256*5);
         sh.setColumnWidth(1, 256*22);
         sh.setColumnWidth(2, 256*40);
+        sh.setColumnWidth(3, 256*15);
 
         // Создаем заголовок
         Row titleRow = sh.createRow(0);
@@ -55,6 +58,10 @@ public class ArchiveReestrExporter extends ReestrExporter {
         cell.setCellValue("Объект недвижимости");
         cell.setCellStyle(cellStyle);
 
+        cell = titleRow.createCell(3);
+        cell.setCellValue("Дата приема");
+        cell.setCellStyle(cellStyle);
+
 
         // формируем список основных дел
 
@@ -68,7 +75,7 @@ public class ArchiveReestrExporter extends ReestrExporter {
         for (int rownum = 0; rownum < mainReceptions.size(); rownum++) {
             Reception reception = mainReceptions.get(rownum);
             Row row = sh.createRow(rownum+1);
-            for (int colnum = 0; colnum < 3; colnum++) {
+            for (int colnum = 0; colnum < 4; colnum++) {
                 cell = row.createCell(colnum);
                 String value = "";
                 switch (colnum) {
@@ -80,6 +87,11 @@ public class ArchiveReestrExporter extends ReestrExporter {
                         break;
                     case 2:
                         value = reception.getRealtyObject().toString();
+                        break;
+                    case 3:
+                        value = dateFormat.format(reception.getOpenDate());
+                        break;
+                    default:
                         break;
                 }
 
