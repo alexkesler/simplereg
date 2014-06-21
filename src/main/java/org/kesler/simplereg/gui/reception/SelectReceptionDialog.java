@@ -200,7 +200,7 @@ public class SelectReceptionDialog extends AbstractDialog {
 
         @Override
         public int getColumnCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -210,6 +210,8 @@ public class SelectReceptionDialog extends AbstractDialog {
                     return "Код Росреестра";
                 case 1:
                     return "Дата приема";
+                case 2:
+                    return "Состояние";
                 default:
                     return "";
             }
@@ -224,6 +226,8 @@ public class SelectReceptionDialog extends AbstractDialog {
                     return reception.getRosreestrCode();
                 case 1:
                     return dateFormat.format(reception.getOpenDate());
+                case 2:
+                    return reception.getStatusName() + " (" + dateFormat.format(reception.getStatusChangeDate()) + ")";
                 default:
                     return null;
             }
