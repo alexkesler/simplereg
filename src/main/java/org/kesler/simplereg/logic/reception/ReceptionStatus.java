@@ -4,12 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 
-import org.hibernate.annotations.Proxy;
-
 import org.kesler.simplereg.dao.AbstractEntity;
 
 @Entity
-@Proxy(lazy=false)
 @Table(name="ReceptionStatuses")
 public class ReceptionStatus extends AbstractEntity {
 	
@@ -19,13 +16,17 @@ public class ReceptionStatus extends AbstractEntity {
 	@Column(name="Code", nullable=false, unique=true)
 	private Integer code;
 
+    @Column(name="initial")
+    private Boolean initial;
+
+    @Column(name="closed")
+    private Boolean closed;
 
 	public ReceptionStatus() {}
 
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -33,12 +34,25 @@ public class ReceptionStatus extends AbstractEntity {
 	public Integer getCode() {
 		return code;
 	}
-
 	public void setCode(Integer code) {
 		this.code = code;
 	}
 
-	@Override
+    public Boolean getInitial() {
+        return initial;
+    }
+    public void setInitial(Boolean initial) {
+        this.initial = initial;
+    }
+
+    public Boolean getClosed() {
+        return closed;
+    }
+    public void setClosed(Boolean closed) {
+        this.closed = closed;
+    }
+
+    @Override
 	public String toString() {
 		return getCode() + " - " + getName(); 
 	}

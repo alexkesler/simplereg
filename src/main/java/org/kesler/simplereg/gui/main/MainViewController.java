@@ -3,6 +3,7 @@ package org.kesler.simplereg.gui.main;
 import java.util.List;
 
 import org.kesler.simplereg.gui.fias.FIASDialog;
+import org.kesler.simplereg.gui.issue.IssueDialogController;
 import org.kesler.simplereg.gui.options.OptionsDialog;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
@@ -27,6 +28,7 @@ import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
 
+import static org.kesler.simplereg.gui.main.MainViewCommand.*;
 
 
 /**
@@ -132,6 +134,9 @@ public class MainViewController implements MainViewListener,
             case FIAS:
                 openFIASDialog();
                 break;
+            case Issue:
+                openIssueDialog();
+                break;
 			case Exit:
 				System.exit(0);	
 
@@ -142,48 +147,49 @@ public class MainViewController implements MainViewListener,
 	private void setMainViewAccess(Operator operator) {
 
 		// по умолчанию все элементы неактивны
-		for (MainViewCommand command: MainViewCommand.values()) {
+		for (MainViewCommand command: values()) {
 			mainView.getActionByCommand(command).setEnabled(false);
 		}
 
 		// Элемент Закрыть всегда активен
-		mainView.getActionByCommand(MainViewCommand.Exit).setEnabled(true);
-		mainView.getActionByCommand(MainViewCommand.Options).setEnabled(true);
-        mainView.getActionByCommand(MainViewCommand.About).setEnabled(true);
+		mainView.getActionByCommand(Exit).setEnabled(true);
+		mainView.getActionByCommand(Options).setEnabled(true);
+        mainView.getActionByCommand(About).setEnabled(true);
 
 		
 		if (operator != null) { // оператор назначен
 
-			mainView.getActionByCommand(MainViewCommand.Logout).setEnabled(true);
-			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
-			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
+			mainView.getActionByCommand(Logout).setEnabled(true);
+			mainView.getActionByCommand(NewReception).setEnabled(true);
+            mainView.getActionByCommand(Issue).setEnabled(true);
+			mainView.getActionByCommand(UpdateReceptions).setEnabled(true);
 
 			if (operator.isControler()) { // для контролера
-				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.FLs).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.ULs).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.RealtyObjects).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
+				mainView.getActionByCommand(ReceptionStatuses).setEnabled(true);
+				mainView.getActionByCommand(OpenReceptionsReestr).setEnabled(true);
+				mainView.getActionByCommand(OpenStatistic).setEnabled(true);
+				mainView.getActionByCommand(FLs).setEnabled(true);
+				mainView.getActionByCommand(ULs).setEnabled(true);
+				mainView.getActionByCommand(RealtyObjects).setEnabled(true);
+				mainView.getActionByCommand(RealtyObjectTypes).setEnabled(true);
 			}
 
 			if (operator.isAdmin()) { // для администратора
-				mainView.getActionByCommand(MainViewCommand.ReceptionStatuses).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.OpenReceptionsReestr).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.OpenStatistic).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.FLs).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.ULs).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.RealtyObjects).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.RealtyObjectTypes).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.Services).setEnabled(true);
-				mainView.getActionByCommand(MainViewCommand.Operators).setEnabled(true);
-                mainView.getActionByCommand(MainViewCommand.FIAS).setEnabled(true);
+				mainView.getActionByCommand(ReceptionStatuses).setEnabled(true);
+				mainView.getActionByCommand(OpenReceptionsReestr).setEnabled(true);
+				mainView.getActionByCommand(OpenStatistic).setEnabled(true);
+				mainView.getActionByCommand(FLs).setEnabled(true);
+				mainView.getActionByCommand(ULs).setEnabled(true);
+				mainView.getActionByCommand(RealtyObjects).setEnabled(true);
+				mainView.getActionByCommand(RealtyObjectTypes).setEnabled(true);
+				mainView.getActionByCommand(Services).setEnabled(true);
+				mainView.getActionByCommand(Operators).setEnabled(true);
+                mainView.getActionByCommand(FIAS).setEnabled(true);
 
 			}
 
 		} else { // если оператор не назначен
-			mainView.getActionByCommand(MainViewCommand.Login).setEnabled(true);			
+			mainView.getActionByCommand(Login).setEnabled(true);
 		}
 
 	}
@@ -356,9 +362,15 @@ public class MainViewController implements MainViewListener,
         dialog.setVisible(true);
     }
 
+    private void openIssueDialog() {
+        IssueDialogController.getInstance().openDialog(mainView);
+    }
+
     public void editReception(Reception reception) {
         MakeReceptionViewController.getInstance().openView(mainView, reception);
     }
+
+
 
 
 

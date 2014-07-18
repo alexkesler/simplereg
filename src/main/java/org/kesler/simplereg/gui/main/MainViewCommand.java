@@ -20,6 +20,7 @@ public enum MainViewCommand {
 	Operators("Операторы", "operators", "user_suit.png"),
 	Options("Настройки", "options", "wrench.png"),
     FIAS("Загрузка ФИАС","fias","building.png"),
+    Issue("Выдача результата", "issue", "issue.png"),
 	Exit("Закрыть","exit", "door_out.png");
 
 

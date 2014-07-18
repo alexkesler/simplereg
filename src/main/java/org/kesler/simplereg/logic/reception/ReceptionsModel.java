@@ -8,6 +8,7 @@ import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersModel;
 import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
@@ -170,6 +171,11 @@ public class ReceptionsModel implements DAOListener{
         Date fromDate = calendar.getTime();
         Date toDate = new Date();
         lastReceptions = DAOFactory.getInstance().getReceptionDAO().getReceptionsByOpenDate(fromDate, toDate);
+    }
+
+    public void addRosreestrCodeFilter(String filterString) {
+        if(!filterString.isEmpty()) filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE,filterString);
+        else filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
     }
 
     /**
