@@ -43,7 +43,7 @@ public class PackagesReader extends DBReader {
     public String getQuerySQL() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
         if (beginDate!=null || endDate!=null || lastNum!=null) {
-            return "select P.ID, P.REGNUM, P.ID_TYPE, P.BEGINDATE, PT.GROUPTYPE, PT.TYPE " +
+            return "select P.ID, P.REGNUM, P.NUM, P.ID_TYPE, P.BEGINDATE, PT.GROUPTYPE, PT.TYPE " +
                     "from DPS$PACKAGE P, DPS$PACKAGETYPE PT " +
                     "WHERE PT.ID=P.ID_TYPE " +
                     (beginDate==null?"":" AND TRUNC(BEGINDATE) >= '" + dateFormat.format(beginDate) + "' ") +
@@ -65,6 +65,7 @@ public class PackagesReader extends DBReader {
             aPackage.setId(rs.getString("ID"));
             aPackage.setTypeId(rs.getString("ID_TYPE"));
             aPackage.setRegnum(rs.getString("REGNUM"));
+            aPackage.setNum(rs.getInt("NUM"));
             aPackage.setBeginDate(rs.getDate("BEGINDATE"));
             aPackage.setGroupType(rs.getString("GROUPTYPE"));
             aPackage.setType(rs.getString("TYPE"));

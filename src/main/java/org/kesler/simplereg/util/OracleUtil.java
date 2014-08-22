@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Properties;
 
-
 public class OracleUtil {
     private static Connection connection;
     public static synchronized Connection getConnection() {

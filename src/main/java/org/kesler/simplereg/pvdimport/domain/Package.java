@@ -8,6 +8,7 @@ import java.util.List;
 public class Package {
     private String id;
     private String regnum;
+    private Integer num;
     private String typeId;
     private String groupType;
     private String type;
@@ -23,6 +24,9 @@ public class Package {
 
     public String getRegnum() { return regnum; }
     public void setRegnum(String regnum) { this.regnum = regnum; }
+
+    public Integer getNum() { return num; }
+    public void setNum(Integer num) { this.num = num; }
 
     public String getTypeId() { return typeId; }
     public void setTypeId(String typeId) { this.typeId = typeId; }
