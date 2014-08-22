@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
-import javax.swing.AbstractListModel;
 import javax.swing.JOptionPane;
 
-import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.Applicator;

@@ -30,6 +30,9 @@ public class Service extends AbstractEntity {
     @Column(name="Code", length=50)
     private String code;
 
+    @Column(name = "PKPVDType")
+    private String pkpvdtype;
+
 	@Column(name="Enabled")
 	private Boolean enabled;
 
@@ -76,7 +79,11 @@ public class Service extends AbstractEntity {
 
     public void setCode(String code) {this.code = code;}
 
-	public Boolean getEnabled() {
+    public String getPkpvdtype() { return pkpvdtype; }
+
+    public void setPkpvdtype(String pkpvdtype) { this.pkpvdtype = pkpvdtype; }
+
+    public Boolean getEnabled() {
 		return enabled;
 	}
 
