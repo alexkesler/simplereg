@@ -1,16 +1,13 @@
 package org.kesler.simplereg.pvdimport.support;
 
-
-
-
-import org.kesler.simplereg.pvdimport.RSProcessor;
+import org.kesler.simplereg.pvdimport.DBReader;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ApplicantsReader implements RSProcessor {
+public class ApplicantsReader extends DBReader {
     private Cause cause;
 
     public ApplicantsReader(Cause cause) {

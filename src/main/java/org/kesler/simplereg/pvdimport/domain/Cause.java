@@ -6,55 +6,67 @@ import java.util.List;
 
 public class Cause {
     private String id;
-    private String regnum;
-    private String groupType;
-    private String type;
+    private Package pack;
+    private String procId;
     private List<Applicant> applicants;
+    private List<Obj> objects;
+    private List<Pay> pays;
+    private Date startDate;
     private Date estimateDate;
+    private Integer state;
+    private String statusMD;
+    private Integer purpose;
 
     public Cause() {
         applicants = new ArrayList<Applicant>();
+        objects = new ArrayList<Obj>();
+        pays = new ArrayList<Pay>();
     }
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public Package getPackage() { return pack; }
+    public void setPackage(Package aPackage) { this.pack = aPackage; }
 
-    public String getRegnum() {
-        return regnum;
-    }
+    public String getRegnum() { return pack ==null?null: pack.getRegnum(); }
 
-    public void setRegnum(String regnum) {
-        this.regnum = regnum;
-    }
+    public String getGroupType() { return pack.getGroupType(); }
 
-    public String getGroupType() {
-        return groupType;
-    }
+    public String getType() { return pack.getType(); }
 
-    public void setGroupType(String groupType) {
-        this.groupType = groupType;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    public String getProcId() { return procId; }
+    public void setProcId(String procId) { this.procId = procId; }
 
     public List<Applicant> getApplicants() {return applicants;}
 
-    public Date getEstimateDate() {
-        return estimateDate;
-    }
+    public List<Obj> getObjects() { return objects; }
 
-    public void setEstimateDate(Date estimateDate) {
-        this.estimateDate = estimateDate;
+    public List<Pay> getPays() {return pays;}
+
+    public Date getStartDate() { return startDate; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
+
+    public Date getEstimateDate() { return estimateDate; }
+    public void setEstimateDate(Date estimateDate) { this.estimateDate = estimateDate; }
+
+    public Integer getState() { return state; }
+    public void setState(Integer state) { this.state = state; }
+
+    public String getStatusMD() {  return statusMD; }
+    public void setStatusMD(String statusMD) { this.statusMD = statusMD; }
+
+    public Integer getPurpose() { return purpose; }
+    public void setPurpose(Integer purpose) { this.purpose = purpose; }
+
+    public Date getBeginDate() { return pack.getBeginDate(); }
+
+    public Double getTotalCharge() {
+        Double totalCharge = 0.0;
+        for(Pay pay:pays) {
+            totalCharge += pay.getCharge();
+        }
+
+        return totalCharge;
     }
 }

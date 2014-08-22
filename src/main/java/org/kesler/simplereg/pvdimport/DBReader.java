@@ -1,24 +1,23 @@
 package org.kesler.simplereg.pvdimport;
 
-
 import org.kesler.simplereg.util.OracleUtil;
 
 import java.sql.*;
 
-public class DBReader {
+public abstract class DBReader {
 
-    public static void read(RSProcessor rsProcessor) {
+    public void read() {
 
             Connection conn = OracleUtil.getConnection();
 
             try  {
                 Statement stmt = conn.createStatement();
                 try  {
-                    System.out.println("Query: " + rsProcessor.getQuerySQL());
-                    ResultSet rs = stmt.executeQuery(rsProcessor.getQuerySQL());
+                    System.out.println("Query: " + getQuerySQL());
+                    ResultSet rs = stmt.executeQuery(getQuerySQL());
                     try {
                         System.out.println("Processing >>>");
-                        rsProcessor.processRs(rs);
+                        processRs(rs);
                         System.out.println("Processing complete");
                     } finally {
                         rs.close();
@@ -33,4 +32,8 @@ public class DBReader {
 
     }
 
- }
+    public abstract String getQuerySQL();
+    public abstract void processRs(ResultSet rs) throws SQLException;
+
+
+}

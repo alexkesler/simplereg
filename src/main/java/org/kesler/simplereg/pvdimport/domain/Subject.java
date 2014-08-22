@@ -56,4 +56,13 @@ public class Subject {
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }
+
+    public String getName() {
+        if (clsType.equals("7.3.1")) {
+            // физ лицо
+            return surname + " " + firstname + " " + patronymic;
+        } else {
+            return shortName;
+        }
+    }
 }

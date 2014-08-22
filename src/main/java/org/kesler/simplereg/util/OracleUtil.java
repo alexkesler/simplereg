@@ -28,7 +28,9 @@ public class OracleUtil {
         prop.setProperty("user", "admin");
         prop.setProperty("password", "admin");
 
-        String url = "jdbc:oracle:thin:@10.10.111.243:1521:xe";
+        String serverIp = OptionsUtil.getOption("pvd.serverip");
+
+        String url = "jdbc:oracle:thin:@" + serverIp + ":1521:xe";
 
         Locale prevLocale = Locale.getDefault();
         Locale.setDefault(Locale.US);

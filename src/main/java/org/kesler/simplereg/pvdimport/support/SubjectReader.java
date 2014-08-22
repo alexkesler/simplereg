@@ -1,6 +1,7 @@
 package org.kesler.simplereg.pvdimport.support;
 
-import org.kesler.simplereg.pvdimport.RSProcessor;
+
+import org.kesler.simplereg.pvdimport.DBReader;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Subject;
 
@@ -8,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class SubjectReader implements RSProcessor {
+public class SubjectReader extends DBReader {
     private Applicant applicant;
 
     public SubjectReader(Applicant applicant) {
