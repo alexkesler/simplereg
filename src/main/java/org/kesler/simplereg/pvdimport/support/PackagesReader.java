@@ -18,7 +18,7 @@ public class PackagesReader extends DBReader {
     private ReaderListener readerListener;
     private Date beginDate;
     private Date endDate;
-    private Long lastNum;
+    private Integer lastNum;
 
     public PackagesReader(ReaderListener readerListener) {
         this.readerListener = readerListener;
@@ -32,7 +32,7 @@ public class PackagesReader extends DBReader {
         packages = new ArrayList<Package>();
     }
 
-    public PackagesReader(ReaderListener readerListener, Long lastNum) {
+    public PackagesReader(ReaderListener readerListener, Integer lastNum) {
         this.readerListener = readerListener;
         this.lastNum = lastNum;
         packages = new ArrayList<Package>();
