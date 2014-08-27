@@ -114,6 +114,25 @@ public class MakeReceptionViewController {
         view = null;
     }
 
+    public void openView(JFrame parentFrame, Reception reception, boolean fromPVD) {
+        log.info("Open view for reception from PVD" + reception.getReceptionCode());
+        this.parentFrame = parentFrame;
+        this.reception = reception;
+        if (fromPVD) {
+            isNew = true;
+            initReceptionFromPVD();
+        }
+
+        // Создаем новый вид
+        view = new MakeReceptionView(this, parentFrame);
+        // Переключаем в начальное состояние
+        viewState = new ServiceMakeReceptionViewState(this, view);
+
+        view.showView();
+        view = null;
+    }
+
+
     private void initReception() {
         log.info("Init reception");
         // Создаем экземпляр приема заявтеля
@@ -140,11 +159,31 @@ public class MakeReceptionViewController {
         reception.setByRecord(false);
         reception.setResultInMFC(false);
 
-        // Создаем пустой список заявителей
-        reception.setApplicators(new ArrayList<Applicator>());
+    }
 
+    private void initReceptionFromPVD() {
+        log.info("Init reception from PVD");
+
+        //Получаем текущего оператора
+        Operator operator = CurrentOperator.getInstance().getOperator();
+        reception.setOperator(operator);
+
+        // Присваиваем номер филиала
+        reception.setFilialCode(OptionsUtil.getOption("reg.filial"));
+
+        // Генерим уникальный номер
+        int currentCount = CounterUtil.getNextCount();
+        reception.setReceptionCodeNum(currentCount);
+
+        // Генерируем код дела
+        reception.generateReceptionCode();
+
+        // Устанавливаем начальные значения
+        reception.setByRecord(false);
+        reception.setResultInMFC(false);
 
     }
+
 
     void back() {
         viewState.back();

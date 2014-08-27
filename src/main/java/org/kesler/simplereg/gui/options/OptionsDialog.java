@@ -111,6 +111,7 @@ public class OptionsDialog extends JDialog {
 		dbPanel.add(new JLabel("Пароль"));
 		dbPanel.add(passwordTextField);
 
+        // Панель регистрационных данных
 		JPanel regPanel = new JPanel(new MigLayout("wrap 2",
 													"[right][left]",
 													""));
@@ -125,13 +126,14 @@ public class OptionsDialog extends JDialog {
         JPanel pvdPanel = new JPanel(new MigLayout("wrap 2",
                 "[right][left]",
                 ""));
-        regPanel.setBorder(BorderFactory.createTitledBorder("ПК ПВД"));
+        pvdPanel.setBorder(BorderFactory.createTitledBorder("ПК ПВД"));
 
         pvdServerIpTextField = new JTextField(15);
 
         pvdPanel.add(new JLabel("IP сервера ПК ПВД"));
         pvdPanel.add(pvdServerIpTextField);
 
+        // Панель логических параметров
         JPanel logicPanel = new JPanel(new MigLayout("wrap 2",
 													"[right][left]",
 													""));

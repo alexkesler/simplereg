@@ -5,6 +5,7 @@ import java.util.List;
 import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.gui.issue.IssueDialogController;
 import org.kesler.simplereg.gui.options.OptionsDialog;
+import org.kesler.simplereg.gui.pvd.PVDImportDialogController;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -15,6 +16,8 @@ import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.pvdimport.Transform;
+import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.gui.services.ServicesDialogController;
@@ -27,8 +30,10 @@ import org.kesler.simplereg.gui.applicator.ULListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
+import org.kesler.simplereg.util.OptionsUtil;
 
 import static org.kesler.simplereg.gui.main.MainViewCommand.*;
+import javax.swing.*;
 
 
 /**
@@ -98,7 +103,10 @@ public class MainViewController implements MainViewListener,
             case NewReception:
 				openMakeReceptionView();
 				break;
-			case UpdateReceptions: 
+           case NewReceptionFromPVD:
+				openNewReceptionFromPVDView();
+				break;
+			case UpdateReceptions:
 				readReceptions();
 				break;
 			case OpenReceptionsReestr: 
@@ -162,6 +170,7 @@ public class MainViewController implements MainViewListener,
 			mainView.getActionByCommand(Logout).setEnabled(true);
 			mainView.getActionByCommand(NewReception).setEnabled(true);
             mainView.getActionByCommand(Issue).setEnabled(true);
+            mainView.getActionByCommand(NewReceptionFromPVD).setEnabled(true);
 			mainView.getActionByCommand(UpdateReceptions).setEnabled(true);
 
 			if (operator.isControler()) { // для контролера
@@ -371,7 +380,23 @@ public class MainViewController implements MainViewListener,
     }
 
 
-    private void
+    private void openNewReceptionFromPVDView() {
+        String pvdServerIp = OptionsUtil.getOption("pvd.serverip");
+        if (pvdServerIp==null || pvdServerIp.isEmpty()) {
+            JOptionPane.showMessageDialog(mainView,"Адрес сервера не задан, проверьте настройки","Ошибка",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Получаем номер последнего дела ПК ПВД
+        Integer lastPVDNum = receptionsModel.getLastPVDNum();
+        Cause cause = null;
+        if (lastPVDNum!=null)
+            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDNum);
+        else // не нашли последнее дело - читаем за текущий день
+            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView);
+        if (cause==null) return;
+        Reception reception = Transform.makeReceptionFromCause(cause);
+        MakeReceptionViewController.getInstance().openView(mainView,reception,true);
+    }
 
 
 
