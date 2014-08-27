@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.gui.options.OptionsDialog;
+import org.kesler.simplereg.gui.pvd.PVDImportDialogController;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -14,6 +15,8 @@ import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.pvdimport.Transform;
+import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.gui.services.ServicesDialogController;
@@ -96,7 +99,10 @@ public class MainViewController implements MainViewListener,
             case NewReception:
 				openMakeReceptionView();
 				break;
-			case UpdateReceptions: 
+           case NewReceptionFromPVD:
+				openNewReceptionFromPVDView();
+				break;
+			case UpdateReceptions:
 				readReceptions();
 				break;
 			case OpenReceptionsReestr: 
@@ -156,6 +162,7 @@ public class MainViewController implements MainViewListener,
 
 			mainView.getActionByCommand(MainViewCommand.Logout).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.NewReception).setEnabled(true);
+            mainView.getActionByCommand(MainViewCommand.NewReceptionFromPVD).setEnabled(true);
 			mainView.getActionByCommand(MainViewCommand.UpdateReceptions).setEnabled(true);
 
 			if (operator.isControler()) { // для контролера
@@ -361,7 +368,13 @@ public class MainViewController implements MainViewListener,
     }
 
 
-    private void
+    private void openNewReceptionFromPVDView() {
+        int lastPVDNum = receptionsModel.getLastPVDNum();
+        Cause cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDNum);
+        if (cause==null) return;
+        Reception reception = Transform.makeReceptionFromCause(cause);
+        MakeReceptionViewController.getInstance().openView(mainView,reception,true);
+    }
 
 
 	/**

@@ -12,4 +12,5 @@ public interface ReceptionDAO extends GenericDAO<Reception>{
 	public List<Reception> getAllReceptions();
 	public List<Reception> getReceptionsByOpenDate(Date from, Date to);
 	public void removeReception(Reception r);
+    public Integer getLastPVDNum();
 }

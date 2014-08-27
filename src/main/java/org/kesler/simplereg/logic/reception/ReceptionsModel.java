@@ -244,6 +244,10 @@ public class ReceptionsModel implements DAOListener{
         removerThread.start();
     }
 
+    public Integer getLastPVDNum() {
+        return DAOFactory.getInstance().getReceptionDAO().getLastPVDNum();
+    }
+
 	/**
 	* Реализует интерфейс {@link org.kesler.simplereg.dao.DAOListener}
 	*/

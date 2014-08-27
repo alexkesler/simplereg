@@ -21,13 +21,25 @@ public class PVDImportDialogController implements ReaderListener{
         causes = new ArrayList<Cause>();
     }
 
-    public PVDImportDialogController getInstance() { return instance; }
+    public static synchronized PVDImportDialogController getInstance() { return instance; }
 
     List<Cause> getCauses() { return causes; }
 
     public Cause showSelectDialog(JDialog parentDialog, int lastNum) {
         causes.clear();
         dialog = new PVDImportDialog(parentDialog, this);
+        readCausesInSeparateThread(lastNum);
+        dialog.setVisible(true);
+        if(dialog.getResult()==PVDImportDialog.OK) {
+            return dialog.getSelectedCause();
+        } else {
+            return null;
+        }
+    }
+
+    public Cause showSelectDialog(JFrame parentFrame, int lastNum) {
+        causes.clear();
+        dialog = new PVDImportDialog(parentFrame, this);
         readCausesInSeparateThread(lastNum);
         dialog.setVisible(true);
         if(dialog.getResult()==PVDImportDialog.OK) {

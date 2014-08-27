@@ -27,6 +27,14 @@ public class PVDImportDialog extends AbstractDialog{
         setLocationRelativeTo(parentDialog);
     }
 
+    PVDImportDialog(JFrame parentFrame, PVDImportDialogController controller) {
+        super(parentFrame, true);
+        this.controller = controller;
+        createGUI();
+        pack();
+        setLocationRelativeTo(parentFrame);
+    }
+
     private void createGUI() {
 
         JPanel mainPanel = new JPanel(new BorderLayout());
