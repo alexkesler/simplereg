@@ -192,6 +192,9 @@ public class MainView extends JFrame {
 		JButton newReceptionButton = new JButton(getActionByCommand(MainViewCommand.NewReception));
 		newReceptionButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.NewReception.getIconName()));
 
+		JButton newReceptionfromPVDButton = new JButton(getActionByCommand(MainViewCommand.NewReceptionFromPVD));
+        newReceptionfromPVDButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.NewReceptionFromPVD.getIconName()));
+
 		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
 		updateButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.UpdateReceptions.getIconName()));
 
@@ -199,6 +202,8 @@ public class MainView extends JFrame {
 		buttonPanel.add(currentOperatorLabel);
 		buttonPanel.add(Box.createHorizontalGlue());
 		buttonPanel.add(newReceptionButton);
+		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		buttonPanel.add(newReceptionfromPVDButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		buttonPanel.add(updateButton);
 		buttonPanel.add(Box.createRigidArea(new Dimension(200,0)));

@@ -29,7 +29,9 @@ import org.kesler.simplereg.gui.applicator.ULListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
+import org.kesler.simplereg.util.OptionsUtil;
 
+import javax.swing.*;
 
 
 /**
@@ -369,8 +371,18 @@ public class MainViewController implements MainViewListener,
 
 
     private void openNewReceptionFromPVDView() {
-        int lastPVDNum = receptionsModel.getLastPVDNum();
-        Cause cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDNum);
+        String pvdServerIp = OptionsUtil.getOption("pvd.serverip");
+        if (pvdServerIp==null || pvdServerIp.isEmpty()) {
+            JOptionPane.showMessageDialog(mainView,"Адрес сервера не задан, проверьте настройки","Ошибка",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Получаем номер последнего дела ПК ПВД
+        Integer lastPVDNum = receptionsModel.getLastPVDNum();
+        Cause cause = null;
+        if (lastPVDNum!=null)
+            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDNum);
+        else // не нашли последнее дело - читаем за текущий день
+            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView);
         if (cause==null) return;
         Reception reception = Transform.makeReceptionFromCause(cause);
         MakeReceptionViewController.getInstance().openView(mainView,reception,true);
