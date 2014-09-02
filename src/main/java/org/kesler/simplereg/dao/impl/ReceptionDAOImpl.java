@@ -78,12 +78,12 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
 	}
 
     @Override
-    public Integer getLastPVDNum() {
+    public Integer getLastPVDPackageNum() {
         Integer lastPVDNum = null;
 
         Session session = null;
 
-        String hql = "SELECT MAX(R.pvdNum) from Reception R";
+        String hql = "SELECT MAX(R.pvdPackageNum) from Reception R";
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery(hql);

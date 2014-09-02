@@ -388,10 +388,10 @@ public class MainViewController implements MainViewListener,
             return;
         }
         // Получаем номер последнего дела ПК ПВД
-        Integer lastPVDNum = receptionsModel.getLastPVDNum();
+        Integer lastPVDPackageNum = receptionsModel.getLastPVDPackageNum();
         Cause cause = null;
-        if (lastPVDNum!=null)
-            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDNum);
+        if (lastPVDPackageNum!=null)
+            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDPackageNum);
         else // не нашли последнее дело - читаем за текущий день
             cause = PVDImportDialogController.getInstance().showSelectDialog(mainView);
         if (cause==null) return;

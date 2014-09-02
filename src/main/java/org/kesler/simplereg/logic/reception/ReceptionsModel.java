@@ -1,7 +1,6 @@
 package org.kesler.simplereg.logic.reception;
 
 import java.util.*;
-import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;
@@ -10,7 +9,6 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersModel;
-import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
 import org.kesler.simplereg.logic.ModelState;
 
@@ -250,8 +248,8 @@ public class ReceptionsModel implements DAOListener{
         removerThread.start();
     }
 
-    public Integer getLastPVDNum() {
-        return DAOFactory.getInstance().getReceptionDAO().getLastPVDNum();
+    public Integer getLastPVDPackageNum() {
+        return DAOFactory.getInstance().getReceptionDAO().getLastPVDPackageNum();
     }
 
 	/**
