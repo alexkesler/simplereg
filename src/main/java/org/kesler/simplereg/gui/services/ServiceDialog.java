@@ -23,6 +23,7 @@ public class ServiceDialog extends JDialog {
 
     private JTextField codeTextField;
 	private JTextArea nameTextArea;
+    private JList pvdTypesList;
 	private JCheckBox enabledCheckBox;
 
 	public ServiceDialog(JDialog parentDialog) {
@@ -69,12 +70,17 @@ public class ServiceDialog extends JDialog {
 		JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);
 		//nameTextAreaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+        pvdTypesList = new JList();
+        JScrollPane pvdTypesListScrollPane = new JScrollPane(pvdTypesList);
+
 		enabledCheckBox = new JCheckBox("Действующая");
 
         dataPanel.add(new JLabel("Номер соглашения"));
         dataPanel.add(codeTextField, "wrap");
 		dataPanel.add(new JLabel("Наименование: "), "wrap");
-		dataPanel.add(nameTextAreaScrollPane, "span, pushy, grow");
+		dataPanel.add(nameTextAreaScrollPane, "span, pushx, grow");
+        dataPanel.add(new JLabel("Коды типов ПК ПВД"), "wrap");
+        dataPanel.add(pvdTypesListScrollPane, "span, pushx, grow");
 		dataPanel.add(enabledCheckBox);
 
 		// Панель кнопок
@@ -134,6 +140,9 @@ public class ServiceDialog extends JDialog {
 
 		Boolean enabled = service.getEnabled();
 		if (enabled == null) enabled = false;
+
+//        String[] typeIDs = service.getPkpvdTypeIDs().split(",");
+
 
 		enabledCheckBox.setSelected(enabled);
 	}
