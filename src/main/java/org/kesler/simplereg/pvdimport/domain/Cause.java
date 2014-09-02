@@ -63,6 +63,8 @@ public class Cause {
 
     public Date getBeginDate() { return pack.getBeginDate(); }
 
+    public Integer getPackageNum() { return pack.getNum(); }
+
     public Double getTotalCharge() {
         Double totalCharge = 0.0;
         for(Pay pay:pays) {

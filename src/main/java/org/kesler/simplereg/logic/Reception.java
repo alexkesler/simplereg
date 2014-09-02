@@ -40,8 +40,8 @@ public class Reception extends AbstractEntity{
     @Column(name = "receptionCodeNum")
     private Integer receptionCodeNum;
 
-    @Column(name = "pvdNum")
-    private Integer pvdNum;
+    @Column(name = "pvdPackageNum")
+    private Integer pvdPackageNum;
 
 	@ManyToOne
 	@JoinColumn(name="ServiceID")
@@ -269,8 +269,8 @@ public class Reception extends AbstractEntity{
 
     }
 
-    public Integer getPvdNum() { return pvdNum; }
-    public void setPvdNum(Integer pvdNum) { this.pvdNum = pvdNum; }
+    public Integer getPvdPackageNum() { return pvdPackageNum; }
+    public void setPvdPackageNum(Integer pvdPackageNum) { this.pvdPackageNum = pvdPackageNum; }
 
     public String getStatusName() {
 		return status == null?"Не определено":status.getName();

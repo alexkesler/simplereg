@@ -7,14 +7,13 @@ import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Subject;
+import org.kesler.simplereg.pvdimport.transform.TransformException;
 
 public class Transform {
-    public static Reception makeReceptionFromCause(Cause cause) {
+    public static Reception makeReceptionFromCause(Cause cause) throws TransformException{
         Reception reception = new Reception();
 
         reception.setService(getServiceByPackageType(cause.getPackage().getTypeId()));
-
-
 
         reception.setRosreestrCode(cause.getRegnum());
 
@@ -22,15 +21,16 @@ public class Transform {
             reception.getApplicators().add(getApplicatorForApplicant(applicant));
         }
 
+        reception.setPvdPackageNum(cause.getPackageNum());
 
         return reception;
     }
 
-    static Service getServiceByPackageType(String typeId)  {
+    static Service getServiceByPackageType(String typeId) throws TransformException{
         for(Service service: ServicesModel.getInstance().getActiveServces()) {
             if (service.fitPkpvdTypeID(typeId)) return service;
         }
-        return null;
+        throw new TransformException("Услуга не найдена");
     }
 
     static Applicator getApplicatorForApplicant(Applicant applicant) {

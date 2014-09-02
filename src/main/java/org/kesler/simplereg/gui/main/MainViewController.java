@@ -18,6 +18,7 @@ import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.pvdimport.Transform;
 import org.kesler.simplereg.pvdimport.domain.Cause;
+import org.kesler.simplereg.pvdimport.transform.TransformException;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import org.kesler.simplereg.gui.services.ServicesDialogController;
@@ -394,7 +395,15 @@ public class MainViewController implements MainViewListener,
         else // не нашли последнее дело - читаем за текущий день
             cause = PVDImportDialogController.getInstance().showSelectDialog(mainView);
         if (cause==null) return;
-        Reception reception = Transform.makeReceptionFromCause(cause);
+
+        Reception reception = null;
+        try {
+            reception = Transform.makeReceptionFromCause(cause);
+        } catch (TransformException e) {
+            JOptionPane.showMessageDialog(mainView,e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         MakeReceptionViewController.getInstance().openView(mainView,reception,true);
     }
 
