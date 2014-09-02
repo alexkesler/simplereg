@@ -8,11 +8,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Proxy;
 
-import org.hibernate.envers.Audited;
-
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.dao.EntityState;
-import org.kesler.simplereg.logic.reception.filter.StatusReceptionsFilter;
 
 
 @Entity
@@ -30,8 +27,8 @@ public class Service extends AbstractEntity {
     @Column(name="Code", length=50)
     private String code;
 
-    @Column(name = "PKPVDType")
-    private String pkpvdtype;
+    @Column(name = "PKPVDTypeIDs")
+    private String pkpvdTypeIDs;
 
 	@Column(name="Enabled")
 	private Boolean enabled;
@@ -79,9 +76,16 @@ public class Service extends AbstractEntity {
 
     public void setCode(String code) {this.code = code;}
 
-    public String getPkpvdtype() { return pkpvdtype; }
+    public String getPkpvdTypeIDs() { return pkpvdTypeIDs; }
+    public void setPkpvdTypeIDs(String pkpvdTypeIDs) { this.pkpvdTypeIDs = pkpvdTypeIDs; }
 
-    public void setPkpvdtype(String pkpvdtype) { this.pkpvdtype = pkpvdtype; }
+    public boolean fitPkpvdTypeID(String typeID) {
+        String[] ids = pkpvdTypeIDs.split(",");
+        for (String id:ids) {
+            if(id.equals(typeID)) return true;
+        }
+        return false;
+    }
 
     public Boolean getEnabled() {
 		return enabled;

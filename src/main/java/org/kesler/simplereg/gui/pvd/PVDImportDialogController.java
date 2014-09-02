@@ -27,18 +27,6 @@ public class PVDImportDialogController implements ReaderListener{
 
     List<Cause> getCauses() { return causes; }
 
-    public Cause showSelectDialog(JDialog parentDialog, int lastNum) {
-        causes.clear();
-        dialog = new PVDImportDialog(parentDialog, this);
-        readCausesInSeparateThread(lastNum);
-        dialog.setVisible(true);
-        if(dialog.getResult()==PVDImportDialog.OK) {
-            return dialog.getSelectedCause();
-        } else {
-            return null;
-        }
-    }
-
     public Cause showSelectDialog(JFrame parentFrame, int lastNum) {
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
@@ -79,7 +67,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
         packagesReader = new PackagesReader(this, begDate, endDate);
-        packagesReader.read();
+        packagesReader.readFullInSeparateThread();
     }
 
     private void readCausesInSeparateThread(final int lastNum) {
@@ -91,7 +79,8 @@ public class PVDImportDialogController implements ReaderListener{
         });
         readerThread.start();
     }
-   private void readCausesThisDayInSeparateThread() {
+
+    private void readCausesThisDayInSeparateThread() {
         Thread readerThread = new Thread(new Runnable() {
             @Override
             public void run() {

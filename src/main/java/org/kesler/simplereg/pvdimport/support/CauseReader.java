@@ -18,9 +18,11 @@ public class CauseReader extends DBReader {
 
     @Override
     public String getQuerySQL() {
-        return "SELECT ID, ID_PACKAGE, STATUSMD, STARTDATE, ESTIMATEDATE, ID_PROC, STATE, STATUSMD, PURPOSE " +
-                "from DPS$D_CAUSE " +
-                "WHERE ID_PACKAGE='" + aPackage.getId() + "'";
+        return "SELECT C.ID, C.ID_PACKAGE, C.STATUSMD, C.STARTDATE, C.ESTIMATEDATE, C.ID_PROC, C.STATE, C.STATUSMD, C.PURPOSE " +
+                ", RBI.REGNUM, RBI.REGDATE " +
+                "from DPS$D_CAUSE C, DPS$RECBOOKITEM RBI " +
+                "WHERE RBI.ID_CAUSE=C.ID AND " +
+                " ID_PACKAGE='" + aPackage.getId() + "'";
     }
 
     @Override
@@ -30,6 +32,7 @@ public class CauseReader extends DBReader {
             Cause cause = new Cause();
             cause.setId(rs.getString("ID"));
             cause.setPackage(aPackage);
+            cause.setRegnum(rs.getString("REGNUM"));
             cause.setProcId(rs.getString("ID_PROC"));
             cause.setStartDate(rs.getDate("STARTDATE"));
             cause.setEstimateDate(rs.getDate("ESTIMATEDATE"));

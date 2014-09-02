@@ -62,10 +62,21 @@ public class PVDImportDialog extends AbstractDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 result = OK;
+                setVisible(false);
+            }
+        });
+
+        JButton cancelButton = new JButton("Отмена");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                result = CANCEL;
+                setVisible(false);
             }
         });
 
         buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
 
         mainPanel.add(dataPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
