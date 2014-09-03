@@ -1,6 +1,6 @@
 package org.kesler.simplereg.gui.pvd;
 
-import org.kesler.simplereg.logic.Reception;
+
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.*;
 import org.kesler.simplereg.pvdimport.support.PackagesReader;

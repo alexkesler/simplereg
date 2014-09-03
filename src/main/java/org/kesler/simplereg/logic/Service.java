@@ -80,6 +80,7 @@ public class Service extends AbstractEntity {
     public void setPkpvdTypeIDs(String pkpvdTypeIDs) { this.pkpvdTypeIDs = pkpvdTypeIDs; }
 
     public boolean fitPkpvdTypeID(String typeID) {
+        if (pkpvdTypeIDs==null || pkpvdTypeIDs.isEmpty()) return false;
         String[] ids = pkpvdTypeIDs.split(",");
         for (String id:ids) {
             if(id.equals(typeID)) return true;

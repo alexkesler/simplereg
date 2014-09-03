@@ -1,11 +1,14 @@
 package org.kesler.simplereg.gui.pvd.type;
 
+import org.kesler.simplereg.logic.Service;
+import org.kesler.simplereg.logic.ServicesModel;
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.PackageType;
 import org.kesler.simplereg.pvdimport.support.PackageTypesReader;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PVDPackageTypeDialogController implements ReaderListener{
@@ -24,7 +27,6 @@ public class PVDPackageTypeDialogController implements ReaderListener{
     private PVDPackageTypeDialogController() {
         checkablePackageTypes = new ArrayList<CheckablePackageType>();
         packageTypesReader = new PackageTypesReader(this);
-        packageTypesReader.readInSeparateThread();
     }
 
     List<CheckablePackageType> getCheckablePackageTypes() {return checkablePackageTypes;}
@@ -33,7 +35,9 @@ public class PVDPackageTypeDialogController implements ReaderListener{
         this.typeIDsString = typeIDsString;
         System.out.println("Open PVDDialog: " + this.typeIDsString);
         dialog = new PVDPackageTypeDialog(parentDialog, this);
-        updateChecks();
+
+        packageTypesReader.readInSeparateThread();
+
         dialog.setVisible(true);
         dialog.dispose();
         loadTypeIDsString();
@@ -66,14 +70,36 @@ public class PVDPackageTypeDialogController implements ReaderListener{
         for(PackageType packageType:newTypes)
             checkablePackageTypes.add(new CheckablePackageType(packageType));
 
+        clearCheckedInOtherServices();
         updateChecks();
 
         dialog.update();
     }
 
     private void updateChecks() {
-        for (CheckablePackageType checkablePackageType:checkablePackageTypes)
-            checkablePackageType.checkString(typeIDsString);
+        for (CheckablePackageType checkablePackageType:checkablePackageTypes) {
+            checkablePackageType.setChecked(false);
+            if (checkablePackageType.fitString(typeIDsString)) checkablePackageType.setChecked(true);
+        }
+    }
+
+    private void clearCheckedInOtherServices() {
+        List<Service> services = ServicesModel.getInstance().getActiveServces();
+        StringBuilder allTypeIDsStringBuilder = new StringBuilder();
+        for(Service service:services) {
+            String typeIDs = service.getPkpvdTypeIDs();
+            if(!typeIDs.isEmpty()) {
+                if(allTypeIDsStringBuilder.length()!=0)
+                    allTypeIDsStringBuilder.append(",");
+                allTypeIDsStringBuilder.append(typeIDs);
+            }
+        }
+        String allTypesIDs = allTypeIDsStringBuilder.toString();
+        Iterator<CheckablePackageType> iterator = checkablePackageTypes.iterator();
+        while (iterator.hasNext()) {
+            CheckablePackageType type = iterator.next();
+            if (type.fitString(allTypesIDs) && !type.fitString(typeIDsString)) iterator.remove();
+        }
     }
 
 }
@@ -92,18 +118,18 @@ class CheckablePackageType {
         this.checked = false;
     }
 
-    void checkString(String typeIDsString) {
+    boolean fitString(String typeIDsString) {
 
-        this.checked = false;
         String[] typeIDs = typeIDsString.split(",");
         for(String typeID:typeIDs) {
             if(typeID.equals(packageType.getId())) {
-                checked = true;
-                break;
+                return true;
             }
         }
+        return false;
 
     }
+
 
     public PackageType getPackageType() { return packageType; }
 

@@ -91,9 +91,9 @@ public class ServiceDialog extends JDialog {
         dataPanel.add(new JLabel("Номер соглашения"), "span, split 2");
         dataPanel.add(codeTextField, "wrap");
 		dataPanel.add(new JLabel("Наименование: "), "wrap");
-		dataPanel.add(nameTextAreaScrollPane, "span, grow");
+		dataPanel.add(nameTextAreaScrollPane, "span,pushy, grow");
         dataPanel.add(new JLabel("Коды типов ПК ПВД"), "wrap");
-        dataPanel.add(pvdTypesTextAreaScrollPane, "span, split 2, pushx, grow");
+        dataPanel.add(pvdTypesTextAreaScrollPane, "span, split 2, push, grow");
         dataPanel.add(selectPVDTypesButton);
 		dataPanel.add(enabledCheckBox);
 
