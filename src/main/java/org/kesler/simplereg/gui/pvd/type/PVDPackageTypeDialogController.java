@@ -14,6 +14,7 @@ public class PVDPackageTypeDialogController implements ReaderListener{
 
     private PVDPackageTypeDialog dialog;
     private final List<PackageType> types;
+    private PackageTypesReader packageTypesReader;
 
     public static synchronized PVDPackageTypeDialogController getInstance() {
         return instance;
@@ -21,11 +22,11 @@ public class PVDPackageTypeDialogController implements ReaderListener{
 
     private PVDPackageTypeDialogController() {
         types = new ArrayList<PackageType>();
-        PackageTypesReader packageTypesReader = new PackageTypesReader(this);
+        packageTypesReader = new PackageTypesReader(this);
         packageTypesReader.readInSeparateThread();
     }
 
-    public List<PackageType> getTypes() {return types;}
+    List<PackageType> getTypes() {return types;}
 
     public void showDialog(JDialog parentDialog) {
         dialog = new PVDPackageTypeDialog(parentDialog, this);
@@ -34,6 +35,8 @@ public class PVDPackageTypeDialogController implements ReaderListener{
 
     @Override
     public void readComplete() {
+        types.clear();
+        types.addAll(packageTypesReader.getTypes());
         dialog.update();
     }
 }

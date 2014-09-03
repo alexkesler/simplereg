@@ -10,6 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Диалог для отображения типов пакетов для диалога редактирования услуги
+ */
 class PVDPackageTypeDialog extends AbstractDialog {
 
     private PVDPackageTypeDialogController controller;
