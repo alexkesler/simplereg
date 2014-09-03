@@ -1,12 +1,14 @@
 package org.kesler.simplereg.gui.services;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.gui.pvd.type.PVDPackageTypeDialogController;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.util.ResourcesUtil;
 
@@ -19,11 +21,13 @@ public class ServiceDialog extends JDialog {
 	private JDialog parentDialog;
 	private int result;
 
+//    private String separator = System.lineSeparator();
+
 	private Service service;
 
     private JTextField codeTextField;
 	private JTextArea nameTextArea;
-    private JList pvdTypesList;
+    private JTextArea pvdTypesTextArea;
 	private JCheckBox enabledCheckBox;
 
 	public ServiceDialog(JDialog parentDialog) {
@@ -70,17 +74,27 @@ public class ServiceDialog extends JDialog {
 		JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);
 		//nameTextAreaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        pvdTypesList = new JList();
-        JScrollPane pvdTypesListScrollPane = new JScrollPane(pvdTypesList);
+        pvdTypesTextArea = new JTextArea();
+        JScrollPane pvdTypesTextAreaScrollPane = new JScrollPane(pvdTypesTextArea);
+
+        JButton selectPVDTypesButton = new JButton("...");
+        selectPVDTypesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectPVDTypes();
+            }
+        });
 
 		enabledCheckBox = new JCheckBox("Действующая");
 
-        dataPanel.add(new JLabel("Номер соглашения"));
+        // Собираем панель данных
+        dataPanel.add(new JLabel("Номер соглашения"), "span, split 2");
         dataPanel.add(codeTextField, "wrap");
 		dataPanel.add(new JLabel("Наименование: "), "wrap");
 		dataPanel.add(nameTextAreaScrollPane, "span, grow");
         dataPanel.add(new JLabel("Коды типов ПК ПВД"), "wrap");
-        dataPanel.add(pvdTypesListScrollPane, "span, grow");
+        dataPanel.add(pvdTypesTextAreaScrollPane, "span, split 2, pushx, grow");
+        dataPanel.add(selectPVDTypesButton);
 		dataPanel.add(enabledCheckBox);
 
 		// Панель кнопок
@@ -132,7 +146,6 @@ public class ServiceDialog extends JDialog {
 
         codeTextField.setText(code);
 
-
         String name = service.getName();
 		if (name == null) name = "";
 
@@ -141,8 +154,8 @@ public class ServiceDialog extends JDialog {
 		Boolean enabled = service.getEnabled();
 		if (enabled == null) enabled = false;
 
-//        String[] typeIDs = service.getPkpvdTypeIDs().split(",");
-
+        String typeIDsString = service.getPkpvdTypeIDs();
+        pvdTypesTextArea.setText(typeIDsString.replace(",","\n"));
 
 		enabledCheckBox.setSelected(enabled);
 	}
@@ -159,10 +172,22 @@ public class ServiceDialog extends JDialog {
 			JOptionPane.showMessageDialog(this, "Наименование услуги не может быть пустым", "Ошибка", JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
-		
+
+        String typeIDString = pvdTypesTextArea.getText().replaceAll("\n",",");
+        service.setPkpvdTypeIDs(typeIDString);
+
 		service.setEnabled(enabledCheckBox.isSelected());
 
 		return true;
 	}
+
+    private void selectPVDTypes() {
+
+        String typeIDsString = pvdTypesTextArea.getText().replaceAll("\n",",");
+        typeIDsString = PVDPackageTypeDialogController.getInstance().showDialog(this, typeIDsString);
+
+        pvdTypesTextArea.setText(typeIDsString.replaceAll(",","\n"));
+
+    }
 
 }

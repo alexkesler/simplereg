@@ -18,6 +18,7 @@ class PVDPackageTypeDialog extends AbstractDialog {
     private PVDPackageTypeDialogController controller;
     private PackageTypeTableModel packageTypeTableModel;
 
+
     PVDPackageTypeDialog(JDialog parentDialog, PVDPackageTypeDialogController controller) {
         super(parentDialog, "Типы пакетов в ПК ПВД", true);
         this.controller = controller;
@@ -36,7 +37,7 @@ class PVDPackageTypeDialog extends AbstractDialog {
         JTable packageTypeTable = new JTable(packageTypeTableModel);
         JScrollPane packageTypeTableScrollPane = new JScrollPane(packageTypeTable);
 
-        dataPanel.add(packageTypeTableScrollPane);
+        dataPanel.add(packageTypeTableScrollPane, "grow");
 
         // Панель кнопок
         JPanel buttonPanel = new JPanel();
@@ -64,10 +65,10 @@ class PVDPackageTypeDialog extends AbstractDialog {
     }
 
     class PackageTypeTableModel extends AbstractTableModel {
-        private final java.util.List<PackageType> types;
+        private final java.util.List<CheckablePackageType> types;
 
         PackageTypeTableModel() {
-            types = controller.getTypes();
+            types = controller.getCheckablePackageTypes();
         }
         @Override
         public int getRowCount() {
@@ -76,17 +77,19 @@ class PVDPackageTypeDialog extends AbstractDialog {
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 4;
         }
 
         @Override
         public String getColumnName(int column) {
             switch (column) {
                 case 0:
-                    return "ID";
+                    return "V";
                 case 1:
-                    return "Группа";
+                    return "ID";
                 case 2:
+                    return "Группа";
+                case 3:
                     return "Тип";
                 default:
                     return "";
@@ -95,16 +98,37 @@ class PVDPackageTypeDialog extends AbstractDialog {
 
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
-            PackageType packageType = types.get(rowIndex);
+            CheckablePackageType packageType = types.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return packageType.getId();
+                    return packageType.isChecked();
                 case 1:
-                    return packageType.getGroupType();
+                    return packageType.getId();
                 case 2:
+                    return packageType.getGroupType();
+                case 3:
                     return packageType.getType();
                 default:
                     return null;
+            }
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (columnIndex==0) return Boolean.class;
+            return super.getColumnClass(columnIndex);
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex==0;
+        }
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            super.setValueAt(aValue, rowIndex, columnIndex);
+            if(columnIndex==0 && aValue instanceof Boolean) {
+                types.get(rowIndex).setChecked((Boolean)aValue);
             }
         }
     }

@@ -76,7 +76,7 @@ public class Service extends AbstractEntity {
 
     public void setCode(String code) {this.code = code;}
 
-    public String getPkpvdTypeIDs() { return pkpvdTypeIDs; }
+    public String getPkpvdTypeIDs() { return pkpvdTypeIDs==null?"":pkpvdTypeIDs; }
     public void setPkpvdTypeIDs(String pkpvdTypeIDs) { this.pkpvdTypeIDs = pkpvdTypeIDs; }
 
     public boolean fitPkpvdTypeID(String typeID) {
