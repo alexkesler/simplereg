@@ -33,7 +33,6 @@ public class PVDPackageTypeDialogController implements ReaderListener{
 
     public String showDialog(JDialog parentDialog, String typeIDsString) {
         this.typeIDsString = typeIDsString;
-        System.out.println("Open PVDDialog: " + this.typeIDsString);
         dialog = new PVDPackageTypeDialog(parentDialog, this);
 
         packageTypesReader.readInSeparateThread();
@@ -41,7 +40,6 @@ public class PVDPackageTypeDialogController implements ReaderListener{
         dialog.setVisible(true);
         dialog.dispose();
         loadTypeIDsString();
-        System.out.println("Close PVDDialog: " + this.typeIDsString);
         return this.typeIDsString;
     }
 

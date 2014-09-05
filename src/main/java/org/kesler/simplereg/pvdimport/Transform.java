@@ -21,6 +21,10 @@ public class Transform {
             reception.getApplicators().add(getApplicatorForApplicant(applicant));
         }
 
+
+
+        reception.setToIssueDate(cause.getEstimateDate());
+
         reception.setPvdPackageNum(cause.getPackageNum());
 
         return reception;

@@ -21,8 +21,6 @@ public class ServiceDialog extends JDialog {
 	private JDialog parentDialog;
 	private int result;
 
-//    private String separator = System.lineSeparator();
-
 	private Service service;
 
     private JTextField codeTextField;
@@ -72,7 +70,6 @@ public class ServiceDialog extends JDialog {
 		nameTextArea.setLineWrap(true);
 		nameTextArea.setWrapStyleWord(true);
 		JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);
-		//nameTextAreaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         pvdTypesTextArea = new JTextArea();
         JScrollPane pvdTypesTextAreaScrollPane = new JScrollPane(pvdTypesTextArea);
