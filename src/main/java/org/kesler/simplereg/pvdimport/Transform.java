@@ -4,10 +4,13 @@ import org.kesler.simplereg.logic.*;
 import org.kesler.simplereg.logic.ServicesModel;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
+import org.kesler.simplereg.logic.applicator.FLModel;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Subject;
 import org.kesler.simplereg.pvdimport.transform.TransformException;
+
+import java.util.List;
 
 public class Transform {
     public static Reception makeReceptionFromCause(Cause cause) throws TransformException{
@@ -60,12 +63,18 @@ public class Transform {
         return applicator;
     }
 
-    static FL getFLByFIO(String firstname, String surname, String parentName)  {
-        FL fl = new FL();
+    static FL getFLByFIO(String firstName, String surName, String parentName)  {
 
-        fl.setFirstName(firstname);
-        fl.setSurName(surname);
-        fl.setParentName(parentName);
+        List<FL> fls = FLModel.getInstance().getFLsByFIO(firstName,surName,parentName);
+        FL fl = null;
+        if (fls.size()==0){
+            fl = new FL();
+            fl.setFirstName(firstName);
+            fl.setSurName(surName);
+            fl.setParentName(parentName);
+        } else {
+            fl = fls.get(0);
+        }
 
         return fl;
     }

@@ -1,9 +1,6 @@
 package org.kesler.simplereg.dao;
 
-import org.kesler.simplereg.dao.impl.FIASRecordDAOImpl;
-import org.kesler.simplereg.dao.impl.ServiceDAOImpl;
-import org.kesler.simplereg.dao.impl.ReceptionDAOImpl;
-import org.kesler.simplereg.dao.impl.GenericDAOImpl;
+import org.kesler.simplereg.dao.impl.*;
 
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.FL;
@@ -17,7 +14,7 @@ public class DAOFactory {
 	private static ServiceDAO serviceDAO = null;
 	private static GenericDAO<Operator> operatorDAO = null;
 	private static ReceptionDAO receptionDAO = null;
-	private static GenericDAO<FL> flDAO = null;
+	private static FLDAO flDAO = null;
 	private static GenericDAO<UL> ulDAO = null;
 	private static GenericDAO<ReceptionStatus> receptionStatusDAO = null;
 	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
@@ -56,9 +53,9 @@ public class DAOFactory {
 		return receptionDAO;
 	}
 
-	public GenericDAO<FL> getFLDAO() {
+	public FLDAO getFLDAO() {
 		if (flDAO == null) {
-			flDAO = new GenericDAOImpl<FL>(FL.class);
+			flDAO = new FLDAOImpl();
 		}
 		return flDAO;
 	}
