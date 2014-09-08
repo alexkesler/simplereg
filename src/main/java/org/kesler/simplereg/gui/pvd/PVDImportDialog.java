@@ -108,7 +108,7 @@ public class PVDImportDialog extends AbstractDialog{
 
         @Override
         public int getColumnCount() {
-            return 3;
+            return 2;
         }
 
         @Override
@@ -118,8 +118,6 @@ public class PVDImportDialog extends AbstractDialog{
                     return "Номер";
                 case 1:
                     return "Дата";
-                case 2:
-                    return "TID";
                 default:
                     return "";
             }
@@ -134,8 +132,6 @@ public class PVDImportDialog extends AbstractDialog{
                     return cause.getRegnum();
                 case 1:
                     return cause.getStartDate();
-                case 2:
-                    return cause.getPackage().getTypeId();
                 default:
                     return null;
             }

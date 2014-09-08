@@ -37,7 +37,6 @@ public class Transform {
 
     static Service getServiceByPackageType(String typeId) throws TransformException{
         List<Service> services = ServicesModel.getInstance().getActiveServices();
-        System.out.println("Services count: " + services.size());
         for(Service service: services) {
             if (service.fitPkpvdTypeID(typeId)) return service;
         }
