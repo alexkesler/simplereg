@@ -1,10 +1,12 @@
 package org.kesler.simplereg.pvdimport;
 
 import org.kesler.simplereg.logic.*;
-import org.kesler.simplereg.logic.ServicesModel;
+
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.applicator.FLModel;
+import org.kesler.simplereg.logic.applicator.ULModel;
+import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Subject;
@@ -34,7 +36,9 @@ public class Transform {
     }
 
     static Service getServiceByPackageType(String typeId) throws TransformException{
-        for(Service service: ServicesModel.getInstance().getActiveServces()) {
+        List<Service> services = ServicesModel.getInstance().getActiveServices();
+        System.out.println("Services count: " + services.size());
+        for(Service service: services) {
             if (service.fitPkpvdTypeID(typeId)) return service;
         }
         throw new TransformException("Услуга не найдена");
@@ -80,8 +84,15 @@ public class Transform {
     }
 
     static UL getULByShortName(String shortName) {
-        UL ul = new UL();
-        ul.setShortName(shortName);
+        List<UL> uls = ULModel.getInstance().getULsByShortName(shortName);
+        UL ul = null;
+        if (uls.size()==0){
+            ul = new UL();
+            ul.setShortName(shortName);
+        } else {
+            ul = uls.get(0);
+        }
+
 
         return ul;
     }

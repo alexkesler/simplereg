@@ -40,7 +40,7 @@ public class PVDImportDialog extends AbstractDialog{
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Панель данных
-        JPanel dataPanel = new JPanel(new MigLayout());
+        JPanel dataPanel = new JPanel(new MigLayout("fill"));
         causesTableModel = new CausesTableModel();
         JTable causesTable = new JTable(causesTableModel);
         causesTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -52,7 +52,7 @@ public class PVDImportDialog extends AbstractDialog{
         });
         JScrollPane causesTableScrollPane = new JScrollPane(causesTable);
 
-        dataPanel.add(causesTableScrollPane);
+        dataPanel.add(causesTableScrollPane, "grow");
 
         // Панель кнопок
         JPanel buttonPanel = new JPanel();
@@ -108,7 +108,7 @@ public class PVDImportDialog extends AbstractDialog{
 
         @Override
         public int getColumnCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -118,6 +118,8 @@ public class PVDImportDialog extends AbstractDialog{
                     return "Номер";
                 case 1:
                     return "Дата";
+                case 2:
+                    return "TID";
                 default:
                     return "";
             }
@@ -132,6 +134,8 @@ public class PVDImportDialog extends AbstractDialog{
                     return cause.getRegnum();
                 case 1:
                     return cause.getStartDate();
+                case 2:
+                    return cause.getPackage().getTypeId();
                 default:
                     return null;
             }

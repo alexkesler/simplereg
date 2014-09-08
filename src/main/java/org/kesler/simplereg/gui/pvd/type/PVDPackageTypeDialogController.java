@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.pvd.type;
 
+import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.ServicesModel;
 import org.kesler.simplereg.pvdimport.ReaderListener;
@@ -33,17 +34,21 @@ public class PVDPackageTypeDialogController implements ReaderListener{
 
     public String showDialog(JDialog parentDialog, String typeIDsString) {
         this.typeIDsString = typeIDsString;
+        checkablePackageTypes.clear();
         dialog = new PVDPackageTypeDialog(parentDialog, this);
 
         packageTypesReader.readInSeparateThread();
 
         dialog.setVisible(true);
         dialog.dispose();
-        loadTypeIDsString();
+        if (dialog.getResult() == AbstractDialog.OK)
+            loadTypeIDsString();
+
         return this.typeIDsString;
     }
 
     void loadTypeIDsString() {
+
         StringBuilder typeIDsStringBuilder = new StringBuilder();
         for (CheckablePackageType checkablePackageType: checkablePackageTypes) {
 
@@ -63,7 +68,7 @@ public class PVDPackageTypeDialogController implements ReaderListener{
     @Override
     public void readComplete() {
         List<PackageType> newTypes = packageTypesReader.getTypes();
-        checkablePackageTypes.clear();
+
 
         for(PackageType packageType:newTypes)
             checkablePackageTypes.add(new CheckablePackageType(packageType));

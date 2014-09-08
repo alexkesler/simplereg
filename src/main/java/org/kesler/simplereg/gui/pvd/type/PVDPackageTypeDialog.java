@@ -24,6 +24,8 @@ class PVDPackageTypeDialog extends AbstractDialog {
         this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentDialog);
+
+        result = NONE;
     }
 
     private void createGUI() {
@@ -46,6 +48,7 @@ class PVDPackageTypeDialog extends AbstractDialog {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                result = OK;
                 setVisible(false);
             }
         });

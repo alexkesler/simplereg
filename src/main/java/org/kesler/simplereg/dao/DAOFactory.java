@@ -15,7 +15,7 @@ public class DAOFactory {
 	private static GenericDAO<Operator> operatorDAO = null;
 	private static ReceptionDAO receptionDAO = null;
 	private static FLDAO flDAO = null;
-	private static GenericDAO<UL> ulDAO = null;
+	private static ULDAO ulDAO = null;
 	private static GenericDAO<ReceptionStatus> receptionStatusDAO = null;
 	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
 	private static GenericDAO<RealtyType> realtyTypeDAO = null;
@@ -60,9 +60,9 @@ public class DAOFactory {
 		return flDAO;
 	}
 
-	public GenericDAO<UL> getULDAO() {
+	public ULDAO getULDAO() {
 		if (ulDAO == null) {
-			ulDAO = new GenericDAOImpl<UL>(UL.class);
+			ulDAO = new ULDAOImpl();
 		}
 		return ulDAO;
 	}

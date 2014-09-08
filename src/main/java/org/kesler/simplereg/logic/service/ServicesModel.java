@@ -1,4 +1,4 @@
-package org.kesler.simplereg.logic;
+package org.kesler.simplereg.logic.service;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.service.ServicesModelListener;
 
 /**
@@ -62,7 +63,7 @@ public class ServicesModel implements DAOListener{
 
 	/**
 	* Прерывает процесс 
-	* @param threadId ID процесса, который необходимо прервать
+	* @param thread ID процесса, который необходимо прервать
 	*/
 
 	public void cancelProcess(Thread thread) {
@@ -73,13 +74,16 @@ public class ServicesModel implements DAOListener{
 	* Возвращает список всех услуг, сохраненных в внутреннем списке, если внутренний список не определен - читает его из базы
 	*/
 	public List<Service> getAllServices() {
-		if (services == null) {
+		if (services == null || services.size()==0) {
 			readServices();
 		}
 		return services;
 	}
 
-	public List<Service> getActiveServces() {
+	public List<Service> getActiveServices() {
+        if (services == null || services.size()==0) {
+            readServices();
+        }
 		return services;
 	}
 
