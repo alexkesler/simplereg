@@ -53,7 +53,7 @@ public class PVDImportDialogController implements ReaderListener{
 
     private void readCauses (int lastNum) {
         packagesReader = new PackagesReader(this, lastNum);
-        packagesReader.read();
+        packagesReader.readFullInSeparateThread();
     }
 
 
