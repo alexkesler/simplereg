@@ -41,6 +41,14 @@ public class ULModel implements DAOListener {
 		return ulList;
 	}
 
+    public List<UL> getULsByShortName(String shortName) {
+        return DAOFactory.getInstance().getULDAO().getULsByShortName(shortName);
+    }
+
+    public List<UL> getULsByFullName(String fullName) {
+        return DAOFactory.getInstance().getULDAO().getULsByFullName(fullName);
+    }
+
 	public void readULs() {
 		ulList = DAOFactory.getInstance().getULDAO().getAllItems();
 		notifyListeners(ModelState.UPDATED);

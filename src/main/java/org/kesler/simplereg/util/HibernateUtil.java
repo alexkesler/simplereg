@@ -52,13 +52,14 @@ public class HibernateUtil {
 		hibernateProperties.setProperty("hibernate.dialect",dialect);
 		hibernateProperties.setProperty("hibernate.connection.username",userName);
 		hibernateProperties.setProperty("hibernate.connection.password",password);
-
+        hibernateProperties.setProperty("hibernate.connection.password",password);
 		hibernateProperties.setProperty("hibernate.c3p0.minPoolSize","1");
 		hibernateProperties.setProperty("hibernate.c3p0.maxPoolSize","20");
-//		hibernateProperties.setProperty("hibernate.c3p0.timeout","10000");
+		hibernateProperties.setProperty("hibernate.c3p0.timeout","10000");
 		hibernateProperties.setProperty("hibernate.c3p0.max_statement","50");
 		hibernateProperties.setProperty("hibernate.hbm2ddl.auto","update");
 		hibernateProperties.setProperty("hibernate.show_sql","false");
+        hibernateProperties.setProperty("hibernate.format_sql","false");
 
 
 		Configuration hibernateConfiguration = new Configuration()

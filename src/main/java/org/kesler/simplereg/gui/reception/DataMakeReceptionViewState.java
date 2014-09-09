@@ -41,16 +41,16 @@ class DataMakeReceptionViewState extends MakeReceptionViewState {
         }
 
         // Проверяем и сохраняем объект недвижимости
-        if (controller.getRealtyObject() != null) {
-            // controller.storeRealtyObject();
-        } else {
-            JOptionPane.showMessageDialog(view,
-                    "Не определен объект недвижимости",
-                    "Ошибка",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-
-        }
+//        if (controller.getRealtyObject() != null) {
+//            // controller.storeRealtyObject();
+//        } else {
+//            JOptionPane.showMessageDialog(view,
+//                    "Не определен объект недвижимости",
+//                    "Ошибка",
+//                    JOptionPane.ERROR_MESSAGE);
+//            return;
+//
+//        }
 
         // Проверяем и сохраняем код Росреестра
         String rosreestrCode = controller.getReception().getRosreestrCode();

@@ -1,12 +1,9 @@
 package org.kesler.simplereg.gui.main;
 
 import javax.swing.*;
-import java.awt.GridLayout;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Dimension;
-import java.awt.Image;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -183,28 +180,54 @@ public class MainView extends JFrame {
 
 		this.setJMenuBar(menuBar);
 
-		Box buttonPanel = new Box(BoxLayout.X_AXIS);
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel,BoxLayout.Y_AXIS));
 
-		currentOperatorLabel = new JLabel();
-		currentOperatorLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+        JPanel operatorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        currentOperatorLabel = new JLabel();
+        currentOperatorLabel.setForeground(Color.BLUE);
+//        currentOperatorLabel.setBorder(BorderFactory.createEtchedBorder());
+
+        operatorPanel.add(Box.createRigidArea(new Dimension(5,0)));
+        operatorPanel.add(new JLabel("Оператор: "));
+        operatorPanel.add(currentOperatorLabel);
+
+
+        JPanel buttonPanel = new JPanel();
 
 		JButton newReceptionButton = new JButton(getActionByCommand(MainViewCommand.NewReception));
 		newReceptionButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.NewReception.getIconName()));
 
+        JButton newReceptionfromPVDButton = new JButton(getActionByCommand(MainViewCommand.NewReceptionFromPVD));
+        newReceptionfromPVDButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.NewReceptionFromPVD.getIconName()));
+
+        JButton issueButton = new JButton(getActionByCommand(MainViewCommand.Issue));
+        issueButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.Issue.getIconName()));
+
 		JButton updateButton = new JButton(getActionByCommand(MainViewCommand.UpdateReceptions));
 		updateButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.UpdateReceptions.getIconName()));
 
-		buttonPanel.add(new JLabel("Оператор: "));
-		buttonPanel.add(currentOperatorLabel);
-		buttonPanel.add(Box.createHorizontalGlue());
+
 		buttonPanel.add(newReceptionButton);
-		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
+//        buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
+        buttonPanel.add(issueButton);
+//		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
+		buttonPanel.add(newReceptionfromPVDButton);
+//		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		buttonPanel.add(updateButton);
-		buttonPanel.add(Box.createRigidArea(new Dimension(200,0)));
+//		buttonPanel.add(Box.createRigidArea(new Dimension(200,0)));
 
 
-		// поправляем ширину столбцов, чтобы было покрасивей
+        topPanel.add(operatorPanel);
+        topPanel.add(buttonPanel);
+
+        // Панель таблицы
+        JPanel tablePanel = new JPanel(new GridLayout(1,0));
+        tablePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+
+        // поправляем ширину столбцов, чтобы было покрасивей
 		final JTable receptionTable = new JTable(tableModel);
         receptionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		receptionTable.getColumnModel().getColumn(0).setMinWidth(30);
@@ -245,8 +268,8 @@ public class MainView extends JFrame {
         });
 
 		JScrollPane receptionTableScrollPane = new JScrollPane(receptionTable);
-		JPanel tablePanel = new JPanel(new GridLayout(1,0));
-		tablePanel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+        // собираем панель таблицы
 		tablePanel.add(receptionTableScrollPane);
 
         WebStatusBar statusBar = new WebStatusBar();
@@ -254,9 +277,9 @@ public class MainView extends JFrame {
         statusBar.add(new JLabel("Сервер баз данных:" ));
         statusBar.add(connectedLabel);
 
-
+        // собираем основную панель
 		mainPanel.add(BorderLayout.CENTER, tablePanel);
-		mainPanel.add(BorderLayout.NORTH, buttonPanel);
+		mainPanel.add(BorderLayout.NORTH, topPanel);
         mainPanel.add(BorderLayout.SOUTH, statusBar);
 
 		this.add(mainPanel, BorderLayout.CENTER);	

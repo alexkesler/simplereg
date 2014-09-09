@@ -21,6 +21,7 @@ public class RealtyObjectsModel implements DAOListener {
 
 	private RealtyObjectsModel() {
 		listeners = new ArrayList<RealtyObjectsModelStateListener>();
+        realtyObjects = new ArrayList<RealtyObject>();
 		DAOFactory.getInstance().getRealtyObjectDAO().addDAOListener(this);
 	}
 

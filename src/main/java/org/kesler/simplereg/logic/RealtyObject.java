@@ -42,7 +42,7 @@ public class RealtyObject extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		String value = type.getName() + " - " + address;
+		String value = (type==null?"":(type.getName() + " - ")) + address;
 
 		return value;
 	}

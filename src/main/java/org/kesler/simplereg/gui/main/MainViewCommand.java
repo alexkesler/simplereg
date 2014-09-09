@@ -8,6 +8,7 @@ public enum MainViewCommand {
 	Logout("Выйти","logout", "disconnect.png"),
     About("О программе","about","information.png"),
 	NewReception("Новый прием","newReception", "asterisk_yellow.png"),
+    NewReceptionFromPVD("Получить из ПК ПВД", "newReceptionFromPVD", "book_previous.png"),
 	UpdateReceptions("Обновить","updateReceptions", "arrow_refresh.png"),
 	OpenStatistic("Статистика","statistic", "chart_pie.png"),
 	OpenReceptionsReestr("Реестр","reestr","table.png"),
@@ -20,6 +21,7 @@ public enum MainViewCommand {
 	Operators("Операторы", "operators", "user_suit.png"),
 	Options("Настройки", "options", "wrench.png"),
     FIAS("Загрузка ФИАС","fias","building.png"),
+    Issue("Выдача результата", "issue", "issue.png"),
 	Exit("Закрыть","exit", "door_out.png");
 
 

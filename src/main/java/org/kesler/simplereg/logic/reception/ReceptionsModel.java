@@ -1,15 +1,14 @@
 package org.kesler.simplereg.logic.reception;
 
 import java.util.*;
-import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
+import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersModel;
-import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
 import org.kesler.simplereg.logic.ModelState;
 
@@ -172,6 +171,11 @@ public class ReceptionsModel implements DAOListener{
         lastReceptions = DAOFactory.getInstance().getReceptionDAO().getReceptionsByOpenDate(fromDate, toDate);
     }
 
+    public void addRosreestrCodeFilter(String filterString) {
+        if(!filterString.isEmpty()) filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE,filterString);
+        else filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
+    }
+
     /**
      * Сохраняет новый прием
      * @param reception  Сохраняемый прием
@@ -242,6 +246,10 @@ public class ReceptionsModel implements DAOListener{
             }
         });
         removerThread.start();
+    }
+
+    public Integer getLastPVDPackageNum() {
+        return DAOFactory.getInstance().getReceptionDAO().getLastPVDPackageNum();
     }
 
 	/**

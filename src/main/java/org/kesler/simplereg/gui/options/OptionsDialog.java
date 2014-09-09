@@ -35,6 +35,8 @@ public class OptionsDialog extends JDialog {
 
 	private JTextField filialTextField;
 
+    private JTextField pvdServerIpTextField;
+
 	private JTextField initRecStatusCodeTextField;
 	private JTextField requestFileNameTextField;
 
@@ -109,6 +111,7 @@ public class OptionsDialog extends JDialog {
 		dbPanel.add(new JLabel("Пароль"));
 		dbPanel.add(passwordTextField);
 
+        // Панель регистрационных данных
 		JPanel regPanel = new JPanel(new MigLayout("wrap 2",
 													"[right][left]",
 													""));
@@ -119,8 +122,19 @@ public class OptionsDialog extends JDialog {
 		regPanel.add(new JLabel("Код филиала"));
 		regPanel.add(filialTextField);
 
+        // Панель параметров ПК ПВД
+        JPanel pvdPanel = new JPanel(new MigLayout("wrap 2",
+                "[right][left]",
+                ""));
+        pvdPanel.setBorder(BorderFactory.createTitledBorder("ПК ПВД"));
 
-		JPanel logicPanel = new JPanel(new MigLayout("wrap 2",
+        pvdServerIpTextField = new JTextField(15);
+
+        pvdPanel.add(new JLabel("IP сервера ПК ПВД"));
+        pvdPanel.add(pvdServerIpTextField);
+
+        // Панель логических параметров
+        JPanel logicPanel = new JPanel(new MigLayout("wrap 2",
 													"[right][left]",
 													""));
 		logicPanel.setBorder(BorderFactory.createTitledBorder("Служебные"));
@@ -136,7 +150,8 @@ public class OptionsDialog extends JDialog {
 
 
 		dataPanel.add(dbPanel, "growx, wrap");
-		dataPanel.add(regPanel, "growx, wrap");		
+		dataPanel.add(regPanel, "growx, wrap");
+        dataPanel.add(pvdPanel, "growx, wrap");
 		dataPanel.add(logicPanel, "growx, wrap");
 
 		JPanel buttonPanel = new JPanel();
@@ -179,6 +194,8 @@ public class OptionsDialog extends JDialog {
 
 		String filial = options.getProperty("reg.filial");
 
+        String pvdServerIp = options.getProperty("pvd.serverip");
+
 		String initRecStatusCode = options.getProperty("logic.initRecStatusCode");
 		String requestFileName = options.getProperty("print.request");
 
@@ -189,6 +206,8 @@ public class OptionsDialog extends JDialog {
 		passwordTextField.setText(password);
 
 		filialTextField.setText(filial);
+
+        pvdServerIpTextField.setText(pvdServerIp);
 
 		initRecStatusCodeTextField.setText(initRecStatusCode);
 		requestFileNameTextField.setText(requestFileName);
@@ -205,6 +224,8 @@ public class OptionsDialog extends JDialog {
 		String password = passwordTextField.getText();
 
 		String filial = filialTextField.getText();
+
+        String pvdServerIp = pvdServerIpTextField.getText();
 
 		String initRecStatusCode = initRecStatusCodeTextField.getText();
 		String requestFileName = requestFileNameTextField.getText();
@@ -229,6 +250,8 @@ public class OptionsDialog extends JDialog {
 		OptionsUtil.setOption("db.password", password);
 
 		OptionsUtil.setOption("reg.filial", filial);
+
+        OptionsUtil.setOption("pvd.serverip",pvdServerIp);
 
 		OptionsUtil.setOption("logic.initRecStatusCode", initRecStatusCode);
 		OptionsUtil.setOption("print.request", requestFileName);
