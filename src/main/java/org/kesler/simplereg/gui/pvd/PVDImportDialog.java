@@ -6,6 +6,8 @@ import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -17,6 +19,7 @@ import java.util.*;
 public class PVDImportDialog extends AbstractDialog{
     private PVDImportDialogController controller;
     private CausesTableModel causesTableModel;
+    private JTextField searchTextField;
     private Cause selectedCause;
 
     PVDImportDialog(JDialog parentDialog, PVDImportDialogController controller) {
@@ -41,6 +44,25 @@ public class PVDImportDialog extends AbstractDialog{
 
         // Панель данных
         JPanel dataPanel = new JPanel(new MigLayout("fill"));
+
+        searchTextField = new JTextField(15);
+        searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                applyFilter();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                applyFilter();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                applyFilter();
+            }
+        });
+
         causesTableModel = new CausesTableModel();
         JTable causesTable = new JTable(causesTableModel);
         causesTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -52,6 +74,7 @@ public class PVDImportDialog extends AbstractDialog{
         });
         JScrollPane causesTableScrollPane = new JScrollPane(causesTable);
 
+        dataPanel.add(searchTextField, "wrap");
         dataPanel.add(causesTableScrollPane, "grow");
 
         // Панель кнопок
@@ -82,6 +105,12 @@ public class PVDImportDialog extends AbstractDialog{
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
+    }
+
+    void applyFilter() {
+        String filterString = searchTextField.getText();
+        controller.setFilterString(filterString);
+        controller.filterCauses();
     }
 
     Cause getSelectedCause() {return selectedCause;}

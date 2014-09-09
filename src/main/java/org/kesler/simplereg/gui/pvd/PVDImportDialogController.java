@@ -18,9 +18,12 @@ public class PVDImportDialogController implements ReaderListener{
     private PVDImportDialog dialog;
 
     private final List<Cause> causes;
+    private final List<Cause> allCauses;
+    private String filterString;
 
     private PVDImportDialogController() {
         causes = new ArrayList<Cause>();
+        allCauses = new ArrayList<Cause>();
     }
 
     public static synchronized PVDImportDialogController getInstance() { return instance; }
@@ -30,6 +33,7 @@ public class PVDImportDialogController implements ReaderListener{
     public Cause showSelectDialog(JFrame parentFrame, int lastNum) {
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
+        filterString = "";
         readCausesInSeparateThread(lastNum);
         dialog.setVisible(true);
         if(dialog.getResult()==PVDImportDialog.OK) {
@@ -42,6 +46,7 @@ public class PVDImportDialogController implements ReaderListener{
     public Cause showSelectDialog(JFrame parentFrame) {
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
+        filterString = "";
         readCausesThisDayInSeparateThread();
         dialog.setVisible(true);
         if(dialog.getResult()==PVDImportDialog.OK) {
@@ -90,12 +95,27 @@ public class PVDImportDialogController implements ReaderListener{
         readerThread.start();
     }
 
+    void setFilterString(String filterString) {
+        this.filterString = filterString.toLowerCase();
+    }
+
+    void filterCauses() {
+        causes.clear();
+        for (Cause cause: allCauses) {
+            if (cause.getRegnum().toLowerCase().contains(filterString)) {
+                causes.add(cause);
+            }
+        }
+        dialog.update();
+    }
+
     @Override
     public void readComplete() {
-        causes.clear();
+        allCauses.clear();
         for (org.kesler.simplereg.pvdimport.domain.Package pack: packagesReader.getPackages()) {
-            causes.addAll(pack.getCauses());
+            allCauses.addAll(pack.getCauses());
         }
+        filterCauses();
         dialog.update();
     }
 }
