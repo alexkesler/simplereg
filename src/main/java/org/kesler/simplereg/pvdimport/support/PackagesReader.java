@@ -46,10 +46,10 @@ public class PackagesReader extends DBReader {
             return "select P.ID, P.REGNUM, P.NUM, P.ID_TYPE, P.BEGINDATE, PT.GROUPTYPE, PT.TYPE " +
                     "from DPS$PACKAGE P, DPS$PACKAGETYPE PT " +
                     "WHERE PT.ID=P.ID_TYPE " +
-                    (beginDate==null?"":" AND TRUNC(BEGINDATE) >= '" + dateFormat.format(beginDate) + "' ") +
-                    (endDate==null?"":" AND TRUNC(BEGINDATE) <= '" + dateFormat.format(endDate) + "' ") +
-                    (lastNum==null?"":" AND NUM > " + lastNum.toString()) +
-                    " ORDER BY NUM";
+                    (beginDate==null?"":" AND TRUNC(P.BEGINDATE) >= '" + dateFormat.format(beginDate) + "' ") +
+                    (endDate==null?"":" AND TRUNC(P.BEGINDATE) <= '" + dateFormat.format(endDate) + "' ") +
+                    (lastNum==null?"":" AND P.NUM > " + lastNum.toString()) +
+                    " ORDER BY P.NUM";
          } else {
             return "select P.ID, P.REGNUM, P.ID_TYPE, P.BEGINDATE, PT.GROUPTYPE, PT.TYPE " +
                     "from DPS$PACKAGE P, DPS$PACKAGETYPE PT " +

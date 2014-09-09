@@ -1,14 +1,17 @@
 package org.kesler.simplereg.pvdimport;
 
+import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.logic.*;
 
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.applicator.FLModel;
 import org.kesler.simplereg.logic.applicator.ULModel;
+import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
+import org.kesler.simplereg.pvdimport.domain.Obj;
 import org.kesler.simplereg.pvdimport.domain.Subject;
 import org.kesler.simplereg.pvdimport.transform.TransformException;
 
@@ -18,15 +21,23 @@ public class Transform {
     public static Reception makeReceptionFromCause(Cause cause) throws TransformException{
         Reception reception = new Reception();
 
+        reception.setOpenDate(cause.getBeginDate());
+
+        reception.setOperator(CurrentOperator.getInstance().getOperator());
+
         reception.setService(getServiceByPackageType(cause.getPackage().getTypeId()));
 
         reception.setRosreestrCode(cause.getRegnum());
 
         for (Applicant applicant: cause.getApplicants()) {
-            reception.getApplicators().add(getApplicatorForApplicant(applicant));
+            Applicator applicator = getApplicatorForApplicant(applicant);
+            applicator.setReception(reception);
+            reception.getApplicators().add(applicator);
         }
 
 
+        Obj obj = cause.getObjects().size()==0?null:cause.getObjects().get(0);
+        reception.setRealtyObject(getRealtyObjectForObj(obj));
 
         reception.setToIssueDate(cause.getEstimateDate());
 
@@ -75,6 +86,7 @@ public class Transform {
             fl.setFirstName(firstName);
             fl.setSurName(surName);
             fl.setParentName(parentName);
+            FLModel.getInstance().addFL(fl);
         } else {
             fl = fls.get(0);
         }
@@ -88,11 +100,23 @@ public class Transform {
         if (uls.size()==0){
             ul = new UL();
             ul.setShortName(shortName);
+            ULModel.getInstance().addUL(ul);
         } else {
             ul = uls.get(0);
         }
 
 
         return ul;
+    }
+
+
+    static RealtyObject getRealtyObjectForObj(Obj obj) {
+        if (obj==null) return null;
+
+        RealtyObject realtyObject = new RealtyObject();
+        realtyObject.setAddress(obj.getFullAddress());
+        RealtyObjectsModel.getInstance().addRealtyObject(realtyObject);
+
+        return realtyObject;
     }
 }
