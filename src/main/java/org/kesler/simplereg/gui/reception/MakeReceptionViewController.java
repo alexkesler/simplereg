@@ -398,6 +398,8 @@ public class MakeReceptionViewController {
             new InfoDialog(parentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
         }
 
+        model.finish();
+
         return true;
     }
 

@@ -28,10 +28,15 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	@Override
 	public void addDAOListener(DAOListener listener) {
-		listeners.add(listener);
+		if (!listeners.contains(listener)) listeners.add(listener);
 	}
 
-	public Long addItem(T item) {
+    @Override
+    public void removeDAOListener(DAOListener listener) {
+        listeners.remove(listener);
+    }
+
+    public Long addItem(T item) {
 		Long id = null;
 
 		notifyListeners(DAOState.CONNECTING);
