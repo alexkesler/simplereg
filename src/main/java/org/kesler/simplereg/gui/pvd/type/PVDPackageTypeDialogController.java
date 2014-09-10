@@ -90,7 +90,7 @@ public class PVDPackageTypeDialogController implements ReaderListener{
         List<Service> services = ServicesModel.getInstance().getActiveServices();
         StringBuilder allTypeIDsStringBuilder = new StringBuilder();
         for(Service service:services) {
-            String typeIDs = service.getPkpvdTypeIDs();
+            String typeIDs = service.getPvdtypesPurposes();
             if(!typeIDs.isEmpty()) {
                 if(allTypeIDsStringBuilder.length()!=0)
                     allTypeIDsStringBuilder.append(",");

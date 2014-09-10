@@ -26,6 +26,7 @@ import org.kesler.simplereg.export.RosReestrReceptionPrinter;
 import org.apache.log4j.Logger;
 
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.util.CounterUtil;
 import org.kesler.simplereg.util.OptionsUtil;
 
@@ -238,6 +239,8 @@ public class MakeReceptionViewController {
         reception.setService(service);
         reception.generateReceptionCode(); // заново генерируем код дела - уже с кодом услуги
         viewState.updatePanelData();
+        service.addPvdtypePurpose(reception.getPvdtypeId(),reception.getPvdPurpose());
+        ServicesModel.getInstance().updateService(service);
 
     }
 

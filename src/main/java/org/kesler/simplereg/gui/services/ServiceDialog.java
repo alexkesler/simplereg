@@ -1,7 +1,6 @@
 package org.kesler.simplereg.gui.services;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,7 +24,7 @@ public class ServiceDialog extends JDialog {
 
     private JTextField codeTextField;
 	private JTextArea nameTextArea;
-    private JTextArea pvdTypesTextArea;
+    private JTextArea pvdtypesPurposesTextArea;
 	private JCheckBox enabledCheckBox;
 
 	public ServiceDialog(JDialog parentDialog) {
@@ -71,8 +70,8 @@ public class ServiceDialog extends JDialog {
 		nameTextArea.setWrapStyleWord(true);
 		JScrollPane nameTextAreaScrollPane = new JScrollPane(nameTextArea);
 
-        pvdTypesTextArea = new JTextArea();
-        JScrollPane pvdTypesTextAreaScrollPane = new JScrollPane(pvdTypesTextArea);
+        pvdtypesPurposesTextArea = new JTextArea();
+        JScrollPane pvdTypesTextAreaScrollPane = new JScrollPane(pvdtypesPurposesTextArea);
 
         JButton selectPVDTypesButton = new JButton("...");
         selectPVDTypesButton.addActionListener(new ActionListener() {
@@ -151,8 +150,8 @@ public class ServiceDialog extends JDialog {
 		Boolean enabled = service.getEnabled();
 		if (enabled == null) enabled = false;
 
-        String typeIDsString = service.getPkpvdTypeIDs();
-        pvdTypesTextArea.setText(typeIDsString.replace(",","\n"));
+        String pvdtypesPurposesString = service.getPvdtypesPurposes()==null?"":service.getPvdtypesPurposes();
+        pvdtypesPurposesTextArea.setText(pvdtypesPurposesString.replace(",", "\n"));
 
 		enabledCheckBox.setSelected(enabled);
 	}
@@ -170,8 +169,8 @@ public class ServiceDialog extends JDialog {
 			return false;
 		}
 
-        String typeIDString = pvdTypesTextArea.getText().replaceAll("\n",",");
-        service.setPkpvdTypeIDs(typeIDString);
+        String pvdtypesPurposesString = pvdtypesPurposesTextArea.getText().replaceAll("\n",",");
+        service.setPvdtypesPurposes(pvdtypesPurposesString);
 
 		service.setEnabled(enabledCheckBox.isSelected());
 
@@ -180,10 +179,10 @@ public class ServiceDialog extends JDialog {
 
     private void selectPVDTypes() {
 
-        String typeIDsString = pvdTypesTextArea.getText().replaceAll("\n",",");
+        String typeIDsString = pvdtypesPurposesTextArea.getText().replaceAll("\n",",");
         typeIDsString = PVDPackageTypeDialogController.getInstance().showDialog(this, typeIDsString);
 
-        pvdTypesTextArea.setText(typeIDsString.replaceAll(",","\n"));
+        pvdtypesPurposesTextArea.setText(typeIDsString.replaceAll(",", "\n"));
 
     }
 
