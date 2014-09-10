@@ -2,7 +2,7 @@ package org.kesler.simplereg.gui.pvd.type;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.ServicesModel;
+import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.PackageType;
 import org.kesler.simplereg.pvdimport.support.PackageTypesReader;
@@ -87,7 +87,7 @@ public class PVDPackageTypeDialogController implements ReaderListener{
     }
 
     private void clearCheckedInOtherServices() {
-        List<Service> services = ServicesModel.getInstance().getActiveServces();
+        List<Service> services = ServicesModel.getInstance().getActiveServices();
         StringBuilder allTypeIDsStringBuilder = new StringBuilder();
         for(Service service:services) {
             String typeIDs = service.getPkpvdTypeIDs();
