@@ -210,13 +210,9 @@ public class MainView extends JFrame {
 
 
 		buttonPanel.add(newReceptionButton);
-//        buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
-        buttonPanel.add(issueButton);
-//		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
+//        buttonPanel.add(issueButton);
 		buttonPanel.add(newReceptionfromPVDButton);
-//		buttonPanel.add(Box.createRigidArea(new Dimension(5,0)));
 		buttonPanel.add(updateButton);
-//		buttonPanel.add(Box.createRigidArea(new Dimension(200,0)));
 
 
         topPanel.add(operatorPanel);
