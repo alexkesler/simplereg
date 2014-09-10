@@ -1,13 +1,8 @@
 package org.kesler.simplereg.gui.reception;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JButton;
+import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.BorderLayout;
 
@@ -30,6 +25,9 @@ public class ReceptionStatusDialog extends JDialog {
 
     private JTextField codeField;
     private JTextField nameField;
+
+    private JCheckBox initialCheckBox;
+    private JCheckBox closedCheckBox;
 
     public ReceptionStatusDialog(JDialog parentDialog) {
         super(parentDialog, "Создать", true);
@@ -64,13 +62,21 @@ public class ReceptionStatusDialog extends JDialog {
         codeField = new JTextField(5);
         codeField.setToolTipText("Введите код состояния (число)");
         nameField = new JTextField(20);
+        initialCheckBox = new JCheckBox();
+        closedCheckBox = new JCheckBox();
 
         // Собираем панель данных
         dataPanel.add(new JLabel("Код: "));
         dataPanel.add(codeField, "wrap");
 
         dataPanel.add(new JLabel("Наименование: "));
-        dataPanel.add(nameField);
+        dataPanel.add(nameField, "wrap");
+        dataPanel.add(new JLabel("Начальное состояние"));
+        dataPanel.add(initialCheckBox, "wrap");
+        dataPanel.add(new JLabel("Cостояние закрытого дела"));
+        dataPanel.add(closedCheckBox);
+
+
 
 
         // панель кнопок
@@ -127,6 +133,9 @@ public class ReceptionStatusDialog extends JDialog {
             nameField.setText("");
         }
 
+        initialCheckBox.setSelected(receptionStatus.getInitial()==null?false:receptionStatus.getInitial());
+        closedCheckBox.setSelected(receptionStatus.getClosed()==null?false:receptionStatus.getClosed());
+
     }
 
     private boolean saveStatusFromGUI() {
@@ -151,6 +160,9 @@ public class ReceptionStatusDialog extends JDialog {
         }
 
         receptionStatus.setName(nameField.getText());
+
+        receptionStatus.setInitial(initialCheckBox.isSelected());
+        receptionStatus.setClosed(closedCheckBox.isSelected());
 
         return true;
     }

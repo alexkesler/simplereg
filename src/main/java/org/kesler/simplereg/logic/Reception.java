@@ -40,6 +40,9 @@ public class Reception extends AbstractEntity{
     @Column(name = "receptionCodeNum")
     private Integer receptionCodeNum;
 
+    @Column(name = "pvdPackageNum")
+    private Integer pvdPackageNum;
+
 	@ManyToOne
 	@JoinColumn(name="ServiceID")
 	private Service service;
@@ -266,53 +269,34 @@ public class Reception extends AbstractEntity{
 
     }
 
-	public String getStatusName() {
+    public Integer getPvdPackageNum() { return pvdPackageNum; }
+    public void setPvdPackageNum(Integer pvdPackageNum) { this.pvdPackageNum = pvdPackageNum; }
+
+    public String getStatusName() {
 		return status == null?"Не определено":status.getName();
 	}
 
 	public Boolean isByRecord() {
 		return byRecord;
 	}
-
 	public void setByRecord(Boolean byRecord) {
 		this.byRecord = byRecord;
 	}
 
-	public Date getToIssueDate() {
-		return toIssueDate;
-	}
+	public Date getToIssueDate() { return toIssueDate; }
+	public void setToIssueDate(Date toIssueDate) {	this.toIssueDate = toIssueDate; }
 
-	public void setToIssueDate(Date toIssueDate) {
-		this.toIssueDate = toIssueDate;
-	}
+	public String getRosreestrCode() { return rosreestrCode; }
+	public void setRosreestrCode(String rosreestrCode) { this.rosreestrCode = rosreestrCode; }
 
-	public String getRosreestrCode() {
-		return rosreestrCode;
-	}
-
-	public void setRosreestrCode(String rosreestrCode) {
-		this.rosreestrCode = rosreestrCode;
-	}
-
-	public String getReceptionCode() {
-		return receptionCode;
-	}
-
-	public void setReceptionCode(String receptionCode) {
-		this.receptionCode = receptionCode;
-	}
+	public String getReceptionCode() { return receptionCode; }
+	public void setReceptionCode(String receptionCode) { this.receptionCode = receptionCode; }
 
     public Integer getReceptionCodeNum() {return receptionCodeNum;}
-
     public void setReceptionCodeNum(Integer receptionCodeNum) {this.receptionCodeNum = receptionCodeNum;}
 
-	public Boolean isResultInMFC() {
-		return resultInMFC;
-	}
-
-	public void setResultInMFC(Boolean resultInMFC) {
-		this.resultInMFC = resultInMFC;
-	}
+	public Boolean isResultInMFC() { return resultInMFC; }
+	public void setResultInMFC(Boolean resultInMFC) { this.resultInMFC = resultInMFC; }
 
 	public String getFilialCode() {
 		String notNullFilialCode = "";
@@ -320,9 +304,7 @@ public class Reception extends AbstractEntity{
 		return notNullFilialCode;
 	}
 
-	public void setFilialCode(String filialCode) {
-		this.filialCode = filialCode;
-	}
+	public void setFilialCode(String filialCode) { this.filialCode = filialCode; }
 
     public Reception getParentReception() {return parentReception;}
     public void setParentReception(Reception parentReception) {

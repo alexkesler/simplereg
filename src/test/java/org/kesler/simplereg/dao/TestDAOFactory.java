@@ -44,7 +44,7 @@ public class TestDAOFactory{
 	@Test
 	public void testGetFLDAO() {
 
-		GenericDAO<FL> flDAO = DAOFactory.getInstance().getFLDAO();
+		FLDAO flDAO = DAOFactory.getInstance().getFLDAO();
 		assertNotNull("FLDAO not returned", flDAO);
 		
 	}
@@ -52,7 +52,7 @@ public class TestDAOFactory{
 	@Test
 	public void testGetULDAO() {
 
-		GenericDAO<UL> ulDAO = DAOFactory.getInstance().getULDAO();
+		ULDAO ulDAO = DAOFactory.getInstance().getULDAO();
 		assertNotNull("ULDAO not returned", ulDAO);
 		
 	}

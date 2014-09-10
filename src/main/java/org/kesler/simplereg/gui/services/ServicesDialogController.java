@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.ServicesModel;
+import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.logic.service.ServicesModelListener;
 import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.dao.EntityState;

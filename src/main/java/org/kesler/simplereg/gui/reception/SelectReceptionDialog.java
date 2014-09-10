@@ -227,7 +227,7 @@ public class SelectReceptionDialog extends AbstractDialog {
                 case 1:
                     return dateFormat.format(reception.getOpenDate());
                 case 2:
-                    return reception.getStatusName() + " (" + dateFormat.format(reception.getStatusChangeDate()) + ")";
+                    return reception.getStatusName() + " (" + (reception.getStatusChangeDate()==null?"Не опр":dateFormat.format(reception.getStatusChangeDate())) + ")";
                 default:
                     return null;
             }

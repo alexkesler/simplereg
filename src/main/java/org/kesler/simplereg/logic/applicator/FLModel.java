@@ -79,7 +79,13 @@ public class FLModel implements DAOListener{
 		
 	}
 
-	public int addFL(FL fl) {
+
+    public List<FL> getFLsByFIO(String firstName, String surName, String parentName) {
+        return DAOFactory.getInstance().getFLDAO().getFLByFIO(firstName,surName,parentName);
+    }
+
+
+    public int addFL(FL fl) {
 		Long id = DAOFactory.getInstance().getFLDAO().addItem(fl);
 		if (id != null) {
 			flList.add(fl);
