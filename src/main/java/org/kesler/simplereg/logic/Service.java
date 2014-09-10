@@ -27,8 +27,8 @@ public class Service extends AbstractEntity {
     @Column(name="Code", length=50)
     private String code;
 
-    @Column(name = "PKPVDTypeIDs")
-    private String pkpvdTypeIDs;
+    @Column(name = "PvdtypesPurposes")
+    private String pvdtypesPurposes;
 
 	@Column(name="Enabled")
 	private Boolean enabled;
@@ -76,16 +76,32 @@ public class Service extends AbstractEntity {
 
     public void setCode(String code) {this.code = code;}
 
-    public String getPkpvdTypeIDs() { return pkpvdTypeIDs==null?"":pkpvdTypeIDs; }
-    public void setPkpvdTypeIDs(String pkpvdTypeIDs) { this.pkpvdTypeIDs = pkpvdTypeIDs; }
+    public String getPvdtypesPurposes() { return pvdtypesPurposes; }
+    public void setPvdtypesPurposes(String pvdtypesPurposes) { this.pvdtypesPurposes = pvdtypesPurposes; }
 
-    public boolean fitPkpvdTypeID(String typeID) {
-        if (pkpvdTypeIDs==null || pkpvdTypeIDs.isEmpty()) return false;
-        String[] ids = pkpvdTypeIDs.split(",");
-        for (String id:ids) {
-            if(id.equals(typeID)) return true;
+    public boolean fitPvdtypePurpose(String pvdtype, Integer purpose) {
+        if (pvdtype==null || purpose==null) return false;
+        if (pvdtypesPurposes==null || pvdtypesPurposes.isEmpty()) return false;
+
+        String pvdtypePurpose = pvdtype + ":" + purpose.toString();
+
+        String[] ps = pvdtypesPurposes.split(",");
+        for(String p:ps) {
+            if(p.equals(pvdtypePurpose)) return true;
         }
         return false;
+    }
+
+    public void addPvdtypePurpose(String pvdtype,Integer purpose) {
+        if (pvdtype==null || purpose==null) return;
+
+        String pvdtypePurpose = pvdtype + ":" + purpose.toString();
+
+        if (pvdtypesPurposes==null || pvdtypesPurposes.isEmpty())
+            pvdtypesPurposes = pvdtypePurpose;
+        else
+            if (!pvdtypesPurposes.contains(pvdtypePurpose))
+                pvdtypesPurposes += "," + pvdtypePurpose;
     }
 
     public Boolean getEnabled() {
