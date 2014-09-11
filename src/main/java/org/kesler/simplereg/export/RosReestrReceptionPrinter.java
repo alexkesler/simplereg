@@ -1,10 +1,7 @@
 package org.kesler.simplereg.export;
 
 import java.io.File;
-import java.util.Set;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Date;
+import java.util.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,6 +17,8 @@ import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
 
+import org.kesler.simplereg.logic.FL;
+import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.util.OptionsUtil;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Applicator;
@@ -131,12 +130,23 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy г.");
 
 		String applicatorsString = "";
-		String represesString = "";
+        List<FL> represes = new ArrayList<FL>();
 		List<Applicator> applicators = reception.getApplicators();
 		for (Applicator applicator: applicators) {
 			applicatorsString = applicatorsString + applicator.getFullName() + "; ";
-			represesString = represesString + (applicator.getRepres()==null?applicator.getFullName():applicator.getRepres().getFIO()) + " _____________; ";
+			FL repres = applicator.getRepres();
+            if (repres==null && applicator instanceof ApplicatorFL) repres = ((ApplicatorFL) applicator).getFL();
+            if (applicator.getRepres()!=null) {
+                if (!represes.contains(repres)) represes.add(repres);
+            }
 		}
+
+        String represesString = "";
+        for (FL repres: represes) {
+            represesString = represesString + repres.getShortFIO() + " _____________; ";
+        }
+
+
 
 		String resultInMFCString = "__";
 		if (reception.isResultInMFC()) resultInMFCString = "V";
