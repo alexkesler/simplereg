@@ -107,6 +107,7 @@ public class Transform {
         if (uls.size()==0){
             ul = new UL();
             ul.setShortName(shortName);
+            ul.setFullName(shortName);
             ULModel.getInstance().addUL(ul);
         } else {
             ul = uls.get(0);
