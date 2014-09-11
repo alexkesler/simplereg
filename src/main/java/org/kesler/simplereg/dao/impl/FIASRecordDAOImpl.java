@@ -28,9 +28,13 @@ public class FIASRecordDAOImpl implements FIASRecordDAO {
 
 	@Override
 	public void addDAOListener(DAOListener listener) {
-		listeners.add(listener);
+		if (!listeners.contains(listener)) listeners.add(listener);
 	}
 
+    @Override
+    public void removeDAOListener(DAOListener listener) {
+        listeners.remove(listener);
+    }
 
     public void addRecords(List<FIASRecord> records) {
 
