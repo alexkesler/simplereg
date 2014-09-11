@@ -351,7 +351,7 @@ public class MainView extends JFrame {
 
 		public Object getValueAt(int row, int column) {
 			Object value = null;
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 			Reception reception = receptions.get(row);
 			if (reception != null) {
 				switch (column) {

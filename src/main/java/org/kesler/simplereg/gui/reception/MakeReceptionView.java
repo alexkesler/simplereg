@@ -509,7 +509,7 @@ class MakeReceptionView extends JDialog {
             });
 
 
-            rosreestrCodeTextField = new JTextField(15);
+            rosreestrCodeTextField = new JTextField(25);
             rosreestrCodeTextField.addFocusListener(new java.awt.event.FocusListener() {
                 public void focusGained(java.awt.event.FocusEvent ev) {
                 }
