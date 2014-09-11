@@ -136,7 +136,7 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 			applicatorsString = applicatorsString + applicator.getFullName() + "; ";
 			FL repres = applicator.getRepres();
             if (repres==null && applicator instanceof ApplicatorFL) repres = ((ApplicatorFL) applicator).getFL();
-            if (applicator.getRepres()!=null) {
+            if (repres!=null) {
                 if (!represes.contains(repres)) represes.add(repres);
             }
 		}
