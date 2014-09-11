@@ -33,6 +33,8 @@ public class Cause {
     public String getRegnum() { return regnum; }
     public void setRegnum(String regnum) { this.regnum = regnum; }
 
+    public String getTypeId() { return pack.getTypeId(); }
+
     public String getGroupType() { return pack.getGroupType(); }
 
     public String getType() { return pack.getType(); }

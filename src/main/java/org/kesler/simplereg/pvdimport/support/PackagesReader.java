@@ -1,6 +1,7 @@
 package org.kesler.simplereg.pvdimport.support;
 
-import org.kesler.simplereg.pvdimport.DBReader;
+import org.kesler.simplereg.pvdimport.PVDReader;
+import org.kesler.simplereg.pvdimport.PVDReaderException;
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
@@ -12,7 +13,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class PackagesReader extends DBReader {
+public class PackagesReader extends PVDReader {
 
     private List<Package> packages;
     private ReaderListener readerListener;
@@ -78,6 +79,13 @@ public class PackagesReader extends DBReader {
     }
 
     public void readFullInSeparateThread() {
+        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                throw new PVDReaderException(e);
+            }
+        };
+
         Thread readerThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -108,10 +116,19 @@ public class PackagesReader extends DBReader {
             }
 
         });
+        readerThread.setUncaughtExceptionHandler(handler);
         readerThread.start();
     }
 
     public void readChargeInSeparateThread() {
+        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                throw new PVDReaderException(e);
+            }
+        };
+
+
         Thread readerThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -130,6 +147,32 @@ public class PackagesReader extends DBReader {
             }
 
         });
+        readerThread.setUncaughtExceptionHandler(handler);
+        readerThread.start();
+    }
+
+    public void readCausesInSeparateThread() {
+        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread t, Throwable e) {
+                throw new PVDReaderException(e);
+            }
+        };
+
+        Thread readerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                PackagesReader.this.read();
+                for (Package aPackage: packages) {
+                    CauseReader causeReader = new CauseReader(aPackage);
+                    causeReader.read();
+                }
+                OracleUtil.closeConnection();
+                readerListener.readComplete();
+            }
+
+        });
+        readerThread.setUncaughtExceptionHandler(handler);
         readerThread.start();
     }
 

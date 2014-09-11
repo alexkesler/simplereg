@@ -1,7 +1,7 @@
 package org.kesler.simplereg.pvdimport.support;
 
 
-import org.kesler.simplereg.pvdimport.DBReader;
+import org.kesler.simplereg.pvdimport.PVDReader;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Subject;
 
@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class SubjectReader extends DBReader {
+public class SubjectReader extends PVDReader {
     private Applicant applicant;
 
     public SubjectReader(Applicant applicant) {

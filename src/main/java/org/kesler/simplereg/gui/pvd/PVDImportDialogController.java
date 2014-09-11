@@ -1,8 +1,12 @@
 package org.kesler.simplereg.gui.pvd;
 
 
+import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProcessDialog;
+import org.kesler.simplereg.pvdimport.PVDReaderException;
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.*;
+import org.kesler.simplereg.pvdimport.support.CauseReader;
 import org.kesler.simplereg.pvdimport.support.PackagesReader;
 
 import javax.swing.*;
@@ -16,6 +20,8 @@ public class PVDImportDialogController implements ReaderListener{
     private static PVDImportDialogController instance = new PVDImportDialogController();
     private PackagesReader packagesReader;
     private PVDImportDialog dialog;
+
+    private ProcessDialog processDialog;
 
     private final List<Cause> causes;
     private final List<Cause> allCauses;
@@ -34,10 +40,15 @@ public class PVDImportDialogController implements ReaderListener{
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
         filterString = "";
-        readCausesInSeparateThread(lastNum);
+        processDialog = new ProcessDialog(dialog);
+        processDialog.showProcess("Читаю данные из ПК ПВД");
+
+        readCauses(lastNum);
         dialog.setVisible(true);
+
+
         if(dialog.getResult()==PVDImportDialog.OK) {
-            return dialog.getSelectedCause();
+             return readCause(dialog.getSelectedCause());
         } else {
             return null;
         }
@@ -47,18 +58,33 @@ public class PVDImportDialogController implements ReaderListener{
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
         filterString = "";
-        readCausesThisDayInSeparateThread();
+        processDialog = new ProcessDialog(dialog);
+        processDialog.showProcess("Читаю данные из ПК ПВД");
+        readCausesThisDay();
         dialog.setVisible(true);
+
+
         if(dialog.getResult()==PVDImportDialog.OK) {
-            return dialog.getSelectedCause();
+            return readCause(dialog.getSelectedCause());
         } else {
             return null;
         }
     }
 
+    private Cause readCause(Cause cause) {
+        try {
+            CauseReader.readCause(cause);
+        } catch (PVDReaderException ex) {
+            JOptionPane.showMessageDialog(dialog, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        return cause;
+    }
+
     private void readCauses (int lastNum) {
         packagesReader = new PackagesReader(this, lastNum);
-        packagesReader.readFullInSeparateThread();
+        packagesReader.readCausesInSeparateThread();
     }
 
 
@@ -72,28 +98,45 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
         packagesReader = new PackagesReader(this, begDate, endDate);
-        packagesReader.readFullInSeparateThread();
+        packagesReader.readCausesInSeparateThread();
+
     }
 
-    private void readCausesInSeparateThread(final int lastNum) {
-        Thread readerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                readCauses(lastNum);
-            }
-        });
-        readerThread.start();
-    }
-
-    private void readCausesThisDayInSeparateThread() {
-        Thread readerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                readCausesThisDay();
-            }
-        });
-        readerThread.start();
-    }
+//    private void readCausesInSeparateThread(final int lastNum) {
+//        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+//            @Override
+//            public void uncaughtException(Thread t, Throwable e) {
+//                processDialog.hideProcess();
+//                JOptionPane.showMessageDialog(dialog,"Ошибка: " + e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+//            }
+//        };
+//        Thread readerThread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                readCauses(lastNum);
+//            }
+//        });
+//        readerThread.setUncaughtExceptionHandler(handler);
+//        readerThread.start();
+//    }
+//
+//    private void readCausesThisDayInSeparateThread() {
+//        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
+//            @Override
+//            public void uncaughtException(Thread t, Throwable e) {
+//                processDialog.hideProcess();
+//                JOptionPane.showMessageDialog(dialog,"Ошибка: " + e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+//            }
+//        };
+//        Thread readerThread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                readCausesThisDay();
+//            }
+//        });
+//        readerThread.setUncaughtExceptionHandler(handler);
+//        readerThread.start();
+//    }
 
     void setFilterString(String filterString) {
         this.filterString = filterString.toLowerCase();
@@ -117,5 +160,6 @@ public class PVDImportDialogController implements ReaderListener{
         }
         filterCauses();
         dialog.update();
+        processDialog.hideProcess();
     }
 }

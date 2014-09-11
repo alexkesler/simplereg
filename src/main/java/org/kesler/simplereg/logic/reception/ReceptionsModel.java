@@ -40,7 +40,7 @@ public class ReceptionsModel implements DAOListener{
     }
 
 	public void addReceptionsModelStateListener(ReceptionsModelStateListener listener) {
-		listeners.add(listener);
+		if (!listeners.contains(listener)) listeners.add(listener);
 	}
 
 
@@ -286,6 +286,10 @@ public class ReceptionsModel implements DAOListener{
 			listener.receptionsModelStateChanged(state);
 		}
 	}
+
+    public void finish() {
+        DAOFactory.getInstance().getReceptionDAO().removeDAOListener(this);
+    }
 
 }
 

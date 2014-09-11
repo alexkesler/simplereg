@@ -1,14 +1,14 @@
 package org.kesler.simplereg.pvdimport.support;
 
 
-import org.kesler.simplereg.pvdimport.DBReader;
+import org.kesler.simplereg.pvdimport.PVDReader;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Obj;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ObjReader extends DBReader {
+public class ObjReader extends PVDReader {
     private Cause cause;
 
     public ObjReader(Cause cause) { this.cause = cause; }
