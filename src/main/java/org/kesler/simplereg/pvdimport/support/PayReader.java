@@ -1,6 +1,6 @@
 package org.kesler.simplereg.pvdimport.support;
 
-import org.kesler.simplereg.pvdimport.DBReader;
+import org.kesler.simplereg.pvdimport.PVDReader;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Pay;
 
@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class PayReader extends DBReader {
+public class PayReader extends PVDReader {
     private Cause cause;
 
     public PayReader(Cause cause) {

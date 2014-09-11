@@ -1,7 +1,7 @@
 package org.kesler.simplereg.pvdimport.support;
 
 
-import org.kesler.simplereg.pvdimport.DBReader;
+import org.kesler.simplereg.pvdimport.PVDReader;
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.PackageType;
 import org.kesler.simplereg.util.OracleUtil;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PackageTypesReader extends DBReader{
+public class PackageTypesReader extends PVDReader {
     private List<PackageType> types;
     private ReaderListener listener;
 

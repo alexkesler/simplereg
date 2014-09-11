@@ -93,6 +93,12 @@ public class Reception extends AbstractEntity{
 	@Column(name="FilialCode")
 	private String filialCode;
 
+    @Column(name = "PvdtypeId")
+    private String pvdtypeId;
+
+    @Column(name = "PvdPurpose")
+    private Integer pvdPurpose;
+
     @ManyToOne
     @JoinColumn(name = "ParentReceptionID")
     private Reception parentReception;
@@ -305,6 +311,12 @@ public class Reception extends AbstractEntity{
 	}
 
 	public void setFilialCode(String filialCode) { this.filialCode = filialCode; }
+
+    public String getPvdtypeId() { return pvdtypeId; }
+    public void setPvdtypeId(String pvdtypeId) { this.pvdtypeId = pvdtypeId; }
+
+    public Integer getPvdPurpose() { return pvdPurpose; }
+    public void setPvdPurpose(Integer pvdPurpose) { this.pvdPurpose = pvdPurpose; }
 
     public Reception getParentReception() {return parentReception;}
     public void setParentReception(Reception parentReception) {

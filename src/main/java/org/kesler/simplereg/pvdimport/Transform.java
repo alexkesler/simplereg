@@ -25,7 +25,10 @@ public class Transform {
 
         reception.setOperator(CurrentOperator.getInstance().getOperator());
 
-        reception.setService(getServiceByPackageType(cause.getPackage().getTypeId()));
+        reception.setService(getServiceByPackageTypePurpose(cause.getTypeId(),cause.getPurpose()));
+
+        reception.setPvdtypeId(cause.getTypeId());
+        reception.setPvdPurpose(cause.getPurpose());
 
         reception.setRosreestrCode(cause.getRegnum());
 
@@ -34,6 +37,8 @@ public class Transform {
             applicator.setReception(reception);
             reception.getApplicators().add(applicator);
         }
+
+
 
 
         Obj obj = cause.getObjects().size()==0?null:cause.getObjects().get(0);
@@ -46,12 +51,14 @@ public class Transform {
         return reception;
     }
 
-    static Service getServiceByPackageType(String typeId) throws TransformException{
+    static Service getServiceByPackageTypePurpose(String typeId, Integer purpose) throws TransformException{
         List<Service> services = ServicesModel.getInstance().getActiveServices();
         for(Service service: services) {
-            if (service.fitPkpvdTypeID(typeId)) return service;
+            if (service.fitPvdtypePurpose(typeId, purpose)) return service;
         }
-        throw new TransformException("Услуга не найдена");
+        return null;
+
+//        throw new TransformException("Услуга не найдена");
     }
 
     static Applicator getApplicatorForApplicant(Applicant applicant) {

@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class OracleUtil {
     private static Connection connection;
-    public static synchronized Connection getConnection() {
+    public static synchronized Connection getConnection() throws SQLException{
         if (connection == null) createConnection();
         return connection;
     }
@@ -22,7 +22,7 @@ public class OracleUtil {
         connection = null;
     }
 
-    private static void createConnection() {
+    private static void createConnection() throws SQLException{
         Properties prop = new Properties();
         prop.setProperty("user", "admin");
         prop.setProperty("password", "admin");
@@ -36,17 +36,11 @@ public class OracleUtil {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
         } catch (ClassNotFoundException ex) {
-            System.out.println("Класс не зарегистрирован");
             ex.printStackTrace();
             return;
         }
-        System.out.println("Класс зарегистрирован");
 
-        try {
-            connection = DriverManager.getConnection(url, prop);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        connection = DriverManager.getConnection(url, prop);
 
         Locale.setDefault(prevLocale);
 

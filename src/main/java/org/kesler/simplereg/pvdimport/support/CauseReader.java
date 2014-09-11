@@ -1,14 +1,15 @@
 package org.kesler.simplereg.pvdimport.support;
 
 
-import org.kesler.simplereg.pvdimport.DBReader;
+import org.kesler.simplereg.pvdimport.PVDReader;
+import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Package;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CauseReader extends DBReader {
+public class CauseReader extends PVDReader {
 
     private Package aPackage;
 
@@ -42,6 +43,26 @@ public class CauseReader extends DBReader {
 
             aPackage.getCauses().add(cause);
         }
+
+    }
+
+    public static Cause readCause(Cause cause) {
+        if (cause==null) throw new NullPointerException();
+        ApplicantsReader applicantsReader = new ApplicantsReader(cause);
+        applicantsReader.read();
+        for (Applicant applicant:cause.getApplicants()) {
+            // читаем субъектов
+            SubjectReader subjectReader = new SubjectReader(applicant);
+            subjectReader.read();
+        }
+        // читаем объекты
+        ObjReader objReader = new ObjReader(cause);
+        objReader.read();
+        // читаем платежи
+        PayReader payReader = new PayReader(cause);
+        payReader.read();
+
+        return cause;
 
     }
 
