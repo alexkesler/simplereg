@@ -1,6 +1,7 @@
 package org.kesler.simplereg.logic.reception.filter;
 
 import org.apache.log4j.Logger;
+import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.util.DateUtil;
 
 import java.util.*;
@@ -11,7 +12,8 @@ public class ReceptionsFiltersModel {
     protected final Logger log;
 
     private List<ReceptionsFilter> filters;
-    private OpenDateReceptionsFilter openDateReceptionsFilter = null;
+    private Date fromOpenDate;
+    private Date toOpenDate;
 
     public ReceptionsFiltersModel() {
         log = Logger.getLogger(this.getClass().getSimpleName());
@@ -66,61 +68,71 @@ public class ReceptionsFiltersModel {
 
     public int addFilter(ReceptionsFilter filter) {
         log.info("Adding filter: " + filter);
-        if (filter.getFiltersEnum()== OPEN_DATE) {
-            // назначаем новый фильтр по дате открытия
-            openDateReceptionsFilter = (OpenDateReceptionsFilter) filter;
-            // Подчищаем такие же фильтры из списка
-            Iterator<ReceptionsFilter> filterIterator = filters.iterator();
-            while (filterIterator.hasNext()) {
-                if (filterIterator.next().getFiltersEnum()== OPEN_DATE) filterIterator.remove();
-            }
-        }
         filters.add(filter);
         return filters.size()-1;
     }
 
     public void removeFilter(int index) {
         log.info("Remove filter:" + filters.get(index));
-        if (filters.get(index).getFiltersEnum()== OPEN_DATE) openDateReceptionsFilter = null;
         filters.remove(index);
     }
 
     public void resetFilters() {
         log.info("Reset filters");
         filters = new ArrayList<ReceptionsFilter>();
-        openDateReceptionsFilter = null;
     }
 
     public Date getFromOpenDate () {
-        return openDateReceptionsFilter==null?null:openDateReceptionsFilter.getFromDate();
+        return fromOpenDate;
     }
     public Date getToOpenDate () {
-        return openDateReceptionsFilter==null?null:openDateReceptionsFilter.getToDate();
+        return toOpenDate;
     }
 
-    public void setOpenDates(Date fromDate, Date toDate) {
-        fromDate = DateUtil.toBeginOfDay(fromDate);
-        toDate = DateUtil.toEndOfDay(toDate);
-        if(openDateReceptionsFilter==null) {
-            openDateReceptionsFilter = new OpenDateReceptionsFilter(fromDate,toDate);
-            filters.add(0,openDateReceptionsFilter);
-        } else {
-            openDateReceptionsFilter.setFromDate(fromDate);
-            openDateReceptionsFilter.setToDate(toDate);
-        }
+    public void setFromOpenDate(Date fromDate) {
+        fromOpenDate = DateUtil.toBeginOfDay(fromDate);
+    }
+
+
+    public void setToOpenDate(Date toDate) {
+        toOpenDate = DateUtil.toEndOfDay(toDate);
     }
 
     private void initFilters() {
+
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.MONTH,-1);
-        Date fromDate = calendar.getTime();
-        fromDate = DateUtil.toBeginOfDay(fromDate);
 
-        Date toDate = new Date();
-        toDate = DateUtil.toEndOfDay(toDate);
+        fromOpenDate = calendar.getTime();
+        fromOpenDate = DateUtil.toBeginOfDay(fromOpenDate);
 
-        openDateReceptionsFilter = new OpenDateReceptionsFilter(fromDate, toDate);
-        filters.add(openDateReceptionsFilter);
+        toOpenDate = new Date();
+        toOpenDate = DateUtil.toEndOfDay(toOpenDate);
+
+    }
+
+    public List<Reception> filterReceptions(List<Reception> allReceptions) {
+        List<Reception> filteredReceptions = new ArrayList<Reception>();
+        for (Reception reception: allReceptions) {
+            boolean fit = true;
+            // проверяем по датам
+            Date openDate = reception.getOpenDate();
+            if (openDate != null)
+                if (openDate.before(fromOpenDate) || openDate.after(toOpenDate)) fit = false;
+
+            // проверяем по фильтрам
+            for (ReceptionsFilter filter: filters) {
+                if (!filter.checkReception(reception)) {
+                    fit = false;
+                    break;
+                }
+            }
+
+            if (fit) filteredReceptions.add(reception);
+        }
+
+
+        return filteredReceptions;
     }
 
 }

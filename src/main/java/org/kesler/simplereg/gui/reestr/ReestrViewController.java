@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.reestr;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -86,8 +87,23 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 	}
 
+    public void setFromOpenDate(Date fromOpenDate) {
+        filtersModel.setFromOpenDate(fromOpenDate);
+    }
 
-	public void searchByReceptionCode(String receptionCodeString) {
+    public void setToOpenDate(Date toOpenDate) {
+        filtersModel.setToOpenDate(toOpenDate);
+    }
+
+    public Date getFromOpenDate() {
+        return filtersModel.getFromOpenDate();
+    }
+
+    public Date getToOpenDate() {
+        return filtersModel.getToOpenDate();
+    }
+
+    public void searchByReceptionCode(String receptionCodeString) {
         if (!receptionCodeString.isEmpty()) {
             int index = filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.RECEPTION_CODE, receptionCodeString);
             view.getFilterListModel().filterAdded(index);
