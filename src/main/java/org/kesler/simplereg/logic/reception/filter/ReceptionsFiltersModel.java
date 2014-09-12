@@ -89,8 +89,12 @@ public class ReceptionsFiltersModel {
         return toOpenDate;
     }
 
-    public void setOpenDates(Date fromDate, Date toDate) {
+    public void setFromOpenDate(Date fromDate) {
         fromOpenDate = DateUtil.toBeginOfDay(fromDate);
+    }
+
+
+    public void setToOpenDate(Date toDate) {
         toOpenDate = DateUtil.toEndOfDay(toDate);
     }
 
