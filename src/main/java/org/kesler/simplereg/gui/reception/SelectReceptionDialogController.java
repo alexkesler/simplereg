@@ -109,7 +109,8 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
     }
 
     void setDates(Date fromDate, Date toDate) {
-        receptionsModel.getFiltersModel().setOpenDates(fromDate, toDate);
+        receptionsModel.getFiltersModel().setFromOpenDate(fromDate);
+        receptionsModel.getFiltersModel().setToOpenDate(toDate);
         receptionsModel.readReceptionsAndApplyFiltersInSeparateThread();
     }
 
