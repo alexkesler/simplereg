@@ -84,19 +84,8 @@ public class ReceptionsModel implements DAOListener{
 	public void applyFilters() {
         List<ReceptionsFilter> filters = filtersModel.getFilters();
         log.info("Applying filters: " + filters);
-		filteredReceptions = new ArrayList<Reception>();
 		notifyListeners(ModelState.FILTERING);
-		for (Reception reception: allReceptions) {
-			boolean fit = true;		
-			for (ReceptionsFilter filter: filters) {
-				if (!filter.checkReception(reception)) {
-                    fit = false;
-                    break;
-                }
-
-			}
-			if (fit) filteredReceptions.add(reception);
-		}
+        filteredReceptions = filtersModel.filterReceptions(allReceptions);
 		notifyListeners(ModelState.FILTERED);
 
 	}

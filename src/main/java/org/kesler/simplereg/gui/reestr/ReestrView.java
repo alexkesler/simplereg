@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.reestr;
 
 import java.awt.*;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -14,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import com.alee.extended.date.DateSelectionListener;
+import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.Reception;
@@ -42,6 +45,8 @@ public class ReestrView extends JFrame {
     private Action resetMainReceptionAction;
 	private Action removeReceptionsAction;
 
+    private WebDateField fromDateField;
+    private WebDateField toDateField;
 	private FilterListModel filterListModel;
 	private int selectedFilterIndex = -1;
 	private ReceptionsFilter selectedFilter = null;
@@ -144,6 +149,22 @@ public class ReestrView extends JFrame {
 
 		JPanel filterPanel = new JPanel(new MigLayout("fill"));
         filterPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Фильтр"));
+
+        fromDateField = new WebDateField(controller.getFromOpenDate());
+        fromDateField.addDateSelectionListener(new DateSelectionListener() {
+            @Override
+            public void dateSelected(Date date) {
+                controller.setFromOpenDate(date);
+            }
+        });
+
+        toDateField = new WebDateField(controller.getToOpenDate());
+        toDateField.addDateSelectionListener(new DateSelectionListener() {
+            @Override
+            public void dateSelected(Date date) {
+                controller.setToOpenDate(date);
+            }
+        });
 
 		// делаем лист для отображения и измененения набора фильтров
 		filterListModel = new FilterListModel();
@@ -348,9 +369,12 @@ public class ReestrView extends JFrame {
 
 
 		// Собираем панель фильтра
-		filterPanel.add(new JLabel("Фильтры: "), "wrap");
-		filterPanel.add(filterListScrollPane, "push, spany 2, w 500, h 80");
+        filterPanel.add(new JLabel("Дата открытия: c "), "span, split 5");
+        filterPanel.add(fromDateField);
+        filterPanel.add(new JLabel(" по "));
+        filterPanel.add(toDateField);
         filterPanel.add(readFromDBButton, "wrap");
+		filterPanel.add(filterListScrollPane, "push, w 500, h 80");
 		filterPanel.add(applyFiltersButton,"pushy, grow, wrap");
 		filterPanel.add(addFilterButton, "split");
 		filterPanel.add(editFilterButton);
@@ -529,6 +553,7 @@ public class ReestrView extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 
+    // Модель для управления списком фильтров
 	class FilterListModel extends AbstractListModel {
 
 		@Override
