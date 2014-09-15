@@ -8,11 +8,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
 
-import org.hibernate.envers.Audited;
-
 import org.kesler.simplereg.dao.AbstractEntity;
-import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.FL;
 
 /**
 * Представляет общий интерфейс для разных заявителей, которые могут быть связаны с приемом документов 
