@@ -15,13 +15,15 @@ import org.kesler.simplereg.pvdimport.domain.Obj;
 import org.kesler.simplereg.pvdimport.domain.Subject;
 import org.kesler.simplereg.pvdimport.transform.TransformException;
 
+import java.util.Date;
 import java.util.List;
 
 public class Transform {
     public static Reception makeReceptionFromCause(Cause cause) throws TransformException{
         Reception reception = new Reception();
 
-        reception.setOpenDate(cause.getBeginDate());
+//        reception.setOpenDate(cause.getBeginDate());
+        reception.setOpenDate(new Date());
 
         reception.setOperator(CurrentOperator.getInstance().getOperator());
 
