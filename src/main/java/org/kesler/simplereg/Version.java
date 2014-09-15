@@ -5,8 +5,8 @@ package org.kesler.simplereg;
  */
 public class Version {
 
-    private static String version = "1.3.6.1";
-    private static String releaseDate = "12.09.2014";
+    private static String version = "1.3.6.2";
+    private static String releaseDate = "15.09.2014";
 
     public static String getVersion() {
         return version;
