@@ -58,7 +58,6 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
             receptions = criteria.list();
 
             log.info("Reading " + receptions.size() + " receptions complete");                                    
-            System.out.println("----Receptions in DAO-----" + receptions.size());
             notifyListeners(DAOState.READY);
         } catch (HibernateException he) {
             System.err.println("Error while reading receptions");

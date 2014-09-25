@@ -67,7 +67,7 @@ public class ReceptionsModel implements DAOListener{
         } else {
             allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
         }
-        log.info("Readed " + allReceptions.size() + " receptions");
+        log.info("Read " + allReceptions.size() + " receptions");
 		notifyListeners(ModelState.UPDATED);
 	}
 
