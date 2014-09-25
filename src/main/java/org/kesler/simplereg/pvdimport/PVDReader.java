@@ -1,10 +1,12 @@
 package org.kesler.simplereg.pvdimport;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.util.OracleUtil;
 
 import java.sql.*;
 
 public abstract class PVDReader {
+    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     public void read() throws PVDReaderException {
 
@@ -12,12 +14,12 @@ public abstract class PVDReader {
             Connection conn = OracleUtil.getConnection();
             Statement stmt = conn.createStatement();
             try {
-                System.out.println("Query: " + getQuerySQL());
+                log.info("Query: " + getQuerySQL());
                 ResultSet rs = stmt.executeQuery(getQuerySQL());
                 try {
-                    System.out.println("Processing >>>");
+                    log.info("Processing >>>");
                     processRs(rs);
-                    System.out.println("Processing complete");
+                    log.info("Processing complete");
                 } finally {
                     rs.close();
                 }
