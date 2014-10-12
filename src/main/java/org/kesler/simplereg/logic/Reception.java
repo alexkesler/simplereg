@@ -13,11 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Proxy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.gui.main.CurrentOperator;
@@ -45,15 +41,18 @@ public class Reception extends AbstractEntity{
 
 	@ManyToOne
 	@JoinColumn(name="ServiceID")
+    @Fetch(FetchMode.JOIN)
 	private Service service;
 
 	@OneToMany (fetch = FetchType.EAGER, mappedBy="reception")
 	@Cascade ({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	@Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 20)
 	private List<Applicator> applicators;
 
 	@ManyToOne
 	@JoinColumn(name="OperatorID")
+    @Fetch(FetchMode.JOIN)
 	private Operator operator;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -62,6 +61,8 @@ public class Reception extends AbstractEntity{
 
 	@ManyToOne
 	@JoinColumn(name="RealtyObjectID")
+    @Fetch(FetchMode.JOIN)
+    @BatchSize(size = 50)
 	private RealtyObject realtyObject;
 
 	@ManyToOne
@@ -75,6 +76,7 @@ public class Reception extends AbstractEntity{
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "reception", orphanRemoval = true)
     @Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
     @Fetch(FetchMode.SUBSELECT)
+    @BatchSize(size = 50)
     private List<ReceptionStatusChange> statusChanges;
 
 	@Column(name="ByRecord")

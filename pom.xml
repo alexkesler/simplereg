@@ -4,7 +4,7 @@
 
     <groupId>org.kesler</groupId>
     <artifactId>simplereg</artifactId>
-    <version>1.3.6.2</version>
+    <version>1.3.6.3</version>
     <packaging>jar</packaging>
 
     <name>simplereg</name>
@@ -88,6 +88,7 @@
                             <jre>
                                 <path>jre7</path>
                                 <!-- <minVersion>1.6.0</minVersion> -->
+                                <maxHeapSize>512</maxHeapSize>
                             </jre>
                             <versionInfo>
                                 <fileVersion>${project.version}</fileVersion>
