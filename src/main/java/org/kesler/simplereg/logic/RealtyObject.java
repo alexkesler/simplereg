@@ -7,11 +7,15 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Proxy;
 import org.kesler.simplereg.logic.realty.RealtyType;
 
 import org.kesler.simplereg.dao.AbstractEntity;
 
 @Entity
+@Proxy(lazy=false)
 @Table(name="RealtyObject")
 public class RealtyObject extends AbstractEntity {
 

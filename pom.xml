@@ -88,6 +88,7 @@
                             <jre>
                                 <path>jre7</path>
                                 <!-- <minVersion>1.6.0</minVersion> -->
+                                <maxHeapSize>512</maxHeapSize>
                             </jre>
                             <versionInfo>
                                 <fileVersion>${project.version}</fileVersion>

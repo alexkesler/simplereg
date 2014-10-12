@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.HibernateException;
+import org.hibernate.*;
 
 import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.util.HibernateUtil;
@@ -55,10 +52,13 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
             if (endDate!=null) {
                 criteria.add(Restrictions.le("openDate",endDate));
             }
+            criteria.setFetchMode("realtyObject", FetchMode.JOIN);
+            criteria.setFetchMode("operator", FetchMode.JOIN);
+            criteria.setFetchMode("service", FetchMode.JOIN);
+
             receptions = criteria.list();
 
-            log.info("Reading " + receptions.size() + " receptions complete");                                    
-            System.out.println("----Receptions in DAO-----" + receptions.size());
+            log.info("Reading " + receptions.size() + " receptions complete");
             notifyListeners(DAOState.READY);
         } catch (HibernateException he) {
             System.err.println("Error while reading receptions");
