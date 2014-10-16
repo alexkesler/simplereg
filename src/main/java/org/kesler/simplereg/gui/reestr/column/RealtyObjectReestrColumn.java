@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.reestr.column;
 
+import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.Reception;
 
 public class RealtyObjectReestrColumn extends ReestrColumn {
@@ -11,6 +12,8 @@ public class RealtyObjectReestrColumn extends ReestrColumn {
     }
 
     public String getValue(Reception reception) {
-        return reception.getRealtyObject().toString();
+        RealtyObject realtyObject = reception.getRealtyObject();
+        return realtyObject==null?"":realtyObject.toString();
     }
+    
 }
