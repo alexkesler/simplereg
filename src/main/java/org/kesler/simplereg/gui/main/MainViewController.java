@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.main;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.gui.issue.IssueDialogController;
 import org.kesler.simplereg.gui.options.OptionsDialog;
@@ -31,6 +32,7 @@ import org.kesler.simplereg.gui.applicator.ULListDialogController;
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
+import org.kesler.simplereg.util.LoggingUtil;
 import org.kesler.simplereg.util.OptionsUtil;
 
 import static org.kesler.simplereg.gui.main.MainViewCommand.*;
@@ -45,6 +47,7 @@ public class MainViewController implements MainViewListener,
 								OperatorsModelStateListener, 
 								ReceptionsModelStateListener{
 	private static MainViewController instance;
+    private static Logger log = Logger.getLogger(MainViewController.class);
 
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
@@ -102,15 +105,19 @@ public class MainViewController implements MainViewListener,
                 about();
                 break;
             case NewReception:
+                log.info("Open Make reception view");
 				openMakeReceptionView();
 				break;
            case NewReceptionFromPVD:
+               log.info("Open New reception from PVD view");
 				openNewReceptionFromPVDView();
 				break;
 			case UpdateReceptions:
+                log.info("Update receptions");
 				readReceptions();
 				break;
-			case OpenReceptionsReestr: 
+			case OpenReceptionsReestr:
+                log.info("Open reestr view");
 				openReceptionsReestr();
 				break;
 			case OpenStatistic: 
@@ -122,7 +129,8 @@ public class MainViewController implements MainViewListener,
 			case ULs: 
 				openULs();
 				break;
-			case Services: 
+			case Services:
+                log.info("Open Services");
 				openServicesView();
 				break;
 			case ReceptionStatuses: 
@@ -147,6 +155,7 @@ public class MainViewController implements MainViewListener,
                 openIssueDialog();
                 break;
 			case Exit:
+                log.info("Exit.");
 				System.exit(0);	
 
 		}
@@ -155,6 +164,7 @@ public class MainViewController implements MainViewListener,
 
 	private void setMainViewAccess(Operator operator) {
 
+        log.info("Setting permissions..");
 		// по умолчанию все элементы неактивны
 		for (MainViewCommand command: values()) {
 			mainView.getActionByCommand(command).setEnabled(false);
@@ -201,6 +211,7 @@ public class MainViewController implements MainViewListener,
 		} else { // если оператор не назначен
 			mainView.getActionByCommand(Login).setEnabled(true);
 		}
+        log.info("Permissions set.");
 
 	}
 
@@ -256,18 +267,25 @@ public class MainViewController implements MainViewListener,
 		processDialog = new ProcessDialog(loginDialog);
 		operatorsModel.readOperatorsInSeparateThread();
 
+        log.info("Showing login dialog..");
 		loginDialog.showDialog();
 
 		// делаем проверку на итог - назначаем оператора
 		if (loginDialog.getResult() == LoginDialog.OK) {
 			Operator operator = loginDialog.getOperator();
 			CurrentOperator.getInstance().setOperator(operator);
+            log.info("Login OK for oper: " + operator.getShortFIO());
+            String logUser = (operator.getCode().isEmpty()?"00":operator.getCode())+"-"+operator.getSurName();
+            LoggingUtil.updateLog4j4User(logUser);
+            log.info("Login OK for oper: " + operator.getShortFIO());
             mainView.setConnected(true);
 			new InfoDialog(mainView, "<html>Добро пожаловать, <p><i>" + 
 										operator.getFirstName() + 
 										" " + operator.getParentName() + "</i>!</p></html>", 1000, InfoDialog.STAR).showInfo();
 		} else {
 			CurrentOperator.getInstance().resetOperator();
+            LoggingUtil.reinitLog4j();
+            log.info("Login canceled");
 			HibernateUtil.closeConnection();
             mainView.setConnected(false);
 		}
@@ -312,7 +330,9 @@ public class MainViewController implements MainViewListener,
 
 
 	private void logout() {
+        log.info("Logout");
 		CurrentOperator.getInstance().resetOperator();
+        LoggingUtil.reinitLog4j();
 		HibernateUtil.closeConnection();
         mainView.setConnected(false);
 	}

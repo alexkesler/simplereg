@@ -1,5 +1,6 @@
 package org.kesler.simplereg.pvdimport;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.logic.*;
 
@@ -19,7 +20,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Transform {
+    private static Logger log = Logger.getLogger(Transform.class.getSimpleName());
     public static Reception makeReceptionFromCause(Cause cause) throws TransformException{
+        log.info("Transform cause " + cause.getRegnum());
         Reception reception = new Reception();
 
 //        reception.setOpenDate(cause.getBeginDate());
@@ -39,8 +42,6 @@ public class Transform {
             applicator.setReception(reception);
             reception.getApplicators().add(applicator);
         }
-
-
 
 
         Obj obj = cause.getObjects().size()==0?null:cause.getObjects().get(0);
