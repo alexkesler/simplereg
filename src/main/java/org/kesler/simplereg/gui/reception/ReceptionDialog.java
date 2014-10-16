@@ -47,7 +47,8 @@ public class ReceptionDialog extends AbstractDialog {
     private JButton saveRosreestrCodeButton;
     private JLabel parentRosreestrCodeLabel;
     private JLabel serviceNameLabel;
-    private JLabel realtyObjectLabel;
+    private JTextArea realtyObjectTextArea;
+//    private JLabel realtyObjectLabel;
     private ApplicatorsListModel applicatorsListModel;
     private SubReceptionsListModel subReceptionsListModel;
     private Reception selectedSubReception;
@@ -137,8 +138,13 @@ public class ReceptionDialog extends AbstractDialog {
         serviceNameLabel = new JLabel();
         serviceNameLabel.setBorder(BorderFactory.createEtchedBorder());
 
-        realtyObjectLabel = new JLabel();
-        realtyObjectLabel.setBorder(BorderFactory.createEtchedBorder());
+//        realtyObjectLabel = new JLabel();
+//        realtyObjectLabel.setBorder(BorderFactory.createEtchedBorder());
+        realtyObjectTextArea = new JTextArea();
+        realtyObjectTextArea.setBorder(BorderFactory.createEtchedBorder());
+        realtyObjectTextArea.setLineWrap(true);
+        realtyObjectTextArea.setWrapStyleWord(true);
+        realtyObjectTextArea.setEditable(false);
 
         JButton editRealtyObjectButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
         editRealtyObjectButton.setToolTipText("Редактировать объект недвижимости");
@@ -259,7 +265,8 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(new JLabel("Услуга:"), "span");
         dataPanel.add(serviceNameLabel, "span, growx");
         dataPanel.add(new JLabel("Объект недвижимости:"), "span");
-        dataPanel.add(realtyObjectLabel, "span, split 2, growx");
+        dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
+//        dataPanel.add(realtyObjectLabel, "span, split 2, growx");
         dataPanel.add(editRealtyObjectButton, "wrap");
         dataPanel.add(new JLabel("Заявители:"), "span");
         dataPanel.add(applicatorsListScrollPane, "span, growx, h 50::");
@@ -376,12 +383,13 @@ public class ReceptionDialog extends AbstractDialog {
         String realtyObjectString = "";
         RealtyObject realtyObject = reception.getRealtyObject();
         if (realtyObject != null) {
-            realtyObjectString = realtyObject.getType() + " " + realtyObject.getAddress();
+            realtyObjectString = (realtyObject.getType()==null?"":realtyObject.getType() + " ") + realtyObject.getAddress();
         } else {
             realtyObjectString = "Не определен";
         }
 
-        realtyObjectLabel.setText(realtyObjectString);
+//        realtyObjectLabel.setText(realtyObjectString);
+        realtyObjectTextArea.setText(realtyObjectString);
 
         // обновляем перечень заявителей
         applicatorsListModel.setApplicators(reception.getApplicators());
