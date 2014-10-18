@@ -26,7 +26,6 @@ public class CheckReceptionStatusDialogController {
     private CheckReceptionStatusDialogController() {
         log = Logger.getLogger(this.getClass().getSimpleName());
         receptionsModel = new ReceptionsModel();
-//        receptionsModel.addReceptionsModelStateListener(this);
     }
 
     public static CheckReceptionStatusDialogController getInstance() {
