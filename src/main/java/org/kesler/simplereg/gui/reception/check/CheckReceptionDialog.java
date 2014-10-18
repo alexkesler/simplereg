@@ -6,8 +6,6 @@ import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -63,23 +61,6 @@ public class CheckReceptionDialog extends AbstractDialog {
         });
 
         searchTextField = new JTextField(15);
-//        searchTextField.getDocument().addDocumentListener(new DocumentListener() {
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                controller.findReceptionsByRosreestrCode(searchTextField.getText());
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                controller.findReceptionsByRosreestrCode(searchTextField.getText());
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                controller.findReceptionsByRosreestrCode(searchTextField.getText());
-//            }
-//
-//        });
 
         receptionsTableModel = new ReceptionsTableModel();
         final JTable receptionsTable = new JTable(receptionsTableModel);
@@ -121,29 +102,16 @@ public class CheckReceptionDialog extends AbstractDialog {
         // панель кнопок
         JPanel buttonPanel = new JPanel();
 
-        JButton okButton = new JButton("OK");
+        JButton okButton = new JButton("Закрыть");
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selectedReception == null) {
-                    JOptionPane.showMessageDialog(currentDialog, "Ничего не выбрано", "Внимание", JOptionPane.WARNING_MESSAGE);
-                } else {
-                    result = OK;
-                    setVisible(false);
-                }
-            }
-        });
-        JButton cancelButton = new JButton("Отмена");
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                result = CANCEL;
                 setVisible(false);
-            }
+             }
         });
 
+
         buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
 
         // Собираем основную панель
         mainPanel.add(dataPanel, BorderLayout.CENTER);
@@ -154,15 +122,12 @@ public class CheckReceptionDialog extends AbstractDialog {
 
     }
 
-    Reception getSelectedReception() {
-        return selectedReception;
-    }
 
     void setReceptions(List<Reception> receptions) {
         receptionsTableModel.setReceptions(receptions);
     }
 
-    class ReceptionsTableModel extends AbstractTableModel {
+    private class ReceptionsTableModel extends AbstractTableModel {
         private List<Reception> receptions;
 
         ReceptionsTableModel() {
