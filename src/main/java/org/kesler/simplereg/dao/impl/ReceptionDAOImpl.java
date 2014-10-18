@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.*;
 
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.util.HibernateUtil;
 
@@ -18,6 +20,7 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
 
 	public ReceptionDAOImpl() {
 		super(Reception.class);
+        log = Logger.getLogger(this.getClass().getSimpleName());
 	}
 
 
@@ -84,7 +87,7 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
             notifyListeners(DAOState.READING);
             Criteria criteria = session.createCriteria(Reception.class);
 
-            criteria.add(Restrictions.ilike("rosreestrCode", code));
+            criteria.add(Restrictions.like("rosreestrCode", code, MatchMode.ANYWHERE).ignoreCase());
 
             criteria.setFetchMode("realtyObject", FetchMode.JOIN);
             criteria.setFetchMode("operator", FetchMode.JOIN);
