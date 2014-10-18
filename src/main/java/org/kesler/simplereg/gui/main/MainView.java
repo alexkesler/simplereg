@@ -202,6 +202,9 @@ public class MainView extends JFrame {
         JButton newReceptionfromPVDButton = new JButton(getActionByCommand(MainViewCommand.NewReceptionFromPVD));
         newReceptionfromPVDButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.NewReceptionFromPVD.getIconName()));
 
+        JButton checkReceptionStatusButton = new JButton(getActionByCommand(MainViewCommand.CheckReceptionStatus));
+        checkReceptionStatusButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.CheckReceptionStatus.getIconName()));
+
         JButton issueButton = new JButton(getActionByCommand(MainViewCommand.Issue));
         issueButton.setIcon(ResourcesUtil.getIcon(MainViewCommand.Issue.getIconName()));
 
@@ -212,6 +215,7 @@ public class MainView extends JFrame {
 		buttonPanel.add(newReceptionButton);
 //        buttonPanel.add(issueButton);
 		buttonPanel.add(newReceptionfromPVDButton);
+		buttonPanel.add(checkReceptionStatusButton);
 		buttonPanel.add(updateButton);
 
 

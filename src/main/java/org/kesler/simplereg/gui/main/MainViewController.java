@@ -7,6 +7,7 @@ import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.gui.issue.IssueDialogController;
 import org.kesler.simplereg.gui.options.OptionsDialog;
 import org.kesler.simplereg.gui.pvd.PVDImportDialogController;
+import org.kesler.simplereg.gui.reception.check.CheckReceptionStatusDialogController;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -112,6 +113,10 @@ public class MainViewController implements MainViewListener,
                 log.info("Open New reception from PVD view");
 				openNewReceptionFromPVDView();
 				break;
+            case CheckReceptionStatus:
+                log.info("Open CheckReceptionStatusDialog");
+				openCheckReceptionStatusDialog();
+				break;
 			case UpdateReceptions:
                 log.info("Update receptions");
 				readReceptions();
@@ -182,6 +187,7 @@ public class MainViewController implements MainViewListener,
 			mainView.getActionByCommand(NewReception).setEnabled(true);
             mainView.getActionByCommand(Issue).setEnabled(true);
             mainView.getActionByCommand(NewReceptionFromPVD).setEnabled(true);
+            mainView.getActionByCommand(CheckReceptionStatus).setEnabled(true);
 			mainView.getActionByCommand(UpdateReceptions).setEnabled(true);
 
 			if (operator.isControler()) { // для контролера
@@ -427,6 +433,10 @@ public class MainViewController implements MainViewListener,
         }
 
         MakeReceptionViewController.getInstance().openView(mainView,reception,true);
+    }
+
+    private void openCheckReceptionStatusDialog() {
+        CheckReceptionStatusDialogController.getInstance().showDialog(mainView);
     }
 
 

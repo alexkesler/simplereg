@@ -22,22 +22,22 @@ import java.util.List;
 /**
  * Диалог проверки статуса дела
  */
-public class CheckReceptionDialog extends AbstractDialog {
+public class CheckReceptionStatusDialog extends AbstractDialog {
 
 
-    private CheckReceptionDialogController controller;
+    private CheckReceptionStatusDialogController controller;
     private ReceptionsTableModel receptionsTableModel;
     private JTextField searchTextField;
     private Reception selectedReception = null;
 
-    CheckReceptionDialog(JDialog parentDialog, CheckReceptionDialogController controller) {
+    CheckReceptionStatusDialog(JDialog parentDialog, CheckReceptionStatusDialogController controller) {
         super(parentDialog, "Проверить статус дела", true);
         this.controller = controller;
         createGUI();
         setLocationRelativeTo(parentDialog);
     }
 
-    CheckReceptionDialog(JFrame parentFrame, CheckReceptionDialogController controller) {
+    CheckReceptionStatusDialog(JFrame parentFrame, CheckReceptionStatusDialogController controller) {
         super(parentFrame, "Проверить статус дела", true);
         this.controller = controller;
         createGUI();

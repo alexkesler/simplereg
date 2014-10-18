@@ -1,48 +1,41 @@
 package org.kesler.simplereg.gui.reception.check;
 
 import org.apache.log4j.Logger;
-import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
-import org.kesler.simplereg.gui.reception.select.SelectReceptionDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Контроллер для управления диалогом проверки статуса дела
  */
-public class CheckReceptionDialogController{
+public class CheckReceptionStatusDialogController {
 
     protected final Logger log;
-    private static CheckReceptionDialogController instance = new CheckReceptionDialogController();
+    private static CheckReceptionStatusDialogController instance = new CheckReceptionStatusDialogController();
 
     ReceptionsModel receptionsModel;
-    CheckReceptionDialog dialog;
+    CheckReceptionStatusDialog dialog;
 
     ProcessDialog processDialog;
 
-    private CheckReceptionDialogController() {
+    private CheckReceptionStatusDialogController() {
         log = Logger.getLogger(this.getClass().getSimpleName());
         receptionsModel = new ReceptionsModel();
 //        receptionsModel.addReceptionsModelStateListener(this);
     }
 
-    public static CheckReceptionDialogController getInstance() {
+    public static CheckReceptionStatusDialogController getInstance() {
         return instance;
     }
 
     public void showDialog(JDialog parentDialog) {
         log.info("Opening dialog");
-        dialog = new CheckReceptionDialog(parentDialog, this);
+        dialog = new CheckReceptionStatusDialog(parentDialog, this);
 
         performDialog();
     }
@@ -50,7 +43,7 @@ public class CheckReceptionDialogController{
 
     public void showDialog(JFrame parentFrame) {
         log.info("Opening dialog");
-        dialog = new CheckReceptionDialog(parentFrame, this);
+        dialog = new CheckReceptionStatusDialog(parentFrame, this);
 
         performDialog();
     }
@@ -83,7 +76,7 @@ public class CheckReceptionDialogController{
 //    }
 
     void openReceptionDialog(Reception reception) {
-        ReceptionDialogController.getInstance().showReadOnlyDialog(dialog,reception);
+        ReceptionDialogController.getInstance().showReadOnlyDialog(dialog, reception);
     }
 
     private class ReceptionFinderSwingWorker extends SwingWorker<List<Reception>,Reception> {
