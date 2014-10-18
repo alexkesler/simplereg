@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.make;
 
 abstract class MakeReceptionViewState {
     protected MakeReceptionViewController controller;

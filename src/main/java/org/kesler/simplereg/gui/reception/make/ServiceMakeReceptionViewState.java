@@ -1,10 +1,9 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.make;
 
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.gui.services.ServicesDialogController;
 
 class ServiceMakeReceptionViewState extends MakeReceptionViewState {
 

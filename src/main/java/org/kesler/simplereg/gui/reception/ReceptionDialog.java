@@ -6,27 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
-import com.alee.utils.swing.DocumentChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatusChange;
-import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.RealtyObject;
 
 import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
-import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 
 
 import org.kesler.simplereg.util.ResourcesUtil;
@@ -201,7 +194,7 @@ public class ReceptionDialog extends AbstractDialog {
                     newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
 
                     if (DEBUG)
-                        System.out.println("Selected status: " + newReceptionStatus + " current status: " + currentReceptionStatus);
+                        System.out.println("Selected receptionstatus: " + newReceptionStatus + " current receptionstatus: " + currentReceptionStatus);
 
                     if (!newReceptionStatus.equals(currentReceptionStatus)) {
                         if (DEBUG) System.out.println("enabled");

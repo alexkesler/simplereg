@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.receptionstatus;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;

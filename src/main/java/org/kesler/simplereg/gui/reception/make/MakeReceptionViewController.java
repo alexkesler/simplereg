@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.make;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.Applicator;

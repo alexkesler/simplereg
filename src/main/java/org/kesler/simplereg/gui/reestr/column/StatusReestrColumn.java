@@ -9,7 +9,7 @@ public class StatusReestrColumn extends ReestrColumn {
 	
 	public StatusReestrColumn() {
 		name = "Состояние";
-		alias = "status";
+		alias = "receptionstatus";
 		width = 20;
 	}
 

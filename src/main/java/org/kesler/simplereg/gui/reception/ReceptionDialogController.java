@@ -2,6 +2,8 @@ package org.kesler.simplereg.gui.reception;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectDialog;
+import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
+import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
