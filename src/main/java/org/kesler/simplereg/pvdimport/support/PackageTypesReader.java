@@ -26,7 +26,7 @@ public class PackageTypesReader extends PVDReader {
     public String getQuerySQL() {
         return "SELECT ID, GROUPTYPE, TYPE " +
                 " from DPS$PACKAGETYPE " +
-                " where status=5 ";
+                " where receptionstatus=5 ";
     }
 
     @Override

@@ -56,6 +56,10 @@ public class ReceptionsModel implements DAOListener{
         return lastReceptions;
     }
 
+    public List<Reception> getReceptionsByRosreesrtCode(String rosreestrCode) {
+        return DAOFactory.getInstance().getReceptionDAO().getReceptionsByRosreestrCode(rosreestrCode);
+    }
+
 
 	// читаем данные из БД
 	public void readReceptions() {

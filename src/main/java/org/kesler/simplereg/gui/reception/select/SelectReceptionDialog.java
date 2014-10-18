@@ -1,13 +1,9 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.select;
 
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.gui.AbstractDialog;
-import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 import javax.swing.*;

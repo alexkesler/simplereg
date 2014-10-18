@@ -8,9 +8,8 @@ import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
-import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
+import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.gui.reestr.export.ReestrExportEnum;
-import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
 import org.kesler.simplereg.gui.reestr.export.ReestrExporterFactory;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
