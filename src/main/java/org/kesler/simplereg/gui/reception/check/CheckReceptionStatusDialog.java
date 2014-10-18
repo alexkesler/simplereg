@@ -49,10 +49,10 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Панель данных
-        JPanel dataPanel = new JPanel(new MigLayout());
+        JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
-        JButton findReceptionsButton = new JButton(ResourcesUtil.getIcon("database_refresh.png"));
-        findReceptionsButton.setToolTipText("Загрузить из базы данных");
+        JButton findReceptionsButton = new JButton(ResourcesUtil.getIcon("zoom.png"));
+        findReceptionsButton.setToolTipText("Найти");
         findReceptionsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -64,6 +64,9 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
 
         receptionsTableModel = new ReceptionsTableModel();
         final JTable receptionsTable = new JTable(receptionsTableModel);
+        for (int i=0; i<receptionsTableModel.getColumnCount();i++) {
+            receptionsTable.getColumnModel().getColumn(i).setPreferredWidth(receptionsTableModel.getColumnSize(i));
+        }
         JScrollPane receptionsTableScrollPane = new JScrollPane(receptionsTable);
         receptionsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         receptionsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -94,7 +97,7 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
         // Собираем панель данных
 
 
-        dataPanel.add(new JLabel("Код Росреестра: "));
+        dataPanel.add(new JLabel("Код Росреестра: "), "split 3");
         dataPanel.add(searchTextField);
         dataPanel.add(findReceptionsButton, "wrap");
         dataPanel.add(receptionsTableScrollPane, "span,grow");
@@ -118,7 +121,7 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
-        setSize(500, 300);
+        setSize(700, 500);
 
     }
 
@@ -152,6 +155,19 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
         @Override
         public int getColumnCount() {
             return 3;
+        }
+
+        public int getColumnSize(int index) {
+            switch (index) {
+                case 0:
+                    return 100;
+                case 1:
+                    return 50;
+                case 2:
+                    return 150;
+                default:
+                    return 100;
+            }
         }
 
         @Override

@@ -60,7 +60,7 @@ public class CheckReceptionStatusDialogController {
     void findReceptionsByRosreestrCode(String rosreestrCodeString) {
         log.info("Finding Receptions by RosreestrCode: " + rosreestrCodeString);
         processDialog = new ProcessDialog(dialog);
-        processDialog.showProcess("Загружаю список дел из БД");
+        processDialog.showProcess("Загружаю дела с кодом, содержащим <"+ rosreestrCodeString+">");
         ReceptionFinderSwingWorker worker = new ReceptionFinderSwingWorker(rosreestrCodeString,processDialog);
         worker.execute();
 
