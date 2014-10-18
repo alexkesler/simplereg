@@ -60,21 +60,11 @@ public class CheckReceptionStatusDialogController {
     void findReceptionsByRosreestrCode(String rosreestrCodeString) {
         log.info("Finding Receptions by RosreestrCode: " + rosreestrCodeString);
         processDialog = new ProcessDialog(dialog);
-        processDialog.showProcess("Загружаю дела с кодом, содержащим <"+ rosreestrCodeString+">");
+        processDialog.showProcess("Загружаю дела из БД");
         ReceptionFinderSwingWorker worker = new ReceptionFinderSwingWorker(rosreestrCodeString,processDialog);
         worker.execute();
 
     }
-
-//    @Override
-//    public void receptionsModelStateChanged(ModelState state) {
-//
-////        if (state == ModelState.FILTERED) {
-////            List<Reception> receptions = receptionsModel.getFilteredReceptions();
-////            dialog.setReceptions(receptions);
-////            if(processDialog!=null) processDialog.hideProcess();
-////        }
-//    }
 
     void openReceptionDialog(Reception reception) {
         ReceptionDialogController.getInstance().showReadOnlyDialog(dialog, reception);

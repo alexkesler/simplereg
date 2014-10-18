@@ -108,14 +108,15 @@ public class ReceptionDialog extends AbstractDialog {
 
         receptionCodeTextField = new JTextField(25);
         receptionCodeTextField.setEnabled(false);
-        receptionCodeTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                receptionCodeTextField.setEnabled(true);
-                saveReceptionCodeButton.setVisible(true);
-            }
-        });
+        if (!readOnly)
+            receptionCodeTextField.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    receptionCodeTextField.setEnabled(true);
+                    saveReceptionCodeButton.setVisible(true);
+                }
+            });
 
         saveReceptionCodeButton = new JButton(ResourcesUtil.getIcon("accept.png"));
         saveReceptionCodeButton.setVisible(false);
@@ -132,14 +133,15 @@ public class ReceptionDialog extends AbstractDialog {
 
         rosreestrCodeTextField = new JTextField(25);
         rosreestrCodeTextField.setEnabled(false);
-        rosreestrCodeTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                rosreestrCodeTextField.setEnabled(true);
-                saveRosreestrCodeButton.setVisible(true);
-            }
-        });
+        if (!readOnly)
+            rosreestrCodeTextField.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    rosreestrCodeTextField.setEnabled(true);
+                    saveRosreestrCodeButton.setVisible(true);
+                }
+            });
 
         saveRosreestrCodeButton = new JButton(ResourcesUtil.getIcon("accept.png"));
         saveRosreestrCodeButton.setVisible(false);
@@ -215,26 +217,30 @@ public class ReceptionDialog extends AbstractDialog {
 
         // получаем новый статус дела
         statusesComboBox = new JComboBox();
-        statusesComboBox.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent ev) {
-                if (ev.getStateChange() == ItemEvent.SELECTED) {
-                    newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
+        if (!readOnly) {
+            statusesComboBox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent ev) {
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
 
-                    if (DEBUG)
-                        System.out.println("Selected receptionstatus: " + newReceptionStatus + " current receptionstatus: " + currentReceptionStatus);
+                        if (DEBUG)
+                            System.out.println("Selected receptionstatus: " + newReceptionStatus + " current receptionstatus: " + currentReceptionStatus);
 
-                    if (!newReceptionStatus.equals(currentReceptionStatus)) {
-                        if (DEBUG) System.out.println("enabled");
-                        statusChanged = true;
-                    } else {
-                        if (DEBUG) System.out.println("disabled");
-                        statusChanged = false;
+                        if (!newReceptionStatus.equals(currentReceptionStatus)) {
+                            if (DEBUG) System.out.println("enabled");
+                            statusChanged = true;
+                        } else {
+                            if (DEBUG) System.out.println("disabled");
+                            statusChanged = false;
+                        }
+
+                        saveNewReceptionStatusButton.setEnabled(statusChanged);
                     }
-
-                    saveNewReceptionStatusButton.setEnabled(statusChanged);
                 }
-            }
-        });
+            });
+        } else {
+            statusesComboBox.setEnabled(false);
+        }
 
         // кнопка сохранения установленного статуса
         saveNewReceptionStatusButton = new JButton();
@@ -271,7 +277,8 @@ public class ReceptionDialog extends AbstractDialog {
         });
 
         // Собираем панель данных
-        dataPanel.add(editButton, "span, right");
+        if (!readOnly)
+            dataPanel.add(editButton, "span, right");
         dataPanel.add(new JLabel("Код запроса:"),"span, split 3");
         dataPanel.add(receptionCodeTextField);
         dataPanel.add(saveReceptionCodeButton, "wrap");
@@ -285,20 +292,31 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(new JLabel("Услуга:"), "span");
         dataPanel.add(serviceNameLabel, "span, growx");
         dataPanel.add(new JLabel("Объект недвижимости:"), "span");
-        dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
-//        dataPanel.add(realtyObjectLabel, "span, split 2, growx");
-        dataPanel.add(editRealtyObjectButton, "wrap");
+        if (!readOnly) {
+            dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
+            dataPanel.add(editRealtyObjectButton, "wrap");
+        } else {
+            dataPanel.add(realtyObjectTextArea, "span, growx");
+        }
         dataPanel.add(new JLabel("Заявители:"), "span");
         dataPanel.add(applicatorsListScrollPane, "span, growx, h 50::");
-        dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
-        dataPanel.add(addSubReceptionButton);
-        dataPanel.add(removeSubReceptionButton, "wrap");
+        if (!readOnly) {
+            dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
+            dataPanel.add(addSubReceptionButton);
+            dataPanel.add(removeSubReceptionButton, "wrap");
+        }  else {
+            dataPanel.add(new JLabel("Дополнительные дела:"), "span,wrap");
+        }
         dataPanel.add(subReceptionsListScrollPane, "span, growx, h 50::");
         dataPanel.add(new JLabel("Состояние дела"), "span");
 //        dataPanel.add(serviceInfoPanel, "growx, wrap");
-        dataPanel.add(statusesComboBox, "span,split 3,w 100");
-        dataPanel.add(saveNewReceptionStatusButton);
-        dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
+        if (!readOnly) {
+            dataPanel.add(statusesComboBox, "span,split 3,w 100");
+            dataPanel.add(saveNewReceptionStatusButton);
+            dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
+        } else {
+            dataPanel.add(statusesComboBox, "span,w 100,wrap");
+        }
         dataPanel.add(statusChangesTableScrollPane, "span, growx, h 100!");
 
 
