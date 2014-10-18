@@ -56,10 +56,11 @@ public class ReceptionDialog extends AbstractDialog {
     private ReceptionStatus newReceptionStatus = null;
     private boolean statusChanged = false;
 
+    private boolean readOnly = false;
+
     ReceptionDialog(JFrame parentFrame, Reception reception, ReceptionDialogController controller) {
         super(parentFrame, true);
         this.controller = controller;
-        currentDialog = this;
         this.reception = reception;
 
         createGUI();
@@ -68,6 +69,32 @@ public class ReceptionDialog extends AbstractDialog {
         this.setLocationRelativeTo(parentFrame);
 
     }
+
+    ReceptionDialog(JDialog parentDialog, Reception reception, ReceptionDialogController controller) {
+        super(parentDialog, true);
+        this.controller = controller;
+        this.reception = reception;
+
+        createGUI();
+        loadGUIDataFromReception();
+        this.setSize(600, 600);
+        this.setLocationRelativeTo(parentDialog);
+
+    }
+
+   ReceptionDialog(JDialog parentDialog, Reception reception, ReceptionDialogController controller, boolean readOnly) {
+        super(parentDialog, true);
+        this.controller = controller;
+        this.reception = reception;
+       this.readOnly = readOnly;
+
+        createGUI();
+        loadGUIDataFromReception();
+        this.setSize(600, 600);
+        this.setLocationRelativeTo(parentDialog);
+
+    }
+
 
     void updateViewData() {
         loadGUIDataFromReception();
