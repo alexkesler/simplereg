@@ -102,6 +102,8 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
         dataPanel.add(findReceptionsButton, "wrap");
         dataPanel.add(receptionsTableScrollPane, "span,grow");
 
+        this.getRootPane().setDefaultButton(findReceptionsButton);
+
         // панель кнопок
         JPanel buttonPanel = new JPanel();
 
