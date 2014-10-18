@@ -108,8 +108,8 @@ public class MainViewController implements MainViewListener,
                 log.info("Open Make reception view");
 				openMakeReceptionView();
 				break;
-           case NewReceptionFromPVD:
-               log.info("Open New reception from PVD view");
+            case NewReceptionFromPVD:
+                log.info("Open New reception from PVD view");
 				openNewReceptionFromPVDView();
 				break;
 			case UpdateReceptions:

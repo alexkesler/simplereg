@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hibernate.*;
 
+
 import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.util.HibernateUtil;
 
@@ -47,7 +48,7 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
             Criteria criteria = session.createCriteria(Reception.class);
 
             if (beginDate!=null) {
-                criteria.add(Restrictions.ge("openDate",beginDate));
+                criteria.add(Restrictions.ge("openDate", beginDate));
             }
             if (endDate!=null) {
                 criteria.add(Restrictions.le("openDate",endDate));
@@ -61,8 +62,7 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
             log.info("Reading " + receptions.size() + " receptions complete");
             notifyListeners(DAOState.READY);
         } catch (HibernateException he) {
-            System.err.println("Error while reading receptions");
-            he.printStackTrace();
+            log.error("Error reading receptions",he);
             notifyListeners(DAOState.ERROR);
         } finally {
             if (session != null && session.isOpen()) {
@@ -72,6 +72,38 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
         return  receptions;
     }
 
+    @Override
+    public List<Reception> getReceptionsByRosreestrCode(String code) {
+        Session session = null;
+        List<Reception> receptions = new ArrayList<Reception>();
+        if (code==null || code.isEmpty()) return receptions;
+        log.info("Reading receptions by RosReestrCode: " + code);
+        try {
+            notifyListeners(DAOState.CONNECTING);
+            session = HibernateUtil.getSessionFactory().openSession();
+            notifyListeners(DAOState.READING);
+            Criteria criteria = session.createCriteria(Reception.class);
+
+            criteria.add(Restrictions.ilike("rosreestrCode", code));
+
+            criteria.setFetchMode("realtyObject", FetchMode.JOIN);
+            criteria.setFetchMode("operator", FetchMode.JOIN);
+            criteria.setFetchMode("service", FetchMode.JOIN);
+
+            receptions = criteria.list();
+
+            log.info("Reading " + receptions.size() + " receptions complete");
+            notifyListeners(DAOState.READY);
+        } catch (HibernateException he) {
+            log.error("Error reading receptions",he);
+            notifyListeners(DAOState.ERROR);
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return  receptions;
+    }
 
     public void removeReception(Reception reception) {
     	removeItem(reception);
@@ -85,13 +117,13 @@ public class ReceptionDAOImpl extends GenericDAOImpl<Reception> implements Recep
 
         String hql = "SELECT MAX(R.pvdPackageNum) from Reception R";
         try {
+            log.info("reading max PVD num");
             session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery(hql);
             List results = query.list();
             if (results.size()>0) lastPVDNum = (Integer) results.get(0);
         } catch (HibernateException he) {
-            System.err.println("Error while reading max pvdNum");
-            he.printStackTrace();
+            log.error("Error while reading max pvdNum",he);
             notifyListeners(DAOState.ERROR);
         } finally {
             if (session != null && session.isOpen()) {
