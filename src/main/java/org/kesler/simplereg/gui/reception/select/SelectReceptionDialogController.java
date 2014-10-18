@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.select;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.AbstractDialog;

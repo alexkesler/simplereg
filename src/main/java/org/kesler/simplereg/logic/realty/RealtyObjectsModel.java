@@ -3,6 +3,7 @@ package org.kesler.simplereg.logic.realty;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
@@ -10,6 +11,7 @@ import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.ModelState;
 
 public class RealtyObjectsModel implements DAOListener {
+    private Logger log;
 
 	private static RealtyObjectsModel instance;
 
@@ -20,6 +22,7 @@ public class RealtyObjectsModel implements DAOListener {
 	private String filterString;
 
 	private RealtyObjectsModel() {
+        log = Logger.getLogger(getClass().getSimpleName());
 		listeners = new ArrayList<RealtyObjectsModelStateListener>();
         realtyObjects = new ArrayList<RealtyObject>();
 		DAOFactory.getInstance().getRealtyObjectDAO().addDAOListener(this);
@@ -55,9 +58,11 @@ public class RealtyObjectsModel implements DAOListener {
 	}
 
 	public void readRealtyObjects() {
-		
+
+        log.info("Reading RealtyObjects");
 		realtyObjects = DAOFactory.getInstance().getRealtyObjectDAO().getAllItems();
 		notifyListeners(ModelState.UPDATED);
+        log.info("Read complete");
 
 	}
 

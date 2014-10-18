@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
@@ -15,13 +16,17 @@ import org.kesler.simplereg.logic.service.ServicesModelListener;
 * Реализует методы доступа к услугам, сохраненным в базе данных, хранит список услуг, прочитанный из базы, записывает изменения в базу
 */
 public class ServicesModel implements DAOListener{
+    private Logger log;
 	private static ServicesModel instance = null;
 	private List<Service> services = null;
+    private List<Service> activeServices = null;
 
 	private List<ServicesModelListener> listeners; // список слушателей для оповещения о событиях с моделью
 
 	private ServicesModel() {
+        log = Logger.getLogger(getClass().getSimpleName());
 		services = new ArrayList<Service>();
+        activeServices = new ArrayList<Service>();
 		DAOFactory.getInstance().getServiceDAO().addDAOListener(this);
 		listeners = new ArrayList<ServicesModelListener>();
 	}
@@ -42,7 +47,13 @@ public class ServicesModel implements DAOListener{
     * Читает услуги из базы данных во внутренний список
     */
 	public void readServices() {
+        log.info("Reading services from DB");
 		services = DAOFactory.getInstance().getServiceDAO().getAllItems();
+        activeServices.clear();
+        for (Service service:services) {
+            if (service.getEnabled()!=null && service.getEnabled()) activeServices.add(service);
+        }
+        log.info("Read " + services.size() + " services");
 		notifyListeners(ModelState.UPDATED);	
 	}
 
@@ -74,32 +85,36 @@ public class ServicesModel implements DAOListener{
 	* Возвращает список всех услуг, сохраненных в внутреннем списке, если внутренний список не определен - читает его из базы
 	*/
 	public List<Service> getAllServices() {
-		if (services == null || services.size()==0) {
+		if (services.size()==0) {
 			readServices();
 		}
 		return services;
 	}
 
 	public List<Service> getActiveServices() {
-        if (services == null || services.size()==0) {
+        if (activeServices.size()==0) {
             readServices();
         }
-		return services;
+		return activeServices;
 	}
 
 	/**
 	* Добавляет услугу, сохраняет её в базу данных
 	*/
 	public void addService(Service service) {
+        log.info("Adding service: " + service.getName());
 		services.add(service);
-		DAOFactory.getInstance().getServiceDAO().addItem(service);							
+		DAOFactory.getInstance().getServiceDAO().addItem(service);
+        log.info("Adding service complete");
 	}
 
 	/**
 	* Обновляет услугу в базе данных
 	*/
 	public void updateService(Service service) {
+        log.info("Updating service: " + service.getName());
 		DAOFactory.getInstance().getServiceDAO().updateItem(service);
+        log.info("Updating service complete");
 	}
 
 
@@ -107,7 +122,10 @@ public class ServicesModel implements DAOListener{
 	* Удаляет услугу из базы данных
 	*/
 	public void deleteService(Service service) {
+        log.info("Removing service: " + service.getName());
+        services.remove(service);
 		DAOFactory.getInstance().getServiceDAO().removeItem(service);
+        log.info("removing service complete");
 	}
 
 	/**

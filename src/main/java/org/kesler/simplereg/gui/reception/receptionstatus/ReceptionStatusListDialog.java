@@ -1,6 +1,5 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.receptionstatus;
 
-import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,7 +19,6 @@ import java.awt.BorderLayout;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.util.ResourcesUtil;
-import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class ReceptionStatusListDialog extends JDialog {
 

@@ -2,6 +2,8 @@ package org.kesler.simplereg.gui.reception;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectDialog;
+import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
+import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
@@ -47,6 +49,32 @@ public class ReceptionDialogController {
         dialog.dispose();
         return result;
     }
+
+    public boolean showDialog(JDialog parentDialog, Reception reception) {
+        boolean result;
+        this.reception = reception;
+        dialog = new ReceptionDialog(parentDialog, reception, this);
+        dialog.setVisible(true);
+        if (dialog.getResult()== AbstractDialog.OK) {
+            receptionsModel.updateReception(reception);
+            result = true;
+        } else {
+            result = false;
+        }
+
+        dialog.dispose();
+        return result;
+    }
+
+    public void showReadOnlyDialog(JDialog parentDialog, Reception reception) {
+        this.reception = reception;
+        dialog = new ReceptionDialog(parentDialog, reception, this, true);
+        dialog.setVisible(true);
+
+        dialog.dispose();
+
+    }
+
 
     void editReception() {
         MakeReceptionViewController.getInstance().openView(dialog, reception);

@@ -56,6 +56,10 @@ public class ReceptionsModel implements DAOListener{
         return lastReceptions;
     }
 
+    public List<Reception> getReceptionsByRosreesrtCode(String rosreestrCode) {
+        return DAOFactory.getInstance().getReceptionDAO().getReceptionsByRosreestrCode(rosreestrCode);
+    }
+
 
 	// читаем данные из БД
 	public void readReceptions() {
@@ -67,7 +71,7 @@ public class ReceptionsModel implements DAOListener{
         } else {
             allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
         }
-        log.info("Readed " + allReceptions.size() + " receptions");
+        log.info("Read " + allReceptions.size() + " receptions");
 		notifyListeners(ModelState.UPDATED);
 	}
 
@@ -153,14 +157,17 @@ public class ReceptionsModel implements DAOListener{
      *
      */
     public void readLastReceptions() {
+        log.info("Reading last receptions");
         Calendar calendar = new GregorianCalendar();
         calendar.add(Calendar.HOUR, -2);
         Date fromDate = calendar.getTime();
         Date toDate = new Date();
         lastReceptions = DAOFactory.getInstance().getReceptionDAO().getReceptionsByOpenDate(fromDate, toDate);
+        log.info("Read "+ lastReceptions.size() + " receptions");
     }
 
     public void addRosreestrCodeFilter(String filterString) {
+        log.info("Set RosreestrCode filter " );
         if(!filterString.isEmpty()) filtersModel.setQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE,filterString);
         else filtersModel.resetQuickFilter(QuickReceptionsFiltersEnum.ROSREESTR_CODE);
     }

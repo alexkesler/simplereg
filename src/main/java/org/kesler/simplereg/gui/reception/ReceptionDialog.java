@@ -6,27 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
-import com.alee.utils.swing.DocumentChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatusChange;
-import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.RealtyObject;
 
 import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
-import org.kesler.simplereg.gui.reception.MakeReceptionViewController;
 
 
 import org.kesler.simplereg.util.ResourcesUtil;
@@ -63,10 +56,11 @@ public class ReceptionDialog extends AbstractDialog {
     private ReceptionStatus newReceptionStatus = null;
     private boolean statusChanged = false;
 
+    private boolean readOnly = false;
+
     ReceptionDialog(JFrame parentFrame, Reception reception, ReceptionDialogController controller) {
         super(parentFrame, true);
         this.controller = controller;
-        currentDialog = this;
         this.reception = reception;
 
         createGUI();
@@ -75,6 +69,32 @@ public class ReceptionDialog extends AbstractDialog {
         this.setLocationRelativeTo(parentFrame);
 
     }
+
+    ReceptionDialog(JDialog parentDialog, Reception reception, ReceptionDialogController controller) {
+        super(parentDialog, true);
+        this.controller = controller;
+        this.reception = reception;
+
+        createGUI();
+        loadGUIDataFromReception();
+        this.setSize(600, 600);
+        this.setLocationRelativeTo(parentDialog);
+
+    }
+
+   ReceptionDialog(JDialog parentDialog, Reception reception, ReceptionDialogController controller, boolean readOnly) {
+        super(parentDialog, true);
+        this.controller = controller;
+        this.reception = reception;
+       this.readOnly = readOnly;
+
+        createGUI();
+        loadGUIDataFromReception();
+        this.setSize(600, 600);
+        this.setLocationRelativeTo(parentDialog);
+
+    }
+
 
     void updateViewData() {
         loadGUIDataFromReception();
@@ -88,14 +108,15 @@ public class ReceptionDialog extends AbstractDialog {
 
         receptionCodeTextField = new JTextField(25);
         receptionCodeTextField.setEnabled(false);
-        receptionCodeTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                receptionCodeTextField.setEnabled(true);
-                saveReceptionCodeButton.setVisible(true);
-            }
-        });
+        if (!readOnly)
+            receptionCodeTextField.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    receptionCodeTextField.setEnabled(true);
+                    saveReceptionCodeButton.setVisible(true);
+                }
+            });
 
         saveReceptionCodeButton = new JButton(ResourcesUtil.getIcon("accept.png"));
         saveReceptionCodeButton.setVisible(false);
@@ -112,14 +133,15 @@ public class ReceptionDialog extends AbstractDialog {
 
         rosreestrCodeTextField = new JTextField(25);
         rosreestrCodeTextField.setEnabled(false);
-        rosreestrCodeTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                rosreestrCodeTextField.setEnabled(true);
-                saveRosreestrCodeButton.setVisible(true);
-            }
-        });
+        if (!readOnly)
+            rosreestrCodeTextField.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    rosreestrCodeTextField.setEnabled(true);
+                    saveRosreestrCodeButton.setVisible(true);
+                }
+            });
 
         saveRosreestrCodeButton = new JButton(ResourcesUtil.getIcon("accept.png"));
         saveRosreestrCodeButton.setVisible(false);
@@ -195,26 +217,30 @@ public class ReceptionDialog extends AbstractDialog {
 
         // получаем новый статус дела
         statusesComboBox = new JComboBox();
-        statusesComboBox.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent ev) {
-                if (ev.getStateChange() == ItemEvent.SELECTED) {
-                    newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
+        if (!readOnly) {
+            statusesComboBox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent ev) {
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
 
-                    if (DEBUG)
-                        System.out.println("Selected status: " + newReceptionStatus + " current status: " + currentReceptionStatus);
+                        if (DEBUG)
+                            System.out.println("Selected receptionstatus: " + newReceptionStatus + " current receptionstatus: " + currentReceptionStatus);
 
-                    if (!newReceptionStatus.equals(currentReceptionStatus)) {
-                        if (DEBUG) System.out.println("enabled");
-                        statusChanged = true;
-                    } else {
-                        if (DEBUG) System.out.println("disabled");
-                        statusChanged = false;
+                        if (!newReceptionStatus.equals(currentReceptionStatus)) {
+                            if (DEBUG) System.out.println("enabled");
+                            statusChanged = true;
+                        } else {
+                            if (DEBUG) System.out.println("disabled");
+                            statusChanged = false;
+                        }
+
+                        saveNewReceptionStatusButton.setEnabled(statusChanged);
                     }
-
-                    saveNewReceptionStatusButton.setEnabled(statusChanged);
                 }
-            }
-        });
+            });
+        } else {
+            statusesComboBox.setEnabled(false);
+        }
 
         // кнопка сохранения установленного статуса
         saveNewReceptionStatusButton = new JButton();
@@ -251,7 +277,8 @@ public class ReceptionDialog extends AbstractDialog {
         });
 
         // Собираем панель данных
-        dataPanel.add(editButton, "span, right");
+        if (!readOnly)
+            dataPanel.add(editButton, "span, right");
         dataPanel.add(new JLabel("Код запроса:"),"span, split 3");
         dataPanel.add(receptionCodeTextField);
         dataPanel.add(saveReceptionCodeButton, "wrap");
@@ -265,20 +292,31 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(new JLabel("Услуга:"), "span");
         dataPanel.add(serviceNameLabel, "span, growx");
         dataPanel.add(new JLabel("Объект недвижимости:"), "span");
-        dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
-//        dataPanel.add(realtyObjectLabel, "span, split 2, growx");
-        dataPanel.add(editRealtyObjectButton, "wrap");
+        if (!readOnly) {
+            dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
+            dataPanel.add(editRealtyObjectButton, "wrap");
+        } else {
+            dataPanel.add(realtyObjectTextArea, "span, growx");
+        }
         dataPanel.add(new JLabel("Заявители:"), "span");
         dataPanel.add(applicatorsListScrollPane, "span, growx, h 50::");
-        dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
-        dataPanel.add(addSubReceptionButton);
-        dataPanel.add(removeSubReceptionButton, "wrap");
+        if (!readOnly) {
+            dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
+            dataPanel.add(addSubReceptionButton);
+            dataPanel.add(removeSubReceptionButton, "wrap");
+        }  else {
+            dataPanel.add(new JLabel("Дополнительные дела:"), "span,wrap");
+        }
         dataPanel.add(subReceptionsListScrollPane, "span, growx, h 50::");
         dataPanel.add(new JLabel("Состояние дела"), "span");
 //        dataPanel.add(serviceInfoPanel, "growx, wrap");
-        dataPanel.add(statusesComboBox, "span,split 3,w 100");
-        dataPanel.add(saveNewReceptionStatusButton);
-        dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
+        if (!readOnly) {
+            dataPanel.add(statusesComboBox, "span,split 3,w 100");
+            dataPanel.add(saveNewReceptionStatusButton);
+            dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
+        } else {
+            dataPanel.add(statusesComboBox, "span,w 100,wrap");
+        }
         dataPanel.add(statusChangesTableScrollPane, "span, growx, h 100!");
 
 

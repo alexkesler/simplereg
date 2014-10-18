@@ -2,16 +2,12 @@ package org.kesler.simplereg.export;
 
 import java.io.File;
 import java.util.*;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.FileNotFoundException;
 import javax.swing.JOptionPane;
 import java.text.SimpleDateFormat;
 import java.awt.Desktop;
 
 import org.docx4j.Docx4J;
-import org.docx4j.wml.P;
 import org.docx4j.wml.Text;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.exceptions.Docx4JException;

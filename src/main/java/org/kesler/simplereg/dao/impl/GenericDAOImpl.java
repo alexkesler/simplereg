@@ -15,7 +15,7 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.util.HibernateUtil;
 
 public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> {
-	protected final Logger log;
+	protected Logger log;
 
 	private List<DAOListener> listeners = new ArrayList<DAOListener>();
 

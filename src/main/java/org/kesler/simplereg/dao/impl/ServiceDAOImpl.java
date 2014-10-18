@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 

@@ -2,7 +2,6 @@ package org.kesler.simplereg.gui.issue;
 
 import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.gui.AbstractDialog;
-import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.util.ResourcesUtil;
 

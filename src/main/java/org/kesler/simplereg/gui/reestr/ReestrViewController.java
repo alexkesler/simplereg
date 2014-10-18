@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
-import org.kesler.simplereg.gui.reception.SelectReceptionDialogController;
+import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.gui.reestr.export.ReestrExportEnum;
-import org.kesler.simplereg.gui.reestr.export.ReestrExporter;
 import org.kesler.simplereg.gui.reestr.export.ReestrExporterFactory;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
@@ -35,10 +35,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	private static ReestrViewController instance = null;	
 	private ReestrView view;
+    private Logger log;
 
 	private ReceptionsModel model;
     private ReceptionsFiltersModel filtersModel;
-//	private List<ReceptionsFilter> filters;
 
 	private ProcessDialog processDialog = null;
 
@@ -52,18 +52,17 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	private ReestrViewController() {
+        log = Logger.getLogger(getClass().getSimpleName());
 		model = new ReceptionsModel();
 		model.addReceptionsModelStateListener(this);
 
         filtersModel = model.getFiltersModel();
-//		filters = new ArrayList<ReceptionsFilter>();
-		// создаем вид с привязкой к этому контроллеру
-		
 	}
 
 	// Открывает основной вид
 	public void openView(JFrame parentFrame) {
-		view = new ReestrView(this, parentFrame);
+		log.info("Opening new ReestrView");
+        view = new ReestrView(this, parentFrame);
 		view.setVisible(true);
 	}
 
@@ -73,7 +72,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	// добавление фильра - вызывается из вида
 	public void addFilter(ReceptionsFiltersEnum filterEnum) {
-		
+		log.info("Open adding filter dialog " + filterEnum.toString());
 		// Создаем подходящий диалог
 		ReceptionsFilterDialog receptionsFilterDialog = ReceptionsFilterDialogFactory.createDialog(view, filterEnum);
 		if (receptionsFilterDialog == null) return;
@@ -84,6 +83,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		if (receptionsFilterDialog.getResult() == ReceptionsFilterDialog.OK) {
 			int index = filtersModel.addFilter(receptionsFilterDialog.getReceptionsFilter());
 			view.getFilterListModel().filterAdded(index);
+            log.info("Filter "+filterEnum.toString() +" added");
 		}
 	}
 

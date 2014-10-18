@@ -9,6 +9,7 @@ public enum MainViewCommand {
     About("О программе","about","information.png"),
 	NewReception("Новый прием","newReception", "asterisk_yellow.png"),
     NewReceptionFromPVD("Получить из ПК ПВД", "newReceptionFromPVD", "book_previous.png"),
+    CheckReceptionStatus("Проверить статус","checkReceptionStatus", "zoom.png"),
 	UpdateReceptions("Обновить","updateReceptions", "arrow_refresh.png"),
 	OpenStatistic("Статистика","statistic", "chart_pie.png"),
 	OpenReceptionsReestr("Реестр","reestr","table.png"),

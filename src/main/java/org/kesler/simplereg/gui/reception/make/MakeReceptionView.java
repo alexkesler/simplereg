@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reception;
+package org.kesler.simplereg.gui.reception.make;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -10,9 +10,6 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.table.AbstractTableModel;
 
 import com.alee.laf.button.WebButton;
 import com.alee.managers.popup.PopupWay;
