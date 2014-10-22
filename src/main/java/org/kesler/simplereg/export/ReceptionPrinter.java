@@ -10,7 +10,7 @@ public abstract class ReceptionPrinter {
 		this.reception = reception;
 	}
 
-	public abstract void printReception();
+	public abstract void printReception() throws Exception;
 
 	protected void saveFile() {
 		

@@ -149,14 +149,14 @@ public class RosReestrReceptionPrinter extends ReceptionPrinter {
 
 
 		mappings = new HashMap<String, String>();
-		mappings.put("v_Applicator_Names", applicatorsString);
-		mappings.put("v_Repres_or_Applicator", represesString);
-		mappings.put("v_ReceptionCode", reception.getReceptionCode());
-		mappings.put("v_CurrentDate", (reception.getOpenDate()==null?"":dateFormat.format(reception.getOpenDate())));
-		mappings.put("v_Operator", reception.getOperator().getFIO());
-		mappings.put("v_Service", reception.getService().getName());
-		mappings.put("v_Result_in_MFC", resultInMFCString);
-		mappings.put("v_ToIssueDate", (reception.getToIssueDate()==null?"":dateFormat.format(reception.getToIssueDate())));
+		mappings.put("@Applicator_Names@", applicatorsString);
+		mappings.put("@Repres_or_Applicator@", represesString);
+		mappings.put("@ReceptionCode@", reception.getReceptionCode());
+		mappings.put("@CurrentDate@", (reception.getOpenDate()==null?"":dateFormat.format(reception.getOpenDate())));
+		mappings.put("@Operator@", reception.getOperator().getFIO());
+		mappings.put("@Service@", reception.getService().getName());
+		mappings.put("@Result_in_MFC@", resultInMFCString);
+		mappings.put("@ToIssueDate@", (reception.getToIssueDate()==null?"":dateFormat.format(reception.getToIssueDate())));
 
 	}
 
