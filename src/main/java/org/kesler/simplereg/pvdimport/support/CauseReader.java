@@ -19,7 +19,9 @@ public class CauseReader extends PVDReader {
 
     @Override
     public String getQuerySQL() {
-        return "SELECT C.ID, C.ID_PACKAGE, C.STATUSMD, C.STARTDATE, C.ESTIMATEDATE, C.ID_PROC, C.STATE, C.STATUSMD, C.PURPOSE " +
+        return "SELECT C.ID, C.ID_PACKAGE, C.STATUSMD, C.STARTDATE, C.ESTIMATEDATE" +
+                ", C.ID_PROC, C.STATE, C.STATUSMD, C.PURPOSE" +
+                ", C.PREVCAUSE_NUM" +
                 ", RBI.REGNUM, RBI.REGDATE " +
                 "from DPS$D_CAUSE C, DPS$RECBOOKITEM RBI " +
                 "WHERE RBI.ID_CAUSE=C.ID AND " +
@@ -39,6 +41,7 @@ public class CauseReader extends PVDReader {
             cause.setEstimateDate(rs.getDate("ESTIMATEDATE"));
             cause.setState(rs.getInt("STATE"));
             cause.setStatusMD(rs.getString("STATUSMD"));
+            cause.setPrevCauseRegnum(rs.getString("PREVCAUSE_NUM"));
             cause.setPurpose(rs.getInt("PURPOSE"));
 
             aPackage.getCauses().add(cause);

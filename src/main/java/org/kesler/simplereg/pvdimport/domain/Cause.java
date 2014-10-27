@@ -16,6 +16,7 @@ public class Cause {
     private Date estimateDate;
     private Integer state;
     private String statusMD;
+    private String prevCauseRegnum;
     private Integer purpose;
 
     public Cause() {
@@ -59,6 +60,9 @@ public class Cause {
 
     public String getStatusMD() {  return statusMD; }
     public void setStatusMD(String statusMD) { this.statusMD = statusMD; }
+
+    public String getPrevCauseRegnum() { return prevCauseRegnum; }
+    public void setPrevCauseRegnum(String prevCauseRegnum) { this.prevCauseRegnum = prevCauseRegnum; }
 
     public Integer getPurpose() { return purpose; }
     public void setPurpose(Integer purpose) { this.purpose = purpose; }
