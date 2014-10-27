@@ -9,6 +9,7 @@ import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.applicator.FLModel;
 import org.kesler.simplereg.logic.applicator.ULModel;
 import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
+import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
@@ -37,6 +38,8 @@ public class Transform {
 
         reception.setRosreestrCode(cause.getRegnum());
 
+        reception.setParentReception(getReceptionByRosreestrCode(cause.getPrevCauseRegnum()));
+
         for (Applicant applicant: cause.getApplicants()) {
             Applicator applicator = getApplicatorForApplicant(applicant);
             applicator.setReception(reception);
@@ -62,6 +65,14 @@ public class Transform {
         return null;
 
 //        throw new TransformException("Услуга не найдена");
+    }
+
+    static Reception getReceptionByRosreestrCode(String rosreestrCode) {
+        if (rosreestrCode==null) return null;
+        List<Reception> receptions = ReceptionsModel.getInstance().getReceptionsByRosreesrtCode(rosreestrCode);
+        if (receptions.size()==0) return null;
+        if (receptions.size()>0) return receptions.get(0);
+        return null;
     }
 
     static Applicator getApplicatorForApplicant(Applicant applicant) {

@@ -431,8 +431,8 @@ public class MainViewController implements MainViewListener,
             JOptionPane.showMessageDialog(mainView,e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        MakeReceptionViewController.getInstance().openView(mainView,reception,true);
+        if (reception!=null)
+            MakeReceptionViewController.getInstance().openView(mainView,reception,true);
     }
 
     private void openCheckReceptionStatusDialog() {
