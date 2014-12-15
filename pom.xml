@@ -19,6 +19,17 @@
     </properties>
 
     <build>
+
+        <finalName>SimpleReg</finalName>
+
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
+
         <plugins>
 
             <plugin>
@@ -72,7 +83,7 @@
                         <configuration>
                             <headerType>gui</headerType>
                             <outfile>target/${project.artifactId}.exe</outfile>
-                            <jar>target/${project.artifactId}-${project.version}.jar</jar>
+                            <jar>target/lib/getdown-1.4.jar</jar>
                             <errTitle>${product.title}</errTitle>
                             <icon>src/main/resources/images/safe.ico</icon>
                             <splash>
@@ -81,14 +92,15 @@
                                 <timeout>10</timeout>
                             </splash>
                             <classPath>
-                                <mainClass>org.kesler.simplereg.SimpleReg</mainClass>
+                                <mainClass>com.threerings.getdown.launcher.Getdown</mainClass>
+                                <!--<mainClass>org.kesler.simplereg.SimpleReg</mainClass>-->
                                 <addDependencies>true</addDependencies>
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
                                 <path>jre7</path>
                                 <!-- <minVersion>1.6.0</minVersion> -->
-                                <maxHeapSize>512</maxHeapSize>
+                                <!--<maxHeapSize>512</maxHeapSize>-->
                             </jre>
                             <versionInfo>
                                 <fileVersion>${project.version}</fileVersion>
@@ -108,24 +120,70 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
                 <executions>
                     <execution>
-                        <id>assembly</id>
-                        <phase>package</phase>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>validate</phase>
                         <goals>
-                            <goal>single</goal>
+                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <descriptors>
-                                <descriptor>src/main/assembly/assembly.xml</descriptor>
-                            </descriptors>
+                            <outputDirectory>${basedir}/target</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/extra</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
 
+            <plugin>
+                <groupId>org.bitbucket.joxley</groupId>
+                <artifactId>getdown-maven-plugin</artifactId>
+                <version>0.0.1</version>
+                <configuration>
+                    <appdir>target</appdir> <!-- Defaults to target -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>digest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0-beta-5</version>
+                <configuration>
+                    <serverId>AppHost</serverId>
+                    <fromDir>${project.build.directory}</fromDir>
+                    <includes>lib/*,templates/*,${project.build.finalName}.jar,getdown.txt,digest.txt
+                    </includes>
+                    <url>scp://10.10.0.118</url>
+                    <toDir>/srv/www/default/public_html/simplereg</toDir>
+                    <optimize>true</optimize>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>upload-to-apphost</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -222,6 +280,14 @@
             <artifactId>log4j</artifactId>
             <version>1.2.16</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.threerings</groupId>
+            <artifactId>getdown</artifactId>
+            <version>1.4</version>
+        </dependency>
+
 
     </dependencies>
 </project>
