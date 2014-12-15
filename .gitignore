@@ -3,5 +3,5 @@ target/
 *.xlsx
 *.iml
 .idea/
-log/
-jre7/
+*log/
+*jre7/
