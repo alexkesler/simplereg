@@ -86,6 +86,7 @@
                             <jar>target/lib/getdown-1.4.jar</jar>
                             <errTitle>${product.title}</errTitle>
                             <icon>src/main/resources/images/safe.ico</icon>
+                            <cmdLine>./</cmdLine>
                             <splash>
                                 <file>src/main/resources/images/mfc.bmp</file>
                                 <waitForWindow>true</waitForWindow>
