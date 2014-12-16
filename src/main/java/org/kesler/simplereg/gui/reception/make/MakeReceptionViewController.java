@@ -3,11 +3,11 @@ package org.kesler.simplereg.gui.reception.make;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
+import org.kesler.simplereg.export.RosReestrPoiReceptionPrinter;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.Applicator;
@@ -378,8 +378,13 @@ public class MakeReceptionViewController {
     }
 
     void printRequest() {
-        ReceptionPrinter printer = new RosReestrReceptionPrinter(reception);
-        printer.printReception();
+        ReceptionPrinter printer = new RosReestrPoiReceptionPrinter(reception);
+        ProcessDialog processDialog = new ProcessDialog(view);
+        ReceptionPrinterWorker receptionPrinterWorker = new ReceptionPrinterWorker(printer,processDialog);
+
+        processDialog.showProcess("Заполняю запрос");
+        receptionPrinterWorker.execute();
+
     }
 
     boolean saveReception() {
@@ -402,6 +407,29 @@ public class MakeReceptionViewController {
         model.finish();
 
         return true;
+    }
+
+
+    class ReceptionPrinterWorker extends SwingWorker<Void,Void> {
+        private ReceptionPrinter receptionPrinter;
+        private ProcessDialog processDialog;
+        ReceptionPrinterWorker(ReceptionPrinter receptionPrinter, ProcessDialog processDialog) {
+            this.receptionPrinter = receptionPrinter;
+            this.processDialog = processDialog;
+        }
+
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            receptionPrinter.printReception();
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            super.done();
+            processDialog.hideProcess();
+        }
     }
 
 }
