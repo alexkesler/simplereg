@@ -257,11 +257,11 @@
             <version>3.9</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.docx4j</groupId>
-            <artifactId>docx4j</artifactId>
-            <version>3.0.0</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.docx4j</groupId>-->
+            <!--<artifactId>docx4j</artifactId>-->
+            <!--<version>3.0.0</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.apache.poi</groupId>

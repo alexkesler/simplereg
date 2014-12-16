@@ -22,7 +22,6 @@ import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.export.ReceptionPrinter;
-import org.kesler.simplereg.export.RosReestrReceptionPrinter;
 
 import org.apache.log4j.Logger;
 
