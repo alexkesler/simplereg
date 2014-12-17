@@ -3,6 +3,7 @@ package org.kesler.simplereg.gui.reception.make;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
 import org.kesler.simplereg.export.RosReestrPoiReceptionPrinter;
@@ -410,6 +411,7 @@ public class MakeReceptionViewController {
 
 
     class ReceptionPrinterWorker extends SwingWorker<Void,Void> {
+        private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
         private ReceptionPrinter receptionPrinter;
         private ProcessDialog processDialog;
         ReceptionPrinterWorker(ReceptionPrinter receptionPrinter, ProcessDialog processDialog) {
@@ -427,7 +429,20 @@ public class MakeReceptionViewController {
         @Override
         protected void done() {
             super.done();
-            processDialog.hideProcess();
+            try {
+                log.info("Request filled");
+                processDialog.hideProcess();
+                get();
+            } catch (ExecutionException ex){
+                log.error("Request filling error: " + ex.getMessage(), ex);
+                processDialog.hideProcess();
+                JOptionPane.showMessageDialog(view,"Ошибка: "+ex.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                log.error("Request filling interrupted: " + ex.getMessage(), ex);
+                processDialog.hideProcess();
+                JOptionPane.showMessageDialog(view,"Ошибка: "+ex.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            }
+
         }
     }
 
