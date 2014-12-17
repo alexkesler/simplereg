@@ -33,6 +33,9 @@ public class Service extends AbstractEntity {
 	@Column(name="Enabled")
 	private Boolean enabled;
 
+	@Column(name = "TemplateUUID")
+	private String templateUuid;
+
 	public Service() {} // for Hibernate
 
 	public Service (Service parentService, String name, Boolean enabled) {
@@ -112,6 +115,9 @@ public class Service extends AbstractEntity {
 		this.enabled = enabled;
 		state = EntityState.CHANGED;
 	}
+
+	public String getTemplateUuid() { return templateUuid;}
+	public void setTemplateUuid(String templateUuid) { this.templateUuid = templateUuid; }
 
 	@Override
 	public String toString() {
