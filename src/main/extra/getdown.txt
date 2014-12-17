@@ -70,7 +70,9 @@ code = lib/xpp3_min-1.1.4c.jar
 code = lib/xstream-1.3.1.jar
 
 
+resource = templates/request.docx
+
 # The main entry point for the application
 class = org.kesler.simplereg.SimpleReg
 
-jvmarg = -Xmx750M
+jvmarg = -Xmx1024M
