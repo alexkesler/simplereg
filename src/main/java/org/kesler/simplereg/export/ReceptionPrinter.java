@@ -4,10 +4,8 @@ import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.util.OptionsUtil;
 
-import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,18 +30,30 @@ public abstract class ReceptionPrinter {
 
 		String requestTemplatePath = templateDir + requestTemplateFileName;
 
-		File requestTemplateFile = new File(requestTemplatePath);
-
-		log.info("Try to open file: " + requestTemplatePath);
-
-		if (!requestTemplateFile.exists()) {
-			log.error("Cannot open file: " + requestTemplatePath);
-			return "";
-		}
+//		File requestTemplateFile = new File(requestTemplatePath);
+//
+//		log.info("Try to open file: " + requestTemplatePath);
+//
+//		if (!requestTemplateFile.exists()) {
+//			log.error("Cannot open file: " + requestTemplatePath);
+//			return "";
+//		}
 		return requestTemplatePath;
 
 	}
-	protected String getRequestPath() {
+	protected InputStream getRequestInputStream() throws Exception{
+		File file = new File(getRequestTemplatePath());
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(file);
+		} catch (FileNotFoundException ex) {
+			log.error("Cannot open input stream");
+			throw new Exception(ex);
+		}
+		return inputStream;
+
+	}
+	protected String getRequestSavePath() {
 		String jarPath = OptionsUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		String dirSeparator = System.getProperty("file.separator");
 

@@ -86,12 +86,13 @@ public class CheckReceptionStatusDialogController {
         @Override
         protected void done() {
             try {
-                dialog.setReceptions(get());
                 if(processDialog!=null) processDialog.hideProcess();
+                dialog.setReceptions(get());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
+
             }
         }
     }

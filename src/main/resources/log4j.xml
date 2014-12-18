@@ -11,7 +11,7 @@
     </appender>
 
    <appender name="file" class="org.apache.log4j.RollingFileAppender">
-       <param name="Threshold" value="INFO"/>
+       <param name="threshold" value="INFO"/>
        <param name="maxFileSize" value="1MB"/>
         <param name="maxBackupIndex" value="5"/>
         <param name="file" value="log/simplereg.log"/>
