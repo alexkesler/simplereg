@@ -6,6 +6,7 @@ import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.pvdimport.PVDReaderException;
 import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.*;
+import org.kesler.simplereg.pvdimport.domain.Package;
 import org.kesler.simplereg.pvdimport.support.CauseReader;
 import org.kesler.simplereg.pvdimport.support.PackagesReader;
 
@@ -26,6 +27,7 @@ public class PVDImportDialogController implements ReaderListener{
     private final List<Cause> causes;
     private final List<Cause> allCauses;
     private String filterString;
+    private PVDImportDialog.Period selectedPeriod;
 
     private PVDImportDialogController() {
         causes = new ArrayList<Cause>();
@@ -40,6 +42,7 @@ public class PVDImportDialogController implements ReaderListener{
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
         filterString = "";
+        selectedPeriod = PVDImportDialog.Period.CURRENT_DAY;
         processDialog = new ProcessDialog(dialog);
         processDialog.showProcess("Читаю данные из ПК ПВД");
 
@@ -58,9 +61,8 @@ public class PVDImportDialogController implements ReaderListener{
         causes.clear();
         dialog = new PVDImportDialog(parentFrame, this);
         filterString = "";
-        processDialog = new ProcessDialog(dialog);
-        processDialog.showProcess("Читаю данные из ПК ПВД");
-        readCausesThisDay();
+        selectedPeriod = PVDImportDialog.Period.CURRENT_DAY;
+        readCausesByPeriod();
         dialog.setVisible(true);
 
 
@@ -87,6 +89,24 @@ public class PVDImportDialogController implements ReaderListener{
         packagesReader.readCausesInSeparateThread();
     }
 
+    public void readCausesByPeriod() {
+        processDialog = new ProcessDialog(dialog);
+        processDialog.showProcess("Читаю данные из ПК ПВД");
+
+        switch (selectedPeriod) {
+            case CURRENT_DAY:
+                readCausesThisDay();
+                break;
+            case LAST_3_DAYS:
+                readCausesLastThreeDays();
+                break;
+            case LAST_WEEK:
+                readCausesLastWeek();
+                break;
+            default:
+                readCausesThisDay();
+        }
+    }
 
     private void readCausesThisDay () {
         Calendar calendar = Calendar.getInstance();
@@ -102,42 +122,42 @@ public class PVDImportDialogController implements ReaderListener{
 
     }
 
-//    private void readCausesInSeparateThread(final int lastNum) {
-//        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-//            @Override
-//            public void uncaughtException(Thread t, Throwable e) {
-//                processDialog.hideProcess();
-//                JOptionPane.showMessageDialog(dialog,"Ошибка: " + e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
-//            }
-//        };
-//        Thread readerThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                readCauses(lastNum);
-//            }
-//        });
-//        readerThread.setUncaughtExceptionHandler(handler);
-//        readerThread.start();
-//    }
-//
-//    private void readCausesThisDayInSeparateThread() {
-//        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-//            @Override
-//            public void uncaughtException(Thread t, Throwable e) {
-//                processDialog.hideProcess();
-//                JOptionPane.showMessageDialog(dialog,"Ошибка: " + e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
-//            }
-//        };
-//        Thread readerThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                readCausesThisDay();
-//            }
-//        });
-//        readerThread.setUncaughtExceptionHandler(handler);
-//        readerThread.start();
-//    }
+    private void readCausesLastThreeDays () {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH,-2);
+        calendar.set(Calendar.HOUR,0);
+        calendar.set(Calendar.MINUTE,1);
+        Date begDate = calendar.getTime();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR,23);
+        calendar.set(Calendar.MINUTE, 59);
+        Date endDate = calendar.getTime();
+        packagesReader = new PackagesReader(this, begDate, endDate);
+        packagesReader.readCausesInSeparateThread();
 
+    }
+
+    private void readCausesLastWeek () {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, -6);
+        calendar.set(Calendar.HOUR,0);
+        calendar.set(Calendar.MINUTE,1);
+        Date begDate = calendar.getTime();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR,23);
+        calendar.set(Calendar.MINUTE, 59);
+        Date endDate = calendar.getTime();
+        packagesReader = new PackagesReader(this, begDate, endDate);
+        packagesReader.readCausesInSeparateThread();
+
+    }
+
+
+    void setSelectedPeriod(PVDImportDialog.Period selectedPeriod) {
+        this.selectedPeriod = selectedPeriod;
+    }
     void setFilterString(String filterString) {
         this.filterString = filterString.toLowerCase();
     }
@@ -162,4 +182,21 @@ public class PVDImportDialogController implements ReaderListener{
         dialog.update();
         processDialog.hideProcess();
     }
-}
+
+
+    class ReadCauseWorker extends SwingWorker<List<Package>, Void> {
+        private PackagesReader reader;
+        ReadCauseWorker(PackagesReader reader) {
+            this.reader = reader;
+        }
+        @Override
+        protected List<Package> doInBackground() throws Exception {
+            return null;
+        }
+
+        @Override
+        protected void done() {
+        }
+    }
+
+ }
