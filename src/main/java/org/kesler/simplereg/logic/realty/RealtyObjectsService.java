@@ -10,10 +10,10 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.ModelState;
 
-public class RealtyObjectsModel implements DAOListener {
+public class RealtyObjectsService implements DAOListener {
     private Logger log;
 
-	private static RealtyObjectsModel instance;
+	private static RealtyObjectsService instance;
 
 	private List<RealtyObjectsModelStateListener> listeners;
 
@@ -21,16 +21,16 @@ public class RealtyObjectsModel implements DAOListener {
 	private List<RealtyObject> filteredRealtyObjects;
 	private String filterString;
 
-	private RealtyObjectsModel() {
+	private RealtyObjectsService() {
         log = Logger.getLogger(getClass().getSimpleName());
 		listeners = new ArrayList<RealtyObjectsModelStateListener>();
         realtyObjects = new ArrayList<RealtyObject>();
 		DAOFactory.getInstance().getRealtyObjectDAO().addDAOListener(this);
 	}
 
-	public static synchronized RealtyObjectsModel getInstance() {
+	public static synchronized RealtyObjectsService getInstance() {
 		if (instance == null) {
-			instance = new RealtyObjectsModel();
+			instance = new RealtyObjectsService();
 		}
 		return instance;
 	}
@@ -64,26 +64,6 @@ public class RealtyObjectsModel implements DAOListener {
 		notifyListeners(ModelState.UPDATED);
         log.info("Read complete");
 
-	}
-
-	public void readRealtyObjectsInSeparateThread() {
-		Thread readerThread = new Thread(new Runnable() {
-			public void run() {
-				readRealtyObjects();
-			}
-		});
-		readerThread.start();
-	}
-
-
-	public void readAndFilterRealtyObjectsInSeparateThread(final String filterString) {
-		Thread readerThread = new Thread(new Runnable() {
-			public void run() {
-				readRealtyObjects();
-				filterRealtyObjects(filterString);
-			}
-		});
-		readerThread.start();
 	}
 
 	public void filterRealtyObjects(String filterString) {

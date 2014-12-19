@@ -12,10 +12,9 @@ import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.operator.OperatorsModel;
+import org.kesler.simplereg.logic.operator.OperatorsService;
 import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
-import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.pvdimport.Transform;
@@ -52,18 +51,18 @@ public class MainViewController implements MainViewListener,
 
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
-	private OperatorsModel operatorsModel;
-	private RealtyObjectsModel realtyObjectsModel;
+	private OperatorsService operatorsService;
+//	private RealtyObjectsService realtyObjectsService;
 	private LoginDialog loginDialog;
 
 	private ProcessDialog processDialog;
 
 	private MainViewController() {
 		this.receptionsModel = new ReceptionsModel();
-		this.operatorsModel = OperatorsModel.getInstance();
-		this.realtyObjectsModel = RealtyObjectsModel.getInstance();
+		this.operatorsService = OperatorsService.getInstance();
+//		this.realtyObjectsService = RealtyObjectsService.getInstance();
 
-		operatorsModel.addOperatorsModelStateListener(this);
+		operatorsService.addOperatorsModelStateListener(this);
 		receptionsModel.addReceptionsModelStateListener(this);
 		
 		mainView = new MainView(this);
@@ -271,7 +270,7 @@ public class MainViewController implements MainViewListener,
 		loginDialog = new LoginDialog(mainView);
 
 		processDialog = new ProcessDialog(loginDialog);
-		operatorsModel.readOperatorsInSeparateThread();
+		operatorsService.readOperatorsInSeparateThread();
 
         log.info("Showing login dialog..");
 		loginDialog.showDialog();
@@ -318,7 +317,7 @@ public class MainViewController implements MainViewListener,
 
 			case UPDATED:
 					if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-					List<Operator> operators = operatorsModel.getActiveOperators();
+					List<Operator> operators = operatorsService.getActiveOperators();
 					if (loginDialog != null) loginDialog.setOperators(operators);
 					break;
 

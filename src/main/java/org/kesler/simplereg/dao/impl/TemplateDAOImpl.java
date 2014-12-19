@@ -86,7 +86,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     public List<Template> getAllTemplates() {
         Session session = null;
         List<Template> templates = new ArrayList<Template>();
-        log.info("Reading templates by OpenDate");
+        log.info("Reading templates");
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(Template.class);
@@ -132,7 +132,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     public Template getTemplateByUUID(String uuid) {
         Session session = null;
         List<Template> templates = new ArrayList<Template>();
-        log.info("Reading templates by OpenDate");
+        log.info("Reading template by UUID");
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             Criteria criteria = session.createCriteria(Template.class);

@@ -2,20 +2,11 @@ package org.kesler.simplereg.gui;
 
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.AbstractListModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -26,11 +17,12 @@ import java.awt.Dimension;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.util.ResourcesUtil;
-import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class GenericListDialog<T> extends AbstractDialog {
+	private final Logger log = Logger.getLogger(this.getClass());
 
 	public static final int VIEW_MODE=0;
 	public static final int VIEW_FILTER_MODE = 1;
@@ -43,9 +35,12 @@ public class GenericListDialog<T> extends AbstractDialog {
 	private GenericListDialogController<T> controller;
 
 	private JTextField filterTextField;
-	private JList itemsList;
+	private JList<T> itemsList;
 	private ItemsListModel itemsListModel;
 	private int selectedIndex;
+	private JLabel processLabel;
+
+
 
 	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, Dimension size, int mode) {
 		super(parentFrame, name, true);
@@ -124,6 +119,10 @@ public class GenericListDialog<T> extends AbstractDialog {
 		return selectedIndex;
 	}
 
+	public T getSelectedItem() {
+		return itemsList.getSelectedValue();
+	}
+
 
 	/**
 	* Устанавливает перечень элементов для отображения/ редактирования
@@ -138,6 +137,14 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 	public void cleanFilter() {
 		filterTextField.setText("");
+	}
+
+	public void showProcess() {
+		processLabel.setVisible(true);
+	}
+
+	public void hideProcess() {
+		processLabel.setVisible(false);
 	}
 
 	private void createGUI() {
@@ -169,8 +176,12 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 		});
 
+		processLabel = new JLabel();
+		processLabel.setIcon(ResourcesUtil.getIcon("loading.gif"));
+		processLabel.setVisible(false);
+
 		itemsListModel = new ItemsListModel();
-		itemsList = new JList(itemsListModel);
+		itemsList = new JList<T>(itemsListModel);
 		// Можно выбрать только один элемент
 		itemsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -192,7 +203,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 						result = OK;
 						setVisible(false);										
 					} else {
-						controller.openEditItemDialog(selectedIndex);
+						if (controller.openEditItemDialog(itemsList.getSelectedValue())) {
+							updatedItem(itemsList.getSelectedIndex());
+						}
 					}
 				}
 			}
@@ -207,7 +220,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 		addItemButton.setIcon(ResourcesUtil.getIcon("add.png"));
 		addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openAddItemDialog();
+				if (controller.openAddItemDialog()) {
+					addedItem(itemsList.getModel().getSize()-1);
+				}
 			}
 		});
 
@@ -216,7 +231,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 		editItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					controller.openEditItemDialog(selectedIndex);
+					if (controller.openEditItemDialog(itemsList.getSelectedValue())) {
+						updatedItem(itemsList.getSelectedIndex());
+					}
 				} else {
 					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
@@ -229,7 +246,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		removeItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					controller.removeItem(selectedIndex);
+					controller.removeItem(itemsList.getSelectedValue());
 				} else {
 					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
@@ -241,9 +258,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.readItems();
-				// itemsListModel.updateItems();
-				// new InfoDialog(currentDialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();
+				controller.updateItems();
 			}
 		});
 
@@ -255,6 +270,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		dataPanel.add(editItemButton);
 		dataPanel.add(removeItemButton);
 		dataPanel.add(updateButton);
+		dataPanel.add(processLabel);
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -289,6 +305,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		buttonPanel.add(okButton);
 		if (isSelect) buttonPanel.add(cancelButton);
 
+
 		// Собираем основную панель
 		mainPanel.add(dataPanel, BorderLayout.CENTER);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -307,11 +324,15 @@ public class GenericListDialog<T> extends AbstractDialog {
 		itemsList.setSelectedIndex(index);
 	}
 
+	public void updatedItems() {
+		itemsListModel.updateItems();
+	}
+
 	public void removedItem(int index) {
 		itemsListModel.removedItem(index);
 	}
 
-	class ItemsListModel extends AbstractListModel {
+	class ItemsListModel extends AbstractListModel<T> {
 
 		private List<T> items;
 
@@ -330,8 +351,8 @@ public class GenericListDialog<T> extends AbstractDialog {
 		}
 
 		@Override
-		public String getElementAt(int index) {
-			String value = items.get(index).toString();
+		public T getElementAt(int index) {
+			T value = items.get(index);
 			return value;
 		}
 

@@ -16,7 +16,7 @@ import org.kesler.simplereg.gui.GenericListDialogController;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
-public class ULListDialogController implements GenericListDialogController, ULModelStateListener {
+public class ULListDialogController implements GenericListDialogController<UL>, ULModelStateListener {
 
 	private static ULListDialogController instance = null;
 
@@ -109,7 +109,7 @@ public class ULListDialogController implements GenericListDialogController, ULMo
 
 
 	@Override
-	public void readItems() {
+	public void updateItems() {
 		model.readULs();
 		model.filterULs();
 		List<UL> uls = model.getFilteredULs();
@@ -147,15 +147,15 @@ public class ULListDialogController implements GenericListDialogController, ULMo
 	}
 
 	@Override
-	public boolean openEditItemDialog(int index ) {
+	public boolean openEditItemDialog(UL ul) {
 		boolean result = false;
-		UL ul = model.getAllULs().get(index);
+
 		ULDialog ulDialog = new ULDialog(dialog, ul);
 		ulDialog.setVisible(true);
 		
 		if (ulDialog.getResult() == ULDialog.OK) {
 			model.updateUL(ul);
-			dialog.updatedItem(index);
+
 			result = true;
 		}
 		// Освобождаем ресурсы
@@ -166,10 +166,10 @@ public class ULListDialogController implements GenericListDialogController, ULMo
 	}
 
 	@Override
-	public boolean removeItem(int index) {
-		UL ul = model.getAllULs().get(index);
+	public boolean removeItem(UL ul) {
+
 		model.deleteUL(ul);
-		dialog.removedItem(index);
+
 		return true;
 	}
 

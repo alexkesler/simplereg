@@ -40,4 +40,9 @@ public class Template extends AbstractEntity{
     public void setByDefault(Boolean byDefault) {
         this.byDefault = byDefault;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

@@ -8,7 +8,7 @@ import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.applicator.FLModel;
 import org.kesler.simplereg.logic.applicator.ULModel;
-import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
+import org.kesler.simplereg.logic.realty.RealtyObjectsService;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
@@ -137,7 +137,7 @@ public class Transform {
 
         RealtyObject realtyObject = new RealtyObject();
         realtyObject.setAddress(obj.getFullAddress());
-        RealtyObjectsModel.getInstance().addRealtyObject(realtyObject);
+        RealtyObjectsService.getInstance().addRealtyObject(realtyObject);
 
         return realtyObject;
     }

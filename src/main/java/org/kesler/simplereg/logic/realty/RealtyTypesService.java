@@ -4,15 +4,15 @@ import java.util.List;
 
 import org.kesler.simplereg.dao.DAOFactory;
 
-public class RealtyTypesModel {
+public class RealtyTypesService {
 
 	private List<RealtyType> realtyTypes;
 
-	private static RealtyTypesModel instance;
+	private static RealtyTypesService instance;
 
-	public static synchronized RealtyTypesModel getInstance() {
+	public static synchronized RealtyTypesService getInstance() {
 		if (instance == null) {
-			instance = new RealtyTypesModel();
+			instance = new RealtyTypesService();
 		}
 		return instance;
 	}

@@ -1,6 +1,5 @@
 package org.kesler.simplereg.gui.applicator;
 
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 
@@ -17,7 +16,7 @@ import org.kesler.simplereg.gui.util.ProcessDialog;
 
 
 
-public class FLListDialogController implements GenericListDialogController, FLModelStateListener{
+public class FLListDialogController implements GenericListDialogController<FL>, FLModelStateListener{
 	
 	private FLModel model;
 	private GenericListDialog dialog;
@@ -131,7 +130,7 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 
 
 	@Override
-	public void readItems() {
+	public void updateItems() {
 		processDialog = new ProcessDialog(dialog);
 		model.readFLsInSeparateThread();
 	}
@@ -177,6 +176,7 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	* Открывает диалог добавления физического лица с введенной фамилией
 	* @param initSurName строка, на основнии которой создается фамилия 
 	*/
+
 	public boolean openAddItemDialog(String initSurName) {
 		boolean result = false;
 		initSurName = initSurName.toLowerCase();
@@ -200,16 +200,14 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 		return result;
 	}
 
-
-	public boolean openEditItemDialog(int index) {
+	@Override
+	public boolean openEditItemDialog(FL fl) {
 		boolean result = false;
-		FL fl = model.getAllFLs().get(index);
 		FLDialog flDialog = new FLDialog(dialog, fl);
 		flDialog.setVisible(true);
 		
 		if (flDialog.getResult() == FLDialog.OK) {
 			model.updateFL(fl);
-			dialog.updatedItem(index);
 			result = true;
 		}
 
@@ -221,10 +219,10 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 
 	}
 
-	public boolean removeItem(int index) {
-		FL fl = model.getAllFLs().get(index);
+	@Override
+	public boolean removeItem(FL fl) {
+
 		model.deleteFL(fl);
-		dialog.removedItem(index);
 
 		return true;
 	}

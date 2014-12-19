@@ -54,8 +54,8 @@ public abstract class ReceptionPrinter {
 
 	}
 	protected String getRequestSavePath() {
-		String jarPath = OptionsUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		String dirSeparator = System.getProperty("file.separator");
+		String jarPath = OptionsUtil.getCurrentDir();
+		String dirSeparator = OptionsUtil.getDirSeparator();
 
 
 		String outDir = new File(jarPath).getParent() + dirSeparator + "out" + dirSeparator;
