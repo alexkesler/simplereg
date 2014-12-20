@@ -14,11 +14,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProgressOverlay;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 public class GenericListDialog<T> extends AbstractDialog {
@@ -38,11 +38,11 @@ public class GenericListDialog<T> extends AbstractDialog {
 	private JList<T> itemsList;
 	private ItemsListModel itemsListModel;
 	private int selectedIndex;
-	private JLabel processLabel;
+	private ProgressOverlay progressOverlay;
 
 
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, Dimension size, int mode) {
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController<T> controller, Dimension size, int mode) {
 		super(parentFrame, name, true);
 		this.controller = controller;
 
@@ -56,7 +56,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 	}
 
 
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller, Dimension size, int mode) {
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController<T> controller, Dimension size, int mode) {
 		super(parentDialog, name, true);
 		this.controller = controller;
 
@@ -69,28 +69,28 @@ public class GenericListDialog<T> extends AbstractDialog {
 		setLocationRelativeTo(parentDialog);
 	}
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, int mode) {
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController<T> controller, int mode) {
 		this(parentFrame, name, controller, new Dimension(400,500), mode);
 	}
 
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller, int mode) {
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController<T> controller, int mode) {
 		this(parentDialog, name, controller, new Dimension(400,500), mode);
 	}
 
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller) {
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController<T> controller) {
 		this(parentFrame, name, controller, VIEW_MODE);
 	}
 
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller) {
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController<T> controller) {
 		this(parentDialog, name, controller, VIEW_MODE);		
 	}
 
-	public GenericListDialog(JFrame parentFrame, GenericListDialogController controller) {
+	public GenericListDialog(JFrame parentFrame, GenericListDialogController<T> controller) {
 		this(parentFrame, "", controller);
 	}
 
-	public GenericListDialog(JDialog parentDialog, GenericListDialogController controller) {
+	public GenericListDialog(JDialog parentDialog, GenericListDialogController<T> controller) {
 		this(parentDialog, "", controller);		
 	}
 
@@ -140,11 +140,11 @@ public class GenericListDialog<T> extends AbstractDialog {
 	}
 
 	public void showProcess() {
-		processLabel.setVisible(true);
+		progressOverlay.showProgress();
 	}
 
 	public void hideProcess() {
-		processLabel.setVisible(false);
+		progressOverlay.hideProgress();
 	}
 
 	private void createGUI() {
@@ -176,9 +176,8 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 		});
 
-		processLabel = new JLabel();
-		processLabel.setIcon(ResourcesUtil.getIcon("loading.gif"));
-		processLabel.setVisible(false);
+
+
 
 		itemsListModel = new ItemsListModel();
 		itemsList = new JList<T>(itemsListModel);
@@ -270,7 +269,8 @@ public class GenericListDialog<T> extends AbstractDialog {
 		dataPanel.add(editItemButton);
 		dataPanel.add(removeItemButton);
 		dataPanel.add(updateButton);
-		dataPanel.add(processLabel);
+
+		progressOverlay = new ProgressOverlay(dataPanel);
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -307,7 +307,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 
 		// Собираем основную панель
-		mainPanel.add(dataPanel, BorderLayout.CENTER);
+		mainPanel.add(progressOverlay, BorderLayout.CENTER);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
