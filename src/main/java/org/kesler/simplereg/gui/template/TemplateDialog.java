@@ -80,7 +80,6 @@ public class TemplateDialog extends AbstractDialog {
         dataPanel.add(viewTemplateButton);
         dataPanel.add(new JLabel("По умолчанию"));
         dataPanel.add(byDefaultCheckBox);
-//        dataPanel.add(removeTemplateButton);
 
         JPanel buttonPanel = new JPanel();
 

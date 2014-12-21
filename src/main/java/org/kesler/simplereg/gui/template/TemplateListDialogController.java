@@ -3,6 +3,7 @@ package org.kesler.simplereg.gui.template;
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.gui.GenericListDialogController;
+import org.kesler.simplereg.logic.support.DefaultTemplateExistTemplateServiceException;
 import org.kesler.simplereg.logic.template.Template;
 import org.kesler.simplereg.logic.template.TemplateService;
 
@@ -74,6 +75,18 @@ public class TemplateListDialogController implements GenericListDialogController
     public boolean openAddItemDialog() {
         log.info("Open add item dialog");
         Template template = new Template();
+        if (TemplateDialog.showModal(dialog, template)) {
+            AddTemplateWorker addTemplateWorker = new AddTemplateWorker(template);
+            dialog.showProcess();
+            addTemplateWorker.execute();
+            return true;
+        }
+        return false;
+
+    }
+
+    private boolean openAddItemDialog(Template template) {
+        log.info("Open add item dialog for template");
         if (TemplateDialog.showModal(dialog, template)) {
             AddTemplateWorker addTemplateWorker = new AddTemplateWorker(template);
             dialog.showProcess();
@@ -182,8 +195,17 @@ public class TemplateListDialogController implements GenericListDialogController
                 log.error("Interrupted",e);
             } catch (ExecutionException e) {
                 log.error("Error adding template",e);
+                if (e.getCause() instanceof DefaultTemplateExistTemplateServiceException) {
+                    JOptionPane.showMessageDialog(dialog,
+                            "Шаблон по умолчанию уже существует",
+                            "Ошибка",
+                            JOptionPane.ERROR_MESSAGE);
+                    template.setByDefault(false);
+                    openAddItemDialog(template);
+
+                } else
                 JOptionPane.showMessageDialog(dialog,
-                        "Ошибка при сохранении данных",
+                        "Ошибка при сохранении данных:" + e.getMessage(),
                         "Ошибка",
                         JOptionPane.ERROR_MESSAGE);
 
@@ -218,12 +240,22 @@ public class TemplateListDialogController implements GenericListDialogController
                 log.error("Interrupted",e);
             } catch (ExecutionException e) {
                 log.error("Error adding template",e);
+                if (e.getCause() instanceof DefaultTemplateExistTemplateServiceException) {
+                    JOptionPane.showMessageDialog(dialog,
+                            "Шаблон по умолчанию уже существует",
+                            "Ошибка",
+                            JOptionPane.ERROR_MESSAGE);
+                    template.setByDefault(false);
+                    openEditItemDialog(template);
+
+                } else
                 JOptionPane.showMessageDialog(dialog,
-                        "Ошибка при сохранении данных",
+                        "Ошибка при сохранении данных: " + e.getMessage(),
                         "Ошибка",
                         JOptionPane.ERROR_MESSAGE);
 
             }
+
 
         }
     }
@@ -255,7 +287,7 @@ public class TemplateListDialogController implements GenericListDialogController
             } catch (ExecutionException e) {
                 log.error("Error adding template",e);
                 JOptionPane.showMessageDialog(dialog,
-                        "Ошибка при сохранении данных",
+                        "Ошибка при сохранении данных: "+ e.getMessage(),
                         "Ошибка",
                         JOptionPane.ERROR_MESSAGE);
 
