@@ -6,11 +6,12 @@ import org.kesler.simplereg.logic.*;
 
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
-import org.kesler.simplereg.logic.applicator.FLModel;
+import org.kesler.simplereg.logic.applicator.FLService;
 import org.kesler.simplereg.logic.applicator.ULModel;
 import org.kesler.simplereg.logic.realty.RealtyObjectsService;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.service.ServicesModel;
+import org.kesler.simplereg.logic.support.ServiceException;
 import org.kesler.simplereg.pvdimport.domain.Applicant;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Obj;
@@ -75,7 +76,7 @@ public class Transform {
         return null;
     }
 
-    static Applicator getApplicatorForApplicant(Applicant applicant) {
+    static Applicator getApplicatorForApplicant(Applicant applicant) throws TransformException{
         Applicator applicator = null;
 
         Subject subject = applicant.getSubject();
@@ -98,16 +99,25 @@ public class Transform {
         return applicator;
     }
 
-    static FL getFLByFIO(String firstName, String surName, String parentName)  {
+    static FL getFLByFIO(String firstName, String surName, String parentName)  throws TransformException{
 
-        List<FL> fls = FLModel.getInstance().getFLsByFIO(firstName,surName,parentName);
+        List<FL> fls = null;
+        try {
+            fls = FLService.getInstance().getFLsByFIO(firstName,surName,parentName);
+        } catch (ServiceException e) {
+            throw new TransformException(e);
+        }
         FL fl = null;
         if (fls.size()==0){
             fl = new FL();
             fl.setFirstName(firstName);
             fl.setSurName(surName);
             fl.setParentName(parentName);
-            FLModel.getInstance().addFL(fl);
+            try {
+                FLService.getInstance().addFL(fl);
+            } catch (ServiceException e) {
+                throw new TransformException(e);
+            }
         } else {
             fl = fls.get(0);
         }

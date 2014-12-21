@@ -7,19 +7,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.dao.TemplateDAO;
+import org.kesler.simplereg.dao.support.DAOException;
 import org.kesler.simplereg.logic.template.Template;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by alex on 17.12.14.
- */
 public class TemplateDAOImpl implements TemplateDAO {
     private final Logger log = Logger.getLogger(this.getClass());
     @Override
-    public void addTemplate(Template template) {
+    public void addTemplate(Template template) throws DAOException{
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try {
@@ -31,7 +29,7 @@ public class TemplateDAOImpl implements TemplateDAO {
         } catch (HibernateException he) {
             if (tx != null) tx.rollback();
             log.error("Error writing template", he);
-            he.printStackTrace();
+            throw new DAOException("Error writing template", he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -41,7 +39,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     }
 
     @Override
-    public void updateTemplate(Template template) {
+    public void updateTemplate(Template template) throws DAOException{
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try {
@@ -53,6 +51,7 @@ public class TemplateDAOImpl implements TemplateDAO {
         } catch (HibernateException he) {
             if (tx != null) tx.rollback();
             log.error("Error updating template", he);
+            throw new DAOException("Error updating template", he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -62,7 +61,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     }
 
     @Override
-    public void removeTemplate(Template template) {
+    public void removeTemplate(Template template) throws DAOException{
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try {
@@ -74,6 +73,7 @@ public class TemplateDAOImpl implements TemplateDAO {
         } catch (HibernateException he) {
             if (tx != null) tx.rollback();
             log.error("Error removing item", he);
+            throw new DAOException("Error removing item", he);
         } finally {
             if (session!=null && session.isOpen()) {
                 session.close();
@@ -83,7 +83,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     }
 
     @Override
-    public List<Template> getAllTemplates() {
+    public List<Template> getAllTemplates() throws DAOException{
         Session session = null;
         List<Template> templates = new ArrayList<Template>();
         log.info("Reading templates");
@@ -96,6 +96,7 @@ public class TemplateDAOImpl implements TemplateDAO {
             log.info("Reading " + templates.size() + " templates complete");
         } catch (HibernateException he) {
             log.error("Error reading templates",he);
+            throw new DAOException("Error reading templates",he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -105,7 +106,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     }
 
     @Override
-    public List<Template> getDefaultTemplates() {
+    public List<Template> getDefaultTemplates() throws DAOException{
         Session session = null;
         List<Template> templates = new ArrayList<Template>();
         log.info("Reading default templates");
@@ -120,6 +121,7 @@ public class TemplateDAOImpl implements TemplateDAO {
             log.info("Reading " + templates.size() + " templates complete");
         } catch (HibernateException he) {
             log.error("Error reading templates",he);
+            throw new DAOException("Error reading templates",he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -129,7 +131,7 @@ public class TemplateDAOImpl implements TemplateDAO {
     }
 
     @Override
-    public Template getTemplateByUUID(String uuid) {
+    public Template getTemplateByUUID(String uuid) throws DAOException{
         Session session = null;
         List<Template> templates = new ArrayList<Template>();
         log.info("Reading template by UUID: "+uuid);
@@ -144,6 +146,7 @@ public class TemplateDAOImpl implements TemplateDAO {
             log.info("Reading " + templates.size() + " templates complete");
         } catch (HibernateException he) {
             log.error("Error reading templates",he);
+            throw new DAOException("Error reading templates",he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

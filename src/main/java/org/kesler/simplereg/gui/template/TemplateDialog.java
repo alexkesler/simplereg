@@ -268,7 +268,7 @@ public class TemplateDialog extends AbstractDialog {
             } catch (IOException e) {
                 log.error("Cant write file", e);
                 JOptionPane.showMessageDialog(this,
-                        "Ошибка при записи файла",
+                        "Ошибка при записи файла: "+e.getMessage(),
                         "Ошибка",
                         JOptionPane.ERROR_MESSAGE);
             } finally {

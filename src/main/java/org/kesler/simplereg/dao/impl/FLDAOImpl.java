@@ -5,8 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.dao.FLDAO;
+import org.kesler.simplereg.dao.support.DAOException;
 import org.kesler.simplereg.logic.FL;
-import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.util.HibernateUtil;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class FLDAOImpl extends GenericDAOImpl<FL> implements FLDAO{
     }
 
     @Override
-    public List<FL> getFLByFIO(String firstName, String surName, String parentName) {
+    public List<FL> getFLByFIO(String firstName, String surName, String parentName) throws DAOException{
         List<FL> fls = new ArrayList<FL>();
 
         notifyListeners(DAOState.CONNECTING);
@@ -36,6 +36,7 @@ public class FLDAOImpl extends GenericDAOImpl<FL> implements FLDAO{
         } catch (HibernateException he) {
             log.error("Reading fls error", he);
             notifyListeners(DAOState.ERROR);
+            throw new DAOException(he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();

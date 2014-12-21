@@ -39,13 +39,6 @@ public abstract class ReceptionPrinter {
 
 	}
 	protected InputStream getRequestInputStream() throws Exception{
-//		File file = new File(getRequestTemplatePath());
-//		try {
-//			inputStream = new FileInputStream(file);
-//		} catch (FileNotFoundException ex) {
-//			log.error("Cannot open input stream");
-//			throw new Exception(ex);
-//		}
 		log.info("Getting template from DB for uuid: "+reception.getService().getUUID());
 		Template template = templateService.getTemplateByUUID(reception.getService().getTemplateUuid());
 		if (template == null) {
