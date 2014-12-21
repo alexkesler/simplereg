@@ -2,20 +2,11 @@ package org.kesler.simplereg.gui;
 
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.AbstractListModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -23,14 +14,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-
 import net.miginfocom.swing.MigLayout;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProgressOverlay;
 import org.kesler.simplereg.util.ResourcesUtil;
-import org.kesler.simplereg.logic.reception.ReceptionStatus;
 
 public class GenericListDialog<T> extends AbstractDialog {
+	private final Logger log = Logger.getLogger(this.getClass());
 
 	public static final int VIEW_MODE=0;
 	public static final int VIEW_FILTER_MODE = 1;
@@ -43,11 +35,14 @@ public class GenericListDialog<T> extends AbstractDialog {
 	private GenericListDialogController<T> controller;
 
 	private JTextField filterTextField;
-	private JList itemsList;
+	private JList<T> itemsList;
 	private ItemsListModel itemsListModel;
 	private int selectedIndex;
+	private ProgressOverlay progressOverlay;
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, Dimension size, int mode) {
+
+
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController<T> controller, Dimension size, int mode) {
 		super(parentFrame, name, true);
 		this.controller = controller;
 
@@ -61,7 +56,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 	}
 
 
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller, Dimension size, int mode) {
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController<T> controller, Dimension size, int mode) {
 		super(parentDialog, name, true);
 		this.controller = controller;
 
@@ -74,28 +69,28 @@ public class GenericListDialog<T> extends AbstractDialog {
 		setLocationRelativeTo(parentDialog);
 	}
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller, int mode) {
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController<T> controller, int mode) {
 		this(parentFrame, name, controller, new Dimension(400,500), mode);
 	}
 
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller, int mode) {
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController<T> controller, int mode) {
 		this(parentDialog, name, controller, new Dimension(400,500), mode);
 	}
 
 
-	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController controller) {
+	public GenericListDialog(JFrame parentFrame, String name, GenericListDialogController<T> controller) {
 		this(parentFrame, name, controller, VIEW_MODE);
 	}
 
-	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController controller) {
+	public GenericListDialog(JDialog parentDialog, String name, GenericListDialogController<T> controller) {
 		this(parentDialog, name, controller, VIEW_MODE);		
 	}
 
-	public GenericListDialog(JFrame parentFrame, GenericListDialogController controller) {
+	public GenericListDialog(JFrame parentFrame, GenericListDialogController<T> controller) {
 		this(parentFrame, "", controller);
 	}
 
-	public GenericListDialog(JDialog parentDialog, GenericListDialogController controller) {
+	public GenericListDialog(JDialog parentDialog, GenericListDialogController<T> controller) {
 		this(parentDialog, "", controller);		
 	}
 
@@ -124,6 +119,10 @@ public class GenericListDialog<T> extends AbstractDialog {
 		return selectedIndex;
 	}
 
+	public T getSelectedItem() {
+		return itemsList.getSelectedValue();
+	}
+
 
 	/**
 	* Устанавливает перечень элементов для отображения/ редактирования
@@ -138,6 +137,14 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 	public void cleanFilter() {
 		filterTextField.setText("");
+	}
+
+	public void showProcess() {
+		progressOverlay.showProgress();
+	}
+
+	public void hideProcess() {
+		progressOverlay.hideProgress();
 	}
 
 	private void createGUI() {
@@ -169,8 +176,11 @@ public class GenericListDialog<T> extends AbstractDialog {
 
 		});
 
+
+
+
 		itemsListModel = new ItemsListModel();
-		itemsList = new JList(itemsListModel);
+		itemsList = new JList<T>(itemsListModel);
 		// Можно выбрать только один элемент
 		itemsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -192,7 +202,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 						result = OK;
 						setVisible(false);										
 					} else {
-						controller.openEditItemDialog(selectedIndex);
+						if (controller.openEditItemDialog(itemsList.getSelectedValue())) {
+							updatedItem(itemsList.getSelectedIndex());
+						}
 					}
 				}
 			}
@@ -207,7 +219,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 		addItemButton.setIcon(ResourcesUtil.getIcon("add.png"));
 		addItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.openAddItemDialog();
+				if (controller.openAddItemDialog()) {
+					addedItem(itemsList.getModel().getSize()-1);
+				}
 			}
 		});
 
@@ -216,7 +230,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 		editItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					controller.openEditItemDialog(selectedIndex);
+					if (controller.openEditItemDialog(itemsList.getSelectedValue())) {
+						updatedItem(itemsList.getSelectedIndex());
+					}
 				} else {
 					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
@@ -229,7 +245,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		removeItemButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				if (selectedIndex != -1) {
-					controller.removeItem(selectedIndex);
+					controller.removeItem(itemsList.getSelectedValue());
 				} else {
 					new InfoDialog(currentDialog, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 				}
@@ -241,9 +257,7 @@ public class GenericListDialog<T> extends AbstractDialog {
 		updateButton.setIcon(ResourcesUtil.getIcon("arrow_refresh.png"));
 		updateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-				controller.readItems();
-				// itemsListModel.updateItems();
-				// new InfoDialog(currentDialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();
+				controller.updateItems();
 			}
 		});
 
@@ -255,6 +269,8 @@ public class GenericListDialog<T> extends AbstractDialog {
 		dataPanel.add(editItemButton);
 		dataPanel.add(removeItemButton);
 		dataPanel.add(updateButton);
+
+		progressOverlay = new ProgressOverlay(dataPanel);
 
 		// Панель кнопок
 		JPanel buttonPanel = new JPanel();
@@ -289,8 +305,9 @@ public class GenericListDialog<T> extends AbstractDialog {
 		buttonPanel.add(okButton);
 		if (isSelect) buttonPanel.add(cancelButton);
 
+
 		// Собираем основную панель
-		mainPanel.add(dataPanel, BorderLayout.CENTER);
+		mainPanel.add(progressOverlay, BorderLayout.CENTER);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		this.setContentPane(mainPanel);
@@ -307,11 +324,15 @@ public class GenericListDialog<T> extends AbstractDialog {
 		itemsList.setSelectedIndex(index);
 	}
 
+	public void updatedItems() {
+		itemsListModel.updateItems();
+	}
+
 	public void removedItem(int index) {
 		itemsListModel.removedItem(index);
 	}
 
-	class ItemsListModel extends AbstractListModel {
+	class ItemsListModel extends AbstractListModel<T> {
 
 		private List<T> items;
 
@@ -330,8 +351,8 @@ public class GenericListDialog<T> extends AbstractDialog {
 		}
 
 		@Override
-		public String getElementAt(int index) {
-			String value = items.get(index).toString();
+		public T getElementAt(int index) {
+			T value = items.get(index);
 			return value;
 		}
 

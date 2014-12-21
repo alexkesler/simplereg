@@ -4,18 +4,14 @@ import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
 import java.awt.BorderLayout;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.JTextComponent;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.kesler.simplereg.fias.FIASModel;
 import org.kesler.simplereg.fias.FIASModelListener;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.logic.realty.RealtyType;
-import org.kesler.simplereg.logic.realty.RealtyTypesModel;
+import org.kesler.simplereg.logic.realty.RealtyTypesService;
 
 import org.kesler.simplereg.util.ResourcesUtil;
 
@@ -73,7 +69,7 @@ public class RealtyObjectDialog extends AbstractDialog implements FIASModelListe
 
 		realtyTypeComboBox = new JComboBox();
 
-		List<RealtyType> realtyTypes = RealtyTypesModel.getInstance().getAllRealtyTypes();
+		List<RealtyType> realtyTypes = RealtyTypesService.getInstance().getAllRealtyTypes();
 		for (RealtyType realtyType: realtyTypes) {
 			realtyTypeComboBox.addItem(realtyType);
 		}

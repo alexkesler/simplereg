@@ -1,12 +1,11 @@
 package org.kesler.simplereg.gui.operators;
 
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.kesler.simplereg.gui.GenericListDialogController;
 import org.kesler.simplereg.gui.GenericListDialog;
-import org.kesler.simplereg.logic.operator.OperatorsModel;
+import org.kesler.simplereg.logic.operator.OperatorsService;
 import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.ModelState;
@@ -14,11 +13,11 @@ import org.kesler.simplereg.logic.ModelState;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
-public class OperatorListDialogController implements GenericListDialogController, OperatorsModelStateListener {
+public class OperatorListDialogController implements GenericListDialogController<Operator>, OperatorsModelStateListener {
 
 	private static OperatorListDialogController instance;
 
-	private OperatorsModel model;
+	private OperatorsService model;
 	private GenericListDialog<Operator> dialog;
 
 	private ProcessDialog processDialog = null;
@@ -32,7 +31,7 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	private OperatorListDialogController() {
 
-		model = OperatorsModel.getInstance();
+		model = OperatorsService.getInstance();
 		model.addOperatorsModelStateListener(this);
 
 	}
@@ -80,16 +79,14 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	@Override
-	public boolean openEditItemDialog(int index) {
+	public boolean openEditItemDialog(Operator operator) {
 
 		boolean result = false;
-		Operator operator = model.getAllOperators().get(index);
 		OperatorDialog operatorDialog = new OperatorDialog(dialog, operator);
 		operatorDialog.setVisible(true);
 
 		if (operatorDialog.getResult() == OperatorDialog.OK) {
 			model.updateOperator(operator);
-			dialog.updatedItem(index);
 			result = true;
 		}
 
@@ -102,16 +99,14 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	@Override
-	public boolean removeItem(int index) {
+	public boolean removeItem(Operator operator) {
 
 		boolean result = false;
 
-		Operator operator = model.getAllOperators().get(index);
-		
+
 		int confirmResult = JOptionPane.showConfirmDialog(dialog, "Удалить оператора: " + operator + "?", "Удалить?", JOptionPane.YES_NO_OPTION);
 		if (confirmResult == JOptionPane.OK_OPTION) { 			
 			model.removeOperator(operator);
-			dialog.removedItem(index);
 			result = true;
 		}
 
@@ -120,7 +115,7 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	@Override
-	public void readItems() {
+	public void updateItems() {
 		processDialog = new ProcessDialog(dialog);
 		model.readOperatorsInSeparateThread();
 	}

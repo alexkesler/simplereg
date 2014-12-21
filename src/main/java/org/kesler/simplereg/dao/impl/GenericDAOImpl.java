@@ -12,6 +12,7 @@ import org.kesler.simplereg.dao.AbstractEntity;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.dao.DAOListener;
 
+import org.kesler.simplereg.dao.support.DAOException;
 import org.kesler.simplereg.util.HibernateUtil;
 
 public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> {
@@ -36,7 +37,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
         listeners.remove(listener);
     }
 
-    public Long addItem(T item) {
+    public Long addItem(T item) throws DAOException{
 		Long id = null;
 
 		notifyListeners(DAOState.CONNECTING);
@@ -55,6 +56,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 			log.error("Error writing item", he);
 			he.printStackTrace();
 			notifyListeners(DAOState.ERROR);
+			throw new DAOException("Error writing item", he);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();		
@@ -66,7 +68,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		return id;
 	}
 
-	public void updateItem(T item) {
+	public void updateItem(T item) throws DAOException{
 
 		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -83,6 +85,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 			if (tx != null) tx.rollback();
 			log.error("Error updating item", he);
 			notifyListeners(DAOState.ERROR);
+			throw new DAOException("Error updating item", he);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();		
@@ -91,7 +94,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 
 	}
 
-	public T getItemById(long id) {
+	public T getItemById(long id) throws DAOException{
 		T item = null;
 
 		notifyListeners(DAOState.CONNECTING);
@@ -105,6 +108,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		} catch (HibernateException he) {
 			log.error("Reading item error", he);
 			notifyListeners(DAOState.ERROR);
+			throw new DAOException("Reading item error", he);
 		} finally {
 			if (session != null && session.isOpen()) {
 				session.close();				
@@ -114,7 +118,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		return item;
 	}
 
-	public List<T> getAllItems() {
+	public List<T> getAllItems() throws DAOException{
 		List<T> list = new ArrayList<T>();
 		notifyListeners(DAOState.CONNECTING);
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -127,6 +131,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 		} catch (HibernateException he) {
 			log.error("Error reading items", he);
 			notifyListeners(DAOState.ERROR);
+			throw new DAOException("Error reading items", he);
 		} finally {
 			if (session!=null && session.isOpen()) {
 				session.close();				
@@ -153,6 +158,7 @@ public class GenericDAOImpl<T extends AbstractEntity> implements GenericDAO <T> 
 			if (tx != null) tx.rollback();
 			log.error("Error removing item", he);
 			notifyListeners(DAOState.ERROR);
+			throw new DAOException("Error removing item", he);
 		} finally {
 			if (session!=null && session.isOpen()) {
 				session.close();				

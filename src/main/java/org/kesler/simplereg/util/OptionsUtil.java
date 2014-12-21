@@ -28,6 +28,7 @@ public class OptionsUtil {
 		return currentDir;
 	}
 
+	public static String getDirSeparator() { return System.getProperty("file.separator");}
 
 	/**
 	* Считывает настройки приложения из файла
@@ -160,6 +161,15 @@ public class OptionsUtil {
 			}
 			
 		}
+
+	}
+
+	public static void createOutDir() {
+
+		String outDir = getCurrentDir() + "out" + getDirSeparator();
+
+		File outDirFile = new File(outDir);
+		if (!outDirFile.exists()) outDirFile.mkdir();
 
 	}
 

@@ -2,12 +2,12 @@ package org.kesler.simplereg.export;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.template.Template;
+import org.kesler.simplereg.logic.template.TemplateService;
 import org.kesler.simplereg.util.OptionsUtil;
 
-import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,8 +16,11 @@ public abstract class ReceptionPrinter {
 
 	protected Reception reception;
 
+	private TemplateService templateService;
+
 	ReceptionPrinter(Reception reception) {
 		this.reception = reception;
+		templateService = new TemplateService();
 	}
 
 	public abstract void printReception() throws Exception;
@@ -32,20 +35,26 @@ public abstract class ReceptionPrinter {
 
 		String requestTemplatePath = templateDir + requestTemplateFileName;
 
-		File requestTemplateFile = new File(requestTemplatePath);
-
-		log.info("Try to open file: " + requestTemplatePath);
-
-		if (!requestTemplateFile.exists()) {
-			log.error("Cannot open file: " + requestTemplatePath);
-			return "";
-		}
 		return requestTemplatePath;
 
 	}
-	protected String getRequestPath() {
-		String jarPath = OptionsUtil.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-		String dirSeparator = System.getProperty("file.separator");
+	protected InputStream getRequestInputStream() throws Exception{
+		log.info("Getting template from DB for uuid: "+reception.getService().getUUID());
+		Template template = templateService.getTemplateByUUID(reception.getService().getTemplateUuid());
+		if (template == null) {
+			log.info("No template found - getting default template");
+			template = templateService.getDefaultTemplate();
+		}
+
+		InputStream inputStream = new ByteArrayInputStream(template.getData());
+
+
+		return inputStream;
+
+	}
+	protected String getRequestSavePath() {
+		String jarPath = OptionsUtil.getCurrentDir();
+		String dirSeparator = OptionsUtil.getDirSeparator();
 
 
 		String outDir = new File(jarPath).getParent() + dirSeparator + "out" + dirSeparator;
@@ -56,7 +65,7 @@ public abstract class ReceptionPrinter {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh-mm-ss");
 
 
-		String requestPath = outDir + "request " + dateFormat.format(new Date()) +".docx";
+		String requestPath = outDir + reception.getServiceName() + " " + dateFormat.format(new Date()) +".docx";
 
 		log.info("Prepare request path: " + requestPath);
 

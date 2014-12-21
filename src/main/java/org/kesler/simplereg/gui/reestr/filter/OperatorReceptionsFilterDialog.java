@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
@@ -14,7 +13,7 @@ import java.awt.GridLayout;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.operator.OperatorsModel;
+import org.kesler.simplereg.logic.operator.OperatorsService;
 import org.kesler.simplereg.logic.reception.filter.OperatorReceptionsFilter;
 
 public class OperatorReceptionsFilterDialog extends ReceptionsFilterDialog {
@@ -48,7 +47,7 @@ public class OperatorReceptionsFilterDialog extends ReceptionsFilterDialog {
 		JPanel operatorsPanel = new JPanel(new GridLayout(0,1));
 		checkBoxes = new ArrayList<JCheckBox>();
 
-		allOperators = OperatorsModel.getInstance().getActiveOperators();
+		allOperators = OperatorsService.getInstance().getActiveOperators();
 
 		for (Operator operator: allOperators) {
 			JCheckBox checkBox = new JCheckBox(operator.getShortFIO());

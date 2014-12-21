@@ -7,6 +7,7 @@ import org.kesler.simplereg.export.mapping.MappingFactory;
 import org.kesler.simplereg.logic.Reception;
 
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +23,12 @@ public class RosReestrPoiReceptionPrinter extends ReceptionPrinter {
     public void printReception() throws Exception{
         log.info("Handle printReception");
 
-        String templatePath = getRequestTemplatePath();
-        if (templatePath.isEmpty()) return;
-        log.info("Open doc: " + templatePath);
-        XWPFDocument doc = new XWPFDocument(OPCPackage.open(templatePath));
+        InputStream inputStream = getRequestInputStream();
+        if (inputStream==null) return;
+        log.info("Open template..");
+        XWPFDocument doc = new XWPFDocument(OPCPackage.open(inputStream));
+
+        inputStream.close();
 
         log.info("Replace mappings..");
         Map<String,String> valueMap = MappingFactory.getInstance().initMappings(reception).getValueMap();
@@ -34,10 +37,15 @@ public class RosReestrPoiReceptionPrinter extends ReceptionPrinter {
         }
 
         log.info("Save doc..");
-        doc.write(new FileOutputStream(getRequestPath()));
-        log.info("Saving complete. Opening..");
-        openFile(getRequestPath());
+        String requestSavePath = getRequestSavePath();
 
+        FileOutputStream fileOutputStream = new FileOutputStream(requestSavePath);
+        doc.write(fileOutputStream);
+        fileOutputStream.close();
+
+        log.info("Saving complete. Opening..");
+        openFile(requestSavePath);
+        log.info("Finished");
 
     }
 
