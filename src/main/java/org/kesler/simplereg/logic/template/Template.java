@@ -5,9 +5,6 @@ import org.kesler.simplereg.dao.AbstractEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-/**
- * Created by alex on 17.12.14.
- */
 @Entity
 public class Template extends AbstractEntity{
     @Column(name = "Name", length = 512)

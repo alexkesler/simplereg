@@ -28,6 +28,8 @@ public class RosReestrPoiReceptionPrinter extends ReceptionPrinter {
         log.info("Open template..");
         XWPFDocument doc = new XWPFDocument(OPCPackage.open(inputStream));
 
+        inputStream.close();
+
         log.info("Replace mappings..");
         Map<String,String> valueMap = MappingFactory.getInstance().initMappings(reception).getValueMap();
         for (String key:valueMap.keySet()) {
@@ -35,9 +37,14 @@ public class RosReestrPoiReceptionPrinter extends ReceptionPrinter {
         }
 
         log.info("Save doc..");
-        doc.write(new FileOutputStream(getRequestSavePath()));
+        String requestSavePath = getRequestSavePath();
+
+        FileOutputStream fileOutputStream = new FileOutputStream(requestSavePath);
+        doc.write(fileOutputStream);
+        fileOutputStream.close();
+
         log.info("Saving complete. Opening..");
-        openFile(getRequestSavePath());
+        openFile(requestSavePath);
         log.info("Finished");
 
     }

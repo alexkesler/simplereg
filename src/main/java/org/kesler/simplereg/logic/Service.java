@@ -36,8 +36,6 @@ public class Service extends AbstractEntity {
 	@Column(name = "TemplateUUID")
 	private String templateUuid;
 
-	@Column(name = "TemplateName")
-	private String templateName;
 
 	public Service() {} // for Hibernate
 
@@ -121,10 +119,6 @@ public class Service extends AbstractEntity {
 
 	public String getTemplateUuid() { return templateUuid;}
 	public void setTemplateUuid(String templateUuid) { this.templateUuid = templateUuid; }
-
-	public String getTemplateName() { return templateName; }
-
-	public void setTemplateName(String templateName) { this.templateName = templateName; }
 
 	@Override
 	public String toString() {

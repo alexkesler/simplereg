@@ -2,6 +2,8 @@ package org.kesler.simplereg.export;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.template.Template;
+import org.kesler.simplereg.logic.template.TemplateService;
 import org.kesler.simplereg.util.OptionsUtil;
 
 import java.awt.*;
@@ -14,8 +16,11 @@ public abstract class ReceptionPrinter {
 
 	protected Reception reception;
 
+	private TemplateService templateService;
+
 	ReceptionPrinter(Reception reception) {
 		this.reception = reception;
+		templateService = new TemplateService();
 	}
 
 	public abstract void printReception() throws Exception;
@@ -30,26 +35,27 @@ public abstract class ReceptionPrinter {
 
 		String requestTemplatePath = templateDir + requestTemplateFileName;
 
-//		File requestTemplateFile = new File(requestTemplatePath);
-//
-//		log.info("Try to open file: " + requestTemplatePath);
-//
-//		if (!requestTemplateFile.exists()) {
-//			log.error("Cannot open file: " + requestTemplatePath);
-//			return "";
-//		}
 		return requestTemplatePath;
 
 	}
 	protected InputStream getRequestInputStream() throws Exception{
-		File file = new File(getRequestTemplatePath());
-		InputStream inputStream = null;
-		try {
-			inputStream = new FileInputStream(file);
-		} catch (FileNotFoundException ex) {
-			log.error("Cannot open input stream");
-			throw new Exception(ex);
+//		File file = new File(getRequestTemplatePath());
+//		try {
+//			inputStream = new FileInputStream(file);
+//		} catch (FileNotFoundException ex) {
+//			log.error("Cannot open input stream");
+//			throw new Exception(ex);
+//		}
+		log.info("Getting template from DB for uuid: "+reception.getService().getUUID());
+		Template template = templateService.getTemplateByUUID(reception.getService().getTemplateUuid());
+		if (template == null) {
+			log.info("No template found - getting default template");
+			template = templateService.getDefaultTemplate();
 		}
+
+		InputStream inputStream = new ByteArrayInputStream(template.getData());
+
+
 		return inputStream;
 
 	}
@@ -66,7 +72,7 @@ public abstract class ReceptionPrinter {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh-mm-ss");
 
 
-		String requestPath = outDir + "request " + dateFormat.format(new Date()) +".docx";
+		String requestPath = outDir + reception.getServiceName() + " " + dateFormat.format(new Date()) +".docx";
 
 		log.info("Prepare request path: " + requestPath);
 
