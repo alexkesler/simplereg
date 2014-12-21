@@ -1,29 +1,23 @@
 package org.kesler.simplereg.gui.applicator;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.*;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.UL;
-import org.kesler.simplereg.logic.applicator.ULModel;
-import org.kesler.simplereg.logic.applicator.ULModelStateListener;
-import org.kesler.simplereg.logic.ModelState;
-
+import org.kesler.simplereg.logic.applicator.ULService;
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.gui.GenericListDialogController;
 
-import org.kesler.simplereg.gui.util.InfoDialog;
-import org.kesler.simplereg.gui.util.ProcessDialog;
-
-public class ULListDialogController implements GenericListDialogController<UL>, ULModelStateListener {
+public class ULListDialogController implements GenericListDialogController<UL> {
+	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
 	private static ULListDialogController instance = null;
 
-	private GenericListDialog dialog;
-	private ULModel model;
-
-	private ProcessDialog processDialog = null;
+	private GenericListDialog<UL> dialog;
+	private ULService ulService;
 
 	public static synchronized ULListDialogController getInstance() {
 		if (instance == null) {
@@ -33,17 +27,15 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 	}
 
 	private ULListDialogController() {
-		model = ULModel.getInstance();
-		model.addULModelStateListener(this);
+		ulService = ULService.getInstance();
 	}
 
 	public void openDialog(JDialog parentDialog) {
+		log.info("Open dialog");
 		dialog = new GenericListDialog<UL>(parentDialog, "Юр лица", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readULsInSeparateThread();
-
+		ulService.setFilterString("");
+		updateItems();
 		dialog.setVisible(true);
 		// освобождаем ресурсы
 		dialog.dispose();
@@ -51,12 +43,11 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 	}
 
 	public void openDialog(JFrame parentFrame) {
+		log.info("Open dialog");
 		dialog = new GenericListDialog<UL>(parentFrame, "Юр лица", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readULsInSeparateThread();
-
+		ulService.setFilterString("");
+		updateItems();
 		dialog.setVisible(true);
 
 		// освобождаем ресурсы
@@ -65,18 +56,18 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 	}
 
 	public UL openSelectDialog(JDialog parentDialog) {
+		log.info("Open select dialog");
 		dialog = new GenericListDialog<UL>(parentDialog, "Юр лица", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readULsInSeparateThread();
+		ulService.setFilterString("");
+		updateItems();
 
 		dialog.setVisible(true);
 
 		UL ul = null;
 		if (dialog.getResult() == GenericListDialog.OK) {
 			int selectedIndex = dialog.getSelectedIndex();
-			ul = model.getFilteredULs().get(selectedIndex);
+			ul = ulService.getFilteredULs().get(selectedIndex);
 		}
 
 		// освобождаем ресурсы
@@ -86,18 +77,18 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 	}
 
 	public UL openSelectDialog(JFrame parentFrame) {
+		log.info("Open select dialog");
 		dialog = new GenericListDialog<UL>(parentFrame, "Юр лица", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readULsInSeparateThread();
+		ulService.setFilterString("");
+		updateItems();
 
 		dialog.setVisible(true);
 
 		UL ul = null;
 		if (dialog.getResult() == GenericListDialog.OK) {
 			int selectedIndex = dialog.getSelectedIndex();
-			ul = model.getFilteredULs().get(selectedIndex);
+			ul = ulService.getFilteredULs().get(selectedIndex);
 		}
 
 		// освобождаем ресурсы
@@ -110,34 +101,33 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 
 	@Override
 	public void updateItems() {
-		model.readULs();
-		model.filterULs();
-		List<UL> uls = model.getFilteredULs();
-		dialog.setItems(uls);
+		log.info("Update ULs");
+		ULListUpdateWorker ulListUpdateWorker = new ULListUpdateWorker();
+		dialog.showProcess();
+		ulListUpdateWorker.execute();
 	}
 
 	@Override
 	public void filterItems(String filterString) {
-		model.setFilterString(filterString);
-		model.filterULs();
-		List<UL> uls = model.getFilteredULs();
-		dialog.setItems(uls);
+		log.info("Filter ULs");
+		ULListFilterWorker ulListFilterWorker = new ULListFilterWorker(filterString);
+		dialog.showProcess();
+		ulListFilterWorker.execute();
 	}
 
 	@Override
 	public boolean openAddItemDialog() {
+		log.info("Open add UL dialog");
 		boolean result = false;
 		ULDialog ulDialog = new ULDialog(dialog);
 		ulDialog.setVisible(true);
 		if (ulDialog.getResult() == ULDialog.OK) {
 			filterItems("");
 			UL ul = ulDialog.getUL();
-			int index = model.addUL(ul);
-			if (index != -1) {
-				dialog.addedItem(index);
-				result = true;
-			}
-			
+			ULAddWorker ulAddWorker = new ULAddWorker(ul);
+			dialog.showProcess();
+			ulAddWorker.execute();
+			result = true;
 		}
 		// Освобождаем ресурсы
 		ulDialog.dispose();
@@ -148,13 +138,16 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 
 	@Override
 	public boolean openEditItemDialog(UL ul) {
+		log.info("Open edit UL dialog");
 		boolean result = false;
 
 		ULDialog ulDialog = new ULDialog(dialog, ul);
 		ulDialog.setVisible(true);
 		
 		if (ulDialog.getResult() == ULDialog.OK) {
-			model.updateUL(ul);
+			ULUpdateWorker ulUpdateWorker = new ULUpdateWorker(ul);
+			dialog.showProcess();
+			ulUpdateWorker.execute();
 
 			result = true;
 		}
@@ -167,51 +160,177 @@ public class ULListDialogController implements GenericListDialogController<UL>, 
 
 	@Override
 	public boolean removeItem(UL ul) {
+		log.info("Remove UL");
 
-		model.deleteUL(ul);
+		ULRemoveWorker ulRemoveWorker = new ULRemoveWorker(ul);
+		dialog.showProcess();
+		ulRemoveWorker.execute();
 
 		return true;
 	}
 
-	@Override 
-	public void ulModelStateChanged(ModelState state) {
-		switch (state) {
-			
-			case CONNECTING:
-				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
-				break;
+	class ULListUpdateWorker extends SwingWorker<List<UL>, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		@Override
+		protected List<UL> doInBackground() throws Exception {
+			log.info("Reading ULs...");
+			ulService.readULs();
+			log.info("Filtering ULs");
+			ulService.filterULs();
+			List<UL> uls = ulService.getFilteredULs();
+			return uls;
+		}
 
-			case READING:
-				if (processDialog != null) processDialog.showProcess("Читаю список юр лиц");
-				break;	
-			
-			case WRITING:
-				if (processDialog != null) processDialog.showProcess("Сохраняю изменения");
-				break;	
-			
-			case UPDATED:
-				// if (dialog != null) dialog.setItems(model.getAllOperators());
-				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
-				break;
-
-			case FILTERED:
-				if (dialog != null) dialog.setItems(model.getFilteredULs());
-				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-				// new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
-				break;
-
-			
-			case READY:
-				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}	
-				break;
-			
-			case ERROR:				
-				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}
-				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
-				break;
-
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				List<UL> uls = get();
+				dialog.setItems(uls);
+				log.info("Update ULs complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error reading ULs",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при чтении данных: " + e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
+
+	class ULListFilterWorker extends SwingWorker<List<UL>, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+
+		public ULListFilterWorker(String filter) {
+			ulService.setFilterString(filter);
+		}
+
+		@Override
+		protected List<UL> doInBackground() throws Exception {
+			log.info("Filter ULs");
+			ulService.filterULs();
+			return ulService.getFilteredULs();
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				List<UL> uls = get();
+				dialog.setItems(uls);
+				log.info("Filtering ULs complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error filtering ULs",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при фильтрации данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	class ULAddWorker extends SwingWorker<Integer, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		private UL ul;
+
+		public ULAddWorker(UL ul) {
+			this.ul = ul;
+		}
+
+		@Override
+		protected Integer doInBackground() throws Exception {
+			log.info("Adding UL: " + ul.getShortName());
+			return ulService.addUL(ul);
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				Integer index = get();
+				dialog.addedItem(index);
+				log.info("Adding UL complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error adding UL",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при сохранении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	class ULUpdateWorker extends SwingWorker<Void, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		private UL ul;
+
+		public ULUpdateWorker(UL ul) {
+			this.ul = ul;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			log.info("Updating UL: " + ul.getShortName());
+			ulService.updateUL(ul);
+			return null;
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				get();
+				log.info("Updating UL complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error updating UL",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при обновлении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	class ULRemoveWorker extends SwingWorker<Void, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		private UL ul;
+
+		public ULRemoveWorker(UL ul) {
+			this.ul = ul;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			log.info("Removing UL: " + ul.getShortName());
+			ulService.removeUL(ul);
+			return null;
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				get();
+				log.info("Removing UL complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error removing UL",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при удалении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
 
 }

@@ -7,7 +7,7 @@ import org.kesler.simplereg.logic.*;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
 import org.kesler.simplereg.logic.applicator.FLService;
-import org.kesler.simplereg.logic.applicator.ULModel;
+import org.kesler.simplereg.logic.applicator.ULService;
 import org.kesler.simplereg.logic.realty.RealtyObjectsService;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.service.ServicesModel;
@@ -125,14 +125,18 @@ public class Transform {
         return fl;
     }
 
-    static UL getULByShortName(String shortName) {
-        List<UL> uls = ULModel.getInstance().getULsByShortName(shortName);
+    static UL getULByShortName(String shortName) throws TransformException{
+        List<UL> uls = ULService.getInstance().getULsByShortName(shortName);
         UL ul = null;
         if (uls.size()==0){
             ul = new UL();
             ul.setShortName(shortName);
             ul.setFullName(shortName);
-            ULModel.getInstance().addUL(ul);
+            try {
+                ULService.getInstance().addUL(ul);
+            } catch (ServiceException e) {
+                throw new TransformException(e);
+            }
         } else {
             ul = uls.get(0);
         }

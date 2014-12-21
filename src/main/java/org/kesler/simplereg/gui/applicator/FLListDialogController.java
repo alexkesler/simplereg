@@ -262,8 +262,8 @@ public class FLListDialogController implements GenericListDialogController<FL>{
 
 		@Override
 		protected void done() {
+			dialog.hideProcess();
 			try {
-				dialog.hideProcess();
 				List<FL> fls = get();
 				dialog.setItems(fls);
 				log.info("Filtering FLs complete");
@@ -295,8 +295,8 @@ public class FLListDialogController implements GenericListDialogController<FL>{
 
 		@Override
 		protected void done() {
+			dialog.hideProcess();
 			try {
-				dialog.hideProcess();
 				Integer index = get();
 				dialog.addedItem(index);
 				log.info("Adding FL complete");
@@ -329,8 +329,8 @@ public class FLListDialogController implements GenericListDialogController<FL>{
 
 		@Override
 		protected void done() {
+			dialog.hideProcess();
 			try {
-				dialog.hideProcess();
 				get();
 				log.info("Updating FL complete");
 			} catch (InterruptedException e) {
@@ -362,8 +362,8 @@ public class FLListDialogController implements GenericListDialogController<FL>{
 
 		@Override
 		protected void done() {
+			dialog.hideProcess();
 			try {
-				dialog.hideProcess();
 				get();
 				log.info("Removing FL complete");
 			} catch (InterruptedException e) {

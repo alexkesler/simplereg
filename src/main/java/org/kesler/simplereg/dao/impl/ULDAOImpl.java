@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.dao.ULDAO;
+import org.kesler.simplereg.dao.support.DAOException;
 import org.kesler.simplereg.logic.FL;
 import org.kesler.simplereg.logic.UL;
 import org.kesler.simplereg.util.HibernateUtil;
@@ -19,7 +20,7 @@ public class ULDAOImpl extends GenericDAOImpl<UL> implements ULDAO{
     }
 
     @Override
-    public List<UL> getULsByShortName(String shortName) {
+    public List<UL> getULsByShortName(String shortName) throws DAOException{
         List<UL> uls = new ArrayList<UL>();
 
         notifyListeners(DAOState.CONNECTING);
@@ -34,6 +35,7 @@ public class ULDAOImpl extends GenericDAOImpl<UL> implements ULDAO{
         } catch (HibernateException he) {
             log.error("Reading uls error", he);
             notifyListeners(DAOState.ERROR);
+            throw new DAOException("Reading uls error", he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
@@ -60,6 +62,7 @@ public class ULDAOImpl extends GenericDAOImpl<UL> implements ULDAO{
         } catch (HibernateException he) {
             log.error("Reading uls error", he);
             notifyListeners(DAOState.ERROR);
+            throw new DAOException("Reading uls error", he);
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
