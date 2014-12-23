@@ -197,6 +197,7 @@ public class MainViewController implements MainViewListener,
 				mainView.getActionByCommand(ULs).setEnabled(true);
 				mainView.getActionByCommand(RealtyObjects).setEnabled(true);
 				mainView.getActionByCommand(RealtyObjectTypes).setEnabled(true);
+				mainView.getActionByCommand(Services).setEnabled(true);
 			}
 
 			if (operator.isAdmin()) { // для администратора
