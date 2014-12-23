@@ -1,29 +1,23 @@
 package org.kesler.simplereg.gui.applicator;
 
-import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
+import javax.swing.*;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.FL;
-import org.kesler.simplereg.logic.applicator.FLModel;
-import org.kesler.simplereg.logic.applicator.FLModelStateListener;
-import org.kesler.simplereg.logic.ModelState;
-
+import org.kesler.simplereg.logic.applicator.FLService;
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.gui.GenericListDialogController;
-
-import org.kesler.simplereg.gui.util.InfoDialog;
-import org.kesler.simplereg.gui.util.ProcessDialog;
-
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
-public class FLListDialogController implements GenericListDialogController, FLModelStateListener{
-	
-	private FLModel model;
-	private GenericListDialog dialog;
+public class FLListDialogController implements GenericListDialogController<FL>{
+	private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+
+	private FLService flService;
+	private GenericListDialog<FL> dialog;
 	private static FLListDialogController instance = null;
 
-	private ProcessDialog processDialog = null;
 
 	public static synchronized FLListDialogController getInstance() {
 		if (instance == null) {
@@ -33,19 +27,18 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	}
 
 	private FLListDialogController() {
-		model = FLModel.getInstance();
-		model.addFLModelStateListener(this);
+		flService = FLService.getInstance();
 	}
 
 	/**
 	* Открывает диалог просмотра-редактирования заявителя - физического лица
 	*/
 	public void openDialog(JFrame parentFrame) {
+		log.info("Open dialog");
 		dialog = new GenericListDialog<FL>(parentFrame, "Заявители", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readFLsInSeparateThread();
+		flService.setFilterString("");
+		updateItems();
 
 		dialog.setVisible(true);
 
@@ -59,11 +52,11 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	* Открывает диалог заявителя - физического лица
 	*/
 	public void openDialog(JDialog parentDialog) {
+		log.info("Open dialog");
 		dialog = new GenericListDialog<FL>(parentDialog, "Заявители", this, GenericListDialog.VIEW_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readFLsInSeparateThread();
+		flService.setFilterString("");
+		updateItems();
 
 		dialog.setVisible(true);
 		
@@ -77,21 +70,19 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	* Открывает диалог выбора заявителя - физического лица
 	*/
 	public FL openSelectDialog(JFrame parentFrame) {
+		log.info("Open select dialog");
 		FL selectedFL = null;
 		// filterItems("");
 		dialog = new GenericListDialog<FL>(parentFrame, "Выбор заявителя", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readFLsInSeparateThread();
+		flService.setFilterString("");
+		updateItems();
 
 		dialog.setVisible(true);
 
 		if (dialog.getResult() == GenericListDialog.OK) {
 			// получаем выбранное физ лицо
-			int selectedIndex = dialog.getSelectedIndex();
-			selectedFL = model.getFilteredFLs().get(selectedIndex);
-			
+			selectedFL = dialog.getSelectedItem();
 		}
 
 		// Освобождаем ресурсы
@@ -105,20 +96,18 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	* Открывает диалог выбора заявителя - физического лица
 	*/
 	public FL openSelectDialog(JDialog parentDialog) {
+		log.info("Open select dialog");
 		FL selectedFL = null;
-		// filterItems("");
 		dialog = new GenericListDialog<FL>(parentDialog, "Выбор заявителя", this, GenericListDialog.SELECT_FILTER_MODE);
 
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString("");
-		model.readFLsInSeparateThread();
-
+		flService.setFilterString("");
+		updateItems();
 		dialog.setVisible(true);
 
 		if (dialog.getResult() == GenericListDialog.OK) {
 			// получаем выбранное физ лицо
-			int selectedIndex = dialog.getSelectedIndex();
-			selectedFL = model.getFilteredFLs().get(selectedIndex);
+
+			selectedFL = dialog.getSelectedItem();
 			
 		}
 
@@ -131,9 +120,10 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 
 
 	@Override
-	public void readItems() {
-		processDialog = new ProcessDialog(dialog);
-		model.readFLsInSeparateThread();
+	public void updateItems() {
+		FLListUpdateWorker flListUpdateWorker = new FLListUpdateWorker();
+		dialog.showProcess();
+		flListUpdateWorker.execute();
 	}
 
 	/**
@@ -142,9 +132,9 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	*/
 	@Override
 	public void filterItems(String filter) {
-		processDialog = new ProcessDialog(dialog);
-		model.setFilterString(filter);
-		model.filterFLsInSeparateThread();
+		FLListFilterWorker flListFilterWorker = new FLListFilterWorker(filter);
+		dialog.showProcess();
+		flListFilterWorker.execute();
 	}
 
 
@@ -161,14 +151,12 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 			filterItems("");
 			// запоминаем новое физ лицо		
 			FL fl = flDialog.getFL();
-			int index = model.addFL(fl);
-			if (index != -1) {
-				dialog.addedItem(index);
-				result = true;
-			}	
+			FLAddWorker flAddWorker = new FLAddWorker(fl);
+			dialog.showProcess();
+			flAddWorker.execute();
+			result = true;
 		}
 		flDialog.dispose();
-		flDialog = null;
 
 		return result;
 	}
@@ -177,6 +165,7 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 	* Открывает диалог добавления физического лица с введенной фамилией
 	* @param initSurName строка, на основнии которой создается фамилия 
 	*/
+
 	public boolean openAddItemDialog(String initSurName) {
 		boolean result = false;
 		initSurName = initSurName.toLowerCase();
@@ -187,86 +176,205 @@ public class FLListDialogController implements GenericListDialogController, FLMo
 		flDialog.setVisible(true);
 		if (flDialog.getResult() == FLDialog.OK) {
 			FL fl = flDialog.getFL();
-			int index = model.addFL(fl);
-			if (index != -1) {
-				dialog.addedItem(index);
-				result = true;
-			}			
+			FLAddWorker flAddWorker = new FLAddWorker(fl);
+			dialog.showProcess();
+			flAddWorker.execute();
+			result = true;
 		}
 		// Освобождаем ресурсы
 		flDialog.dispose();
-		flDialog = null;
 
 		return result;
 	}
 
-
-	public boolean openEditItemDialog(int index) {
+	@Override
+	public boolean openEditItemDialog(FL fl) {
 		boolean result = false;
-		FL fl = model.getAllFLs().get(index);
 		FLDialog flDialog = new FLDialog(dialog, fl);
 		flDialog.setVisible(true);
 		
 		if (flDialog.getResult() == FLDialog.OK) {
-			model.updateFL(fl);
-			dialog.updatedItem(index);
+			FLUpdateWorker flUpdateWorker = new FLUpdateWorker(fl);
+			dialog.showProcess();
+			flUpdateWorker.execute();
 			result = true;
 		}
 
 		// Освобождаем ресурсы
 		flDialog.dispose();
-		flDialog = null;
 
 		return result;
 
 	}
 
-	public boolean removeItem(int index) {
-		FL fl = model.getAllFLs().get(index);
-		model.deleteFL(fl);
-		dialog.removedItem(index);
-
+	@Override
+	public boolean removeItem(FL fl) {
+		FLRemoveWorker flRemoveWorker = new FLRemoveWorker(fl);
+		dialog.showProcess();
+		flRemoveWorker.execute();
 		return true;
 	}
 
-	@Override 
-	public void flModelStateChanged(ModelState state) {
-		switch (state) {
-			
-			case CONNECTING:
-				if (processDialog != null) processDialog.showProcess("Соединяюсь...");			
-				break;
 
-			case READING:
-				if (processDialog != null) processDialog.showProcess("Читаю список заявителей");
-				break;	
-			
-			case WRITING:
-				if (processDialog != null) processDialog.showProcess("Сохраняю изменения");
-				break;	
-			
-			case UPDATED:
-				// if (dialog != null) dialog.setItems(model.getAllOperators());
-				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-				new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
-				break;
+	class FLListUpdateWorker extends SwingWorker<List<FL>, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		@Override
+		protected List<FL> doInBackground() throws Exception {
+			log.info("Read FLs");
+			flService.readLFs();
+			log.info("Filter FLs");
+			flService.filterFLs();
+			return flService.getFilteredFLs();
+		}
 
-			case FILTERED:
-				if (dialog != null) dialog.setItems(model.getFilteredFLs());
-				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-				// new InfoDialog(dialog, "Обновлено", 500, InfoDialog.GREEN).showInfo();	
-				break;
+		@Override
+		protected void done() {
+			try {
+				dialog.hideProcess();
+				List<FL> fls = get();
+				dialog.setItems(fls);
+				log.info("Reading FLs complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error reading FLs",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при чтении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
 
-			
-			case READY:
-				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}	
-				break;
-			
-			case ERROR:				
-				if (processDialog != null) {processDialog.hideProcess(); processDialog=null;}
-				new InfoDialog(dialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
-				break;
+	class FLListFilterWorker extends SwingWorker<List<FL>, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
+		public FLListFilterWorker(String filter) {
+			flService.setFilterString(filter);
+		}
+
+		@Override
+		protected List<FL> doInBackground() throws Exception {
+			log.info("Filter FLs");
+			flService.filterFLs();
+			return flService.getFilteredFLs();
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				List<FL> fls = get();
+				dialog.setItems(fls);
+				log.info("Filtering FLs complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error filtering FLs",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при фильтрации данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	class FLAddWorker extends SwingWorker<Integer, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		private FL fl;
+
+		public FLAddWorker(FL fl) {
+			this.fl = fl;
+		}
+
+		@Override
+		protected Integer doInBackground() throws Exception {
+			log.info("Adding FL: " + fl.getFIO());
+			return flService.addFL(fl);
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				Integer index = get();
+				dialog.addedItem(index);
+				log.info("Adding FL complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error adding FL",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при сохранении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	class FLUpdateWorker extends SwingWorker<Void, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		private FL fl;
+
+		public FLUpdateWorker(FL fl) {
+			this.fl = fl;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			log.info("Updating FL: "+ fl.getFIO());
+			flService.updateFL(fl);
+			return null;
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				get();
+				log.info("Updating FL complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error updating FL",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при обновлении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	class FLRemoveWorker extends SwingWorker<Void, Void> {
+		private Logger log = Logger.getLogger(this.getClass().getSimpleName());
+		private FL fl;
+
+		public FLRemoveWorker(FL fl) {
+			this.fl = fl;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			log.info("Removing FL: "+ fl.getFIO());
+			flService.removeFL(fl);
+			return null;
+		}
+
+		@Override
+		protected void done() {
+			dialog.hideProcess();
+			try {
+				get();
+				log.info("Removing FL complete");
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error removing FL",e);
+				JOptionPane.showMessageDialog(dialog,
+						"Ошибка при удалении данных: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 

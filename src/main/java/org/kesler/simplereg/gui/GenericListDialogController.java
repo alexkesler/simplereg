@@ -1,15 +1,14 @@
 package org.kesler.simplereg.gui;
 
-import java.util.List;
 
 public interface GenericListDialogController<T> {
 	
 	boolean openAddItemDialog();
-	boolean openEditItemDialog(int index);
-	boolean removeItem(int index);
+	boolean openEditItemDialog(T item);
+	boolean removeItem(T item);
 
 	void filterItems(String filter);
 	
-	void readItems();
+	void updateItems();
 }	
 

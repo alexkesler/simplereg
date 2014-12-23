@@ -2,8 +2,6 @@ package org.kesler.simplereg.logic.operator;
 
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import java.sql.SQLException;
 
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.dao.DAOFactory;
@@ -11,21 +9,21 @@ import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.ModelState;
 
-public class OperatorsModel implements DAOListener{
+public class OperatorsService implements DAOListener{
 
 	private List<Operator> operators = null;
-	private static OperatorsModel instance = null;
+	private static OperatorsService instance = null;
 
 	private List<OperatorsModelStateListener> listeners;
 
-	private OperatorsModel() {
+	private OperatorsService() {
 		listeners = new ArrayList<OperatorsModelStateListener>();
 		DAOFactory.getInstance().getOperatorDAO().addDAOListener(this);
 	}
 
-	public static synchronized OperatorsModel getInstance() {
+	public static synchronized OperatorsService getInstance() {
 		if (instance == null) {
-			instance = new OperatorsModel();
+			instance = new OperatorsService();
 		}
 		return instance;
 	}

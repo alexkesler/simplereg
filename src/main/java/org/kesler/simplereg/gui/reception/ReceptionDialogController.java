@@ -5,7 +5,7 @@ import org.kesler.simplereg.gui.realty.RealtyObjectDialog;
 import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.realty.RealtyObjectsModel;
+import org.kesler.simplereg.logic.realty.RealtyObjectsService;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 
 import javax.swing.*;
@@ -95,7 +95,7 @@ public class ReceptionDialogController {
         RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog,reception.getRealtyObject());
         realtyObjectDialog.setVisible(true);
         if (realtyObjectDialog.getResult()==AbstractDialog.OK) {
-            RealtyObjectsModel.getInstance().updateRealtyObject(reception.getRealtyObject());
+            RealtyObjectsService.getInstance().updateRealtyObject(reception.getRealtyObject());
             dialog.updateViewData();
         }
 

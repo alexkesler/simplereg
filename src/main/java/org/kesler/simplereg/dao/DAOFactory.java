@@ -21,6 +21,7 @@ public class DAOFactory {
 	private static GenericDAO<RealtyType> realtyTypeDAO = null;
 	private static GenericDAO<Counter> counterDAO = null;
     private static FIASRecordDAO fiasRecordDAO = null;
+	private static TemplateDAO templateDAO = null;
 	
 	private static DAOFactory instance = null;
 
@@ -104,6 +105,13 @@ public class DAOFactory {
         }
         return fiasRecordDAO;
     }
+
+	public TemplateDAO getTemplateDAO() {
+		if (templateDAO==null) {
+			templateDAO = new TemplateDAOImpl();
+		}
+		return templateDAO;
+	}
 
 
 }

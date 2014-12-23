@@ -3,11 +3,12 @@ package org.kesler.simplereg.gui.reception.make;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
+import java.util.concurrent.ExecutionException;
+import javax.swing.*;
 
+import org.kesler.simplereg.export.RosReestrPoiReceptionPrinter;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
+import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.Applicator;
@@ -22,7 +23,6 @@ import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
 import org.kesler.simplereg.export.ReceptionPrinter;
-import org.kesler.simplereg.export.RosReestrReceptionPrinter;
 
 import org.apache.log4j.Logger;
 
@@ -378,8 +378,13 @@ public class MakeReceptionViewController {
     }
 
     void printRequest() {
-        ReceptionPrinter printer = new RosReestrReceptionPrinter(reception);
-        printer.printReception();
+        ReceptionPrinter printer = new RosReestrPoiReceptionPrinter(reception);
+        ProcessDialog processDialog = new ProcessDialog(view);
+        ReceptionPrinterWorker receptionPrinterWorker = new ReceptionPrinterWorker(printer,processDialog);
+
+        processDialog.showProcess("Заполняю запрос");
+        receptionPrinterWorker.execute();
+
     }
 
     boolean saveReception() {
@@ -402,6 +407,43 @@ public class MakeReceptionViewController {
         model.finish();
 
         return true;
+    }
+
+
+    class ReceptionPrinterWorker extends SwingWorker<Void,Void> {
+        private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
+        private ReceptionPrinter receptionPrinter;
+        private ProcessDialog processDialog;
+        ReceptionPrinterWorker(ReceptionPrinter receptionPrinter, ProcessDialog processDialog) {
+            this.receptionPrinter = receptionPrinter;
+            this.processDialog = processDialog;
+        }
+
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            receptionPrinter.printReception();
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            super.done();
+            try {
+                log.info("Request filled");
+                processDialog.hideProcess();
+                get();
+            } catch (ExecutionException ex){
+                log.error("Request filling error: " + ex.getMessage(), ex);
+                processDialog.hideProcess();
+                JOptionPane.showMessageDialog(view,"Ошибка: "+ex.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            } catch (InterruptedException ex) {
+                log.error("Request filling interrupted: " + ex.getMessage(), ex);
+                processDialog.hideProcess();
+                JOptionPane.showMessageDialog(view,"Ошибка: "+ex.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
     }
 
 }
