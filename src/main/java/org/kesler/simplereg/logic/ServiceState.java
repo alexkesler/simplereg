@@ -1,6 +1,6 @@
 package org.kesler.simplereg.logic;
 
-public enum ModelState {
+public enum ServiceState {
 	UPDATED,
 	CONNECTING,
 	READING,

@@ -39,7 +39,7 @@ public abstract class ReceptionPrinter {
 
 	}
 	protected InputStream getRequestInputStream() throws Exception{
-		log.info("Getting template from DB for uuid: "+reception.getService().getUUID());
+		log.info("Getting template from DB for uuid: "+reception.getService().getTemplateUuid());
 		Template template = templateService.getTemplateByUUID(reception.getService().getTemplateUuid());
 		if (template == null) {
 			log.info("No template found - getting default template");

@@ -27,7 +27,7 @@ public class Service extends AbstractEntity {
     @Column(name="Code", length=50)
     private String code;
 
-    @Column(name = "PvdtypesPurposes")
+    @Column(name = "PvdtypesPurposes", length = 510)
     private String pvdtypesPurposes;
 
 	@Column(name="Enabled")
@@ -106,7 +106,25 @@ public class Service extends AbstractEntity {
         else
             if (!pvdtypesPurposes.contains(pvdtypePurpose))
                 pvdtypesPurposes += "," + pvdtypePurpose;
+		cropPvdtypesPurpose(510);
     }
+
+	private void cropPvdtypesPurpose(int length) {
+		if (pvdtypesPurposes!=null && pvdtypesPurposes.length()>length) {
+			int nextLength = pvdtypesPurposes.indexOf(",");
+			if (nextLength<0) {
+				return;
+			}
+
+			nextLength++;
+			while (pvdtypesPurposes.length()-nextLength > length) {
+				nextLength = pvdtypesPurposes.indexOf(",",nextLength);
+				if (nextLength<0) return;
+				nextLength++;
+			}
+			pvdtypesPurposes = pvdtypesPurposes.substring(nextLength);
+		}
+	}
 
     public Boolean getEnabled() {
 		return enabled;

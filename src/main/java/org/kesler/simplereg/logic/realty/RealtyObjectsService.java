@@ -8,7 +8,7 @@ import org.kesler.simplereg.logic.RealtyObject;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 
 public class RealtyObjectsService implements DAOListener {
     private Logger log;
@@ -61,7 +61,7 @@ public class RealtyObjectsService implements DAOListener {
 
         log.info("Reading RealtyObjects");
 		realtyObjects = DAOFactory.getInstance().getRealtyObjectDAO().getAllItems();
-		notifyListeners(ModelState.UPDATED);
+		notifyListeners(ServiceState.UPDATED);
         log.info("Read complete");
 
 	}
@@ -113,15 +113,15 @@ public class RealtyObjectsService implements DAOListener {
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(ModelState.CONNECTING);
+				notifyListeners(ServiceState.CONNECTING);
 			break;
 			
 			case READING:
-				notifyListeners(ModelState.READING);
+				notifyListeners(ServiceState.READING);
 			break;
 			
 			case WRITING:
-				notifyListeners(ModelState.WRITING);
+				notifyListeners(ServiceState.WRITING);
 			break;
 			
 			case READY:
@@ -129,12 +129,12 @@ public class RealtyObjectsService implements DAOListener {
 			break;
 			
 			case ERROR:
-				notifyListeners(ModelState.ERROR);
+				notifyListeners(ServiceState.ERROR);
 			break;				
 		}
 	}
 
-	private void notifyListeners(ModelState state) {
+	private void notifyListeners(ServiceState state) {
 		for (RealtyObjectsModelStateListener listener: listeners) {
 			listener.realtyObjectsModelStateChanged(state);
 		}

@@ -3,7 +3,7 @@ package org.kesler.simplereg.gui.reception.select;
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -123,9 +123,9 @@ public class SelectReceptionDialogController implements ReceptionsModelStateList
     }
 
     @Override
-    public void receptionsModelStateChanged(ModelState state) {
+    public void receptionsModelStateChanged(ServiceState state) {
 
-        if (state == ModelState.FILTERED) {
+        if (state == ServiceState.FILTERED) {
             List<Reception> receptions = receptionsModel.getFilteredReceptions();
             receptions.removeAll(receptionsToStrike);
             dialog.setReceptions(receptions);
