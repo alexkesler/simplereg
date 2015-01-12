@@ -7,17 +7,17 @@ import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 
 public class OperatorsService implements DAOListener{
 
 	private List<Operator> operators = null;
 	private static OperatorsService instance = null;
 
-	private List<OperatorsModelStateListener> listeners;
+	private List<OperatorsServiceStateListener> listeners;
 
 	private OperatorsService() {
-		listeners = new ArrayList<OperatorsModelStateListener>();
+		listeners = new ArrayList<OperatorsServiceStateListener>();
 		DAOFactory.getInstance().getOperatorDAO().addDAOListener(this);
 	}
 
@@ -28,14 +28,19 @@ public class OperatorsService implements DAOListener{
 		return instance;
 	}
 
-	public void addOperatorsModelStateListener(OperatorsModelStateListener listener) {
+	public void addOperatorsServiceStateListener(OperatorsServiceStateListener listener) {
 		listeners.add(listener);
 	}
+	public void removeOperatorsServiceStateListener(OperatorsServiceStateListener listener) {
+		listeners.remove(listener);
+	}
+
+
 
 	public void readOperators() {
 		operators = DAOFactory.getInstance().getOperatorDAO().getAllItems();
 		checkAdmin();
-		notifyListeners(ModelState.UPDATED);
+		notifyListeners(ServiceState.UPDATED);
 
 	}
 
@@ -55,30 +60,30 @@ public class OperatorsService implements DAOListener{
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(ModelState.CONNECTING);
+				notifyListeners(ServiceState.CONNECTING);
 			break;
 
 			case READING:
-				notifyListeners(ModelState.READING);
+				notifyListeners(ServiceState.READING);
 			break;
 
 			case WRITING:
-				notifyListeners(ModelState.WRITING);
+				notifyListeners(ServiceState.WRITING);
 			break;
 
 			case READY:
-				notifyListeners(ModelState.READY);		
+				notifyListeners(ServiceState.READY);
 			break;
 
 			case ERROR:
-				notifyListeners(ModelState.ERROR);
+				notifyListeners(ServiceState.ERROR);
 			break;
 		}
 	}
 
-	private void notifyListeners(ModelState state) {
-		for (OperatorsModelStateListener listener : listeners) {
-			listener.operatorsModelStateChanged(state);			
+	private void notifyListeners(ServiceState state) {
+		for (OperatorsServiceStateListener listener : listeners) {
+			listener.operatorsServiceStateChanged(state);
 		}
 	}
 

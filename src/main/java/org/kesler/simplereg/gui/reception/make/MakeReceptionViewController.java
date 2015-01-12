@@ -9,13 +9,9 @@ import javax.swing.*;
 import org.kesler.simplereg.export.RosReestrPoiReceptionPrinter;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.Applicator;
+import org.kesler.simplereg.logic.*;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
-import org.kesler.simplereg.logic.RealtyObject;
-import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
@@ -27,6 +23,7 @@ import org.kesler.simplereg.export.ReceptionPrinter;
 import org.apache.log4j.Logger;
 
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.util.CounterUtil;
 import org.kesler.simplereg.util.OptionsUtil;
@@ -241,8 +238,10 @@ public class MakeReceptionViewController {
         reception.generateReceptionCode(); // заново генерируем код дела - уже с кодом услуги
         viewState.updatePanelData();
         service.addPvdtypePurpose(reception.getPvdtypeId(),reception.getPvdPurpose());
-        ServicesModel.getInstance().updateService(service);
 
+        // ОБновляем службу в отдельном потоке
+        ServiceUpdater serviceUpdater = new ServiceUpdater(service);
+        serviceUpdater.execute();
     }
 
     void setReceptionByRecord(boolean byRecord) {
@@ -389,31 +388,122 @@ public class MakeReceptionViewController {
 
     boolean saveReception() {
 
-        ReceptionsModel model = new ReceptionsModel();
-
-        if (isNew) {
-            model.addReception(reception);
-        } else {
-            model.updateReception(reception);
-        }
-
-
-        if (parentFrame != null) {
-            new InfoDialog(parentFrame, "Сохранено", 500, InfoDialog.GREEN).showInfo();
-        } else if (parentDialog != null) {
-            new InfoDialog(parentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
-        }
-
-        model.finish();
+        ReceptionSaver receptionSaver = new ReceptionSaver(reception,isNew);
+        receptionSaver.execute();
 
         return true;
     }
+
+
+    // Классы для сохранения сущностей в отдельнопо потоке
+    class ServiceUpdater extends SwingWorker<Void, Void> {
+        private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
+        private Service service;
+        public ServiceUpdater(Service service) {
+            this.service = service;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            ServicesModel.getInstance().updateService(service);
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (InterruptedException e) {
+                log.error("Interrupted",e);
+            } catch (ExecutionException e) {
+                log.error("Error updating service",e);
+                JOptionPane.showMessageDialog(view,"Ошибка при обновлении услуги: "+e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
+    class ReceptionSaver extends SwingWorker<Void,String> implements ReceptionsModelStateListener{
+        private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
+        private Reception reception;
+        private boolean isNew;
+        private ReceptionsModel receptionsModel;
+        private ProcessDialog processDialog;
+
+        public ReceptionSaver(Reception reception, boolean isNew) {
+            this.reception = reception;
+            this.isNew = isNew;
+            receptionsModel = ReceptionsModel.getInstance();
+            receptionsModel.addReceptionsModelStateListener(this);
+            if (parentFrame != null) {
+                processDialog = new ProcessDialog(parentFrame);
+            } else if (parentDialog != null) {
+                processDialog = new ProcessDialog(parentDialog);
+            }
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            if (isNew) {
+                log.info("Adding reception...");
+                receptionsModel.addReception(reception);
+            } else {
+                log.info("Updating reception...");
+                receptionsModel.updateReception(reception);
+            }
+            return null;
+        }
+
+        @Override
+        public void receptionsModelStateChanged(ServiceState state) {
+            switch (state) {
+                case CONNECTING:
+                    publish("Соединяюсь..");
+                    break;
+                case WRITING:
+                    publish("Сохраняю в базу данных..");
+                    break;
+                case READY:
+                    publish("Готово");
+
+            }
+        }
+
+        @Override
+        protected void process(List<String> chunks) {
+            processDialog.showProcess(chunks.get(chunks.size()-1));
+        }
+
+        @Override
+        protected void done() {
+            try {
+                processDialog.hideProcess();
+                receptionsModel.finish();
+                receptionsModel.removeReceptionsModelStateListener(this);
+
+                get();
+                if (parentFrame != null) {
+                    new InfoDialog(parentFrame, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+                } else if (parentDialog != null) {
+                    new InfoDialog(parentDialog, "Сохранено", 500, InfoDialog.GREEN).showInfo();
+                }
+
+            } catch (InterruptedException e) {
+                log.error("Interrupted",e);
+            } catch (ExecutionException e) {
+                log.error("Error saving reception",e);
+                JOptionPane.showMessageDialog(view,"Ошибка при сохранении приема: "+e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
 
 
     class ReceptionPrinterWorker extends SwingWorker<Void,Void> {
         private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
         private ReceptionPrinter receptionPrinter;
         private ProcessDialog processDialog;
+
         ReceptionPrinterWorker(ReceptionPrinter receptionPrinter, ProcessDialog processDialog) {
             this.receptionPrinter = receptionPrinter;
             this.processDialog = processDialog;

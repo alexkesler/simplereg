@@ -6,14 +6,14 @@ import javax.swing.JOptionPane;
 import org.kesler.simplereg.gui.GenericListDialogController;
 import org.kesler.simplereg.gui.GenericListDialog;
 import org.kesler.simplereg.logic.operator.OperatorsService;
-import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
+import org.kesler.simplereg.logic.operator.OperatorsServiceStateListener;
 import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 
-public class OperatorListDialogController implements GenericListDialogController<Operator>, OperatorsModelStateListener {
+public class OperatorListDialogController implements GenericListDialogController<Operator>, OperatorsServiceStateListener {
 
 	private static OperatorListDialogController instance;
 
@@ -32,7 +32,7 @@ public class OperatorListDialogController implements GenericListDialogController
 	private OperatorListDialogController() {
 
 		model = OperatorsService.getInstance();
-		model.addOperatorsModelStateListener(this);
+		model.addOperatorsServiceStateListener(this);
 
 	}
 
@@ -53,11 +53,6 @@ public class OperatorListDialogController implements GenericListDialogController
 
 	}
 
-	// @Override
-	// public List<Operator> getAllItems() {
-	// 	return model.getAllOperators();
-	// }
-
 	@Override
 	public boolean openAddItemDialog() {
 		boolean result = false;
@@ -73,7 +68,6 @@ public class OperatorListDialogController implements GenericListDialogController
 
 		// Освобождаем ресурсы
 		operatorDialog.dispose();
-		operatorDialog = null;
 
 		return result;
 	}
@@ -92,7 +86,6 @@ public class OperatorListDialogController implements GenericListDialogController
 
 		// Освобождаем ресурсы
 		operatorDialog.dispose();
-		operatorDialog = null;
 
 		return result;
 
@@ -126,7 +119,7 @@ public class OperatorListDialogController implements GenericListDialogController
 	}
 
 	@Override
-	public void operatorsModelStateChanged(ModelState state) {
+	public void operatorsServiceStateChanged(ServiceState state) {
 		switch (state) {
 			
 			case CONNECTING:

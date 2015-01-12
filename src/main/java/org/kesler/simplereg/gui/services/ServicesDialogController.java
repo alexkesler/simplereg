@@ -1,17 +1,12 @@
 package org.kesler.simplereg.gui.services;
 
-import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.kesler.simplereg.logic.Service;
 import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.logic.service.ServicesModelListener;
-import org.kesler.simplereg.logic.ModelState;
-import org.kesler.simplereg.dao.EntityState;
+import org.kesler.simplereg.logic.ServiceState;
 
 
 import org.kesler.simplereg.gui.util.InfoDialog;
@@ -165,7 +160,7 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	}
 
 
-	public void modelStateChanged(ModelState state) {
+	public void modelStateChanged(ServiceState state) {
 		//if (processDialog == null) return ;
 		switch (state) {
 			case CONNECTING:

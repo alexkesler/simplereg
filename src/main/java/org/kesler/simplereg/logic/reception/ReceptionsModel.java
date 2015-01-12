@@ -10,7 +10,7 @@ import org.kesler.simplereg.dao.DAOState;
 import org.kesler.simplereg.logic.reception.filter.QuickReceptionsFiltersEnum;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFiltersModel;
 import org.kesler.simplereg.logic.reception.filter.ReceptionsFilter;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 
 public class ReceptionsModel implements DAOListener{
     protected final Logger log;
@@ -46,6 +46,10 @@ public class ReceptionsModel implements DAOListener{
 		if (!listeners.contains(listener)) listeners.add(listener);
 	}
 
+	public void removeReceptionsModelStateListener(ReceptionsModelStateListener listener) {
+		if (!listeners.contains(listener)) listeners.remove(listener);
+	}
+
 
 	public List<Reception> getAllReceptions() {
 		return allReceptions;
@@ -75,7 +79,7 @@ public class ReceptionsModel implements DAOListener{
             allReceptions = DAOFactory.getInstance().getReceptionDAO().getAllReceptions();
         }
         log.info("Read " + allReceptions.size() + " receptions");
-		notifyListeners(ModelState.UPDATED);
+		notifyListeners(ServiceState.UPDATED);
 	}
 
 	public void readReceptionsInSeparateThread() {
@@ -91,9 +95,9 @@ public class ReceptionsModel implements DAOListener{
 	public void applyFilters() {
         List<ReceptionsFilter> filters = filtersModel.getFilters();
         log.info("Applying filters: " + filters);
-		notifyListeners(ModelState.FILTERING);
+		notifyListeners(ServiceState.FILTERING);
         filteredReceptions = filtersModel.filterReceptions(allReceptions);
-		notifyListeners(ModelState.FILTERED);
+		notifyListeners(ServiceState.FILTERED);
 
 	}
 
@@ -130,7 +134,7 @@ public class ReceptionsModel implements DAOListener{
     public void applyFiltersSequently(List<ReceptionsFilter> filters) {
         log.info("Applying filters sequently..");
         List<Reception> newFilteredReceptions = new ArrayList<Reception>();
-        notifyListeners(ModelState.FILTERING);
+        notifyListeners(ServiceState.FILTERING);
         for (Reception reception: filteredReceptions) {
             boolean fit = true;
             for (ReceptionsFilter filter: filters) {
@@ -139,7 +143,7 @@ public class ReceptionsModel implements DAOListener{
             if (fit) newFilteredReceptions.add(reception);
         }
         filteredReceptions = newFilteredReceptions;
-        notifyListeners(ModelState.FILTERED);
+        notifyListeners(ServiceState.FILTERED);
     }
 
     /**
@@ -188,40 +192,12 @@ public class ReceptionsModel implements DAOListener{
 	}
 
     /**
-     * Сохраняет новый прием в отдельном потоке
-      * @param reception сохраняемый прием
-     */
-    public void addReceptionInSeparateThread(final Reception reception) {
-        Thread adderThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                addReception(reception);
-            }
-        });
-        adderThread.start();
-    }
-
-    /**
      * Сохраняет существующий прием
      * @param reception существующий прием, который необходимо сохранить
      */
 	public void updateReception(Reception reception) {
 		DAOFactory.getInstance().getReceptionDAO().updateReception(reception);
 	}
-
-    /**
-     * Сохраняет существующий прием в отдельном потоке
-     * @param reception  существующий прием, который необходимо сохранить
-     */
-    public void updateReceptionInSeparateThread(final Reception reception) {
-        Thread updaterThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateReception(reception);
-            }
-        });
-        updaterThread.start();
-    }
 
     /**
      * Удаляет прием
@@ -232,20 +208,6 @@ public class ReceptionsModel implements DAOListener{
 		allReceptions.remove(reception);
 		filteredReceptions.remove(reception);
 	}
-
-    /**
-     * Удаляет прием в отдельном потоке
-     * @param reception прием, который необходимо удалить
-     */
-    public void removeReceptionInSeparateThread(final Reception reception) {
-        Thread removerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                removeReception(reception);
-            }
-        });
-        removerThread.start();
-    }
 
     public Integer getLastPVDPackageNum() {
         return DAOFactory.getInstance().getReceptionDAO().getLastPVDPackageNum();
@@ -258,28 +220,28 @@ public class ReceptionsModel implements DAOListener{
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(ModelState.CONNECTING);
+				notifyListeners(ServiceState.CONNECTING);
 			break;
 			
 			case READING:
-				notifyListeners(ModelState.READING);
+				notifyListeners(ServiceState.READING);
 			break;
 			
 			case WRITING:
-				notifyListeners(ModelState.WRITING);
+				notifyListeners(ServiceState.WRITING);
 			break;
 			
 			case READY:
-				notifyListeners(ModelState.READY);
+				notifyListeners(ServiceState.READY);
 			break;
 			
 			case ERROR:
-				notifyListeners(ModelState.ERROR);
+				notifyListeners(ServiceState.ERROR);
 			break;				
 		}
 	}
 
-	private void notifyListeners(ModelState state) {
+	private void notifyListeners(ServiceState state) {
         log.info("State: "+state);
 		for (ReceptionsModelStateListener listener: listeners) {
 			listener.receptionsModelStateChanged(state);
