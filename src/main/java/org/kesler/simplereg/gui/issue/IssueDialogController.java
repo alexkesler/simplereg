@@ -1,7 +1,7 @@
 package org.kesler.simplereg.gui.issue;
 
 import net.miginfocom.swing.MigLayout;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
@@ -55,8 +55,8 @@ public class IssueDialogController implements ReceptionsModelStateListener{
     }
 
     @Override
-    public void receptionsModelStateChanged(ModelState state) {
-        if(state==ModelState.FILTERED) {
+    public void receptionsModelStateChanged(ServiceState state) {
+        if(state== ServiceState.FILTERED) {
             issueDialog.updateReceptions(receptionsModel.getFilteredReceptions());
         }
     }

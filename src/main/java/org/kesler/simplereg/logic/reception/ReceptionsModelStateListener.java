@@ -1,7 +1,7 @@
 package org.kesler.simplereg.logic.reception;
 
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 
 public interface ReceptionsModelStateListener {
-	public void receptionsModelStateChanged(ModelState state);
+	public void receptionsModelStateChanged(ServiceState state);
 }

@@ -17,7 +17,7 @@ import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 
 import org.kesler.simplereg.gui.reestr.column.ReestrColumnsDialog;
@@ -345,7 +345,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	// реализует интерфейс для слушателя модели приемов 
 	@Override
-	public void receptionsModelStateChanged(ModelState state) {
+	public void receptionsModelStateChanged(ServiceState state) {
 		switch (state) {
 			case CONNECTING:
 				if (processDialog != null) processDialog.showProcess("Соединяюсь");

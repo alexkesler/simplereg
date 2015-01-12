@@ -2,15 +2,13 @@ package org.kesler.simplereg.logic.service;
 
 import java.util.List;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.dao.DAOFactory;
 import org.kesler.simplereg.dao.DAOListener;
 import org.kesler.simplereg.dao.DAOState;
-import org.kesler.simplereg.logic.ModelState;
+import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.Service;
-import org.kesler.simplereg.logic.service.ServicesModelListener;
 
 /**
 * Реализует методы доступа к услугам, сохраненным в базе данных, хранит список услуг, прочитанный из базы, записывает изменения в базу
@@ -54,7 +52,7 @@ public class ServicesModel implements DAOListener{
             if (service.getEnabled()!=null && service.getEnabled()) activeServices.add(service);
         }
         log.info("Read " + services.size() + " services");
-		notifyListeners(ModelState.UPDATED);	
+		notifyListeners(ServiceState.UPDATED);
 	}
 
     /**
@@ -135,24 +133,24 @@ public class ServicesModel implements DAOListener{
 	public void daoStateChanged(DAOState state) {
 		switch (state) {
 			case CONNECTING:
-				notifyListeners(ModelState.CONNECTING);
+				notifyListeners(ServiceState.CONNECTING);
 			break;
 			case READING:
-				notifyListeners(ModelState.READING);
+				notifyListeners(ServiceState.READING);
 			break;
 			case WRITING:
-				notifyListeners(ModelState.WRITING);
+				notifyListeners(ServiceState.WRITING);
 			break;
 			case READY:
-				notifyListeners(ModelState.READY);
+				notifyListeners(ServiceState.READY);
 			break;
 			case ERROR:
-				notifyListeners(ModelState.ERROR);
+				notifyListeners(ServiceState.ERROR);
 			break;
 		}
 	}
 
-	private void notifyListeners(ModelState state) {
+	private void notifyListeners(ServiceState state) {
 		for (ServicesModelListener listener: listeners) {
 			listener.modelStateChanged(state);
 		}

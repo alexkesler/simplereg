@@ -1,42 +1,42 @@
 package org.kesler.simplereg.gui.main;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
+import org.kesler.simplereg.gui.applicator.FLListDialogController;
+import org.kesler.simplereg.gui.applicator.ULListDialogController;
 import org.kesler.simplereg.gui.fias.FIASDialog;
 import org.kesler.simplereg.gui.issue.IssueDialogController;
+import org.kesler.simplereg.gui.operators.OperatorListDialogController;
 import org.kesler.simplereg.gui.options.OptionsDialog;
 import org.kesler.simplereg.gui.pvd.PVDImportDialogController;
+import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
+import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
 import org.kesler.simplereg.gui.reception.check.CheckReceptionStatusDialogController;
-import org.kesler.simplereg.logic.reception.ReceptionsModel;
-import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
-import org.kesler.simplereg.logic.Operator;
-import org.kesler.simplereg.logic.operator.OperatorsService;
-import org.kesler.simplereg.logic.ModelState;
-import org.kesler.simplereg.logic.operator.OperatorsModelStateListener;
-import org.kesler.simplereg.gui.util.ProcessDialog;
+import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
+import org.kesler.simplereg.gui.reception.receptionstatus.ReceptionStatusListDialogController;
+import org.kesler.simplereg.gui.reestr.ReestrViewController;
+import org.kesler.simplereg.gui.services.ServicesDialogController;
+import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.util.InfoDialog;
+import org.kesler.simplereg.gui.util.ProcessDialog;
+import org.kesler.simplereg.logic.ServiceState;
+import org.kesler.simplereg.logic.Operator;
+import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.logic.operator.OperatorsServiceStateListener;
+import org.kesler.simplereg.logic.operator.OperatorsService;
+import org.kesler.simplereg.logic.reception.ReceptionsModel;
+import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.pvdimport.Transform;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.transform.TransformException;
 import org.kesler.simplereg.util.HibernateUtil;
-
-import org.kesler.simplereg.gui.services.ServicesDialogController;
-import org.kesler.simplereg.gui.operators.OperatorListDialogController;
-import org.kesler.simplereg.gui.statistic.StatisticViewController;
-import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
-import org.kesler.simplereg.gui.reception.receptionstatus.ReceptionStatusListDialogController;
-import org.kesler.simplereg.gui.applicator.FLListDialogController;
-import org.kesler.simplereg.gui.applicator.ULListDialogController;
-import org.kesler.simplereg.gui.reestr.ReestrViewController;
-import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
-import org.kesler.simplereg.gui.realty.RealtyTypeListDialogController;
 import org.kesler.simplereg.util.LoggingUtil;
 import org.kesler.simplereg.util.OptionsUtil;
 
-import static org.kesler.simplereg.gui.main.MainViewCommand.*;
 import javax.swing.*;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import static org.kesler.simplereg.gui.main.MainViewCommand.*;
 
 
 /**
@@ -44,7 +44,6 @@ import javax.swing.*;
 */
 public class MainViewController implements MainViewListener, 
 								CurrentOperatorListener, 
-								OperatorsModelStateListener, 
 								ReceptionsModelStateListener{
 	private static MainViewController instance;
     private static Logger log = Logger.getLogger(MainViewController.class);
@@ -52,7 +51,6 @@ public class MainViewController implements MainViewListener,
 	private MainView mainView;
 	private ReceptionsModel receptionsModel;
 	private OperatorsService operatorsService;
-//	private RealtyObjectsService realtyObjectsService;
 	private LoginDialog loginDialog;
 
 	private ProcessDialog processDialog;
@@ -62,7 +60,6 @@ public class MainViewController implements MainViewListener,
 		this.operatorsService = OperatorsService.getInstance();
 //		this.realtyObjectsService = RealtyObjectsService.getInstance();
 
-		operatorsService.addOperatorsModelStateListener(this);
 		receptionsModel.addReceptionsModelStateListener(this);
 		
 		mainView = new MainView(this);
@@ -229,7 +226,7 @@ public class MainViewController implements MainViewListener,
 	}
 
 	@Override 
-	public void receptionsModelStateChanged(ModelState state) {
+	public void receptionsModelStateChanged(ServiceState state) {
 		switch (state) {
 			case CONNECTING:
 				if (processDialog != null) processDialog.showProcess("Соединяюсь...");
@@ -241,7 +238,7 @@ public class MainViewController implements MainViewListener,
 
 			case WRITING:
 				if (processDialog != null) processDialog.showProcess("Сохраняю");
-			break;	
+			break;
 
 			case READY:
 				if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
@@ -271,7 +268,10 @@ public class MainViewController implements MainViewListener,
 		loginDialog = new LoginDialog(mainView);
 
 		processDialog = new ProcessDialog(loginDialog);
-		operatorsService.readOperatorsInSeparateThread();
+
+		OperatorsReader operatorsReader = new OperatorsReader(processDialog);
+		processDialog.showProcess("Читаю список операторов из базы...");
+		operatorsReader.execute();
 
         log.info("Showing login dialog..");
 		loginDialog.showDialog();
@@ -299,39 +299,6 @@ public class MainViewController implements MainViewListener,
 		loginDialog.dispose();
 		loginDialog = null;
 
-			
-
-	}
-
-
-
-	public void operatorsModelStateChanged(ModelState state) {
-		switch (state) {
-			case CONNECTING:
-					
-					if (processDialog != null) processDialog.showProcess("Соединяюсь...");
-					break;
-			
-			case READING:
-					if (processDialog != null) processDialog.showProcess("Читаю список операторов из базы...");
-					break;
-
-			case UPDATED:
-					if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-					List<Operator> operators = operatorsService.getActiveOperators();
-					if (loginDialog != null) loginDialog.setOperators(operators);
-					break;
-
-			case READY:
-					break;
-
-
-			case ERROR:
-					if (processDialog != null) {processDialog.hideProcess(); processDialog = null;}
-					new InfoDialog(loginDialog, "Ошибка базы данных", 1000, InfoDialog.RED).showInfo();
-					break;	
-			
-		}
 	}
 
 
@@ -413,13 +380,6 @@ public class MainViewController implements MainViewListener,
             JOptionPane.showMessageDialog(mainView,"Адрес сервера не задан, проверьте настройки","Ошибка",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        // Получаем номер последнего дела ПК ПВД
-//        Integer lastPVDPackageNum = receptionsModel.getLastPVDPackageNum();
-//        Integer lastPVDPackageNum = null;
-
-//        if (lastPVDPackageNum!=null)
-//            cause = PVDImportDialogController.getInstance().showSelectDialog(mainView, lastPVDPackageNum);
-//        else // не нашли последнее дело - читаем за текущий день
 
         Cause cause = PVDImportDialogController.getInstance().showSelectDialog(mainView);
         if (cause==null) return;
@@ -440,8 +400,6 @@ public class MainViewController implements MainViewListener,
     }
 
 
-
-
 	/**
 	* Обрабатывет событие смены оператора
 	*/
@@ -455,6 +413,61 @@ public class MainViewController implements MainViewListener,
 		}
 
 		setMainViewAccess(operator);
+	}
+
+	/// Класс для чтения списка операторов в отдельном потоке
+	class OperatorsReader extends SwingWorker<List<Operator>, String> implements OperatorsServiceStateListener {
+		private ProcessDialog processDialog;
+
+		public OperatorsReader(ProcessDialog processDialog) {
+			this.processDialog = processDialog;
+		}
+
+		@Override
+		protected List<Operator> doInBackground() throws Exception {
+			operatorsService.addOperatorsServiceStateListener(this);
+			operatorsService.readOperators();
+			return operatorsService.getActiveOperators();
+		}
+
+		@Override
+		protected void process(List<String> chunks) {
+			processDialog.showProcess(chunks.get(chunks.size()-1));
+		}
+
+		@Override
+		public void operatorsServiceStateChanged(ServiceState state) {
+			switch (state) {
+				case CONNECTING:
+					publish("Соединяюсь...");
+					break;
+				case READING:
+					publish("Читаю список операторов..");
+					break;
+				case READY:
+					publish("Готово");
+
+			}
+		}
+
+		@Override
+		protected void done() {
+			operatorsService.removeOperatorsServiceStateListener(this);
+			try {
+				processDialog.hideProcess();
+				List<Operator> operators = get();
+				if (loginDialog!=null)
+					loginDialog.setOperators(operators);
+
+			} catch (InterruptedException e) {
+				log.error("Interrupted",e);
+			} catch (ExecutionException e) {
+				log.error("Error reading operators",e);
+				JOptionPane.showMessageDialog(loginDialog,"Ошибка при чтении списка операторов: "+e.getMessage(),
+						"Ошибка",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 }
