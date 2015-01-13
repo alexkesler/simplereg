@@ -434,7 +434,7 @@ public class MakeReceptionViewController {
             this.reception = reception;
             this.isNew = isNew;
             receptionsModel = ReceptionsModel.getInstance();
-            receptionsModel.addReceptionsModelStateListener(this);
+//            receptionsModel.addReceptionsModelStateListener(this);
             if (parentFrame != null) {
                 processDialog = new ProcessDialog(parentFrame);
             } else if (parentDialog != null) {
@@ -446,9 +446,11 @@ public class MakeReceptionViewController {
         protected Void doInBackground() throws Exception {
             if (isNew) {
                 log.info("Adding reception...");
+                publish("Сохраняю в базу данных...");
                 receptionsModel.addReception(reception);
             } else {
                 log.info("Updating reception...");
+                publish("Сохраняю в базу данных...");
                 receptionsModel.updateReception(reception);
             }
             return null;
@@ -478,8 +480,8 @@ public class MakeReceptionViewController {
         protected void done() {
             try {
                 processDialog.hideProcess();
-                receptionsModel.finish();
-                receptionsModel.removeReceptionsModelStateListener(this);
+//                receptionsModel.finish();
+//                receptionsModel.removeReceptionsModelStateListener(this);
 
                 get();
                 if (parentFrame != null) {
