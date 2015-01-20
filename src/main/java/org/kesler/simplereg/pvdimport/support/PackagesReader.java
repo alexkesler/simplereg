@@ -176,4 +176,15 @@ public class PackagesReader extends PVDReader {
         readerThread.start();
     }
 
+    public void readCauses() {
+        PackagesReader.this.read();
+        for (Package aPackage: packages) {
+            CauseReader causeReader = new CauseReader(aPackage);
+            causeReader.read();
+        }
+        OracleUtil.closeConnection();
+        readerListener.readComplete();
+
+    }
+
 }

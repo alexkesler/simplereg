@@ -1,7 +1,6 @@
 package org.kesler.simplereg.gui.pvd;
 
 
-
 import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.pvdimport.domain.Cause;
@@ -9,13 +8,10 @@ import org.kesler.simplereg.pvdimport.domain.Cause;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 
 public class PVDImportDialog extends AbstractDialog{
     private PVDImportDialogController controller;
@@ -40,6 +36,17 @@ public class PVDImportDialog extends AbstractDialog{
         createGUI();
         pack();
         setLocationRelativeTo(parentFrame);
+        searchTextField.requestFocus();
+    }
+
+    void disableControls() {
+        periodComboBox.setEnabled(false);
+        searchTextField.setEnabled(false);
+    }
+
+    void enableControls() {
+        periodComboBox.setEnabled(true);
+        searchTextField.setEnabled(true);
         searchTextField.requestFocus();
     }
 
@@ -91,12 +98,6 @@ public class PVDImportDialog extends AbstractDialog{
         causesTableModel = new CausesTableModel();
         causesTable = new JTable(causesTableModel);
         causesTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//        causesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-//            @Override
-//            public void valueChanged(ListSelectionEvent e) {
-//                selectedCause = controller.getCauses().get(e.getFirstIndex());
-//            }
-//        });
         JScrollPane causesTableScrollPane = new JScrollPane(causesTable);
 
         dataPanel.add(periodComboBox,"growx,wrap");
@@ -158,7 +159,7 @@ public class PVDImportDialog extends AbstractDialog{
         controller.filterCauses();
 
         if (controller.getCauses().size()>0)
-            causesTable.getSelectionModel().setSelectionInterval(0,0);
+            causesTable.getSelectionModel().setSelectionInterval(0, 0);
 
         searchTextField.requestFocus();
     }
@@ -216,6 +217,8 @@ public class PVDImportDialog extends AbstractDialog{
             }
 
         }
+
+
     }
 
     public enum Period {

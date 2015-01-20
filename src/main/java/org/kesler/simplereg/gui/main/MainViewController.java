@@ -18,16 +18,16 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.operator.OperatorsServiceStateListener;
+import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.operator.OperatorsService;
+import org.kesler.simplereg.logic.operator.OperatorsServiceStateListener;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.pvdimport.Transform;
 import org.kesler.simplereg.pvdimport.domain.Cause;
-import org.kesler.simplereg.pvdimport.transform.TransformException;
+import org.kesler.simplereg.pvdimport.support.CauseReader;
 import org.kesler.simplereg.util.HibernateUtil;
 import org.kesler.simplereg.util.LoggingUtil;
 import org.kesler.simplereg.util.OptionsUtil;
@@ -478,6 +478,7 @@ public class MainViewController implements MainViewListener,
 
 		@Override
 		protected Void doInBackground() throws Exception {
+			CauseReader.readCause(cause);
 			Reception reception = Transform.makeReceptionFromCause(cause);
 			MakeReceptionViewController.getInstance().openView(mainView,reception,true);
 			return null;
