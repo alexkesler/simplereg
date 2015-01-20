@@ -20,6 +20,7 @@ import java.util.*;
 public class PVDImportDialog extends AbstractDialog{
     private PVDImportDialogController controller;
     private CausesTableModel causesTableModel;
+    private JTable causesTable;
     private JComboBox<Period> periodComboBox;
     private JTextField searchTextField;
     private Cause selectedCause;
@@ -88,14 +89,14 @@ public class PVDImportDialog extends AbstractDialog{
         });
 
         causesTableModel = new CausesTableModel();
-        JTable causesTable = new JTable(causesTableModel);
+        causesTable = new JTable(causesTableModel);
         causesTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        causesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                selectedCause = controller.getCauses().get(e.getFirstIndex());
-            }
-        });
+//        causesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+//            @Override
+//            public void valueChanged(ListSelectionEvent e) {
+//                selectedCause = controller.getCauses().get(e.getFirstIndex());
+//            }
+//        });
         JScrollPane causesTableScrollPane = new JScrollPane(causesTable);
 
         dataPanel.add(periodComboBox,"growx,wrap");
@@ -109,10 +110,21 @@ public class PVDImportDialog extends AbstractDialog{
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedCause = null;
+                int selectedIndex = causesTable.getSelectedRow();
+                if (selectedIndex >= 0) selectedCause = controller.getCauses().get(selectedIndex);
+                if (selectedCause==null) {
+                    JOptionPane.showMessageDialog(currentDialog,
+                            "Ничего не выбрано",
+                            "Внимание!",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 result = OK;
                 setVisible(false);
             }
         });
+
 
         JButton cancelButton = new JButton("Отмена");
         cancelButton.addActionListener(new ActionListener() {
@@ -125,6 +137,7 @@ public class PVDImportDialog extends AbstractDialog{
 
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
+        getRootPane().setDefaultButton(okButton);
 
         mainPanel.add(dataPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -143,6 +156,10 @@ public class PVDImportDialog extends AbstractDialog{
         String filterString = searchTextField.getText();
         controller.setFilterString(filterString);
         controller.filterCauses();
+
+        if (controller.getCauses().size()>0)
+            causesTable.getSelectionModel().setSelectionInterval(0,0);
+
         searchTextField.requestFocus();
     }
 
