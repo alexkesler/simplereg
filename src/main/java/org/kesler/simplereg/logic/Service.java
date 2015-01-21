@@ -27,7 +27,7 @@ public class Service extends AbstractEntity {
     @Column(name="Code", length=50)
     private String code;
 
-    @Column(name = "PvdtypesPurposes", length = 510)
+    @Column(name = "PvdtypesPurposes", length = 511)
     private String pvdtypesPurposes;
 
 	@Column(name="Enabled")
