@@ -1,13 +1,11 @@
 package org.kesler.simplereg.gui.pvd;
 
 
-import org.kesler.simplereg.gui.util.InfoDialog;
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.pvdimport.PVDReaderException;
 import org.kesler.simplereg.pvdimport.ReaderListener;
-import org.kesler.simplereg.pvdimport.domain.*;
+import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Package;
-import org.kesler.simplereg.pvdimport.support.CauseReader;
 import org.kesler.simplereg.pvdimport.support.PackagesReader;
 
 import javax.swing.*;
@@ -15,8 +13,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class PVDImportDialogController implements ReaderListener{
+    private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
     private static PVDImportDialogController instance = new PVDImportDialogController();
     private PackagesReader packagesReader;
@@ -32,6 +32,7 @@ public class PVDImportDialogController implements ReaderListener{
     private PVDImportDialogController() {
         causes = new ArrayList<Cause>();
         allCauses = new ArrayList<Cause>();
+        processDialog = new ProcessDialog(dialog);
     }
 
     public static synchronized PVDImportDialogController getInstance() { return instance; }
@@ -43,15 +44,13 @@ public class PVDImportDialogController implements ReaderListener{
         dialog = new PVDImportDialog(parentFrame, this);
         filterString = "";
         selectedPeriod = PVDImportDialog.Period.CURRENT_DAY;
-        processDialog = new ProcessDialog(dialog);
-        processDialog.showProcess("Читаю данные из ПК ПВД");
 
         readCauses(lastNum);
         dialog.setVisible(true);
 
 
         if(dialog.getResult()==PVDImportDialog.OK) {
-             return readCause(dialog.getSelectedCause());
+             return dialog.getSelectedCause();
         } else {
             return null;
         }
@@ -67,31 +66,20 @@ public class PVDImportDialogController implements ReaderListener{
 
 
         if(dialog.getResult()==PVDImportDialog.OK) {
-            return readCause(dialog.getSelectedCause());
+            return dialog.getSelectedCause();
         } else {
             return null;
         }
     }
 
-    private Cause readCause(Cause cause) {
-        try {
-            CauseReader.readCause(cause);
-        } catch (PVDReaderException ex) {
-            JOptionPane.showMessageDialog(dialog, ex.getMessage(), "Ошибка", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-
-        return cause;
-    }
 
     private void readCauses (int lastNum) {
         packagesReader = new PackagesReader(this, lastNum);
-        packagesReader.readCausesInSeparateThread();
+        new PackagesReaderWorker(packagesReader).go();
     }
 
     public void readCausesByPeriod() {
         processDialog = new ProcessDialog(dialog);
-        processDialog.showProcess("Читаю данные из ПК ПВД");
 
         switch (selectedPeriod) {
             case CURRENT_DAY:
@@ -118,7 +106,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
         packagesReader = new PackagesReader(this, begDate, endDate);
-        packagesReader.readCausesInSeparateThread();
+        new PackagesReaderWorker(packagesReader).go();
 
     }
 
@@ -134,7 +122,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
         packagesReader = new PackagesReader(this, begDate, endDate);
-        packagesReader.readCausesInSeparateThread();
+        new PackagesReaderWorker(packagesReader).go();
 
     }
 
@@ -150,7 +138,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
         packagesReader = new PackagesReader(this, begDate, endDate);
-        packagesReader.readCausesInSeparateThread();
+        new PackagesReaderWorker(packagesReader).go();
 
     }
 
@@ -174,28 +162,54 @@ public class PVDImportDialogController implements ReaderListener{
 
     @Override
     public void readComplete() {
-        allCauses.clear();
-        for (org.kesler.simplereg.pvdimport.domain.Package pack: packagesReader.getPackages()) {
-            allCauses.addAll(pack.getCauses());
-        }
-        filterCauses();
-        dialog.update();
-        processDialog.hideProcess();
+
     }
 
 
-    class ReadCauseWorker extends SwingWorker<List<Package>, Void> {
+
+    class PackagesReaderWorker extends SwingWorker<List<Package>, Void> {
         private PackagesReader reader;
-        ReadCauseWorker(PackagesReader reader) {
+
+        void go() {
+            processDialog.showProcess("Читаю данные из ПК ПВД");
+            dialog.disableControls();
+            execute();
+
+        }
+
+        PackagesReaderWorker(PackagesReader reader) {
             this.reader = reader;
         }
         @Override
         protected List<Package> doInBackground() throws Exception {
-            return null;
+            reader.readCauses();
+
+            return reader.getPackages();
         }
 
         @Override
         protected void done() {
+            try {
+                processDialog.hideProcess();
+                List<Package> packages = get();
+                allCauses.clear();
+                for (org.kesler.simplereg.pvdimport.domain.Package pack: packages) {
+                    allCauses.addAll(pack.getCauses());
+                }
+                filterCauses();
+                dialog.update();
+                dialog.enableControls();
+
+            } catch (InterruptedException e) {
+                log.error("Interrupted",e);
+
+            } catch (ExecutionException e) {
+                log.error("Error reading causes", e);
+                JOptionPane.showMessageDialog(dialog,
+                        "Ошибка при чтении данных из ПК ПВД: "+e.getMessage(),
+                        "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
