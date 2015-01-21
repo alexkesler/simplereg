@@ -18,16 +18,16 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.Operator;
 import org.kesler.simplereg.logic.Reception;
-import org.kesler.simplereg.logic.operator.OperatorsServiceStateListener;
+import org.kesler.simplereg.logic.ServiceState;
 import org.kesler.simplereg.logic.operator.OperatorsService;
+import org.kesler.simplereg.logic.operator.OperatorsServiceStateListener;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModelStateListener;
 import org.kesler.simplereg.pvdimport.Transform;
 import org.kesler.simplereg.pvdimport.domain.Cause;
-import org.kesler.simplereg.pvdimport.transform.TransformException;
+import org.kesler.simplereg.pvdimport.support.CauseReader;
 import org.kesler.simplereg.util.HibernateUtil;
 import org.kesler.simplereg.util.LoggingUtil;
 import org.kesler.simplereg.util.OptionsUtil;
@@ -384,15 +384,11 @@ public class MainViewController implements MainViewListener,
         Cause cause = PVDImportDialogController.getInstance().showSelectDialog(mainView);
         if (cause==null) return;
 
-        Reception reception = null;
-        try {
-            reception = Transform.makeReceptionFromCause(cause);
-        } catch (TransformException e) {
-            JOptionPane.showMessageDialog(mainView,e.getMessage(),"Ошибка",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (reception!=null)
-            MakeReceptionViewController.getInstance().openView(mainView,reception,true);
+		ProcessDialog pd = new ProcessDialog(mainView);
+		CauseTransformer causeTransformer = new CauseTransformer(cause,pd);
+		pd.showProcess("Преобразую запрос..");
+		causeTransformer.execute();
+
     }
 
     private void openCheckReceptionStatusDialog() {
@@ -466,6 +462,38 @@ public class MainViewController implements MainViewListener,
 				JOptionPane.showMessageDialog(loginDialog,"Ошибка при чтении списка операторов: "+e.getMessage(),
 						"Ошибка",
 						JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	// Класс для преобразования Cause в Reception  в отдельном потоке
+	class CauseTransformer  extends SwingWorker<Void,Void> {
+		private Cause cause;
+		private ProcessDialog processDialog;
+
+		public CauseTransformer(Cause cause, ProcessDialog processDialog) {
+			this.cause = cause;
+			this.processDialog = processDialog;
+		}
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			CauseReader.readCause(cause);
+			Reception reception = Transform.makeReceptionFromCause(cause);
+			MakeReceptionViewController.getInstance().openView(mainView,reception,true);
+			return null;
+		}
+
+		@Override
+		protected void done() {
+			processDialog.hideProcess();
+			try {
+				get();
+			} catch (InterruptedException e) {
+				log.error("Interrupted", e);
+			} catch (ExecutionException e) {
+				log.error("Transform error: " + e.getMessage(), e);
+				JOptionPane.showMessageDialog(mainView, e.getMessage(), "Ошибка",JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

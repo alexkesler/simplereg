@@ -1,7 +1,6 @@
 package org.kesler.simplereg.gui.pvd;
 
 
-
 import net.miginfocom.swing.MigLayout;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.pvdimport.domain.Cause;
@@ -9,17 +8,15 @@ import org.kesler.simplereg.pvdimport.domain.Cause;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 
 public class PVDImportDialog extends AbstractDialog{
     private PVDImportDialogController controller;
     private CausesTableModel causesTableModel;
+    private JTable causesTable;
     private JComboBox<Period> periodComboBox;
     private JTextField searchTextField;
     private Cause selectedCause;
@@ -39,6 +36,17 @@ public class PVDImportDialog extends AbstractDialog{
         createGUI();
         pack();
         setLocationRelativeTo(parentFrame);
+        searchTextField.requestFocus();
+    }
+
+    void disableControls() {
+        periodComboBox.setEnabled(false);
+        searchTextField.setEnabled(false);
+    }
+
+    void enableControls() {
+        periodComboBox.setEnabled(true);
+        searchTextField.setEnabled(true);
         searchTextField.requestFocus();
     }
 
@@ -88,14 +96,8 @@ public class PVDImportDialog extends AbstractDialog{
         });
 
         causesTableModel = new CausesTableModel();
-        JTable causesTable = new JTable(causesTableModel);
+        causesTable = new JTable(causesTableModel);
         causesTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        causesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                selectedCause = controller.getCauses().get(e.getFirstIndex());
-            }
-        });
         JScrollPane causesTableScrollPane = new JScrollPane(causesTable);
 
         dataPanel.add(periodComboBox,"growx,wrap");
@@ -109,10 +111,21 @@ public class PVDImportDialog extends AbstractDialog{
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedCause = null;
+                int selectedIndex = causesTable.getSelectedRow();
+                if (selectedIndex >= 0) selectedCause = controller.getCauses().get(selectedIndex);
+                if (selectedCause==null) {
+                    JOptionPane.showMessageDialog(currentDialog,
+                            "Ничего не выбрано",
+                            "Внимание!",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
                 result = OK;
                 setVisible(false);
             }
         });
+
 
         JButton cancelButton = new JButton("Отмена");
         cancelButton.addActionListener(new ActionListener() {
@@ -125,6 +138,7 @@ public class PVDImportDialog extends AbstractDialog{
 
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
+        getRootPane().setDefaultButton(okButton);
 
         mainPanel.add(dataPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -143,6 +157,10 @@ public class PVDImportDialog extends AbstractDialog{
         String filterString = searchTextField.getText();
         controller.setFilterString(filterString);
         controller.filterCauses();
+
+        if (controller.getCauses().size()>0)
+            causesTable.getSelectionModel().setSelectionInterval(0, 0);
+
         searchTextField.requestFocus();
     }
 
@@ -199,6 +217,8 @@ public class PVDImportDialog extends AbstractDialog{
             }
 
         }
+
+
     }
 
     public enum Period {
