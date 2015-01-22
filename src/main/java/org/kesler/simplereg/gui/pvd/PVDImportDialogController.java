@@ -3,7 +3,6 @@ package org.kesler.simplereg.gui.pvd;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.util.ProcessDialog;
-import org.kesler.simplereg.pvdimport.ReaderListener;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Package;
 import org.kesler.simplereg.pvdimport.support.PackagesReader;
@@ -15,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class PVDImportDialogController implements ReaderListener{
+public class PVDImportDialogController {
     private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
     private static PVDImportDialogController instance = new PVDImportDialogController();
@@ -74,7 +73,7 @@ public class PVDImportDialogController implements ReaderListener{
 
 
     private void readCauses (int lastNum) {
-        packagesReader = new PackagesReader(this, lastNum);
+        packagesReader = new PackagesReader(lastNum);
         new PackagesReaderWorker(packagesReader).go();
     }
 
@@ -105,7 +104,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.HOUR,23);
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
-        packagesReader = new PackagesReader(this, begDate, endDate);
+        packagesReader = new PackagesReader(begDate, endDate);
         new PackagesReaderWorker(packagesReader).go();
 
     }
@@ -121,7 +120,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.HOUR,23);
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
-        packagesReader = new PackagesReader(this, begDate, endDate);
+        packagesReader = new PackagesReader(begDate, endDate);
         new PackagesReaderWorker(packagesReader).go();
 
     }
@@ -137,7 +136,7 @@ public class PVDImportDialogController implements ReaderListener{
         calendar.set(Calendar.HOUR,23);
         calendar.set(Calendar.MINUTE, 59);
         Date endDate = calendar.getTime();
-        packagesReader = new PackagesReader(this, begDate, endDate);
+        packagesReader = new PackagesReader(begDate, endDate);
         new PackagesReaderWorker(packagesReader).go();
 
     }
@@ -159,12 +158,6 @@ public class PVDImportDialogController implements ReaderListener{
         }
         dialog.update();
     }
-
-    @Override
-    public void readComplete() {
-
-    }
-
 
 
     class PackagesReaderWorker extends SwingWorker<List<Package>, Void> {

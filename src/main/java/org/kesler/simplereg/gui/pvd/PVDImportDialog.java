@@ -20,6 +20,7 @@ public class PVDImportDialog extends AbstractDialog{
     private JComboBox<Period> periodComboBox;
     private JTextField searchTextField;
     private Cause selectedCause;
+    private JButton okButton;
 
     PVDImportDialog(JDialog parentDialog, PVDImportDialogController controller) {
         super(parentDialog, true);
@@ -42,12 +43,14 @@ public class PVDImportDialog extends AbstractDialog{
     void disableControls() {
         periodComboBox.setEnabled(false);
         searchTextField.setEnabled(false);
+        okButton.setEnabled(false);
     }
 
     void enableControls() {
         periodComboBox.setEnabled(true);
         searchTextField.setEnabled(true);
         searchTextField.requestFocus();
+        okButton.setEnabled(true);
     }
 
     private void createGUI() {
@@ -107,7 +110,7 @@ public class PVDImportDialog extends AbstractDialog{
         // Панель кнопок
         JPanel buttonPanel = new JPanel();
 
-        JButton okButton = new JButton("Выбрать");
+        okButton = new JButton("Выбрать");
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
