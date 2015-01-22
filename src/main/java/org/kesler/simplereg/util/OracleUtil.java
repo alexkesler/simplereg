@@ -9,11 +9,12 @@ import java.util.Properties;
 public class OracleUtil {
     private static Connection connection;
     public static synchronized Connection getConnection() throws SQLException{
-        if (connection == null) createConnection();
+        if (connection == null || connection.isClosed()) createConnection();
         return connection;
     }
 
     public static synchronized void closeConnection() {
+        if (connection==null) return;
         try {
             connection.close();
         } catch (SQLException e) {

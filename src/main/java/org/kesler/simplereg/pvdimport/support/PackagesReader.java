@@ -1,40 +1,35 @@
 package org.kesler.simplereg.pvdimport.support;
 
 import org.kesler.simplereg.pvdimport.PVDReader;
-import org.kesler.simplereg.pvdimport.PVDReaderException;
-import org.kesler.simplereg.pvdimport.ReaderListener;
-import org.kesler.simplereg.pvdimport.domain.Applicant;
-import org.kesler.simplereg.pvdimport.domain.Cause;
 import org.kesler.simplereg.pvdimport.domain.Package;
 import org.kesler.simplereg.util.OracleUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class PackagesReader extends PVDReader {
 
     private List<Package> packages;
-    private ReaderListener readerListener;
     private Date beginDate;
     private Date endDate;
     private Integer lastNum;
 
-    public PackagesReader(ReaderListener readerListener) {
-        this.readerListener = readerListener;
+    public PackagesReader() {
         packages = new ArrayList<Package>();
     }
 
-    public PackagesReader(ReaderListener readerListener, Date beginDate, Date endDate) {
-        this.readerListener = readerListener;
+    public PackagesReader(Date beginDate, Date endDate) {
         this.beginDate = beginDate;
         this.endDate = endDate;
         packages = new ArrayList<Package>();
     }
 
-    public PackagesReader(ReaderListener readerListener, Integer lastNum) {
-        this.readerListener = readerListener;
+    public PackagesReader(Integer lastNum) {
         this.lastNum = lastNum;
         packages = new ArrayList<Package>();
     }
@@ -78,103 +73,6 @@ public class PackagesReader extends PVDReader {
         return packages;
     }
 
-    public void readFullInSeparateThread() {
-        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                throw new PVDReaderException(e);
-            }
-        };
-
-        Thread readerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PackagesReader.this.read();
-                for (Package aPackage: packages) {
-                    CauseReader causeReader = new CauseReader(aPackage);
-                    causeReader.read();
-                    for (Cause cause: aPackage.getCauses()) {
-                        // читаем заявителей
-                        ApplicantsReader applicantsReader = new ApplicantsReader(cause);
-                        applicantsReader.read();
-                        for (Applicant applicant:cause.getApplicants()) {
-                            // читаем субъектов
-                            SubjectReader subjectReader = new SubjectReader(applicant);
-                            subjectReader.read();
-                        }
-                        // читаем объекты
-                        ObjReader objReader = new ObjReader(cause);
-                        objReader.read();
-                        // читаем платежи
-                        PayReader payReader = new PayReader(cause);
-                        payReader.read();
-                    }
-
-                }
-                OracleUtil.closeConnection();
-                readerListener.readComplete();
-            }
-
-        });
-        readerThread.setUncaughtExceptionHandler(handler);
-        readerThread.start();
-    }
-
-    public void readChargeInSeparateThread() {
-        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                throw new PVDReaderException(e);
-            }
-        };
-
-
-        Thread readerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PackagesReader.this.read();
-                for (Package aPackage: packages) {
-                    CauseReader causeReader = new CauseReader(aPackage);
-                    causeReader.read();
-                    for (Cause cause: aPackage.getCauses()) {
-                        // читаем платежи
-                        PayReader payReader = new PayReader(cause);
-                        payReader.read();
-                    }
-                }
-                OracleUtil.closeConnection();
-                readerListener.readComplete();
-            }
-
-        });
-        readerThread.setUncaughtExceptionHandler(handler);
-        readerThread.start();
-    }
-
-    public void readCausesInSeparateThread() {
-        Thread.UncaughtExceptionHandler handler = new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                throw new PVDReaderException(e);
-            }
-        };
-
-        Thread readerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                PackagesReader.this.read();
-                for (Package aPackage: packages) {
-                    CauseReader causeReader = new CauseReader(aPackage);
-                    causeReader.read();
-                }
-                OracleUtil.closeConnection();
-                readerListener.readComplete();
-            }
-
-        });
-        readerThread.setUncaughtExceptionHandler(handler);
-        readerThread.start();
-    }
 
     public void readCauses() {
         PackagesReader.this.read();
@@ -183,7 +81,6 @@ public class PackagesReader extends PVDReader {
             causeReader.read();
         }
         OracleUtil.closeConnection();
-        readerListener.readComplete();
 
     }
 
