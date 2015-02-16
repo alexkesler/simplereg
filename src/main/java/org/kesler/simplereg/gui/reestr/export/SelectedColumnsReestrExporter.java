@@ -29,6 +29,13 @@ public class SelectedColumnsReestrExporter extends ReestrExporter {
 
         List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();
 
+        CellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setWrapText(true);
+        cellStyle.setBorderTop(CellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(CellStyle.BORDER_THIN);
+        cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
+
 
         Row titleRow = sh.createRow(0);
         for (int colnum = 0; colnum < reestrColumns.size(); colnum++) {
@@ -37,12 +44,6 @@ public class SelectedColumnsReestrExporter extends ReestrExporter {
             Cell cell = titleRow.createCell(colnum);
             String value = reestrColumns.get(colnum).getName();
             cell.setCellValue(value);
-            CellStyle cellStyle = wb.createCellStyle();
-            cellStyle.setWrapText(true);
-            cellStyle.setBorderTop(CellStyle.BORDER_THIN);
-            cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
-            cellStyle.setBorderRight(CellStyle.BORDER_THIN);
-            cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
 
             cell.setCellStyle(cellStyle);
         }
@@ -55,13 +56,6 @@ public class SelectedColumnsReestrExporter extends ReestrExporter {
                 Cell cell = row.createCell(colnum);
                 String value = reestrColumns.get(colnum).getValue(receptions.get(rownum)).toString();
                 cell.setCellValue(value);
-
-                CellStyle cellStyle = wb.createCellStyle();
-                cellStyle.setWrapText(true);
-                cellStyle.setBorderTop(CellStyle.BORDER_THIN);
-                cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
-                cellStyle.setBorderRight(CellStyle.BORDER_THIN);
-                cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
 
                 cell.setCellStyle(cellStyle);
             }
