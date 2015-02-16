@@ -96,13 +96,6 @@ public class ReturnReestrExporter extends ReestrExporter {
 
                 cell.setCellValue(value);
 
-                cellStyle = wb.createCellStyle();
-                cellStyle.setWrapText(true);
-                cellStyle.setBorderTop(CellStyle.BORDER_THIN);
-                cellStyle.setBorderLeft(CellStyle.BORDER_THIN);
-                cellStyle.setBorderRight(CellStyle.BORDER_THIN);
-                cellStyle.setBorderBottom(CellStyle.BORDER_THIN);
-
                 cell.setCellStyle(cellStyle);
             }
         }
