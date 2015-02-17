@@ -16,10 +16,10 @@ import org.kesler.simplereg.dao.AbstractEntity;
 @Proxy(lazy=false)
 public class UL extends AbstractEntity {
 	
-	@Column(name="FullName")
+	@Column(name="FullName", length = 1023)
 	private String fullName;
 
-	@Column(name="ShortName")
+	@Column(name="ShortName",length = 510)
 	private String shortName;
 
 	public UL () {}
