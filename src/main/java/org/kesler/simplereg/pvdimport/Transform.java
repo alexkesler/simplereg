@@ -91,7 +91,7 @@ public class Transform {
         } else if (cls.equals("7.1") || cls.equals("7.2")) { // Юр лицо, муниципалитет
             ApplicatorUL applicatorUL = new ApplicatorUL();
             applicatorUL.setUL(getULByShortName(subject.getShortName()));
-            applicatorUL.setRepres(getFLByFIO(agent.getFirstname(),agent.getSurname(),agent.getPatronymic()));
+            if (agent!=null) applicatorUL.setRepres(getFLByFIO(agent.getFirstname(),agent.getSurname(),agent.getPatronymic()));
             applicator = applicatorUL;
         }
 
