@@ -1,4 +1,4 @@
-package org.kesler.simplereg.export;
+package org.kesler.simplereg.export.reception;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.logic.Reception;

@@ -1,9 +1,9 @@
-package org.kesler.simplereg.export;
+package org.kesler.simplereg.export.reception;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xwpf.usermodel.*;
-import org.kesler.simplereg.export.mapping.MappingFactory;
+import org.kesler.simplereg.export.reception.mapping.MappingFactory;
 import org.kesler.simplereg.logic.Reception;
 
 import java.io.FileOutputStream;

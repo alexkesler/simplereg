@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.export;
+package org.kesler.simplereg.export.reestr;
 
 /**
  * Перечисления для ведомостей

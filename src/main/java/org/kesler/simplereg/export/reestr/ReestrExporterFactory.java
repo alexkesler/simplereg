@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.export;
+package org.kesler.simplereg.export.reestr;
 
 /**
  * Created by alex on 13.06.14.

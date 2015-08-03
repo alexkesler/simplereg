@@ -1,6 +1,6 @@
-package org.kesler.simplereg.export.mapping;
+package org.kesler.simplereg.export.reception.mapping;
 
-import org.kesler.simplereg.export.mapping.support.*;
+import org.kesler.simplereg.export.reception.mapping.support.*;
 import org.kesler.simplereg.logic.Reception;
 
 import java.util.ArrayList;

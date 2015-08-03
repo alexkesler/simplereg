@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.export;
+package org.kesler.simplereg.export.reestr;
 
 import com.alee.laf.filechooser.WebFileChooser;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -31,7 +31,6 @@ public abstract class ReestrExporter {
         }
         this.receptions = receptions;
         Thread processThread = new Thread(new Runnable() {
-            @Override
             public void run() {
                 process();
             }
