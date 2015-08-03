@@ -372,6 +372,10 @@ public class MakeReceptionViewController {
         reception.setRosreestrCode(rosreestrCode);
     }
 
+    void setPagesNum(Integer pagesNum) {
+        reception.setPagesNum(pagesNum);
+    }
+
     void setResultInMFC(boolean resultInMFC) {
         reception.setResultInMFC(resultInMFC);
     }
@@ -456,7 +460,7 @@ public class MakeReceptionViewController {
             return null;
         }
 
-        @Override
+
         public void receptionsModelStateChanged(ServiceState state) {
             switch (state) {
                 case CONNECTING:
