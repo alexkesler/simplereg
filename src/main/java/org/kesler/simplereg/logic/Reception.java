@@ -101,6 +101,9 @@ public class Reception extends AbstractEntity{
     @Column(name = "PvdPurpose")
     private Integer pvdPurpose;
 
+	@Column(name = "PagesNum")
+    private Integer pagesNum;
+
     @ManyToOne
     @JoinColumn(name = "ParentReceptionID")
     private Reception parentReception;
@@ -320,7 +323,10 @@ public class Reception extends AbstractEntity{
     public Integer getPvdPurpose() { return pvdPurpose; }
     public void setPvdPurpose(Integer pvdPurpose) { this.pvdPurpose = pvdPurpose; }
 
-    public Reception getParentReception() {return parentReception;}
+	public Integer getPagesNum() { return pagesNum; }
+	public void setPagesNum(Integer pagesNum) { this.pagesNum = pagesNum; }
+
+	public Reception getParentReception() {return parentReception;}
     public void setParentReception(Reception parentReception) {
         if (parentReception!=null) {
             this.parentReception = parentReception;

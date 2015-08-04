@@ -1,6 +1,6 @@
-package org.kesler.simplereg.export.mapping.support;
+package org.kesler.simplereg.export.reception.mapping.support;
 
-import org.kesler.simplereg.export.mapping.ValueMapping;
+import org.kesler.simplereg.export.reception.mapping.ValueMapping;
 import org.kesler.simplereg.logic.Applicator;
 import org.kesler.simplereg.logic.FL;
 import org.kesler.simplereg.logic.Reception;
@@ -9,22 +9,24 @@ import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepresesOrApplicatorsValueMapping extends ValueMapping {
-    public RepresesOrApplicatorsValueMapping(Reception reception) {
+
+public class ApplicatorsValueMapping extends ValueMapping {
+    public ApplicatorsValueMapping(Reception reception) {
         super(reception);
     }
 
     @Override
     public String getName() {
-
-        return "@RepresesOrApplicators@";
+        return "@Applicators@";
     }
 
     @Override
     public String getValue() {
+        String applicatorsString = "";
         List<FL> represes = new ArrayList<FL>();
         List<Applicator> applicators = reception.getApplicators();
         for (Applicator applicator: applicators) {
+            applicatorsString = applicatorsString + applicator.getFullName() + "; ";
             FL repres = applicator.getRepres();
             if (repres==null && applicator instanceof ApplicatorFL) repres = ((ApplicatorFL) applicator).getFL();
             if (repres!=null) {
@@ -32,11 +34,6 @@ public class RepresesOrApplicatorsValueMapping extends ValueMapping {
             }
         }
 
-        String represesString = "";
-        for (FL repres: represes) {
-            represesString = represesString + repres.getShortFIO() + " _____________; ";
-        }
-
-        return represesString;
+        return applicatorsString;
     }
 }
