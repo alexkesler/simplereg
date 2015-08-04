@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.logic.Reception;
+import org.kesler.simplereg.util.OptionsUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,6 +21,11 @@ public class TransmitReestrExporter extends ReestrExporter {
 
     @Override
     protected void prepare() {
+
+        String filialName = OptionsUtil.getOption("reg.filial.name");
+        String filialAddress = OptionsUtil.getOption("reg.filial.address");
+
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Sheet sh = wb.createSheet();
 
@@ -64,7 +70,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         titleRow = sh.createRow(1);
         cell = titleRow.createCell(0);
         titleRow.createCell(1);
-        cell.setCellValue("от ГБУ СО «Многофункциональный центр» (Асбестовский филиал ГБУ СО МФЦ)");
+        cell.setCellValue("от ГБУ СО «Многофункциональный центр» (" + filialName + ")");
         cell.setCellStyle(centeredCellStyle);
         titleRow.createCell(2);
         titleRow.createCell(3);
@@ -77,7 +83,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         titleRow = sh.createRow(2);
         cell = titleRow.createCell(0);
         titleRow.createCell(1);
-        cell.setCellValue("______________________________________________________________________________________");
+        cell.setCellValue(filialAddress);
         cell.setCellStyle(centeredCellStyle);
         titleRow.createCell(2);
         titleRow.createCell(3);
@@ -117,7 +123,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         titleRow = sh.createRow(5);
         cell = titleRow.createCell(0);
         titleRow.createCell(1);
-        cell.setCellValue("от ______________________________________________________________________________");
+        cell.setCellValue("в ______________________________________________________________________________");
         cell.setCellStyle(centeredCellStyle);
         titleRow.createCell(2);
         titleRow.createCell(3);

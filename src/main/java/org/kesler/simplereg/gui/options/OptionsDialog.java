@@ -34,6 +34,8 @@ public class OptionsDialog extends JDialog {
 	private JTextField passwordTextField;
 
 	private JTextField filialTextField;
+	private JTextField filialNameTextField;
+	private JTextField filialAddressTextField;
 
     private JTextField pvdServerIpTextField;
 
@@ -118,9 +120,15 @@ public class OptionsDialog extends JDialog {
 		regPanel.setBorder(BorderFactory.createTitledBorder("Регистрационные данные"));
 
 		filialTextField = new JTextField(5);
+		filialNameTextField = new JTextField(25);
+		filialAddressTextField = new JTextField(25);
 
 		regPanel.add(new JLabel("Код филиала"));
 		regPanel.add(filialTextField);
+		regPanel.add(new JLabel("Наим филиала"));
+		regPanel.add(filialNameTextField);
+		regPanel.add(new JLabel("Адрес филиала"));
+		regPanel.add(filialAddressTextField);
 
         // Панель параметров ПК ПВД
         JPanel pvdPanel = new JPanel(new MigLayout("wrap 2",
@@ -193,6 +201,8 @@ public class OptionsDialog extends JDialog {
 		String password = options.getProperty("db.password");
 
 		String filial = options.getProperty("reg.filial");
+		String filialName = options.getProperty("reg.filial.name");
+		String filialAddress = options.getProperty("reg.filial.address");
 
         String pvdServerIp = options.getProperty("pvd.serverip");
 
@@ -206,6 +216,8 @@ public class OptionsDialog extends JDialog {
 		passwordTextField.setText(password);
 
 		filialTextField.setText(filial);
+		filialNameTextField.setText(filialName);
+		filialAddressTextField.setText(filialAddress);
 
         pvdServerIpTextField.setText(pvdServerIp);
 
@@ -224,6 +236,8 @@ public class OptionsDialog extends JDialog {
 		String password = passwordTextField.getText();
 
 		String filial = filialTextField.getText();
+		String filialName = filialNameTextField.getText();
+		String filialAddress = filialAddressTextField.getText();
 
         String pvdServerIp = pvdServerIpTextField.getText();
 
@@ -250,6 +264,8 @@ public class OptionsDialog extends JDialog {
 		OptionsUtil.setOption("db.password", password);
 
 		OptionsUtil.setOption("reg.filial", filial);
+		OptionsUtil.setOption("reg.filial.name", filialName);
+		OptionsUtil.setOption("reg.filial.address", filialAddress);
 
         OptionsUtil.setOption("pvd.serverip",pvdServerIp);
 

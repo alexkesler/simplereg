@@ -82,6 +82,8 @@ public class OptionsUtil {
         defaultOptions.setProperty("db.password", "q1w2e3R$");
         defaultOptions.setProperty("db.name","simplereg");
         defaultOptions.setProperty("reg.filial", "01");
+        defaultOptions.setProperty("reg.filial.name", "");
+        defaultOptions.setProperty("reg.filial.address", "");
         defaultOptions.setProperty("pvd.serverip", "");
         defaultOptions.setProperty("logic.initRecStatusCode", "1");
         defaultOptions.setProperty("print.request","request.docx");
