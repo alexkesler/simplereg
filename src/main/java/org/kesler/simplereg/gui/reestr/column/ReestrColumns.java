@@ -108,4 +108,24 @@ public class ReestrColumns {
 		}
 	}
 
+	public boolean moveUpActiveColumn(ReestrColumn column) {
+		int index = activeColumns.indexOf(column);
+		if (index > 0) {
+			activeColumns.remove(column);
+			activeColumns.add(index-1,column);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean moveDownActiveColumn(ReestrColumn column) {
+		int index = activeColumns.indexOf(column);
+		if (index < activeColumns.size()-1) {
+			activeColumns.remove(column);
+			activeColumns.add(index+1,column);
+			return true;
+		}
+		return false;
+	}
+
 }
