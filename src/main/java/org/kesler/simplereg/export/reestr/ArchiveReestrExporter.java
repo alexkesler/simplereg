@@ -15,12 +15,8 @@ import java.util.List;
  */
 public class ArchiveReestrExporter extends ReestrExporter {
 
-    private ReestrExportEnum exportEnum = ReestrExportEnum.FOR_ARCHIVE;
-
-
-    @Override
-    public ReestrExportEnum getEnum() {
-        return exportEnum;
+    public ArchiveReestrExporter() {
+        type = Type.FOR_ARCHIVE;
     }
 
     @Override
@@ -86,7 +82,7 @@ public class ArchiveReestrExporter extends ReestrExporter {
                         value = getRosreestrCodes(reception);
                         break;
                     case 2:
-                        value = reception.getRealtyObject().toString();
+                        value = reception.getRealtyObject()==null?"":reception.getRealtyObject().toString();
                         break;
                     case 3:
                         value = dateFormat.format(reception.getOpenDate());

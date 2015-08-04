@@ -7,9 +7,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
+import org.kesler.simplereg.export.reestr.ReestrExporter;
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
-import org.kesler.simplereg.export.reestr.ReestrExportEnum;
 import org.kesler.simplereg.export.reestr.ReestrExporterFactory;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.gui.util.InfoDialog;
@@ -215,10 +215,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 			selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
 		}
 
-		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " + 
-														selectedReceptionsString + 
-														" статус: " + status.getName() + " ?</html>", 
-														"Сменить статус?", JOptionPane.YES_NO_OPTION);
+		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " +
+						selectedReceptionsString +
+						" статус: " + status.getName() + " ?</html>",
+				"Сменить статус?", JOptionPane.YES_NO_OPTION);
 
 		if (confirmResult == JOptionPane.OK_OPTION) {
 			for (Reception reception: selectedReceptions) {
@@ -332,15 +332,19 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 	public void exportSelectedColumns() {
-        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.SELECTED_COLUMNS).export(model.getFilteredReceptions());
+        ReestrExporterFactory.createReestrExporter(ReestrExporter.Type.SELECTED_COLUMNS).export(model.getFilteredReceptions());
 	}
 
+    public void exportForTransmit() {
+        ReestrExporterFactory.createReestrExporter(ReestrExporter.Type.FOR_TRANSMIT).export(model.getFilteredReceptions());
+    }
+
     public void exportForArchive() {
-        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.FOR_ARCHIVE).export(model.getFilteredReceptions());
+        ReestrExporterFactory.createReestrExporter(ReestrExporter.Type.FOR_ARCHIVE).export(model.getFilteredReceptions());
     }
 
     public void exportForReturn() {
-        ReestrExporterFactory.createReestrExporter(ReestrExportEnum.FOR_RETURN).export(model.getFilteredReceptions());
+        ReestrExporterFactory.createReestrExporter(ReestrExporter.Type.FOR_RETURN).export(model.getFilteredReceptions());
     }
 
 	// реализует интерфейс для слушателя модели приемов 

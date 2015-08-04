@@ -14,11 +14,8 @@ import java.util.List;
  */
 public class SelectedColumnsReestrExporter extends ReestrExporter {
 
-    private ReestrExportEnum exportEnum = ReestrExportEnum.SELECTED_COLUMNS;
-
-    @Override
-    public ReestrExportEnum getEnum() {
-        return exportEnum;
+    public SelectedColumnsReestrExporter() {
+        type = Type.SELECTED_COLUMNS;
     }
 
     @Override

@@ -14,11 +14,9 @@ import java.util.List;
  * Экспорт ведомости для возврата
  */
 public class ReturnReestrExporter extends ReestrExporter {
-    private ReestrExportEnum exportEnum = ReestrExportEnum.FOR_RETURN;
 
-    @Override
-    public ReestrExportEnum getEnum() {
-        return exportEnum;
+    public ReturnReestrExporter() {
+        type = Type.FOR_RETURN;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class ReturnReestrExporter extends ReestrExporter {
                         value = getRosreestrCodes(reception);
                         break;
                     case 2:
-                        value = reception.getRealtyObject().toString();
+                        value = reception.getRealtyObject()==null?"":reception.getRealtyObject().toString();
                         break;
                     case 3:
                         value = dateFormat.format(reception.getOpenDate());
