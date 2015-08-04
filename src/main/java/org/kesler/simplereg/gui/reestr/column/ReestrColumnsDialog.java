@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import net.miginfocom.swing.MigLayout;
+import org.kesler.simplereg.util.ResourcesUtil;
 
 
 public class ReestrColumnsDialog extends JDialog {
@@ -153,6 +154,35 @@ public class ReestrColumnsDialog extends JDialog {
         });
 		JScrollPane activeColumnsListScrollPane = new JScrollPane(activeColumnsList);
 
+		JButton moveUpButton = new JButton(ResourcesUtil.getIcon("up.png"));
+		JButton moveDownButton = new JButton(ResourcesUtil.getIcon("down.png"));
+
+
+        moveUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectedActiveColumnIndex > 0) {
+                    if (reestrColumns.moveUpActiveColumn(selectedActiveColumn)) {
+                        activeColumnsListModel.contentsChanged();
+                        activeColumnsList.getSelectionModel().setSelectionInterval(selectedActiveColumnIndex-1,selectedActiveColumnIndex-1);
+                    }
+                }
+            }
+        });
+
+        moveDownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectedActiveColumnIndex < activeColumnsListModel.getSize()-1) {
+                    if (reestrColumns.moveDownActiveColumn(selectedActiveColumn)) {
+                        activeColumnsListModel.contentsChanged();
+                        activeColumnsList.getSelectionModel().setSelectionInterval(selectedActiveColumnIndex+1,selectedActiveColumnIndex+1);
+                    }
+                }
+            }
+        });
+
+
 
 		// Собираем панель данных
 		dataPanel.add(new JLabel("Неактивные"));
@@ -161,6 +191,8 @@ public class ReestrColumnsDialog extends JDialog {
 		dataPanel.add(activateColumnButton, "split 2, flowy");
 		dataPanel.add(deactivateColumnButton);
 		dataPanel.add(activeColumnsListScrollPane, "push, grow, w 70, spany 2");
+        dataPanel.add(moveUpButton, "split 2, flowy");
+        dataPanel.add(moveDownButton);
 
 
 		/// Панель кнопок 
@@ -236,6 +268,10 @@ public class ReestrColumnsDialog extends JDialog {
 		public void columnRemoved(int index) {
 			fireIntervalRemoved(this,index,index);
 		}
+
+        public void contentsChanged() {
+            fireContentsChanged(this,0,getSize());
+        }
 	}	
 
 }
