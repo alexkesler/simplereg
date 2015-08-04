@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.BorderLayout;
@@ -377,7 +379,7 @@ class MakeReceptionView extends JDialog {
         }
 
         // Модель данных для JList заявителей
-        class ApplicatorsListModel<Applicator> extends AbstractListModel {
+        class ApplicatorsListModel extends AbstractListModel<Applicator> {
             List<Applicator> applicators;
 
             ApplicatorsListModel(List<Applicator> applicators) {
@@ -482,6 +484,8 @@ class MakeReceptionView extends JDialog {
 
         JTextField rosreestrCodeTextField;
 
+        JSpinner pagesNumPagesSpinner;
+
         JCheckBox resultInMFCCheckBox;
 
         DataPanel() {
@@ -518,6 +522,15 @@ class MakeReceptionView extends JDialog {
             });
 
 
+            final SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(1,1,200,1);
+            pagesNumPagesSpinner = new JSpinner(spinnerNumberModel);
+
+            pagesNumPagesSpinner.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    controller.setPagesNum(spinnerNumberModel.getNumber().intValue());
+                }
+            });
+
             resultInMFCCheckBox = new JCheckBox("Результат получать в МФЦ");
             resultInMFCCheckBox.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ev) {
@@ -534,6 +547,9 @@ class MakeReceptionView extends JDialog {
 
             this.add(new JLabel("Код дела Росреестра: "));
             this.add(rosreestrCodeTextField, "wrap");
+
+            this.add(new JLabel("Кол-во страниц: "));
+            this.add(pagesNumPagesSpinner, "wrap");
 
             this.add(resultInMFCCheckBox, "wrap");
 
@@ -558,6 +574,10 @@ class MakeReceptionView extends JDialog {
 
         void setRosreestrCode(String rosreestrCode) {
             rosreestrCodeTextField.setText(rosreestrCode);
+        }
+
+        void setPagesNum(Integer pagesNum) {
+            pagesNumPagesSpinner.setValue(pagesNum);
         }
 
         void setResultInMFC(boolean resultInMFC) {

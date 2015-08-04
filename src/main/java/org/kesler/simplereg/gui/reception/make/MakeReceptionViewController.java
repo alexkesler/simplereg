@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import javax.swing.*;
 
-import org.kesler.simplereg.export.RosReestrPoiReceptionPrinter;
+import org.kesler.simplereg.export.reception.RosReestrPoiReceptionPrinter;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.*;
@@ -18,7 +18,7 @@ import org.kesler.simplereg.gui.main.CurrentOperator;
 import org.kesler.simplereg.gui.applicator.ApplicatorFLDialog;
 import org.kesler.simplereg.gui.applicator.ApplicatorULDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectListDialogController;
-import org.kesler.simplereg.export.ReceptionPrinter;
+import org.kesler.simplereg.export.reception.ReceptionPrinter;
 
 import org.apache.log4j.Logger;
 
@@ -372,6 +372,10 @@ public class MakeReceptionViewController {
         reception.setRosreestrCode(rosreestrCode);
     }
 
+    void setPagesNum(Integer pagesNum) {
+        reception.setPagesNum(pagesNum);
+    }
+
     void setResultInMFC(boolean resultInMFC) {
         reception.setResultInMFC(resultInMFC);
     }
@@ -456,7 +460,7 @@ public class MakeReceptionViewController {
             return null;
         }
 
-        @Override
+
         public void receptionsModelStateChanged(ServiceState state) {
             switch (state) {
                 case CONNECTING:

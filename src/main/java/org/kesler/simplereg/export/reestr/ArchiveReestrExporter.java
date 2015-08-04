@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.export;
+package org.kesler.simplereg.export.reestr;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -11,14 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Экспорт ведомости для возврата
+ * Формирование реестра передачи в архив
  */
-public class ReturnReestrExporter extends ReestrExporter {
-    private ReestrExportEnum exportEnum = ReestrExportEnum.FOR_RETURN;
+public class ArchiveReestrExporter extends ReestrExporter {
 
-    @Override
-    public ReestrExportEnum getEnum() {
-        return exportEnum;
+    public ArchiveReestrExporter() {
+        type = Type.FOR_ARCHIVE;
     }
 
     @Override
@@ -61,7 +59,6 @@ public class ReturnReestrExporter extends ReestrExporter {
         cell.setCellStyle(cellStyle);
 
 
-
         // формируем список основных дел
 
         List<Reception> mainReceptions = new ArrayList<Reception>();
@@ -85,7 +82,7 @@ public class ReturnReestrExporter extends ReestrExporter {
                         value = getRosreestrCodes(reception);
                         break;
                     case 2:
-                        value = reception.getRealtyObject().toString();
+                        value = reception.getRealtyObject()==null?"":reception.getRealtyObject().toString();
                         break;
                     case 3:
                         value = dateFormat.format(reception.getOpenDate());
@@ -99,6 +96,7 @@ public class ReturnReestrExporter extends ReestrExporter {
                 cell.setCellStyle(cellStyle);
             }
         }
+
 
     }
 

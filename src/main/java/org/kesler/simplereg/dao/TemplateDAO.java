@@ -8,10 +8,10 @@ import java.util.List;
  * Created by alex on 17.12.14.
  */
 public interface TemplateDAO {
-    public void addTemplate(Template template);
-    public void updateTemplate(Template template);
-    public void removeTemplate(Template template);
-    public List<Template> getAllTemplates();
-    public List<Template> getDefaultTemplates();
-    public Template getTemplateByUUID(String uuid);
+    void addTemplate(Template template);
+    void updateTemplate(Template template);
+    void removeTemplate(Template template);
+    List<Template> getAllTemplates();
+    List<Template> getDefaultTemplates();
+    Template getTemplateByUUID(String uuid);
 }

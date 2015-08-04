@@ -360,11 +360,11 @@ public class ReestrView extends JFrame {
         readFromDBButton.setIcon(ResourcesUtil.getIcon("database_refresh.png"));
         readFromDBButton.setToolTipText("Перечитать из базы данных");
         readFromDBButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.readFromDBAndApplyFilters();
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.readFromDBAndApplyFilters();
+			}
+		});
 
 
 
@@ -382,15 +382,23 @@ public class ReestrView extends JFrame {
 		filterPanel.add(resetFiltersButton, "wrap");
 
         JPanel exportPanel = new JPanel();
-        exportPanel.setLayout(new BoxLayout(exportPanel,BoxLayout.Y_AXIS));
-        exportPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Ведомости"));
+        exportPanel.setLayout(new BoxLayout(exportPanel, BoxLayout.Y_AXIS));
+        exportPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Ведомости"));
 
         JButton exportSelectedColumnsButton = new JButton("Список");
         exportSelectedColumnsButton.setIcon(ResourcesUtil.getIcon("table.png"));
         exportSelectedColumnsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				controller.exportSelectedColumns();
+			}
+		});
+
+        JButton exportForTransmitButton = new JButton("Для передачи");
+		exportForTransmitButton.setIcon(ResourcesUtil.getIcon("issue.png"));
+		exportForTransmitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                controller.exportSelectedColumns();
-            }
+                controller.exportForTransmit();
+			}
         });
 
         JButton exportForArchiveButton = new JButton("Для архива");
@@ -405,13 +413,14 @@ public class ReestrView extends JFrame {
         JButton exportForReturnButton = new JButton("Возврат");
         exportForReturnButton.setIcon(ResourcesUtil.getIcon("arrow_undo.png"));
         exportForReturnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.exportForReturn();
-            }
-        });
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.exportForReturn();
+			}
+		});
 
         exportPanel.add(exportSelectedColumnsButton);
+        exportPanel.add(exportForTransmitButton);
         exportPanel.add(exportForArchiveButton);
         exportPanel.add(exportForReturnButton);
 

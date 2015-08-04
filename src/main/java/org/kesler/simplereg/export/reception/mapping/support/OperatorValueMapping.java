@@ -1,6 +1,6 @@
-package org.kesler.simplereg.export.mapping.support;
+package org.kesler.simplereg.export.reception.mapping.support;
 
-import org.kesler.simplereg.export.mapping.ValueMapping;
+import org.kesler.simplereg.export.reception.mapping.ValueMapping;
 import org.kesler.simplereg.logic.Reception;
 
 public class OperatorValueMapping extends ValueMapping {

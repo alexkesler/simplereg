@@ -1,4 +1,4 @@
-package org.kesler.simplereg.gui.reestr.export;
+package org.kesler.simplereg.export.reestr;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -14,11 +14,8 @@ import java.util.List;
  */
 public class SelectedColumnsReestrExporter extends ReestrExporter {
 
-    private ReestrExportEnum exportEnum = ReestrExportEnum.SELECTED_COLUMNS;
-
-    @Override
-    public ReestrExportEnum getEnum() {
-        return exportEnum;
+    public SelectedColumnsReestrExporter() {
+        type = Type.SELECTED_COLUMNS;
     }
 
     @Override
