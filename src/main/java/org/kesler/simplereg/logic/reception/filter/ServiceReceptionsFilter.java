@@ -1,5 +1,6 @@
 package org.kesler.simplereg.logic.reception.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kesler.simplereg.logic.Reception;
@@ -9,11 +10,12 @@ public class ServiceReceptionsFilter implements ReceptionsFilter {
 
     private ReceptionsFiltersEnum filtersEnum = ReceptionsFiltersEnum.SERVICE;
 
-	private List<Service> filterServices;
+	private final List<Service> filterServices;
 
 
 	public ServiceReceptionsFilter(List<Service> filterServices) {
-		this.filterServices = filterServices;
+		this.filterServices = new ArrayList<Service>();
+        this.filterServices.addAll(filterServices);
 	}
 
 	public List<Service> getServices() {
@@ -37,6 +39,7 @@ public class ServiceReceptionsFilter implements ReceptionsFilter {
 			if (service.equals(reception.getService())) {
 				fit = true;
 			}
+
 		}
 
 		return fit;

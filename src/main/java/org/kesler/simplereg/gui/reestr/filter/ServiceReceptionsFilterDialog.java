@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.ListSelectionModel;
@@ -26,22 +25,25 @@ import org.kesler.simplereg.gui.services.ServicesDialogController;
 
 import org.kesler.simplereg.logic.reception.filter.ServiceReceptionsFilter;
 
+import org.kesler.simplereg.logic.service.ServicesModel;
 import org.kesler.simplereg.util.ResourcesUtil;
 
 
 public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 
-	private List<Service> services;
+	private List<Service> services ;
 	private ServicesListModel servicesListModel;
 	private int selectedServiceIndex = -1;
+    private ServicesModel servicesModel;
 
 	public ServiceReceptionsFilterDialog(JFrame frame) {
 		super(frame, "Фильтр по услугам");
+        servicesModel = ServicesModel.getInstance();
 	}
 
 	public ServiceReceptionsFilterDialog(JFrame frame, ServiceReceptionsFilter filter) {
 		super(frame, "Фильтр по услугам", filter);
-
+        servicesModel = ServicesModel.getInstance();
 	}
 
 	@Override
@@ -79,7 +81,8 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 				if(service != null) {
 
 					services.add(service);
-					servicesListModel.serviceAdded(services.size()-1);
+                    services.addAll(servicesModel.getChildServices(service));
+					servicesListModel.contentsChanged();
 				}
 			}
 		});
@@ -108,7 +111,11 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 
 	@Override 
 	protected void loadGUIDataFromReceptionsFilter() {
-		
+
+		ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
+		services.clear();
+        services.addAll(serviceReceptionsFilter.getServices());
+        servicesListModel.contentsChanged();
 
 	}
 
@@ -121,17 +128,16 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 			return false;
 		}
 
+        ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
+        serviceReceptionsFilter.getServices().clear();
+        serviceReceptionsFilter.getServices().addAll(services);
 
-		return true;
+
+        return true;
 
 	}
 
 	class ServicesListModel extends AbstractListModel {
-
-		ServicesListModel() {
-			ServiceReceptionsFilter serviceReceptionsFilter = (ServiceReceptionsFilter) receptionsFilter;
-			services = serviceReceptionsFilter.getServices();
-		}
 
 		@Override
 		public int getSize() {
@@ -150,6 +156,10 @@ public class ServiceReceptionsFilterDialog extends ReceptionsFilterDialog {
 		public void serviceRemoved(int index) {
 			fireIntervalRemoved(this, index, index);
 		}
+
+        public void contentsChanged() {
+            fireContentsChanged(this,0,services.size()-1);
+        }
 
 	}
 

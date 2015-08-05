@@ -37,4 +37,5 @@ public abstract class AbstractDialog extends JDialog {
 		currentDialog = this;
 	}
 
+
 }

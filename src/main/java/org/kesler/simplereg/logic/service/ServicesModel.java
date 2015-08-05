@@ -89,6 +89,19 @@ public class ServicesModel implements DAOListener{
 		return services;
 	}
 
+    public List<Service> getChildServices(Service parentService) {
+        List<Service> childServices = new ArrayList<Service>();
+
+        for (Service service: services) {
+            if (service.getParentService()!=null && service.getParentService().equals(parentService)) {
+                childServices.add(service);
+                childServices.addAll(getChildServices(service));
+            }
+        }
+
+        return childServices;
+    }
+
 	public List<Service> getActiveServices() {
         if (activeServices.size()==0) {
             readServices();

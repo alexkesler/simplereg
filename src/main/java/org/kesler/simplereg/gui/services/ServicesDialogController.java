@@ -59,17 +59,36 @@ public class ServicesDialogController implements ServicesModelListener, ProcessD
 	public Service openSelectDialog(JDialog parentDialog) {
 		Service selectedService = null;
 
-		dialog = new SelectServicesDialog(parentDialog, this);
+		SelectServicesDialog selectServicesDialog = new SelectServicesDialog(parentDialog, this);
+		selectServicesDialog.setLeafSelect(false);
+        dialog = selectServicesDialog;
 		reloadTree();
-		dialog.setVisible(true);
+        dialog.setVisible(true);
 
-		if (dialog.getResult() == ServicesDialog.OK) {
+		if (selectServicesDialog.getResult() == ServicesDialog.OK) {
 			selectedService = dialog.getSelectedService();
 		}
 
 		// Освобождаем ресурсы
-		dialog.dispose();
-		dialog = null;
+		selectServicesDialog.dispose();
+		return selectedService;
+	}
+
+	public Service openSelectLeafDialog(JDialog parentDialog) {
+		Service selectedService = null;
+
+		SelectServicesDialog selectServicesDialog = new SelectServicesDialog(parentDialog, this);
+		selectServicesDialog.setLeafSelect(true);
+        dialog = selectServicesDialog;
+		reloadTree();
+		dialog.setVisible(true);
+
+		if (selectServicesDialog.getResult() == ServicesDialog.OK) {
+			selectedService = dialog.getSelectedService();
+		}
+
+		// Освобождаем ресурсы
+		selectServicesDialog.dispose();
 		return selectedService;
 	}
 
