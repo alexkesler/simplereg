@@ -1,5 +1,6 @@
 package org.kesler.simplereg.export.reestr;
 
+import org.apache.poi.hssf.usermodel.HSSFPrintSetup;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.kesler.simplereg.gui.main.CurrentOperator;
@@ -530,6 +531,14 @@ public class TransmitReestrExporter extends ReestrExporter {
         range = new CellRangeAddress(footerRowPos+13,footerRowPos+13,5,6);
         sh.addMergedRegion(range);
 
+
+        PrintSetup prsetup = sh.getPrintSetup();
+        sh.setAutobreaks(true);
+//        prsetup.setFitHeight((short)1);
+        prsetup.setFitWidth((short)1);
+//        sh.setFitToPage(true);
+
+        wb.setPrintArea(0,0,0,6,footerRowPos+13);
 
     }
 

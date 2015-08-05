@@ -32,6 +32,8 @@ public class SelectServicesDialog extends ServicesDialog{
 	private DefaultMutableTreeNode originalRootNode;
 	private DefaultMutableTreeNode filteredRootNode;
 
+	private boolean leafSelect = false;
+
 	// private String filterString;
 
 	public SelectServicesDialog(JFrame parentFrame, ServicesDialogController controller) {
@@ -46,6 +48,9 @@ public class SelectServicesDialog extends ServicesDialog{
 		filteredRootNode = new DefaultMutableTreeNode("Услуги");
 	}
 
+	public void setLeafSelect(boolean leafSelect) {
+		this.leafSelect = leafSelect;
+	}
 
 	@Override
 	protected void createGUI() {
@@ -120,18 +125,18 @@ public class SelectServicesDialog extends ServicesDialog{
         				"Ошибка",
         				JOptionPane.ERROR_MESSAGE);
 			return ;
-		} 
-
-		if (!selectedNode.isLeaf()) {
-			JOptionPane.showMessageDialog(null,
-        				"Нельзя выбрать обобщающую услугу",
-        				"Ошибка",
-        				JOptionPane.ERROR_MESSAGE);
-			return ;
-			
 		}
 
-		result = OK;
+        if (leafSelect && !selectedNode.isLeaf()) {
+            JOptionPane.showMessageDialog(null,
+                    "Нельзя выбрать обобщающую услугу",
+                    "Ошибка",
+                    JOptionPane.ERROR_MESSAGE);
+            return ;
+
+        }
+
+        result = OK;
 		setVisible(false);
 
 	}

@@ -233,7 +233,7 @@ public class MakeReceptionViewController {
     }
 
     void selectService() {
-        Service service = ServicesDialogController.getInstance().openSelectDialog(view);
+        Service service = ServicesDialogController.getInstance().openSelectLeafDialog(view);
         reception.setService(service);
         reception.generateReceptionCode(); // заново генерируем код дела - уже с кодом услуги
         viewState.updatePanelData();
