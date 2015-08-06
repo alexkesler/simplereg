@@ -538,7 +538,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         prsetup.setFitWidth((short)1);
 //        sh.setFitToPage(true);
 
-        wb.setPrintArea(0,0,0,6,footerRowPos+13);
+        wb.setPrintArea(0,0,6,0,footerRowPos+13);
 
     }
 
