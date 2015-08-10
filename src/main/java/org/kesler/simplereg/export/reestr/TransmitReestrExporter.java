@@ -35,7 +35,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         sh.setColumnWidth(2, 256*25);
         sh.setColumnWidth(3, 256 * 15);
         sh.setColumnWidth(4, 256 * 22);
-        sh.setColumnWidth(5, 256 * 15);
+        sh.setColumnWidth(5, 256 * 22);
         sh.setColumnWidth(6, 256 * 15);
 
 
@@ -194,7 +194,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         cell.setCellStyle(headerCellStyle);
 
         cell = headerRow.createCell(5);
-        cell.setCellValue("Количество листов в запросе");
+        cell.setCellValue("Номер дела ПК ПВД");
         cell.setCellStyle(headerCellStyle);
 
         cell = headerRow.createCell(6);
@@ -242,8 +242,8 @@ public class TransmitReestrExporter extends ReestrExporter {
                         cell.setCellStyle(tableCellStyle);
                         break;
                     case 5:
-                        cell.setCellValue(reception.getPagesNum()==null?"":reception.getPagesNum()+"");
-                        cell.setCellStyle(tableCenteredCellStyle);
+                        cell.setCellValue(reception.getRosreestrCode());
+                        cell.setCellStyle(tableCellStyle);
                         break;
                     default:
                         cell.setCellStyle(tableCellStyle);
@@ -538,7 +538,7 @@ public class TransmitReestrExporter extends ReestrExporter {
         prsetup.setFitWidth((short)1);
 //        sh.setFitToPage(true);
 
-        wb.setPrintArea(0,0,0,6,footerRowPos+13);
+        wb.setPrintArea(0,0,6,0,footerRowPos+13);
 
     }
 

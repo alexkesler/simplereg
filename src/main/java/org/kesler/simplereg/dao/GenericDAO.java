@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface GenericDAO <T extends AbstractEntity> extends DAOObservable{
 	
-	public Long addItem(T item) throws DAOException;
+	Long addItem(T item) throws DAOException;
 
-	public void updateItem(T item) throws DAOException;
+	void updateItem(T item) throws DAOException;
 
-	public T getItemById(long id) throws DAOException;
+	T getItemById(long id) throws DAOException;
 
-	public List<T> getAllItems() throws DAOException;
+	List<T> getAllItems() throws DAOException;
 
-	public void removeItem(T item) throws DAOException;
+	void removeItem(T item) throws DAOException;
 }
