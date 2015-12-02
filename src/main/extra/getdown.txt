@@ -75,4 +75,4 @@ resource = templates/request.docx
 # The main entry point for the application
 class = org.kesler.simplereg.SimpleReg
 
-jvmarg = -Xmx1024M
+jvmarg = -Xmx712M
