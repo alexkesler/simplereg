@@ -1,7 +1,10 @@
 package org.kesler.simplereg.gui.pvd;
 
 
+import com.alee.extended.date.DateSelectionListener;
+import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.pvdimport.domain.Cause;
 
@@ -12,12 +15,15 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 public class PVDImportDialog extends AbstractDialog{
+    private final Logger log = Logger.getLogger(this.getClass().getSimpleName());
     private PVDImportDialogController controller;
     private CausesTableModel causesTableModel;
     private JTable causesTable;
     private JComboBox<Period> periodComboBox;
+    private WebDateField selectedDateWebDateField;
     private JTextField searchTextField;
     private Cause selectedCause;
     private JButton okButton;
@@ -58,17 +64,24 @@ public class PVDImportDialog extends AbstractDialog{
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Панель данных
-        JPanel dataPanel = new JPanel(new MigLayout("fill"));
+        final JPanel dataPanel = new JPanel(new MigLayout("fill"));
 
         periodComboBox = new JComboBox<Period>();
         periodComboBox.addItem(Period.CURRENT_DAY);
         periodComboBox.addItem(Period.LAST_3_DAYS);
         periodComboBox.addItem(Period.LAST_WEEK);
+        periodComboBox.addItem(Period.SELECTED_DATE);
         periodComboBox.setSelectedIndex(0);
         periodComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                applyPeriod();
+                if (periodComboBox.getSelectedItem().equals(Period.SELECTED_DATE)) {
+                    selectedDateWebDateField.setVisible(true);
+                    selectedDateWebDateField.requestFocus();
+                } else {
+                    selectedDateWebDateField.setVisible(false);
+                    applyPeriod();
+                }
             }
         });
         periodComboBox.setRenderer(new DefaultListCellRenderer(){
@@ -79,6 +92,18 @@ public class PVDImportDialog extends AbstractDialog{
             }
         });
         periodComboBox.setFocusable(false);
+
+        selectedDateWebDateField = new WebDateField(new Date());
+        selectedDateWebDateField.addDateSelectionListener(new DateSelectionListener() {
+            @Override
+            public void dateSelected(Date date) {
+                if (periodComboBox.getSelectedItem().equals(Period.SELECTED_DATE)) {
+                    log.debug("SelectedDate: " + date);
+                    applyPeriod();
+                }
+            }
+        });
+        selectedDateWebDateField.setVisible(false);
 
         searchTextField = new JTextField(15);
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
@@ -104,6 +129,7 @@ public class PVDImportDialog extends AbstractDialog{
         JScrollPane causesTableScrollPane = new JScrollPane(causesTable);
 
         dataPanel.add(periodComboBox,"growx,wrap");
+        dataPanel.add(selectedDateWebDateField, "wrap");
         dataPanel.add(searchTextField, "wrap");
         dataPanel.add(causesTableScrollPane, "grow");
 
@@ -151,6 +177,7 @@ public class PVDImportDialog extends AbstractDialog{
 
     void applyPeriod() {
         controller.setSelectedPeriod((Period)periodComboBox.getSelectedItem());
+        controller.setSelectedDate(selectedDateWebDateField.getDate());
         controller.readCausesByPeriod();
         controller.filterCauses();
         searchTextField.requestFocus();
@@ -227,7 +254,8 @@ public class PVDImportDialog extends AbstractDialog{
     public enum Period {
         CURRENT_DAY("За текущий день"),
         LAST_3_DAYS("За 3 дня"),
-        LAST_WEEK("За неделю");
+        LAST_WEEK("За неделю"),
+        SELECTED_DATE("За выбранную дату");
         private String desc;
 
         Period(String desc){
