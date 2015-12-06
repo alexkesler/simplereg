@@ -27,6 +27,7 @@ public class PVDImportDialogController {
     private final List<Cause> allCauses;
     private String filterString;
     private PVDImportDialog.Period selectedPeriod;
+    private Date selectedDate;
 
     private PVDImportDialogController() {
         causes = new ArrayList<Cause>();
@@ -90,6 +91,9 @@ public class PVDImportDialogController {
             case LAST_WEEK:
                 readCausesLastWeek();
                 break;
+            case SELECTED_DATE:
+                readCausesSelectedDate();
+                break;
             default:
                 readCausesThisDay();
         }
@@ -141,9 +145,26 @@ public class PVDImportDialogController {
 
     }
 
+    private void readCausesSelectedDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(selectedDate);
+        calendar.set(Calendar.HOUR,0);
+        calendar.set(Calendar.MINUTE,1);
+        Date begDate = calendar.getTime();
+        calendar.setTime(selectedDate);
+        calendar.set(Calendar.HOUR,23);
+        calendar.set(Calendar.MINUTE, 59);
+        Date endDate = calendar.getTime();
+        packagesReader = new PackagesReader(begDate, endDate);
+        new PackagesReaderWorker(packagesReader).go();
+    }
+
 
     void setSelectedPeriod(PVDImportDialog.Period selectedPeriod) {
         this.selectedPeriod = selectedPeriod;
+    }
+    void setSelectedDate(Date selectedDate) {
+        this.selectedDate = selectedDate;
     }
     void setFilterString(String filterString) {
         this.filterString = filterString.toLowerCase();
