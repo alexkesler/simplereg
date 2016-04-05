@@ -227,6 +227,8 @@ public class MakeReceptionViewController {
         reception.setReceptionCode(receptionCode);
     }
 
+    void setReceptionOpenDate(Date openDate) {reception.setOpenDate(openDate);}
+
     void regenerateReceptionCode() {
         reception.generateReceptionCode();
         viewState.updatePanelData();

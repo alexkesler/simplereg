@@ -27,8 +27,8 @@ public class Transform {
         log.info("Transform cause " + cause.getRegnum());
         Reception reception = new Reception();
 
-//        reception.setOpenDate(cause.getBeginDate());
-        reception.setOpenDate(new Date());
+        reception.setOpenDate(cause.getBeginDate());
+//        reception.setOpenDate(new Date());
 
         reception.setOperator(CurrentOperator.getInstance().getOperator());
 
