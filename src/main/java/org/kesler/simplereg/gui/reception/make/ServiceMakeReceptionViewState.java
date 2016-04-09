@@ -69,6 +69,8 @@ class ServiceMakeReceptionViewState extends MakeReceptionViewState {
         String receptionCode = controller.getReception().getReceptionCode();
         view.getServicePanel().setReceptionCode(receptionCode);
 
+        view.getServicePanel().setReceptionOpenDate(controller.getReception().getOpenDate());
+
         // Устанавливаем поле Наименование услуги
         String serviceName = "Не определена";
         Service service = controller.getService();

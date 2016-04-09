@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.export.reestr.ReestrExporter;
+import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.export.reestr.ReestrExporterFactory;
@@ -35,6 +36,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 	private static ReestrViewController instance = null;	
 	private ReestrView view;
+	private ChangeStatusDialog changeStatusDialog;
     private Logger log;
 
 	private ReceptionsModel model;
@@ -63,6 +65,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	public void openView(JFrame parentFrame) {
 		log.info("Opening new ReestrView");
         view = new ReestrView(this, parentFrame);
+        changeStatusDialog = new ChangeStatusDialog(view);
 		view.setVisible(true);
 	}
 
@@ -207,26 +210,23 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 		}
 
 		List<Reception> receptions = model.getFilteredReceptions();
-		String selectedReceptionsString = "";
 		List<Reception> selectedReceptions = new ArrayList<Reception>();
 		for (int i=0; i<indexes.length; i++) {
 			Reception reception = receptions.get(indexes[i]);
 			selectedReceptions.add(reception);	
-			selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
 		}
 
-		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " +
-						selectedReceptionsString +
-						" статус: " + status.getName() + " ?</html>",
-				"Сменить статус?", JOptionPane.YES_NO_OPTION);
 
-		if (confirmResult == JOptionPane.OK_OPTION) {
-			for (Reception reception: selectedReceptions) {
-				reception.setStatus(status);
-				model.updateReception(reception);
-			}
-			view.tableDataChanged();						
-		}
+        changeStatusDialog.show(selectedReceptions, status);
+        if (changeStatusDialog.getResult() == AbstractDialog.OK) {
+            Date statusChangeDate = changeStatusDialog.getStatusChangeDate();
+            for (Reception reception: selectedReceptions) {
+                reception.setStatus(status, statusChangeDate);
+                model.updateReception(reception);
+            }
+            view.tableDataChanged();
+        }
+
 
 	}
 
@@ -238,12 +238,12 @@ public class ReestrViewController implements ReceptionsModelStateListener{
         }
         // Получаем дела, которые выбраны
         List<Reception> receptions = model.getFilteredReceptions();
-        String selectedReceptionsString = "";
+        StringBuilder selectedReceptionsStringSB = new StringBuilder();
         List<Reception> selectedReceptions = new ArrayList<Reception>();
         for (int i=0; i<indexes.length; i++) {
             Reception reception = receptions.get(indexes[i]);
             selectedReceptions.add(reception);
-            selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
+            selectedReceptionsStringSB.append("<p>").append(reception.getRosreestrCode()).append(";</p>");
         }
 
         // Формируем список дел, которые нужно исключить из выбора
@@ -259,7 +259,7 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
 
         int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Установить для запросов: " +
-                        selectedReceptionsString +
+                        selectedReceptionsStringSB.toString() +
                         " основное дело: " + mainReception.getRosreestrCode() + " ?</html>",
                 "Установить основное дело?", JOptionPane.YES_NO_OPTION);
 

@@ -3,6 +3,7 @@ package org.kesler.simplereg.gui.reception;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -10,6 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 
 import org.kesler.simplereg.gui.AbstractDialog;
@@ -46,6 +48,7 @@ public class ReceptionDialog extends AbstractDialog {
     private SubReceptionsListModel subReceptionsListModel;
     private Reception selectedSubReception;
     private JComboBox statusesComboBox;
+    private WebDateField statusChangeDateWebDateField;
     private ReceptionStatusChangesTableModel receptionStatusChangesTableModel;
     private JButton saveNewReceptionStatusButton;
     private JButton removeLastReceptionStatusChangeButton;
@@ -86,7 +89,7 @@ public class ReceptionDialog extends AbstractDialog {
         super(parentDialog, true);
         this.controller = controller;
         this.reception = reception;
-       this.readOnly = readOnly;
+        this.readOnly = readOnly;
 
         createGUI();
         loadGUIDataFromReception();
@@ -229,12 +232,14 @@ public class ReceptionDialog extends AbstractDialog {
                         if (!newReceptionStatus.equals(currentReceptionStatus)) {
                             if (DEBUG) System.out.println("enabled");
                             statusChanged = true;
+                            statusChangeDateWebDateField.setDate(new Date());
                         } else {
                             if (DEBUG) System.out.println("disabled");
                             statusChanged = false;
                         }
 
                         saveNewReceptionStatusButton.setEnabled(statusChanged);
+                        statusChangeDateWebDateField.setVisible(statusChanged);
                     }
                 }
             });
@@ -242,10 +247,13 @@ public class ReceptionDialog extends AbstractDialog {
             statusesComboBox.setEnabled(false);
         }
 
+        statusChangeDateWebDateField = new WebDateField();
+
         // кнопка сохранения установленного статуса
         saveNewReceptionStatusButton = new JButton();
         saveNewReceptionStatusButton.setIcon(ResourcesUtil.getIcon("disk.png"));
         saveNewReceptionStatusButton.setEnabled(false);
+        statusChangeDateWebDateField.setVisible(false);
         saveNewReceptionStatusButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 saveStatus();
@@ -311,7 +319,8 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(new JLabel("Состояние дела"), "span");
 //        dataPanel.add(serviceInfoPanel, "growx, wrap");
         if (!readOnly) {
-            dataPanel.add(statusesComboBox, "span,split 3,w 100");
+            dataPanel.add(statusesComboBox, "span,split 4,w 100");
+            dataPanel.add(statusChangeDateWebDateField);
             dataPanel.add(saveNewReceptionStatusButton);
             dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
         } else {
@@ -355,13 +364,15 @@ public class ReceptionDialog extends AbstractDialog {
     }
 
     private void saveStatus() {
-        reception.setStatus(newReceptionStatus);
+        Date statusChangeDate = statusChangeDateWebDateField.getDate();
+        reception.setStatus(newReceptionStatus, statusChangeDate);
         receptionStatusChangesTableModel.update(); // обновляем табличку со статусами
         checkStatusRemoveAbility();
 
 //		ReceptionsModel.getInstance().updateReception(reception);
         currentReceptionStatus = newReceptionStatus;
         statusChanged = false;
+        statusChangeDateWebDateField.setVisible(false);
         saveNewReceptionStatusButton.setEnabled(false);
         receptionChanged();
     }
