@@ -13,6 +13,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import com.alee.extended.date.DateSelectionListener;
 import com.alee.laf.button.WebButton;
 import com.alee.managers.popup.PopupWay;
 import com.alee.managers.popup.WebButtonPopup;
@@ -154,6 +155,7 @@ class MakeReceptionView extends JDialog {
     class ServicePanel extends JPanel {
 
         JTextField receptionCodeTextField;
+        WebDateField receptionOpenDateWebDateField;
         JLabel serviceNameLabel;
         JCheckBox byRecordCheckBox;
         JLabel parentReceptionLabel;
@@ -169,6 +171,14 @@ class MakeReceptionView extends JDialog {
 
                 public void focusLost(java.awt.event.FocusEvent ev) {
                     controller.setReceptionCode(receptionCodeTextField.getText());
+                }
+            });
+
+            receptionOpenDateWebDateField = new WebDateField();
+            receptionOpenDateWebDateField.addDateSelectionListener(new DateSelectionListener() {
+                @Override
+                public void dateSelected(Date date) {
+                    controller.setReceptionOpenDate(date);
                 }
             });
 
@@ -222,6 +232,8 @@ class MakeReceptionView extends JDialog {
             this.add(new JLabel("Код дела: "), "span, split 3");
             this.add(receptionCodeTextField);
             this.add(regenerateReceptionCodeButton, "wrap");
+            this.add(new JLabel("Дата: "), "ay top");
+            this.add(receptionOpenDateWebDateField, "wrap");
             this.add(new JLabel("Услуга: "), "ay top");
             this.add(serviceNameLabel, "pushx, grow");
             this.add(selectServiceButton, "right, wrap");
@@ -237,6 +249,8 @@ class MakeReceptionView extends JDialog {
         void setReceptionCode(String receptionCode) {
             receptionCodeTextField.setText(receptionCode);
         }
+
+        void setReceptionOpenDate(Date openDate) {receptionOpenDateWebDateField.setDate(openDate);}
 
         void setServiceName(String serviceName) {
             serviceNameLabel.setText("<html>" + serviceName + "</html>");

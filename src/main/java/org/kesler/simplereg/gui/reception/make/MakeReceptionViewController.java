@@ -12,6 +12,7 @@ import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.*;
 import org.kesler.simplereg.logic.applicator.ApplicatorFL;
 import org.kesler.simplereg.logic.applicator.ApplicatorUL;
+import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.main.CurrentOperator;
@@ -226,6 +227,8 @@ public class MakeReceptionViewController {
     void setReceptionCode(String receptionCode) {
         reception.setReceptionCode(receptionCode);
     }
+
+    void setReceptionOpenDate(Date openDate) {reception.setOpenDate(openDate);}
 
     void regenerateReceptionCode() {
         reception.generateReceptionCode();
@@ -451,6 +454,11 @@ public class MakeReceptionViewController {
             if (isNew) {
                 log.info("Adding reception...");
                 publish("Сохраняю в базу данных...");
+
+                // Назначаем для приема начальный статус
+                Date openDate = reception.getOpenDate();
+                reception.setStatus(ReceptionStatusesModel.getInstance().getInitReceptionStatus(), openDate);
+
                 receptionsModel.addReception(reception);
             } else {
                 log.info("Updating reception...");

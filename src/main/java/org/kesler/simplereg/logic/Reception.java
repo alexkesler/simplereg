@@ -221,6 +221,21 @@ public class Reception extends AbstractEntity{
         setStatus(status,changeDate,currentOperator);
  	}
 
+    public void setStatus(ReceptionStatus status, Date changeDate) {
+
+        this.status = status;
+        this.statusChangeDate = changeDate;
+		Operator currentOperator = CurrentOperator.getInstance().getOperator();
+
+        ReceptionStatusChange statusChange = new ReceptionStatusChange(this, status, changeDate, currentOperator);
+        statusChanges.add(statusChange);
+
+        //Изменяем состояния подзапросов
+        for (Reception subReception:subReceptions) {
+            subReception.setStatus(status,changeDate,currentOperator);
+        }
+
+    }
     private void setStatus(ReceptionStatus status, Date changeDate, Operator operator) {
 
         this.status = status;
