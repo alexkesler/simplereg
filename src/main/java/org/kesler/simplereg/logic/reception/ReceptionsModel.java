@@ -184,8 +184,6 @@ public class ReceptionsModel implements DAOListener{
      * @param reception  Сохраняемый прием
      */
 	public void addReception(Reception reception) {
-		// Назначаем для приема начальный статус
-        reception.setStatus(ReceptionStatusesModel.getInstance().getInitReceptionStatus());
 
 		DAOFactory.getInstance().getReceptionDAO().addReception(reception);
 //		allReceptions.add(reception);
