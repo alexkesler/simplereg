@@ -551,7 +551,7 @@ public class ReceptionDialog extends AbstractDialog {
                     columnName = "Состояние";
                     break;
                 case 1:
-                    columnName = "Время установки";
+                    columnName = "Дата";
                     break;
                 case 2:
                     columnName = "Кто установил";
@@ -565,7 +565,7 @@ public class ReceptionDialog extends AbstractDialog {
         public Object getValueAt(int row, int column) {
             Object value = null;
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
             ReceptionStatusChange statusChange = statusChanges.get(row);
             switch (column) {
