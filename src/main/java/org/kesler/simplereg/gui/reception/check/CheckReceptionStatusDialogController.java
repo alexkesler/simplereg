@@ -66,7 +66,7 @@ public class CheckReceptionStatusDialogController {
     }
 
     void openReceptionDialog(Reception reception) {
-        ReceptionDialogController.getInstance().showReadOnlyDialog(dialog, reception);
+        ReceptionDialogController.getInstance().showIssueDialog(dialog, reception);
     }
 
     private class ReceptionFinderSwingWorker extends SwingWorker<List<Reception>,Reception> {

@@ -1,21 +1,27 @@
 package org.kesler.simplereg.gui.reception;
 
+import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.AbstractDialog;
 import org.kesler.simplereg.gui.realty.RealtyObjectDialog;
 import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.realty.RealtyObjectsService;
+import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionsModel;
 
 import javax.swing.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Контроллер управления диалогом просмотра/редактирования дела
  */
 public class ReceptionDialogController {
+    protected final Logger log = Logger.getLogger(this.getClass().getSimpleName());
     private ReceptionDialog dialog;
     private Reception reception;
 
@@ -37,7 +43,8 @@ public class ReceptionDialogController {
     public boolean showDialog(JFrame parentFrame, Reception reception) {
         boolean result;
         this.reception = reception;
-        dialog = new ReceptionDialog(parentFrame, reception, this);
+        createDialog(parentFrame);
+        dialog.setDialogData(reception, false, false);
         dialog.setVisible(true);
         if (dialog.getResult()== AbstractDialog.OK) {
             receptionsModel.updateReception(reception);
@@ -53,7 +60,8 @@ public class ReceptionDialogController {
     public boolean showDialog(JDialog parentDialog, Reception reception) {
         boolean result;
         this.reception = reception;
-        dialog = new ReceptionDialog(parentDialog, reception, this);
+        createDialog(parentDialog);
+        dialog.setDialogData(reception, false, false);
         dialog.setVisible(true);
         if (dialog.getResult()== AbstractDialog.OK) {
             receptionsModel.updateReception(reception);
@@ -68,11 +76,21 @@ public class ReceptionDialogController {
 
     public void showReadOnlyDialog(JDialog parentDialog, Reception reception) {
         this.reception = reception;
-        dialog = new ReceptionDialog(parentDialog, reception, this, true);
+        createDialog(parentDialog);
+        dialog.setDialogData(reception, true, false);
         dialog.setVisible(true);
 
         dialog.dispose();
 
+    }
+
+    public void showIssueDialog(JDialog parentDialog, Reception reception) {
+        this.reception = reception;
+        createDialog(parentDialog);
+        dialog.setDialogData(reception, true, true);
+        dialog.setVisible(true);
+
+        dialog.dispose();
     }
 
 
@@ -81,15 +99,23 @@ public class ReceptionDialogController {
         dialog.updateViewData();
     }
 
-    void setReceptionCode(String receptionCode) {
-        reception.setReceptionCode(receptionCode);
-        dialog.receptionChanged();
+
+    void issueReception(ReceptionStatus receptionStatus, Date issueDate) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        int result = JOptionPane.showConfirmDialog(dialog,"<html><p>Выдать результат с простановкой статуса:</p><p><b>" +
+                        receptionStatus + "</b> от <b><i>" + dateFormat.format(issueDate)+"</i><b>?</p></html>",
+                "Внимание",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+        if (result==JOptionPane.YES_OPTION) {
+            reception.setStatus(receptionStatus, issueDate);
+            saveReception();
+            dialog.setIssue(false);
+            dialog.updateViewData();
+        }
     }
 
-    void setRosreestrCode(String rosreestrCode) {
-        reception.setRosreestrCode(rosreestrCode);
-        dialog.receptionChanged();
-    }
+
+
+
 
     void editRealtyObject() {
         RealtyObjectDialog realtyObjectDialog = new RealtyObjectDialog(dialog,reception.getRealtyObject());
@@ -110,7 +136,7 @@ public class ReceptionDialogController {
         Reception subReception = SelectReceptionDialogController.getInstance().showDialog(dialog, receptionsToStrike);
         if (subReception!=null) {
             reception.addSubReception(subReception);
-            receptionsModel.updateReception(reception);
+            saveReception();
         }
     }
 
@@ -123,9 +149,47 @@ public class ReceptionDialogController {
                 "Убрать связь?",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
         if (result==JOptionPane.YES_OPTION) {
             reception.removeSubReception(subReception);
-            receptionsModel.updateReception(subReception);
+            saveReception();
         }
     }
 
+
+    private void createDialog(JFrame parentFrame) {
+        if (dialog == null || !dialog.getParent().equals(parentFrame)) {
+            log.info("Creating new ReceptionDialog");
+            dialog = new ReceptionDialog(parentFrame, this);
+        }
+    }
+
+    private void createDialog(JDialog parentDialog) {
+        if (dialog == null || !dialog.getParent().equals(parentDialog)) {
+            log.info("Creating new ReceptionDialog");
+            dialog = new ReceptionDialog(parentDialog, this);
+        }
+    }
+
+    public void saveReception() {
+        (new ReceptionSaver()).execute();
+    }
+
+    class ReceptionSaver extends SwingWorker<Void, Void> {
+        @Override
+        protected Void doInBackground() throws Exception {
+            receptionsModel.updateReception(reception);
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                log.error("Error saving Reception: " + e);
+            }
+
+        }
+    }
 
 }

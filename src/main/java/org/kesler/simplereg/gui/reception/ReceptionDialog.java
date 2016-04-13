@@ -33,8 +33,9 @@ public class ReceptionDialog extends AbstractDialog {
 
     private ReceptionDialogController controller;
 
-    private final Reception reception; // чтобы нигде ненароком не переназначить - исходник в контроллере
+    private Reception reception; // чтобы нигде ненароком не переназначить - исходник в контроллере
 
+    private JButton editButton;
     private JTextField receptionCodeTextField;
     private JButton saveReceptionCodeButton;
     private JLabel byRecordLabel;
@@ -42,24 +43,34 @@ public class ReceptionDialog extends AbstractDialog {
     private JButton saveRosreestrCodeButton;
     private JLabel parentRosreestrCodeLabel;
     private JLabel serviceNameLabel;
+
+    private JPanel issuePanel;
+    private JButton issueButton;
+    private JComboBox<ReceptionStatus> issueStatusesComboBox;
+    private WebDateField issueDateWebDateField;
     private JTextArea realtyObjectTextArea;
-//    private JLabel realtyObjectLabel;
+    private JButton editRealtyObjectButton;
     private ApplicatorsListModel applicatorsListModel;
     private SubReceptionsListModel subReceptionsListModel;
+    private JButton addSubReceptionButton;
+    private JButton removeSubReceptionButton;
     private Reception selectedSubReception;
-    private JComboBox statusesComboBox;
+    private JComboBox<ReceptionStatus> statusesComboBox;
+    private ItemListener statusesComboBoxListener;
     private WebDateField statusChangeDateWebDateField;
     private ReceptionStatusChangesTableModel receptionStatusChangesTableModel;
     private JButton saveNewReceptionStatusButton;
     private JButton removeLastReceptionStatusChangeButton;
-    private JButton okButton;
+    private JButton closeButton;
+    private JButton saveButton;
     private JButton cancelButton;
 
     private ReceptionStatus currentReceptionStatus = null;
     private ReceptionStatus newReceptionStatus = null;
-    private boolean statusChanged = false;
+    private boolean receptionChanged = false;
 
     private boolean readOnly = false;
+    private boolean issue = false;
 
     ReceptionDialog(JFrame parentFrame, Reception reception, ReceptionDialogController controller) {
         super(parentFrame, true);
@@ -68,7 +79,17 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 600);
+        this.setSize(600, 610);
+        this.setLocationRelativeTo(parentFrame);
+
+    }
+
+    ReceptionDialog(JFrame parentFrame, ReceptionDialogController controller) {
+        super(parentFrame, true);
+        this.controller = controller;
+
+        createGUI();
+        this.setSize(600, 610);
         this.setLocationRelativeTo(parentFrame);
 
     }
@@ -80,7 +101,17 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 600);
+        this.setSize(600, 610);
+        this.setLocationRelativeTo(parentDialog);
+
+    }
+
+    ReceptionDialog(JDialog parentDialog, ReceptionDialogController controller) {
+        super(parentDialog, true);
+        this.controller = controller;
+
+        createGUI();
+        this.setSize(600, 610);
         this.setLocationRelativeTo(parentDialog);
 
     }
@@ -93,11 +124,21 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 600);
+        this.setSize(600, 610);
         this.setLocationRelativeTo(parentDialog);
 
+   }
+
+
+    void setDialogData(Reception reception, boolean readOnly, boolean issue) {
+        this.reception = reception;
+        this.readOnly = readOnly;
+        this.issue = issue;
+        loadGUIDataFromReception();
+        setLocationRelativeTo(getParent());
     }
 
+    public void setIssue(boolean issue) { this.issue = issue; }
 
     void updateViewData() {
         loadGUIDataFromReception();
@@ -126,7 +167,8 @@ public class ReceptionDialog extends AbstractDialog {
         saveReceptionCodeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setReceptionCode(receptionCodeTextField.getText());
+                reception.setReceptionCode(receptionCodeTextField.getText());
+                receptionChanged();
                 receptionCodeTextField.setEnabled(false);
                 saveReceptionCodeButton.setVisible(false);
             }
@@ -151,13 +193,25 @@ public class ReceptionDialog extends AbstractDialog {
         saveRosreestrCodeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.setRosreestrCode(rosreestrCodeTextField.getText());
+                reception.setRosreestrCode(rosreestrCodeTextField.getText());
+                receptionChanged();
                 rosreestrCodeTextField.setEnabled(false);
                 saveRosreestrCodeButton.setVisible(false);
             }
         });
 
         parentRosreestrCodeLabel = new JLabel();
+
+
+        issueButton = new JButton("<html><p color='limegreen'><b>Выдать</b></p></html");
+        issueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.issueReception((ReceptionStatus) issueStatusesComboBox.getSelectedItem(),issueDateWebDateField.getDate());
+            }
+        });
+        issueStatusesComboBox = new JComboBox<>();
+        issueDateWebDateField = new WebDateField();
 
 
         serviceNameLabel = new JLabel();
@@ -171,7 +225,7 @@ public class ReceptionDialog extends AbstractDialog {
         realtyObjectTextArea.setWrapStyleWord(true);
         realtyObjectTextArea.setEditable(false);
 
-        JButton editRealtyObjectButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
+        editRealtyObjectButton = new JButton(ResourcesUtil.getIcon("pencil.png"));
         editRealtyObjectButton.setToolTipText("Редактировать объект недвижимости");
         editRealtyObjectButton.addActionListener(new ActionListener() {
             @Override
@@ -179,9 +233,6 @@ public class ReceptionDialog extends AbstractDialog {
                 controller.editRealtyObject();
             }
         });
-
-        // Панель сведений об услуге
-        JPanel serviceInfoPanel = new JPanel();
 
 
         applicatorsListModel = new ApplicatorsListModel();
@@ -200,7 +251,7 @@ public class ReceptionDialog extends AbstractDialog {
             }
         });
 
-        JButton addSubReceptionButton = new JButton(ResourcesUtil.getIcon("add.png"));
+        addSubReceptionButton = new JButton(ResourcesUtil.getIcon("add.png"));
         addSubReceptionButton.setToolTipText("Добавить дополнительное дело");
         addSubReceptionButton.addActionListener(new ActionListener() {
             @Override
@@ -209,7 +260,7 @@ public class ReceptionDialog extends AbstractDialog {
             }
         });
 
-        JButton removeSubReceptionButton = new JButton(ResourcesUtil.getIcon("delete.png"));
+        removeSubReceptionButton = new JButton(ResourcesUtil.getIcon("delete.png"));
         removeSubReceptionButton.setToolTipText("Удалить выбранное дополнительное дело");
         removeSubReceptionButton.addActionListener(new ActionListener() {
             @Override
@@ -219,33 +270,32 @@ public class ReceptionDialog extends AbstractDialog {
         });
 
         // получаем новый статус дела
-        statusesComboBox = new JComboBox();
-        if (!readOnly) {
-            statusesComboBox.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent ev) {
-                    if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
+        statusesComboBox = new JComboBox<>();
 
-                        if (DEBUG)
-                            System.out.println("Selected receptionstatus: " + newReceptionStatus + " current receptionstatus: " + currentReceptionStatus);
+        statusesComboBoxListener = new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
+                if (ev.getStateChange() == ItemEvent.SELECTED) {
+                    newReceptionStatus = (ReceptionStatus) statusesComboBox.getSelectedItem();
 
-                        if (!newReceptionStatus.equals(currentReceptionStatus)) {
-                            if (DEBUG) System.out.println("enabled");
-                            statusChanged = true;
-                            statusChangeDateWebDateField.setDate(new Date());
-                        } else {
-                            if (DEBUG) System.out.println("disabled");
-                            statusChanged = false;
-                        }
+                    if (DEBUG)
+                        System.out.println("Selected receptionstatus: " + newReceptionStatus + " current receptionstatus: " + currentReceptionStatus);
 
-                        saveNewReceptionStatusButton.setEnabled(statusChanged);
-                        statusChangeDateWebDateField.setVisible(statusChanged);
+                    if (!newReceptionStatus.equals(currentReceptionStatus)) {
+                        if (DEBUG) System.out.println("enabled");
+                        saveNewReceptionStatusButton.setEnabled(true);
+                        statusChangeDateWebDateField.setEnabled(true);
+                        statusChangeDateWebDateField.setDate(new Date());
+                    } else {
+                        if (DEBUG) System.out.println("disabled");
+                        saveNewReceptionStatusButton.setEnabled(false);
+                        statusChangeDateWebDateField.setEnabled(false);
+                        statusChangeDateWebDateField.setDate(reception.getStatusChangeDate());
                     }
+
                 }
-            });
-        } else {
-            statusesComboBox.setEnabled(false);
-        }
+            }
+        };
+
 
         statusChangeDateWebDateField = new WebDateField();
 
@@ -253,7 +303,7 @@ public class ReceptionDialog extends AbstractDialog {
         saveNewReceptionStatusButton = new JButton();
         saveNewReceptionStatusButton.setIcon(ResourcesUtil.getIcon("disk.png"));
         saveNewReceptionStatusButton.setEnabled(false);
-        statusChangeDateWebDateField.setVisible(false);
+        statusChangeDateWebDateField.setEnabled(false);
         saveNewReceptionStatusButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 saveStatus();
@@ -276,7 +326,7 @@ public class ReceptionDialog extends AbstractDialog {
         JScrollPane statusChangesTableScrollPane = new JScrollPane(statusChangesTable);
 
 
-        JButton editButton = new JButton("Изменить");
+        editButton = new JButton("Изменить");
         editButton.setIcon(ResourcesUtil.getIcon("pencil.png"));
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -285,60 +335,70 @@ public class ReceptionDialog extends AbstractDialog {
         });
 
         // Собираем панель данных
-        if (!readOnly)
-            dataPanel.add(editButton, "span, right");
-        dataPanel.add(new JLabel("Код запроса:"),"span, split 3");
-        dataPanel.add(receptionCodeTextField);
-        dataPanel.add(saveReceptionCodeButton, "wrap");
-        dataPanel.add(new JLabel("По записи: "));
-        dataPanel.add(byRecordLabel, "wrap");
-        dataPanel.add(new JLabel("Код Росреестра:"), "span, split 3");
-        dataPanel.add(rosreestrCodeTextField);
-        dataPanel.add(saveRosreestrCodeButton, "wrap");
-        dataPanel.add(new JLabel("Код Росреестра основного дела:"), "span, split 2");
-        dataPanel.add(parentRosreestrCodeLabel,"wrap");
+
+        dataPanel.add(editButton, "span, right");
+        JPanel infoPanel = new JPanel(new MigLayout("fill"));
+        infoPanel.add(new JLabel("Код запроса:"),"span, split 3");
+        infoPanel.add(receptionCodeTextField);
+        infoPanel.add(saveReceptionCodeButton, "wrap");
+        infoPanel.add(new JLabel("По записи: "));
+        infoPanel.add(byRecordLabel, "wrap");
+        infoPanel.add(new JLabel("Код Росреестра:"), "span, split 3");
+        infoPanel.add(rosreestrCodeTextField);
+        infoPanel.add(saveRosreestrCodeButton, "wrap");
+        infoPanel.add(new JLabel("Код Росреестра основного дела:"), "span, split 2");
+        infoPanel.add(parentRosreestrCodeLabel,"wrap");
+        
+        issuePanel = new JPanel(new MigLayout("fill"));
+        
+        issuePanel.add(issueButton, "wrap");
+        issuePanel.add(issueStatusesComboBox,"wrap");
+        issuePanel.add(issueDateWebDateField);
+
+        
+        dataPanel.add(infoPanel, "growx");
+        dataPanel.add(issuePanel, "wrap");
+        
         dataPanel.add(new JLabel("Услуга:"), "span");
         dataPanel.add(serviceNameLabel, "span, growx");
         dataPanel.add(new JLabel("Объект недвижимости:"), "span");
-        if (!readOnly) {
-            dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
-            dataPanel.add(editRealtyObjectButton, "wrap");
-        } else {
-            dataPanel.add(realtyObjectTextArea, "span, growx");
-        }
+        dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
+        dataPanel.add(editRealtyObjectButton, "wrap");
         dataPanel.add(new JLabel("Заявители:"), "span");
         dataPanel.add(applicatorsListScrollPane, "span, growx, h 50::");
-        if (!readOnly) {
-            dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
-            dataPanel.add(addSubReceptionButton);
-            dataPanel.add(removeSubReceptionButton, "wrap");
-        }  else {
-            dataPanel.add(new JLabel("Дополнительные дела:"), "span,wrap");
-        }
+        dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
+        dataPanel.add(addSubReceptionButton);
+        dataPanel.add(removeSubReceptionButton, "wrap");
+
         dataPanel.add(subReceptionsListScrollPane, "span, growx, h 50::");
         dataPanel.add(new JLabel("Состояние дела"), "span");
-//        dataPanel.add(serviceInfoPanel, "growx, wrap");
-        if (!readOnly) {
-            dataPanel.add(statusesComboBox, "span,split 4,w 100");
-            dataPanel.add(statusChangeDateWebDateField);
-            dataPanel.add(saveNewReceptionStatusButton);
-            dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
-        } else {
-            dataPanel.add(statusesComboBox, "span,w 100,wrap");
-        }
+        dataPanel.add(statusesComboBox, "span,split 4,w 100");
+        dataPanel.add(statusChangeDateWebDateField);
+        dataPanel.add(saveNewReceptionStatusButton);
+        dataPanel.add(removeLastReceptionStatusChangeButton, "wrap");
         dataPanel.add(statusChangesTableScrollPane, "span, growx, h 100!");
 
 
         // Панель кнопок
         JPanel buttonPanel = new JPanel();
 
-        okButton = new JButton("Закрыть");
-        okButton.addActionListener(new ActionListener() {
+        closeButton = new JButton("Закрыть");
+        closeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 setVisible(false);
             }
         });
-        okButton.requestFocus();
+
+        saveButton = new JButton("Сохранить");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.saveReception();
+                receptionChanged = false;
+                updateButtons();
+            }
+        });
+        saveButton.setVisible(false);
 
         cancelButton = new JButton("Отмена");
         cancelButton.addActionListener(new ActionListener() {
@@ -350,14 +410,15 @@ public class ReceptionDialog extends AbstractDialog {
         });
         cancelButton.setVisible(false);
 
-        buttonPanel.add(okButton);
+        buttonPanel.add(closeButton);
+        buttonPanel.add(saveButton);
         buttonPanel.add(cancelButton);
 
         // Собираем основную панель
         mainPanel.add(dataPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        okButton.requestFocus();
+        closeButton.requestFocus();
 
         this.setContentPane(mainPanel);
 
@@ -371,24 +432,33 @@ public class ReceptionDialog extends AbstractDialog {
 
 //		ReceptionsModel.getInstance().updateReception(reception);
         currentReceptionStatus = newReceptionStatus;
-        statusChanged = false;
-        statusChangeDateWebDateField.setVisible(false);
+        receptionChanged = false;
+        statusChangeDateWebDateField.setEnabled(false);
         saveNewReceptionStatusButton.setEnabled(false);
-        receptionChanged();
+        receptionChanged = true;
+        updateButtons();
     }
 
     private void removeLastStatusChange() {
         reception.removeLastStatusChange();
+        currentReceptionStatus = reception.getStatus();
         receptionStatusChangesTableModel.update();
+        statusesComboBox.setSelectedItem(reception.getStatus());
+        statusChangeDateWebDateField.setDate(reception.getStatusChangeDate());
         checkStatusRemoveAbility();
-        receptionChanged();
+        receptionChanged = true;
+        updateButtons();
     }
 
-    void receptionChanged() {
-        okButton.setText("Сохранить");
-        cancelButton.setVisible(true);
-        statusChanged = true;
-        result = OK;
+    private void receptionChanged() {
+        receptionChanged = true;
+        updateButtons();
+    }
+
+    private void updateButtons() {
+        closeButton.setVisible(!receptionChanged);
+        saveButton.setVisible(receptionChanged);
+        cancelButton.setVisible(receptionChanged);
     }
 
 
@@ -461,9 +531,58 @@ public class ReceptionDialog extends AbstractDialog {
             statusesComboBox.addItem(receptionStatus);
         }
 
+
+        List<ReceptionStatus> closedReceptionStatuses = ReceptionStatusesModel.getInstance().getClosedReceptionStatus();
+        issueStatusesComboBox.removeAllItems();
+        for (ReceptionStatus receptionStatus : closedReceptionStatuses) {
+            issueStatusesComboBox.addItem(receptionStatus);
+        }
+
+
+
         // выбираем текущий статус
         statusesComboBox.setSelectedIndex(index);
 
+        statusChangeDateWebDateField.setDate(reception.getStatusChangeDate());
+
+
+        receptionStatusChangesTableModel.setStatusChanges(reception.getStatusChanges());
+
+
+        if (!readOnly) {
+            editButton.setVisible(true);
+            statusesComboBox.setEnabled(true);
+            statusesComboBox.addItemListener(statusesComboBoxListener);
+//            statusChangeDateWebDateField.setVisible(true);
+            saveNewReceptionStatusButton.setVisible(true);
+            removeLastReceptionStatusChangeButton.setVisible(true);
+            addSubReceptionButton.setVisible(true);
+            removeSubReceptionButton.setVisible(true);
+            editRealtyObjectButton.setVisible(true);
+        } else {
+            editButton.setVisible(false);
+            statusesComboBox.setEnabled(false);
+            statusesComboBox.removeItemListener(statusesComboBoxListener);
+//            statusChangeDateWebDateField.setVisible(false);
+            saveNewReceptionStatusButton.setVisible(false);
+            removeLastReceptionStatusChangeButton.setVisible(false);
+            addSubReceptionButton.setVisible(false);
+            removeSubReceptionButton.setVisible(false);
+            editRealtyObjectButton.setVisible(false);
+
+        }
+
+
+        if (issue) {
+            issuePanel.setVisible(true);
+            issueDateWebDateField.setDate(new Date());
+        } else {
+            issuePanel.setVisible(false);
+        }
+
+
+        receptionChanged = false;
+        updateButtons();
 
     }
 
@@ -525,7 +644,12 @@ public class ReceptionDialog extends AbstractDialog {
         private List<ReceptionStatusChange> statusChanges;
 
         ReceptionStatusChangesTableModel() {
-            statusChanges = reception.getStatusChanges();
+            statusChanges = new ArrayList<>();
+        }
+
+        public void setStatusChanges(List<ReceptionStatusChange> statusChanges) {
+            this.statusChanges = statusChanges;
+            update();
         }
 
         public void update() {
