@@ -1,5 +1,6 @@
 package org.kesler.simplereg.logic.reception;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.kesler.simplereg.dao.DAOFactory;
@@ -67,6 +68,18 @@ public class ReceptionStatusesModel {
 				if (code == initRecStatCode) initReceptionStatus = status;			
 		}
 		return initReceptionStatus;
+	}
+
+	public List<ReceptionStatus> getClosedReceptionStatus() {
+		readFromDB();
+		List<ReceptionStatus> closedReceptionStatuses = new ArrayList<>();
+
+		for (ReceptionStatus receptionStatus : receptionStatuses) {
+			if (receptionStatus.getClosed()!=null && receptionStatus.getClosed())
+				closedReceptionStatuses.add(receptionStatus);
+		}
+
+		return closedReceptionStatuses;
 	}
 
 	private void checkDefaultStatus() {
