@@ -1,11 +1,6 @@
 package org.kesler.simplereg.logic;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.*;
 
 
 import org.kesler.simplereg.dao.AbstractEntity;
@@ -23,15 +18,20 @@ public abstract class Applicator extends AbstractEntity {
 	@JoinColumn(name="ReceptionID", nullable=false)
 	private Reception reception;
 
+	@Column(name = "Issued")
+	private Boolean issued;
+
 	public Reception getReception() {
 		return reception;
 	}
-
 	public void setReception(Reception reception) {
 		this.reception = reception;
 	}
 
-    public abstract Applicator copyThis();
+	public Boolean isIssued() { return issued; }
+	public void setIssued(Boolean issued) { this.issued = issued; }
+
+	public abstract Applicator copyThis();
 
 	public abstract String getShortName();
 

@@ -1,12 +1,12 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
-import java.awt.BorderLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -46,8 +46,6 @@ public class ReceptionDialog extends AbstractDialog {
 
     private JPanel issuePanel;
     private JButton issueButton;
-    private JComboBox<ReceptionStatus> issueStatusesComboBox;
-    private WebDateField issueDateWebDateField;
     private JTextArea realtyObjectTextArea;
     private JButton editRealtyObjectButton;
     private ApplicatorsListModel applicatorsListModel;
@@ -79,7 +77,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentFrame);
 
     }
@@ -89,7 +87,7 @@ public class ReceptionDialog extends AbstractDialog {
         this.controller = controller;
 
         createGUI();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentFrame);
 
     }
@@ -101,7 +99,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentDialog);
 
     }
@@ -111,7 +109,7 @@ public class ReceptionDialog extends AbstractDialog {
         this.controller = controller;
 
         createGUI();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentDialog);
 
     }
@@ -203,15 +201,15 @@ public class ReceptionDialog extends AbstractDialog {
         parentRosreestrCodeLabel = new JLabel();
 
 
-        issueButton = new JButton("<html><p color='limegreen'><b>Выдать</b></p></html");
+        issueButton = new JButton("<html><span style='color:green;font-weight:bold;'>Выдать</span></html");
+        issueButton.setIcon(ResourcesUtil.getIcon("issue.png"));
+        issueButton.setPreferredSize(new Dimension(150,60));
         issueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.issueReception((ReceptionStatus) issueStatusesComboBox.getSelectedItem(),issueDateWebDateField.getDate());
+                controller.openIssueDialog(reception);
             }
         });
-        issueStatusesComboBox = new JComboBox<>();
-        issueDateWebDateField = new WebDateField();
 
 
         serviceNameLabel = new JLabel();
@@ -337,7 +335,7 @@ public class ReceptionDialog extends AbstractDialog {
         // Собираем панель данных
 
         dataPanel.add(editButton, "span, right");
-        JPanel infoPanel = new JPanel(new MigLayout("fill"));
+        JPanel infoPanel = new JPanel(new MigLayout("fill, insets 0"));
         infoPanel.add(new JLabel("Код запроса:"),"span, split 3");
         infoPanel.add(receptionCodeTextField);
         infoPanel.add(saveReceptionCodeButton, "wrap");
@@ -352,8 +350,6 @@ public class ReceptionDialog extends AbstractDialog {
         issuePanel = new JPanel(new MigLayout("fill"));
         
         issuePanel.add(issueButton, "wrap");
-        issuePanel.add(issueStatusesComboBox,"wrap");
-        issuePanel.add(issueDateWebDateField);
 
         
         dataPanel.add(infoPanel, "growx");
@@ -532,14 +528,6 @@ public class ReceptionDialog extends AbstractDialog {
         }
 
 
-        List<ReceptionStatus> closedReceptionStatuses = ReceptionStatusesModel.getInstance().getClosedReceptionStatus();
-        issueStatusesComboBox.removeAllItems();
-        for (ReceptionStatus receptionStatus : closedReceptionStatuses) {
-            issueStatusesComboBox.addItem(receptionStatus);
-        }
-
-
-
         // выбираем текущий статус
         statusesComboBox.setSelectedIndex(index);
 
@@ -575,7 +563,6 @@ public class ReceptionDialog extends AbstractDialog {
 
         if (issue) {
             issuePanel.setVisible(true);
-            issueDateWebDateField.setDate(new Date());
         } else {
             issuePanel.setVisible(false);
         }

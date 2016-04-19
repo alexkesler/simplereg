@@ -152,9 +152,6 @@ public class MainViewController implements MainViewListener,
             case FIAS:
                 openFIASDialog();
                 break;
-            case Issue:
-                openIssueDialog();
-                break;
 			case Exit:
                 log.info("Exit.");
 				System.exit(0);	
@@ -365,9 +362,6 @@ public class MainViewController implements MainViewListener,
         dialog.setVisible(true);
     }
 
-    private void openIssueDialog() {
-        IssueDialogController.getInstance().openDialog(mainView);
-    }
 
     public void editReception(Reception reception) {
         MakeReceptionViewController.getInstance().openView(mainView, reception);
