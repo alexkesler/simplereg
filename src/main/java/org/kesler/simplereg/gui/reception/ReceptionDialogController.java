@@ -96,6 +96,7 @@ public class ReceptionDialogController {
 
     void openIssueDialog(Reception reception) {
         IssueDialogController.getInstance().openDialog(dialog, reception);
+        dialog.updateViewData();
     }
 
 
