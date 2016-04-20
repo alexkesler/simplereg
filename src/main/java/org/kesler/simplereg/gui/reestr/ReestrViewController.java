@@ -1,5 +1,6 @@
 package org.kesler.simplereg.gui.reestr;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -203,17 +204,10 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 
-	public void changeReceptionsStatus(int[] indexes, ReceptionStatus status) {
-		if (indexes.length == 0) {
+	public void changeReceptionsStatus(Collection<Reception> selectedReceptions, ReceptionStatus status) {
+		if (selectedReceptions.size() == 0) {
 			new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 			return;
-		}
-
-		List<Reception> receptions = model.getFilteredReceptions();
-		List<Reception> selectedReceptions = new ArrayList<Reception>();
-		for (int i=0; i<indexes.length; i++) {
-			Reception reception = receptions.get(indexes[i]);
-			selectedReceptions.add(reception);	
 		}
 
 
@@ -231,18 +225,14 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 	}
 
 
-    public void selectMainReception(int[] indexes) {
-        if (indexes.length == 0) {
+    public void selectMainReception(Collection<Reception> selectedReceptions) {
+        if (selectedReceptions.size() == 0) {
             new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
             return;
         }
         // Получаем дела, которые выбраны
-        List<Reception> receptions = model.getFilteredReceptions();
         StringBuilder selectedReceptionsStringSB = new StringBuilder();
-        List<Reception> selectedReceptions = new ArrayList<Reception>();
-        for (int i=0; i<indexes.length; i++) {
-            Reception reception = receptions.get(indexes[i]);
-            selectedReceptions.add(reception);
+        for (Reception reception: selectedReceptions) {
             selectedReceptionsStringSB.append("<p>").append(reception.getRosreestrCode()).append(";</p>");
         }
 
@@ -272,23 +262,20 @@ public class ReestrViewController implements ReceptionsModelStateListener{
         }
     }
 
-    public void resetMainReception(int[] indexes) {
-        if (indexes.length == 0) {
+    public void resetMainReception(Collection<Reception> selectedReceptions) {
+        if (selectedReceptions.size() == 0) {
             new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
             return;
         }
 
-        List<Reception> receptions = model.getFilteredReceptions();
-        String selectedReceptionsString = "";
-        List<Reception> selectedReceptions = new ArrayList<Reception>();
-        for (int i=0; i<indexes.length; i++) {
-            Reception reception = receptions.get(indexes[i]);
-            selectedReceptions.add(reception);
-            selectedReceptionsString += "<p>" + reception.getRosreestrCode() + ";</p>";
+        StringBuilder selectedReceptionsStringBuilder = new StringBuilder();
+        for (Reception reception: selectedReceptions) {
+            selectedReceptionsStringBuilder.append("<p>").append(reception.getRosreestrCode())
+					.append(";</p>");
         }
 
         int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Сбросить для дел: " +
-                        selectedReceptionsString +
+                        selectedReceptionsStringBuilder.toString() +
                         " основное дело ?</html>",
                 "Сбросить основное дело?", JOptionPane.YES_NO_OPTION);
 
@@ -302,24 +289,20 @@ public class ReestrViewController implements ReceptionsModelStateListener{
 
     }
 
-	public void removeReceptions(int[] indexes) {
-		if (indexes.length == 0) {
+	public void removeReceptions(Collection<Reception> selectedReceptions) {
+		if (selectedReceptions.size() == 0) {
 			new InfoDialog(view, "Ничего не выбрано", 1000, InfoDialog.RED).showInfo();
 			return;
 		}
 		
-		List<Reception> receptions = model.getFilteredReceptions();
-		String selectedReceptionsString = "";
-		List<Reception> selectedReceptions = new ArrayList<Reception>();
-		for (int i=0; i<indexes.length; i++) {
-			Reception reception = receptions.get(indexes[i]);
-			selectedReceptions.add(reception);
-			selectedReceptionsString += "<p>" + reception.getReceptionCode() + ";</p>";				
+		StringBuilder selectedReceptionsSB = new StringBuilder();
+		for (Reception reception: selectedReceptions) {
+			selectedReceptionsSB.append("<p>").append(reception.getReceptionCode()).append(";</p>");
 		}
 
 		/// сюда надо поместить уточняющий вопрос
 		int confirmResult = JOptionPane.showConfirmDialog(view, "<html>Удалить запросы: " + 
-														selectedReceptionsString + " ?</html>", 
+														selectedReceptionsSB.toString() + " ?</html>",
 														"Удалить запросы?", JOptionPane.YES_NO_OPTION);
 
 		if (confirmResult == JOptionPane.OK_OPTION) {
