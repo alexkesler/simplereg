@@ -106,6 +106,9 @@ public class MainView extends JFrame {
 		JMenuItem reestrMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenReceptionsReestr));
 		reestrMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenReceptionsReestr.getIconName()));
 
+		JMenuItem statusChangesReestrMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenReceptionStatusChangesReestr));
+		statusChangesReestrMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenReceptionStatusChangesReestr.getIconName()));
+
 		// JMenuItem statisticMenuItem = new JMenuItem(getActionByCommand(MainViewCommand.OpenStatistic));
 		// statisticMenuItem.setIcon(ResourcesUtil.getIcon(MainViewCommand.OpenStatistic.getIconName()));
 		
@@ -120,7 +123,7 @@ public class MainView extends JFrame {
 
 		// Собираем меню задач
 		tasksMenu.add(reestrMenuItem);
-		// tasksMenu.add(statisticMenuItem);
+		tasksMenu.add(statusChangesReestrMenuItem);
 		tasksMenu.add(flsMenuItem);
 		tasksMenu.add(ulsMenuItem);
 		tasksMenu.add(realtyObjectsMenuItem);

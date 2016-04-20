@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by alex on 19.04.16.
  */
-public interface SimpleregService {
+public interface SimpleRegService {
 
     List<Reception> findAllReceptions();
     List<ReceptionStatusChange> findAllStatusChanges();

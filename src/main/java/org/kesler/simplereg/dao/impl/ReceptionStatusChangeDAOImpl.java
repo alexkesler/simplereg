@@ -10,4 +10,6 @@ public class ReceptionStatusChangeDAOImpl extends GenericDAOImpl<ReceptionStatus
     public ReceptionStatusChangeDAOImpl() {
         super(ReceptionStatusChange.class);
     }
+
+
 }

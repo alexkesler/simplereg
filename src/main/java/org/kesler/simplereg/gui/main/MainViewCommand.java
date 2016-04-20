@@ -13,6 +13,7 @@ public enum MainViewCommand {
 	UpdateReceptions("Обновить","updateReceptions", "arrow_refresh.png"),
 	OpenStatistic("Статистика","statistic", "chart_pie.png"),
 	OpenReceptionsReestr("Реестр","reestr","table.png"),
+	OpenReceptionStatusChangesReestr("Реестр изменений состояний","statuschangesreestr","table_gear.png"),
 	FLs("Физ лица", "fls", "group.png"),
 	ULs("Юр лица", "uls", "chart_organisation.png"),
 	Services("Услуги", "services", "book.png"),
