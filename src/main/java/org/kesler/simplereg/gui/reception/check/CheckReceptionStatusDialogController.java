@@ -1,6 +1,7 @@
 package org.kesler.simplereg.gui.reception.check;
 
 import org.apache.log4j.Logger;
+import org.kesler.simplereg.gui.issue.IssueDialogController;
 import org.kesler.simplereg.gui.reception.ReceptionDialogController;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.Reception;
@@ -67,6 +68,10 @@ public class CheckReceptionStatusDialogController {
 
     void openReceptionDialog(Reception reception) {
         ReceptionDialogController.getInstance().showIssueDialog(dialog, reception);
+    }
+
+    void openIssueDialog(Reception reception) {
+        IssueDialogController.getInstance().openDialog(dialog, reception);
     }
 
     private class ReceptionFinderSwingWorker extends SwingWorker<List<Reception>,Reception> {

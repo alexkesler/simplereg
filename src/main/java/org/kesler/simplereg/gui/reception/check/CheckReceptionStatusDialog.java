@@ -93,6 +93,20 @@ public class CheckReceptionStatusDialog extends AbstractDialog {
             }
         });
 
+        JPopupMenu issuePopupMenu = new JPopupMenu();
+
+        JMenuItem issueMenuItem = new JMenuItem("Выдать");
+        issueMenuItem.setIcon(ResourcesUtil.getIcon("issue.png"));
+        issueMenuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.openIssueDialog(selectedReception);
+            }
+        });
+
+        issuePopupMenu.add(issueMenuItem);
+
+        receptionsTable.setComponentPopupMenu(issuePopupMenu);
 
         // Собираем панель данных
 

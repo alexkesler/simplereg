@@ -6,12 +6,12 @@ import java.util.Date;
 import org.kesler.simplereg.logic.Reception;
 
 public interface ReceptionDAO extends GenericDAO<Reception>{
-	public void addReception(Reception r);
-	public void updateReception(Reception r);
-	public Reception getReceptionById(Long id);
-	public List<Reception> getAllReceptions();
-	public List<Reception> getReceptionsByOpenDate(Date from, Date to);
-	public List<Reception> getReceptionsByRosreestrCode(String code);
-	public void removeReception(Reception r);
-    public Integer getLastPVDPackageNum();
+	void addReception(Reception r);
+	void updateReception(Reception r);
+	Reception getReceptionById(Long id);
+	List<Reception> getAllReceptions();
+	List<Reception> getReceptionsByOpenDate(Date from, Date to);
+	List<Reception> getReceptionsByRosreestrCode(String code);
+	void removeReception(Reception r);
+    Integer getLastPVDPackageNum();
 }

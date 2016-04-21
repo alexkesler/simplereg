@@ -16,6 +16,7 @@ import org.kesler.simplereg.gui.reception.receptionstatus.ReceptionStatusListDia
 import org.kesler.simplereg.gui.reestr.ReestrViewController;
 import org.kesler.simplereg.gui.services.ServicesDialogController;
 import org.kesler.simplereg.gui.statistic.StatisticViewController;
+import org.kesler.simplereg.gui.statuschangesreestr.ReceptionStatusChangesReestrViewController;
 import org.kesler.simplereg.gui.util.InfoDialog;
 import org.kesler.simplereg.gui.util.ProcessDialog;
 import org.kesler.simplereg.logic.Operator;
@@ -121,7 +122,11 @@ public class MainViewController implements MainViewListener,
                 log.info("Open reestr view");
 				openReceptionsReestr();
 				break;
-			case OpenStatistic: 
+			case OpenReceptionStatusChangesReestr:
+                log.info("Open status changes reestr view");
+				openReceptionStatusChangesReestr();
+				break;
+			case OpenStatistic:
 				openStatistic();
 				break;
 			case FLs: 
@@ -151,9 +156,6 @@ public class MainViewController implements MainViewListener,
 				break;
             case FIAS:
                 openFIASDialog();
-                break;
-            case Issue:
-                openIssueDialog();
                 break;
 			case Exit:
                 log.info("Exit.");
@@ -189,6 +191,7 @@ public class MainViewController implements MainViewListener,
 			if (operator.isControler()) { // для контролера
 				mainView.getActionByCommand(ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(OpenReceptionsReestr).setEnabled(true);
+				mainView.getActionByCommand(OpenReceptionStatusChangesReestr).setEnabled(true);
 				mainView.getActionByCommand(OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(FLs).setEnabled(true);
 				mainView.getActionByCommand(ULs).setEnabled(true);
@@ -200,6 +203,7 @@ public class MainViewController implements MainViewListener,
 			if (operator.isAdmin()) { // для администратора
 				mainView.getActionByCommand(ReceptionStatuses).setEnabled(true);
 				mainView.getActionByCommand(OpenReceptionsReestr).setEnabled(true);
+				mainView.getActionByCommand(OpenReceptionStatusChangesReestr).setEnabled(true);
 				mainView.getActionByCommand(OpenStatistic).setEnabled(true);
 				mainView.getActionByCommand(FLs).setEnabled(true);
 				mainView.getActionByCommand(ULs).setEnabled(true);
@@ -347,6 +351,10 @@ public class MainViewController implements MainViewListener,
 		ReestrViewController.getInstance().openView(mainView);
 	}
 
+	private void openReceptionStatusChangesReestr() {
+		ReceptionStatusChangesReestrViewController.getInstance().showView(mainView);
+	}
+
 	private void openOptions() {
 		OptionsDialog optionsDialog = new OptionsDialog(mainView);
 		optionsDialog.showDialog();
@@ -365,9 +373,6 @@ public class MainViewController implements MainViewListener,
         dialog.setVisible(true);
     }
 
-    private void openIssueDialog() {
-        IssueDialogController.getInstance().openDialog(mainView);
-    }
 
     public void editReception(Reception reception) {
         MakeReceptionViewController.getInstance().openView(mainView, reception);
