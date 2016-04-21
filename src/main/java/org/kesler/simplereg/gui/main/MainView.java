@@ -123,7 +123,7 @@ public class MainView extends JFrame {
 
 		// Собираем меню задач
 		tasksMenu.add(reestrMenuItem);
-		tasksMenu.add(statusChangesReestrMenuItem);
+//		tasksMenu.add(statusChangesReestrMenuItem);
 		tasksMenu.add(flsMenuItem);
 		tasksMenu.add(ulsMenuItem);
 		tasksMenu.add(realtyObjectsMenuItem);
