@@ -23,7 +23,7 @@ public class ReestrColumns {
 	}
 
 	private ReestrColumns() {
-		allColumns = new ArrayList<ReestrColumn>();
+		allColumns = new ArrayList<>();
 		ReestrColumn openDateReestrColumn = new OpenDateReestrColumn();
 		ReestrColumn applicatorsReestrColumn = new ApplicatorsReestrColumn();
 		ReestrColumn serviceReestrColumn = new ServiceReestrColumn();

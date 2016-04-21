@@ -2,6 +2,7 @@ package org.kesler.simplereg.gui.reception;
 
 import org.apache.log4j.Logger;
 import org.kesler.simplereg.gui.AbstractDialog;
+import org.kesler.simplereg.gui.issue.IssueDialogController;
 import org.kesler.simplereg.gui.realty.RealtyObjectDialog;
 import org.kesler.simplereg.gui.reception.make.MakeReceptionViewController;
 import org.kesler.simplereg.gui.reception.select.SelectReceptionDialogController;
@@ -61,7 +62,7 @@ public class ReceptionDialogController {
         boolean result;
         this.reception = reception;
         createDialog(parentDialog);
-        dialog.setDialogData(reception, false, false);
+        dialog.setDialogData(reception, false, true);
         dialog.setVisible(true);
         if (dialog.getResult()== AbstractDialog.OK) {
             receptionsModel.updateReception(reception);
@@ -93,24 +94,16 @@ public class ReceptionDialogController {
         dialog.dispose();
     }
 
-
-    void editReception() {
-        MakeReceptionViewController.getInstance().openView(dialog, reception);
+    void openIssueDialog(Reception reception) {
+        IssueDialogController.getInstance().openDialog(dialog, reception);
         dialog.updateViewData();
     }
 
 
-    void issueReception(ReceptionStatus receptionStatus, Date issueDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        int result = JOptionPane.showConfirmDialog(dialog,"<html><p>Выдать результат с простановкой статуса:</p><p><b>" +
-                        receptionStatus + "</b> от <b><i>" + dateFormat.format(issueDate)+"</i><b>?</p></html>",
-                "Внимание",JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-        if (result==JOptionPane.YES_OPTION) {
-            reception.setStatus(receptionStatus, issueDate);
-            saveReception();
-            dialog.setIssue(false);
-            dialog.updateViewData();
-        }
+
+    void editReception() {
+        MakeReceptionViewController.getInstance().openView(dialog, reception);
+        dialog.updateViewData();
     }
 
 

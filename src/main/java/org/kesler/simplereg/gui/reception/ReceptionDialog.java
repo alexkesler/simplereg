@@ -1,12 +1,12 @@
 package org.kesler.simplereg.gui.reception;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.*;
-import java.awt.BorderLayout;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -46,11 +46,9 @@ public class ReceptionDialog extends AbstractDialog {
 
     private JPanel issuePanel;
     private JButton issueButton;
-    private JComboBox<ReceptionStatus> issueStatusesComboBox;
-    private WebDateField issueDateWebDateField;
     private JTextArea realtyObjectTextArea;
     private JButton editRealtyObjectButton;
-    private ApplicatorsListModel applicatorsListModel;
+    private ApplicatorsTableModel applicatorsTableModel;
     private SubReceptionsListModel subReceptionsListModel;
     private JButton addSubReceptionButton;
     private JButton removeSubReceptionButton;
@@ -79,7 +77,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentFrame);
 
     }
@@ -89,7 +87,7 @@ public class ReceptionDialog extends AbstractDialog {
         this.controller = controller;
 
         createGUI();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentFrame);
 
     }
@@ -101,7 +99,7 @@ public class ReceptionDialog extends AbstractDialog {
 
         createGUI();
         loadGUIDataFromReception();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentDialog);
 
     }
@@ -111,7 +109,7 @@ public class ReceptionDialog extends AbstractDialog {
         this.controller = controller;
 
         createGUI();
-        this.setSize(600, 610);
+        this.setSize(600, 700);
         this.setLocationRelativeTo(parentDialog);
 
     }
@@ -203,15 +201,15 @@ public class ReceptionDialog extends AbstractDialog {
         parentRosreestrCodeLabel = new JLabel();
 
 
-        issueButton = new JButton("<html><p color='limegreen'><b>Выдать</b></p></html");
+        issueButton = new JButton("<html><span style='color:green;font-weight:bold;'>Выдать</span></html");
+        issueButton.setIcon(ResourcesUtil.getIcon("issue.png"));
+        issueButton.setPreferredSize(new Dimension(150,60));
         issueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                controller.issueReception((ReceptionStatus) issueStatusesComboBox.getSelectedItem(),issueDateWebDateField.getDate());
+                controller.openIssueDialog(reception);
             }
         });
-        issueStatusesComboBox = new JComboBox<>();
-        issueDateWebDateField = new WebDateField();
 
 
         serviceNameLabel = new JLabel();
@@ -235,9 +233,15 @@ public class ReceptionDialog extends AbstractDialog {
         });
 
 
-        applicatorsListModel = new ApplicatorsListModel();
-        JList<Applicator> applicatorsList = new JList<Applicator>(applicatorsListModel);
-        JScrollPane applicatorsListScrollPane = new JScrollPane(applicatorsList);
+
+
+        applicatorsTableModel = new ApplicatorsTableModel();
+        JTable applicatorsTable = new JTable(applicatorsTableModel);
+
+        applicatorsTable.getColumnModel().getColumn(0).setMaxWidth(30);
+        applicatorsTable.getColumnModel().getColumn(2).setMaxWidth(70);
+
+        JScrollPane applicatorsTableScrollPane = new JScrollPane(applicatorsTable);
 
         subReceptionsListModel = new SubReceptionsListModel();
         JList<String> subReceptionsList = new JList<String>(subReceptionsListModel);
@@ -337,7 +341,7 @@ public class ReceptionDialog extends AbstractDialog {
         // Собираем панель данных
 
         dataPanel.add(editButton, "span, right");
-        JPanel infoPanel = new JPanel(new MigLayout("fill"));
+        JPanel infoPanel = new JPanel(new MigLayout("fill, insets 0"));
         infoPanel.add(new JLabel("Код запроса:"),"span, split 3");
         infoPanel.add(receptionCodeTextField);
         infoPanel.add(saveReceptionCodeButton, "wrap");
@@ -352,8 +356,6 @@ public class ReceptionDialog extends AbstractDialog {
         issuePanel = new JPanel(new MigLayout("fill"));
         
         issuePanel.add(issueButton, "wrap");
-        issuePanel.add(issueStatusesComboBox,"wrap");
-        issuePanel.add(issueDateWebDateField);
 
         
         dataPanel.add(infoPanel, "growx");
@@ -365,7 +367,7 @@ public class ReceptionDialog extends AbstractDialog {
         dataPanel.add(realtyObjectTextArea, "span, split 2, growx");
         dataPanel.add(editRealtyObjectButton, "wrap");
         dataPanel.add(new JLabel("Заявители:"), "span");
-        dataPanel.add(applicatorsListScrollPane, "span, growx, h 50::");
+        dataPanel.add(applicatorsTableScrollPane, "span, growx, h 50::");
         dataPanel.add(new JLabel("Дополнительные дела:"), "span, split 3");
         dataPanel.add(addSubReceptionButton);
         dataPanel.add(removeSubReceptionButton, "wrap");
@@ -511,7 +513,7 @@ public class ReceptionDialog extends AbstractDialog {
         realtyObjectTextArea.setText(realtyObjectString);
 
         // обновляем перечень заявителей
-        applicatorsListModel.setApplicators(reception.getApplicators());
+        applicatorsTableModel.setApplicators(reception.getApplicators());
 
         // обновляем список подзапросов
         subReceptionsListModel.setSubReceptions(reception.getSubReceptions());
@@ -530,14 +532,6 @@ public class ReceptionDialog extends AbstractDialog {
         for (ReceptionStatus receptionStatus : receptionStatuses) {
             statusesComboBox.addItem(receptionStatus);
         }
-
-
-        List<ReceptionStatus> closedReceptionStatuses = ReceptionStatusesModel.getInstance().getClosedReceptionStatus();
-        issueStatusesComboBox.removeAllItems();
-        for (ReceptionStatus receptionStatus : closedReceptionStatuses) {
-            issueStatusesComboBox.addItem(receptionStatus);
-        }
-
 
 
         // выбираем текущий статус
@@ -575,7 +569,6 @@ public class ReceptionDialog extends AbstractDialog {
 
         if (issue) {
             issuePanel.setVisible(true);
-            issueDateWebDateField.setDate(new Date());
         } else {
             issuePanel.setVisible(false);
         }
@@ -615,28 +608,76 @@ public class ReceptionDialog extends AbstractDialog {
         }
     }
 
-    class ApplicatorsListModel extends AbstractListModel<Applicator> {
 
-        private List<Applicator> applicators;
+    class ApplicatorsTableModel extends AbstractTableModel {
 
-        ApplicatorsListModel() {
-            applicators = new ArrayList<Applicator>();
-        }
+        private List<Applicator> applicators = new ArrayList<>();
 
-        public void setApplicators(List<Applicator> applicators) {
+        void setApplicators(List<Applicator> applicators) {
             this.applicators = applicators;
-            fireContentsChanged(this, 0, applicators.size() - 1);
+            fireTableDataChanged();
         }
 
         @Override
-        public int getSize() {
+        public int getRowCount() {
             return applicators.size();
         }
 
         @Override
-        public Applicator getElementAt(int index) {
-            return applicators.get(index);
+        public int getColumnCount() {
+            return 3;
         }
+
+        @Override
+        public String getColumnName(int column) {
+            switch (column) {
+                case 0:
+                    return "#";
+                case 1:
+                    return "Заявитель";
+                case 2:
+                    return "Выдано";
+                default:
+                    return "";
+            }
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (columnIndex==2) return Boolean.class;
+            return String.class;
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            if (columnIndex!=2) return false;
+            if (readOnly) return false;
+            return true;
+        }
+
+
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            if (columnIndex!=2) return;
+            Applicator applicator = applicators.get(rowIndex);
+            applicator.setIssued((Boolean)aValue);
+            receptionChanged();
+            fireTableCellUpdated(rowIndex, columnIndex);
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return rowIndex+1;
+                case 1:
+                    return applicators.get(rowIndex).toString();
+                case 2:
+                    return applicators.get(rowIndex).isIssued();
+            }
+            return null;
+        }
+
     }
 
     class ReceptionStatusChangesTableModel extends AbstractTableModel {

@@ -17,6 +17,7 @@ public class DAOFactory {
 	private static FLDAO flDAO = null;
 	private static ULDAO ulDAO = null;
 	private static GenericDAO<ReceptionStatus> receptionStatusDAO = null;
+	private static ReceptionStatusChangeDAO receptionStatusChangeDAO = null;
 	private static GenericDAO<RealtyObject> realtyObjectDAO = null;
 	private static GenericDAO<RealtyType> realtyTypeDAO = null;
 	private static GenericDAO<Counter> counterDAO = null;
@@ -73,6 +74,13 @@ public class DAOFactory {
 			receptionStatusDAO = new GenericDAOImpl<ReceptionStatus>(ReceptionStatus.class);
 		}
 		return receptionStatusDAO;
+	}
+
+	public static ReceptionStatusChangeDAO getReceptionStatusChangeDAO() {
+		if (receptionStatusChangeDAO == null) {
+			receptionStatusChangeDAO = new ReceptionStatusChangeDAOImpl();
+		}
+		return receptionStatusChangeDAO;
 	}
 
 	public GenericDAO<RealtyObject> getRealtyObjectDAO() {
