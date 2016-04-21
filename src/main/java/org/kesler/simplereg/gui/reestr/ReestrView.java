@@ -1,24 +1,22 @@
 package org.kesler.simplereg.gui.reestr;
 
 import java.awt.*;
-import java.util.Date;
+import java.awt.event.*;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.AbstractTableModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.table.TableColumn;
 
 import com.alee.extended.date.DateSelectionListener;
 import com.alee.extended.date.WebDateField;
 import net.miginfocom.swing.MigLayout;
 
+import org.kesler.simplereg.gui.util.CheckBoxHeaderRenderer;
 import org.kesler.simplereg.logic.Reception;
 import org.kesler.simplereg.logic.reception.ReceptionStatus;
 import org.kesler.simplereg.logic.reception.ReceptionStatusesModel;
@@ -63,10 +61,19 @@ public class ReestrView extends JFrame {
 		reestrTableModel.setReceptions(receptions);
 	}
 
-	private void createGUI() {
+    public List<Reception> getReceptions() {
+        return reestrTableModel.receptions;
+    }
+    public void selectReception(Reception reception) {
+        reestrTableModel.selectReception(reception);
+    }
+
+    private void createGUI() {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel topPanel = new JPanel(new MigLayout("fill"));
+
+        JPanel topLeftPanel = new JPanel(new MigLayout());
 
         // Панель быстрого поиска
         JPanel searchPanel = new JPanel(new MigLayout("fill"));
@@ -137,6 +144,8 @@ public class ReestrView extends JFrame {
         });
 
 
+
+
         searchPanel.add(new JLabel("Код дела"));
         searchPanel.add(receptionCodeSearchTextField);
         searchPanel.add(applyReceptionCodeSearchButton);
@@ -144,7 +153,38 @@ public class ReestrView extends JFrame {
         searchPanel.add(new JLabel("Код Росреестра"));
         searchPanel.add(rosreestrCodeSearchTextField);
         searchPanel.add(applyRosreestrCodeSearchButton);
-        searchPanel.add(resetRosreestrCodeSearchButton, "wrap");
+        searchPanel.add(resetRosreestrCodeSearchButton);
+
+
+        final JTextField findAndSelectTextField = new JTextField(20);
+        findAndSelectTextField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.findAndSelectReception(findAndSelectTextField.getText());
+                findAndSelectTextField.selectAll();
+            }
+        });
+
+        JButton findAndSelectButton = new JButton(ResourcesUtil.getIcon("zoom.png"));
+        findAndSelectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.findAndSelectReception(findAndSelectTextField.getText());
+                findAndSelectTextField.selectAll();
+            }
+        });
+
+        JPanel findAndSelectPanel = new JPanel(new MigLayout("fill"));
+        findAndSelectPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Найти и выбрать"));
+
+        findAndSelectPanel.add(findAndSelectTextField);
+        findAndSelectPanel.add(findAndSelectButton);
+
+
+
+        /// собираем верхнюю левую панель
+        topLeftPanel.add(searchPanel,"wrap");
+        topLeftPanel.add(findAndSelectPanel);
 
 
 		JPanel filterPanel = new JPanel(new MigLayout("fill"));
@@ -424,7 +464,7 @@ public class ReestrView extends JFrame {
         exportPanel.add(exportForArchiveButton);
         exportPanel.add(exportForReturnButton);
 
-        topPanel.add(searchPanel);
+        topPanel.add(topLeftPanel);
         topPanel.add(filterPanel);
         topPanel.add(exportPanel);
 
@@ -446,35 +486,17 @@ public class ReestrView extends JFrame {
 		//////// Основная таблица для приемов
 		reestrTableModel = new ReestrTableModel();
 		reestrTable = new JTable(reestrTableModel);
+		TableColumn selectingTableColumn = reestrTable.getColumnModel().getColumn(0);
+		selectingTableColumn.setHeaderRenderer(new CheckBoxHeaderRenderer(reestrTable.getTableHeader(), selectingTableColumn));
+		selectingTableColumn.setMaxWidth(30);
+        TableColumn numberingTableColumn = reestrTable.getColumnModel().getColumn(1);
+		numberingTableColumn.setMaxWidth(50);
 		//добавляем кнопку изменения столбцов
 		reestrTable.getTableHeader().setLayout(new BorderLayout());
 		reestrTable.getTableHeader().add(columnsButton, BorderLayout.EAST);
 
-		reestrTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent lse) {
-				if (reestrTable.getSelectedRows().length==0) {
-					openReceptionAction.setEnabled(false);
-					changeReceptionsStatusAction.setEnabled(false);
-                    selectMainReceptionAction.setEnabled(false);
-                    resetMainReceptionAction.setEnabled(false);
-					removeReceptionsAction.setEnabled(false);
-				} else if (reestrTable.getSelectedRows().length==1) {
-					openReceptionAction.setEnabled(true);
-					changeReceptionsStatusAction.setEnabled(true);
-                    selectMainReceptionAction.setEnabled(true);
-                    resetMainReceptionAction.setEnabled(true);
-					removeReceptionsAction.setEnabled(true);
-					removeReceptionsAction.putValue(Action.NAME, "Удалить запрос");
-				} else {
-					openReceptionAction.setEnabled(false);
-					changeReceptionsStatusAction.setEnabled(true);
-                    selectMainReceptionAction.setEnabled(true);
-                    resetMainReceptionAction.setEnabled(true);
-					removeReceptionsAction.setEnabled(true);
-					removeReceptionsAction.putValue(Action.NAME, "Удалить запросы");
-				}
-			}
-		});
+        reestrTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
 
 		/// добавление реакции на двойной клик - открытие приема на просмотр
 		reestrTable.addMouseListener(new MouseAdapter() {
@@ -533,7 +555,38 @@ public class ReestrView extends JFrame {
         reestrPopupMenu.add(mainReceptionMenu);
 		reestrPopupMenu.add(removeReceptionsMenuItem);
 
-		reestrTable.setComponentPopupMenu(reestrPopupMenu);
+        reestrPopupMenu.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                if (reestrTableModel.getSelectedReceptions().size() == 0) {
+                    openReceptionAction.setEnabled(reestrTable.getSelectedRows().length == 1);
+                    changeReceptionsStatusAction.setEnabled(false);
+                    selectMainReceptionAction.setEnabled(false);
+                    resetMainReceptionAction.setEnabled(false);
+                    removeReceptionsAction.setEnabled(false);
+                } else {
+                    openReceptionAction.setEnabled(reestrTable.getSelectedRows().length == 1);
+                    changeReceptionsStatusAction.setEnabled(true);
+                    selectMainReceptionAction.setEnabled(true);
+                    resetMainReceptionAction.setEnabled(true);
+                    removeReceptionsAction.setEnabled(true);
+                    removeReceptionsAction.putValue(Action.NAME, "Удалить запросы");
+                }
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+
+            }
+        });
+
+
+        reestrTable.setComponentPopupMenu(reestrPopupMenu);
 
 		dataPanel.add(reestrTableScrollPane, "push, grow");
 
@@ -617,54 +670,83 @@ public class ReestrView extends JFrame {
 
 	class ReestrTableModel extends AbstractTableModel {
 
-		private List<Reception> receptions;
-
-		ReestrTableModel() {
-			receptions = new ArrayList<Reception>();
-		}
+		private List<Reception> receptions = new ArrayList<>();
+		private Map<Long, Reception> selectedReceptionsMap = new TreeMap<>();
 
 		void setReceptions(List<Reception> receptions) {
 			this.receptions = receptions;
 			fireTableDataChanged();
 		}
 
+        void selectReception(Reception reception) {
+            if (!receptions.contains(reception)) {
+                receptions.add(reception);
+                fireTableRowsInserted(receptions.size()-1,receptions.size()-1);
+            }
+            selectedReceptionsMap.put(reception.getId(), reception);
+            fireTableCellUpdated(receptions.indexOf(reception),0);
+        }
+
+        Collection<Reception> getSelectedReceptions() {
+            return selectedReceptionsMap.values();
+        }
+
 		public int getRowCount() {
 			return receptions.size();
 		}
 
 		public int getColumnCount() {
-			return ReestrColumns.getInstance().getActiveColumns().size() + 1;
+			return ReestrColumns.getInstance().getActiveColumns().size() + 2;
 		}
 
 		public String getColumnName(int column) {
 			List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();			
 
-			String name = "Не опр";
-
-			if (column == 0) {
-				name = "№";
-			} else {
-				name = reestrColumns.get(column - 1).getName();
+			switch (column) {
+				case 0:
+					return null;
+				case 1:
+					return "№";
+				default:
+					return reestrColumns.get(column - 2).getName();
 			}
+		}
 
-		return name;
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			if (columnIndex==0) return Boolean.class;
+			return String.class;
 		}
 
 		public Object getValueAt(int row, int column) {
 			Reception reception = receptions.get(row);
 			
-			List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();			
+			List<ReestrColumn> reestrColumns = ReestrColumns.getInstance().getActiveColumns();
 
-
-			Object value = null;
-
-			if (column == 0) {
-				value = row + 1;
-			} else {
-				value = reestrColumns.get(column - 1).getValue(reception);
+			switch (column) {
+				case 0:
+					return selectedReceptionsMap.containsKey(reception.getId());
+				case 1:
+					return row + 1;
+				default:
+					return reestrColumns.get(column - 2).getValue(reception);
 			}
 
-			return value;
+		}
+
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			if (columnIndex==0) return true;
+			return false;
+		}
+
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			if (columnIndex != 0) return;
+			Reception reception = receptions.get(rowIndex);
+			if ((Boolean) aValue) selectedReceptionsMap.put(reception.getId(), reception);
+			else selectedReceptionsMap.remove(reception.getId());
+            fireTableCellUpdated(rowIndex, columnIndex);
 		}
 
 		public String getToolTipText(MouseEvent e) {
@@ -707,8 +789,8 @@ public class ReestrView extends JFrame {
 
 		public void actionPerformed(ActionEvent ev) {
 			if (status == null) return;
-			int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
-			controller.changeReceptionsStatus(selectedReceptionsIndexes, status);
+            Collection<Reception> selectedReceptions = reestrTableModel.getSelectedReceptions();
+			controller.changeReceptionsStatus(selectedReceptions, status);
 		}
 	}
 
@@ -717,8 +799,8 @@ public class ReestrView extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
-            controller.selectMainReception(selectedReceptionsIndexes);
+            Collection<Reception> selectedReceptions = reestrTableModel.getSelectedReceptions();
+            controller.selectMainReception(selectedReceptions);
         }
     }
 
@@ -727,8 +809,8 @@ public class ReestrView extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
-            controller.resetMainReception(selectedReceptionsIndexes);
+            Collection<Reception> selectedReceptions = reestrTableModel.getSelectedReceptions();
+            controller.resetMainReception(selectedReceptions);
         }
     }
 
@@ -738,8 +820,8 @@ public class ReestrView extends JFrame {
 		}
 
 		public void actionPerformed (ActionEvent ev) {
-			int[] selectedReceptionsIndexes = reestrTable.getSelectedRows();
-			controller.removeReceptions(selectedReceptionsIndexes);			
+            Collection<Reception> selectedReceptions = reestrTableModel.getSelectedReceptions();
+            controller.removeReceptions(selectedReceptions);
 		}
 	}
 

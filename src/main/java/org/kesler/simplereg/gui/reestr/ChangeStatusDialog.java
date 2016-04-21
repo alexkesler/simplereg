@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ChangeStatusDialog extends AbstractDialog {
         setLocationRelativeTo(parentFrame);
     }
 
-    public void show(List<Reception> receptions, ReceptionStatus status) {
+    public void show(Collection<Reception> receptions, ReceptionStatus status) {
 
         List<String> receptionCodes = receptionsCodeListDataModel.getReceptionCodes();
         receptionCodes.clear();
