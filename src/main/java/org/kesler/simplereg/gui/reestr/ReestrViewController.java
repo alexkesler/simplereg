@@ -130,6 +130,17 @@ public class ReestrViewController implements ReceptionsModelStateListener{
         applyFilters();
     }
 
+    void findAndSelectReception(String rosreestrCode) {
+        for (Reception reception : view.getReceptions()) {
+            if (reception.getRosreestrCode().equals(rosreestrCode)) {
+                new InfoDialog(view, "Найдено, выбрано", 1500, InfoDialog.GREEN).showInfo();
+                view.selectReception(reception);
+                return;
+            }
+        }
+        new InfoDialog(view, "Не найдено", 1500, InfoDialog.RED).showInfo();
+    }
+
 	// Редактирование фильтра - вызывается из вида
 	public void editFilter(int filterIndex) {
 		if (filterIndex == -1) {
